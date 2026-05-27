@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniFi 完整產品線研究報告</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --card2: #1c2333;
+    --border: #30363d;
+    --accent: #0085ff;
+    --accent2: #00c4ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --purple: #a371f7;
+    --red: #f85149;
+    --orange: #f0883e;
+    --text: #e6edf3;
+    --muted: #8b949e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, 'Segoe UI', sans-serif; line-height: 1.6; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #0a2040 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,133,255,0.15) 0%, transparent 70%);
+  }
+  .hero-logo { font-size: 48px; margin-bottom: 12px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--muted); font-size: 16px; margin-top: 10px; }
+  .hero-meta { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .hero-meta span { background: rgba(0,133,255,0.15); border: 1px solid rgba(0,133,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 13px; color: var(--accent2); }
+
+  /* LAYOUT */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  .section { padding: 48px 0; }
+  .section-title {
+    font-size: 24px; font-weight: 700; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-desc { color: var(--muted); margin-bottom: 28px; font-size: 14px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ARCHITECTURE */
+  .arch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .arch-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; text-align: center; position: relative; overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .arch-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .arch-card .icon { font-size: 36px; margin-bottom: 10px; }
+  .arch-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .arch-card p { font-size: 12px; color: var(--muted); }
+  .arch-card .app-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(0,133,255,0.15); border: 1px solid rgba(0,133,255,0.3);
+    border-radius: 6px; padding: 2px 6px; font-size: 10px; color: var(--accent2);
+  }
+
+  /* TIER TABLE */
+  .tier-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 32px; }
+  .tier-table th { background: var(--card2); padding: 12px 16px; text-align: left; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .tier-table td { padding: 12px 16px; border-bottom: 1px solid rgba(48,54,61,0.5); vertical-align: top; }
+  .tier-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .tier-home { color: var(--green); }
+  .tier-smb { color: var(--accent2); }
+  .tier-ent { color: var(--purple); }
+
+  /* PRODUCT CARDS */
+  .product-section { margin-bottom: 48px; }
+  .product-header {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 20px;
+  }
+  .product-header .cat-icon { font-size: 32px; }
+  .product-header h2 { font-size: 20px; font-weight: 700; }
+  .product-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .product-header .count-badge {
+    margin-left: auto; background: rgba(0,133,255,0.1); border: 1px solid rgba(0,133,255,0.2);
+    border-radius: 20px; padding: 4px 14px; font-size: 13px; color: var(--accent2); white-space: nowrap;
+  }
+
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .prod-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px; transition: border-color 0.2s, transform 0.2s;
+  }
+  .prod-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .prod-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .prod-name { font-weight: 700; font-size: 15px; }
+  .prod-price { font-size: 13px; color: var(--green); font-weight: 600; white-space: nowrap; }
+  .prod-model { font-size: 11px; color: var(--muted); font-family: monospace; margin-bottom: 8px; }
+  .prod-specs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .spec-tag {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; color: var(--muted);
+  }
+  .spec-tag.highlight { background: rgba(0,133,255,0.1); border-color: rgba(0,133,255,0.2); color: var(--accent2); }
+  .spec-tag.green { background: rgba(63,185,80,0.1); border-color: rgba(63,185,80,0.2); color: var(--green); }
+  .spec-tag.purple { background: rgba(163,113,247,0.1); border-color: rgba(163,113,247,0.2); color: var(--purple); }
+  .spec-tag.orange { background: rgba(240,136,62,0.1); border-color: rgba(240,136,62,0.2); color: var(--orange); }
+
+  /* TIER BADGE */
+  .tier-badge {
+    display: inline-block; border-radius: 6px; padding: 2px 8px;
+    font-size: 11px; font-weight: 600; margin-bottom: 6px;
+  }
+  .tb-home { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+  .tb-pro { background: rgba(0,133,255,0.15); color: var(--accent2); border: 1px solid rgba(0,133,255,0.3); }
+  .tb-ent { background: rgba(163,113,247,0.15); color: var(--purple); border: 1px solid rgba(163,113,247,0.3); }
+
+  /* KEY CONCEPTS */
+  .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .concept-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  }
+  .concept-card .c-icon { font-size: 28px; margin-bottom: 10px; }
+  .concept-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .concept-card p { font-size: 13px; color: var(--muted); }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-table th { background: var(--card2); padding: 10px 14px; text-align: center; color: var(--muted); font-weight: 600; border: 1px solid var(--border); }
+  .compare-table th:first-child { text-align: left; }
+  .compare-table td { padding: 10px 14px; border: 1px solid rgba(48,54,61,0.5); text-align: center; }
+  .compare-table td:first-child { text-align: left; font-weight: 500; }
+  .compare-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .check { color: var(--green); }
+  .cross { color: var(--red); }
+  .partial { color: var(--yellow); }
+
+  /* FOOTER */
+  .footer { background: var(--card); border-top: 1px solid var(--border); padding: 32px 20px; text-align: center; }
+  .footer p { color: var(--muted); font-size: 13px; }
+  .footer a { color: var(--accent2); text-decoration: none; }
+
+  /* TOPOLOGY DIAGRAM */
+  .topo {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; margin-bottom: 32px; overflow-x: auto;
+  }
+  .topo-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .topo-flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .topo-node {
+    background: var(--card2); border: 2px solid var(--border); border-radius: 10px;
+    padding: 12px 16px; text-align: center; min-width: 100px;
+    transition: border-color 0.2s;
+  }
+  .topo-node:hover { border-color: var(--accent); }
+  .topo-node .n-icon { font-size: 24px; margin-bottom: 4px; }
+  .topo-node .n-name { font-size: 11px; font-weight: 700; }
+  .topo-node .n-type { font-size: 10px; color: var(--muted); }
+  .topo-arrow { color: var(--muted); font-size: 20px; padding: 0 8px; }
+  .topo-line { display: flex; flex-direction: column; gap: 12px; }
+  .topo-row { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .node-hl-blue { border-color: rgba(0,133,255,0.5); }
+  .node-hl-green { border-color: rgba(63,185,80,0.5); }
+  .node-hl-purple { border-color: rgba(163,113,247,0.5); }
+  .node-hl-orange { border-color: rgba(240,136,62,0.5); }
+
+  @media (max-width: 600px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .tier-table { display: block; overflow-x: auto; }
+    .product-header { flex-wrap: wrap; }
+    .product-header .count-badge { margin-left: 0; }
+    .topo-flow { flex-direction: column; }
+    .topo-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-logo">🔵</div>
+  <h1>UniFi 完整產品線研究報告</h1>
+  <p>Ubiquiti UniFi 生態系統 — 從家用到企業級的完整網路解決方案</p>
+  <div class="hero-meta">
+    <span>📅 2026-05-27</span>
+    <span>🛒 台灣官方授權店</span>
+    <span>📦 5 大產品線 / 160+ 產品</span>
+    <span>💰 NT$1,199 ~ NT$154,099</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SECTION: 架構總覽 -->
+<div class="section">
+  <div class="section-title">🏗️ UniFi 生態系統架構</div>
+  <div class="section-desc">UniFi 是 Ubiquiti 的企業網路平台，涵蓋從有線到無線、從安全到門禁的完整解決方案，統一由雲端或本地 Controller 管理。</div>
+
+  <!-- 拓撲圖 -->
+  <div class="topo">
+    <div class="topo-title">典型網路拓撲（家用 / 中小企業）</div>
+    <div class="topo-line">
+      <div class="topo-row">
+        <div class="topo-node node-hl-blue">
+          <div class="n-icon">🌐</div>
+          <div class="n-name">ISP / WAN</div>
+          <div class="n-type">外部網路</div>
+        </div>
+        <div class="topo-arrow">→</div>
+        <div class="topo-node node-hl-blue">
+          <div class="n-icon">🛡️</div>
+          <div class="n-name">Cloud Gateway</div>
+          <div class="n-type">防火牆 / 路由器</div>
+        </div>
+        <div class="topo-arrow">→</div>
+        <div class="topo-node node-hl-green">
+          <div class="n-icon">🔌</div>
+          <div class="n-name">Switch</div>
+          <div class="n-type">PoE 交換器</div>
+        </div>
+        <div class="topo-arrow">→</div>
+        <div class="topo-node node-hl-purple">
+          <div class="n-icon">📡</div>
+          <div class="n-name">WiFi AP</div>
+          <div class="n-type">無線接入點</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; padding-left:40px;">
+        <div class="topo-node node-hl-orange" style="min-width:80px;">
+          <div class="n-icon">📷</div>
+          <div class="n-name">Protect</div>
+          <div class="n-type">監控系統</div>
+        </div>
+        <div class="topo-node node-hl-orange" style="min-width:80px;">
+          <div class="n-icon">🚪</div>
+          <div class="n-name">Access</div>
+          <div class="n-type">門禁管理</div>
+        </div>
+        <div class="topo-node" style="min-width:80px;">
+          <div class="n-icon">☁️</div>
+          <div class="n-name">UniFi Cloud</div>
+          <div class="n-type">遠端管理</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 管理 App -->
+  <div class="arch-grid">
+    <div class="arch-card">
+      <div class="app-badge">App</div>
+      <div class="icon">🌐</div>
+      <h3>UniFi Network</h3>
+      <p>管理 Gateway、Switch、WiFi AP、VLAN、VPN 等核心網路設備</p>
+    </div>
+    <div class="arch-card">
+      <div class="app-badge">App</div>
+      <div class="icon">📹</div>
+      <h3>UniFi Protect</h3>
+      <p>監控攝影機、NVR、門鈴、AI 分析、錄影回放與即時串流</p>
+    </div>
+    <div class="arch-card">
+      <div class="app-badge">App</div>
+      <div class="icon">🔑</div>
+      <h3>UniFi Access</h3>
+      <p>門禁讀卡機、Hub、對講機、員工卡片管理與出入記錄</p>
+    </div>
+    <div class="arch-card">
+      <div class="icon">☁️</div>
+      <h3>UniFi Cloud</h3>
+      <p>免費雲端遠端存取，不需自建 Cloud Key，適合無 IT 團隊場所</p>
+    </div>
+    <div class="arch-card">
+      <div class="icon">🔒</div>
+      <h3>PoE 供電</h3>
+      <p>透過網路線同時傳輸電力與資料，AP、攝影機、門禁設備免額外電源</p>
+    </div>
+    <div class="arch-card">
+      <div class="icon">🎛️</div>
+      <h3>Etherlighting™</h3>
+      <p>Pro Max / XG 系列交換器特有燈效，可自訂埠狀態與指示功能</p>
+    </div>
+  </div>
+
+  <!-- 部署規模對照 -->
+  <div class="section-title" style="margin-bottom:12px;">📊 部署規模對照</div>
+  <table class="tier-table">
+    <thead>
+      <tr>
+        <th>規模</th>
+        <th>適用場所</th>
+        <th>建議 Gateway</th>
+        <th>建議 Switch</th>
+        <th>建議 AP</th>
+        <th>預算範圍</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tier-home">🏠 家用</td>
+        <td>公寓、透天厝</td>
+        <td>UCG-Ultra / UDR7</td>
+        <td>USW-Flex-Mini</td>
+        <td>U7 Lite / U6+</td>
+        <td>NT$5,000~15,000</td>
+      </tr>
+      <tr>
+        <td class="tier-smb">🏢 中小企業</td>
+        <td>辦公室、餐廳、旅館</td>
+        <td>UCG-Max / UDM-Pro</td>
+        <td>USW-Pro-Max / USW-Enterprise</td>
+        <td>U7 Pro / U6 Enterprise</td>
+        <td>NT$30,000~150,000</td>
+      </tr>
+      <tr>
+        <td class="tier-ent">🏭 企業</td>
+        <td>園區、資料中心、大樓</td>
+        <td>UDM-Pro-Max / EFG</td>
+        <td>USW-EnterpriseXG / USW-Pro-XG</td>
+        <td>U7 Pro Max XGS / Building Bridge XG</td>
+        <td>NT$150,000+</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Cloud Gateways -->
+<div class="section">
+  <div class="product-section">
+    <div class="product-header">
+      <div class="cat-icon">🛡️</div>
+      <div>
+        <h2>Cloud Gateways — 閘道器 / 路由器 / 防火牆</h2>
+        <p>是整個 UniFi 網路的核心，負責 WAN 連線、防火牆、VLAN、VPN、QoS 與 IDS/IPS</p>
+      </div>
+      <div class="count-badge">9 款產品</div>
+    </div>
+
+    <div class="products-grid">
+      <div class="prod-card">
+        <div class="tier-badge tb-ent">企業旗艦</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Enterprise Fortress Gateway</div>
+          <div class="prod-price">NT$77,099</div>
+        </div>
+        <div class="prod-model">EFG</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">10G WAN x4</span>
+          <span class="spec-tag highlight">SFP+ x8</span>
+          <span class="spec-tag green">IDS/IPS</span>
+          <span class="spec-tag purple">硬體加速</span>
+          <span class="spec-tag">DPI</span>
+          <span class="spec-tag">Redundant PSU</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-ent">企業</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Dream Machine Pro Max</div>
+          <div class="prod-price">NT$23,099</div>
+        </div>
+        <div class="prod-model">UDM-Pro-Max</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">10G SFP+</span>
+          <span class="spec-tag highlight">2.5G WAN</span>
+          <span class="spec-tag green">NVR 內建</span>
+          <span class="spec-tag">HDD 槽 x3</span>
+          <span class="spec-tag">UniFi OS</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-pro">中小企業</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Dream Machine Pro</div>
+          <div class="prod-price">NT$14,699</div>
+        </div>
+        <div class="prod-model">UDM-Pro</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">10G SFP+</span>
+          <span class="spec-tag highlight">1G WAN</span>
+          <span class="spec-tag green">NVR 內建</span>
+          <span class="spec-tag">HDD 槽 x1</span>
+          <span class="spec-tag">8埠 1G PoE</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-pro">中小企業</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Dream Machine SE</div>
+          <div class="prod-price">NT$19,299</div>
+        </div>
+        <div class="prod-model">UDM-SE</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">2.5G WAN</span>
+          <span class="spec-tag">8埠 1G PoE</span>
+          <span class="spec-tag green">HDD 槽 x1</span>
+          <span class="spec-tag">SFP+ x2</span>
+          <span class="spec-tag">壁掛設計</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-pro">中小企業</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Cloud Gateway Max</div>
+          <div class="prod-price">NT$10,799</div>
+        </div>
+        <div class="prod-model">UCG-Max</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">2.5G WAN</span>
+          <span class="spec-tag">SFP+ x2</span>
+          <span class="spec-tag green">PoE+ x4</span>
+          <span class="spec-tag">桌上型</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-home">家用 / 小辦公室</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Cloud Gateway Ultra</div>
+          <div class="prod-price">NT$3,899</div>
+        </div>
+        <div class="prod-model">UCG-Ultra</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">1G WAN</span>
+          <span class="spec-tag">4埠 1G PoE</span>
+          <span class="spec-tag green">最入門</span>
+          <span class="spec-tag">小型機身</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-home">家用</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Dream Router 7</div>
+          <div class="prod-price">NT$10,799</div>
+        </div>
+        <div class="prod-model">UDR7</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">WiFi 7 內建</span>
+          <span class="spec-tag highlight">2.5G WAN</span>
+          <span class="spec-tag green">AP 整合</span>
+          <span class="spec-tag">PoE x1</span>
+          <span class="spec-tag">一體機</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-home">家用</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Express 7</div>
+          <div class="prod-price">NT$7,699</div>
+        </div>
+        <div class="prod-model">UX7</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">WiFi 7 內建</span>
+          <span class="spec-tag">最簡單設定</span>
+          <span class="spec-tag green">新手首選</span>
+          <span class="spec-tag">小型</span>
+        </div>
+      </div>
+
+      <div class="prod-card">
+        <div class="tier-badge tb-ent">旗艦</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Dream Wall</div>
+          <div class="prod-price">NT$38,499</div>
+        </div>
+        <div class="prod-model">UDW</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">壁掛整合機</span>
+          <span class="spec-tag highlight">AP + Switch + GW</span>
+          <span class="spec-tag green">全功能合一</span>
+          <span class="spec-tag">觸控面板</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Switching -->
+<div class="section">
+  <div class="product-section">
+    <div class="product-header">
+      <div class="cat-icon">🔌</div>
+      <div>
+        <h2>Switching — 交換器 / Switch</h2>
+        <p>從 5 埠桌上型到 48 埠 Enterprise XG，提供 PoE、SFP+、10G/25G 上行</p>
+      </div>
+      <div class="count-badge">39 款產品</div>
+    </div>
+
+    <!-- Enterprise Campus Aggregation -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--purple); margin-bottom:10px; padding:6px 12px; background:rgba(163,113,247,0.08); border-radius:8px; display:inline-block;">🏭 Enterprise Campus Aggregation（骨幹交換器）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="tier-badge tb-ent">極致旗艦</div>
+          <div class="prod-card-top">
+            <div class="prod-name">Enterprise XG 24</div>
+            <div class="prod-price">NT$154,099</div>
+          </div>
+          <div class="prod-model">USW-EnterpriseXG-24</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">25G SFP28 x24</span>
+            <span class="spec-tag highlight">100G QSFP28 x2</span>
+            <span class="spec-tag purple">Etherlighting™</span>
+            <span class="spec-tag">Layer 3</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-ent">骨幹</div>
+          <div class="prod-card-top">
+            <div class="prod-name">Aggregation</div>
+            <div class="prod-price">NT$29,999</div>
+          </div>
+          <div class="prod-model">USW-Aggregation</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">10G SFP+ x8</span>
+            <span class="spec-tag">無 PoE</span>
+            <span class="spec-tag">Layer 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro XG -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent2); margin-bottom:10px; padding:6px 12px; background:rgba(0,196,255,0.08); border-radius:8px; display:inline-block;">⚡ Pro XG 系列（10G 電口 + 高速上行）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro Max 24 XG</div>
+            <div class="prod-price">NT$84,999</div>
+          </div>
+          <div class="prod-model">USW-Pro-Max-24-XG</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">10G x24</span>
+            <span class="spec-tag highlight">25G SFP28 x4</span>
+            <span class="spec-tag purple">Etherlighting™</span>
+            <span class="spec-tag green">PoE++</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro XG 24</div>
+            <div class="prod-price">NT$44,999</div>
+          </div>
+          <div class="prod-model">USW-Pro-XG-24</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">10G SFP+ x24</span>
+            <span class="spec-tag highlight">25G x4</span>
+            <span class="spec-tag">無 PoE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro Max -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent2); margin-bottom:10px; padding:6px 12px; background:rgba(0,196,255,0.08); border-radius:8px; display:inline-block;">🔷 Pro Max 系列（最強 PoE + Etherlighting™）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro Max 48 PoE</div>
+            <div class="prod-price">NT$54,999</div>
+          </div>
+          <div class="prod-model">USW-Pro-Max-48-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2.5G x48 PoE++</span>
+            <span class="spec-tag highlight">10G SFP+ x4</span>
+            <span class="spec-tag purple">Etherlighting™</span>
+            <span class="spec-tag orange">720W PoE Budget</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro Max 48</div>
+            <div class="prod-price">NT$34,999</div>
+          </div>
+          <div class="prod-model">USW-Pro-Max-48</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2.5G x48</span>
+            <span class="spec-tag">SFP+ x4</span>
+            <span class="spec-tag purple">Etherlighting™</span>
+            <span class="spec-tag">無 PoE</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro Max 24 PoE</div>
+            <div class="prod-price">NT$34,999</div>
+          </div>
+          <div class="prod-model">USW-Pro-Max-24-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2.5G x24 PoE++</span>
+            <span class="spec-tag">SFP+ x4</span>
+            <span class="spec-tag purple">Etherlighting™</span>
+            <span class="spec-tag orange">400W Budget</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Standard / Enterprise -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:10px; padding:6px 12px; background:rgba(63,185,80,0.08); border-radius:8px; display:inline-block;">🟢 Enterprise / Standard 系列（主流辦公室）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Enterprise 48 PoE</div>
+            <div class="prod-price">NT$36,099</div>
+          </div>
+          <div class="prod-model">USW-Enterprise-48-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2.5G x48 PoE+</span>
+            <span class="spec-tag">SFP+ x4</span>
+            <span class="spec-tag green">Layer 3</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Enterprise 24 PoE</div>
+            <div class="prod-price">NT$22,099</div>
+          </div>
+          <div class="prod-model">USW-Enterprise-24-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2.5G x24 PoE+</span>
+            <span class="spec-tag">SFP+ x4</span>
+            <span class="spec-tag green">Layer 3</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro 48 PoE</div>
+            <div class="prod-price">NT$22,499</div>
+          </div>
+          <div class="prod-model">USW-Pro-48-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">1G x48 PoE+</span>
+            <span class="spec-tag">SFP+ x4</span>
+            <span class="spec-tag">600W Budget</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Pro 24 PoE</div>
+            <div class="prod-price">NT$14,299</div>
+          </div>
+          <div class="prod-model">USW-Pro-24-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">1G x24 PoE+</span>
+            <span class="spec-tag">SFP+ x4</span>
+            <span class="spec-tag">400W Budget</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flex / Lite -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--yellow); margin-bottom:10px; padding:6px 12px; background:rgba(210,153,34,0.08); border-radius:8px; display:inline-block;">🔶 Flex / Lite 系列（彈性小型）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Flex 2.5G</div>
+            <div class="prod-price">NT$4,199</div>
+          </div>
+          <div class="prod-model">USW-Flex-2.5G</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2.5G x5</span>
+            <span class="spec-tag green">PoE 輸入供電</span>
+            <span class="spec-tag">小型桌上型</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Flex Mini</div>
+            <div class="prod-price">NT$1,199</div>
+          </div>
+          <div class="prod-model">USW-Flex-Mini</div>
+          <div class="prod-specs">
+            <span class="spec-tag">1G x5</span>
+            <span class="spec-tag green">PoE 輸入</span>
+            <span class="spec-tag">最入門</span>
+            <span class="spec-tag orange">最低價</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Lite 16 PoE</div>
+            <div class="prod-price">NT$7,099</div>
+          </div>
+          <div class="prod-model">USW-Lite-16-PoE</div>
+          <div class="prod-specs">
+            <span class="spec-tag">1G x16</span>
+            <span class="spec-tag highlight">PoE+ x8</span>
+            <span class="spec-tag">SFP x2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: WiFi AP -->
+<div class="section">
+  <div class="product-section">
+    <div class="product-header">
+      <div class="cat-icon">📡</div>
+      <div>
+        <h2>WiFi — 無線接入點（AP）</h2>
+        <p>從 WiFi 5 到最新 WiFi 7，涵蓋室內、戶外、牆面、網狀網路</p>
+      </div>
+      <div class="count-badge">22 款產品</div>
+    </div>
+
+    <!-- WiFi 7 -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--purple); margin-bottom:10px; padding:6px 12px; background:rgba(163,113,247,0.08); border-radius:8px; display:inline-block;">🚀 WiFi 7 — U7 系列（最新世代）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="tier-badge tb-ent">最強旗艦</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Pro Max XGS</div>
+            <div class="prod-price">NT$27,999</div>
+          </div>
+          <div class="prod-model">U7-Pro-Max-XGS</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag highlight">10G PoE++</span>
+            <span class="spec-tag green">6 GHz 支援</span>
+            <span class="spec-tag purple">Tri-band</span>
+            <span class="spec-tag">頂規天線</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-ent">旗艦</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Pro XG</div>
+            <div class="prod-price">NT$14,999</div>
+          </div>
+          <div class="prod-model">U7-Pro-XG</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag highlight">2.5G PoE++</span>
+            <span class="spec-tag green">6 GHz</span>
+            <span class="spec-tag purple">Tri-band</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-pro">主流</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Pro Max</div>
+            <div class="prod-price">NT$9,999</div>
+          </div>
+          <div class="prod-model">U7-Pro-Max</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag">2.5G PoE+</span>
+            <span class="spec-tag green">6 GHz</span>
+            <span class="spec-tag">辦公室首選</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-pro">主流</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Pro</div>
+            <div class="prod-price">NT$6,499</div>
+          </div>
+          <div class="prod-model">U7-Pro</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag">1G PoE+</span>
+            <span class="spec-tag green">Tri-band</span>
+            <span class="spec-tag">性價比高</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-home">入門</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Lite</div>
+            <div class="prod-price">NT$3,699</div>
+          </div>
+          <div class="prod-model">U7-Lite</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag">1G PoE</span>
+            <span class="spec-tag green">家用入門</span>
+            <span class="spec-tag orange">最低 WiFi 7 價</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-home">壁面</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Wall</div>
+            <div class="prod-price">NT$4,599</div>
+          </div>
+          <div class="prod-model">U7-Wall</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag">壁面插座式</span>
+            <span class="spec-tag green">下游 PoE</span>
+            <span class="spec-tag">旅館房間</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-home">嵌入式</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 IW</div>
+            <div class="prod-price">NT$6,299</div>
+          </div>
+          <div class="prod-model">U7-IW</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag">美式插座嵌入</span>
+            <span class="spec-tag">乙太網路埠</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-pro">戶外</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Outdoor</div>
+            <div class="prod-price">NT$7,999</div>
+          </div>
+          <div class="prod-model">U7-Outdoor</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag orange">IP67 防水</span>
+            <span class="spec-tag">2.5G PoE+</span>
+            <span class="spec-tag">戶外覆蓋</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-home">Mesh</div>
+          <div class="prod-card-top">
+            <div class="prod-name">U7 Mesh</div>
+            <div class="prod-price">NT$5,999</div>
+          </div>
+          <div class="prod-model">U7-Mesh</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 7</span>
+            <span class="spec-tag green">Mesh 回傳</span>
+            <span class="spec-tag">無線部署</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WiFi 6E -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent2); margin-bottom:10px; padding:6px 12px; background:rgba(0,196,255,0.08); border-radius:8px; display:inline-block;">⚡ WiFi 6E — U6 Enterprise 系列</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">U6 Enterprise</div>
+            <div class="prod-price">NT$8,299</div>
+          </div>
+          <div class="prod-model">U6-Enterprise</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 6E</span>
+            <span class="spec-tag highlight">2.5G PoE+</span>
+            <span class="spec-tag green">6 GHz</span>
+            <span class="spec-tag">Tri-band</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">U6 Enterprise IW</div>
+            <div class="prod-price">NT$7,999</div>
+          </div>
+          <div class="prod-model">U6-Enterprise-IW</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 6E</span>
+            <span class="spec-tag">嵌入式壁面</span>
+            <span class="spec-tag green">6 GHz</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WiFi 6 -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:10px; padding:6px 12px; background:rgba(63,185,80,0.08); border-radius:8px; display:inline-block;">🟢 WiFi 6 — U6 系列（成熟主流）</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">U6 Pro</div>
+            <div class="prod-price">NT$5,499</div>
+          </div>
+          <div class="prod-model">U6-Pro</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 6</span>
+            <span class="spec-tag">1G PoE+</span>
+            <span class="spec-tag">辦公主流</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">U6+</div>
+            <div class="prod-price">NT$3,499</div>
+          </div>
+          <div class="prod-model">U6-Plus</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">WiFi 6</span>
+            <span class="spec-tag green">家用 CP 值高</span>
+            <span class="spec-tag">1G PoE</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">U6 Extender</div>
+            <div class="prod-price">NT$3,799</div>
+          </div>
+          <div class="prod-model">U6-Extender</div>
+          <div class="prod-specs">
+            <span class="spec-tag">WiFi 6</span>
+            <span class="spec-tag green">Mesh 延伸</span>
+            <span class="spec-tag">插電牆插</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">U6 Mesh Pro</div>
+            <div class="prod-price">NT$7,799</div>
+          </div>
+          <div class="prod-model">U6-Mesh-Pro</div>
+          <div class="prod-specs">
+            <span class="spec-tag">WiFi 6</span>
+            <span class="spec-tag orange">IP67 防水</span>
+            <span class="spec-tag green">戶外 Mesh</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bridging -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--orange); margin-bottom:10px; padding:6px 12px; background:rgba(240,136,62,0.08); border-radius:8px; display:inline-block;">🌉 Bridging — 建物無線橋接</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Building Bridge XG</div>
+            <div class="prod-price">NT$17,099</div>
+          </div>
+          <div class="prod-model">UBB-XG</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">10G 點對點</span>
+            <span class="spec-tag orange">最遠 200m+</span>
+            <span class="spec-tag">建物間橋接</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">Device Bridge</div>
+            <div class="prod-price">NT$5,699</div>
+          </div>
+          <div class="prod-model">U-Device-Bridge</div>
+          <div class="prod-specs">
+            <span class="spec-tag">無線橋接</span>
+            <span class="spec-tag green">有線設備無線化</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Protect -->
+<div class="section">
+  <div class="product-section">
+    <div class="product-header">
+      <div class="cat-icon">📷</div>
+      <div>
+        <h2>UniFi Protect — 監控系統</h2>
+        <p>AI 影像分析、4K/2K 攝影機、NVR 錄影、門鈴、PTZ 全周轉</p>
+      </div>
+      <div class="count-badge">53 款產品</div>
+    </div>
+
+    <!-- NVR -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--purple); margin-bottom:10px; padding:6px 12px; background:rgba(163,113,247,0.08); border-radius:8px; display:inline-block;">💾 NVR — 網路錄影主機</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="tier-badge tb-ent">旗艦</div>
+          <div class="prod-card-top">
+            <div class="prod-name">Enterprise NVR</div>
+            <div class="prod-price">NT$46,199</div>
+          </div>
+          <div class="prod-model">ENVR</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">HDD x16 槽</span>
+            <span class="spec-tag highlight">最大 160TB</span>
+            <span class="spec-tag purple">AI 加速晶片</span>
+            <span class="spec-tag">機架型</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-pro">主流</div>
+          <div class="prod-card-top">
+            <div class="prod-name">NVR Pro</div>
+            <div class="prod-price">NT$22,099</div>
+          </div>
+          <div class="prod-model">UNVR-Pro</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">HDD x4 槽</span>
+            <span class="spec-tag">最大 32TB</span>
+            <span class="spec-tag green">PoE x4</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-home">入門</div>
+          <div class="prod-card-top">
+            <div class="prod-name">NVR</div>
+            <div class="prod-price">NT$11,799</div>
+          </div>
+          <div class="prod-model">UNVR</div>
+          <div class="prod-specs">
+            <span class="spec-tag">HDD x4 槽</span>
+            <span class="spec-tag green">家用 / 小商業</span>
+            <span class="spec-tag">機架型</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="tier-badge tb-home">迷你</div>
+          <div class="prod-card-top">
+            <div class="prod-name">NVR Instant</div>
+            <div class="prod-price">NT$6,999</div>
+          </div>
+          <div class="prod-model">UNVR-Instant</div>
+          <div class="prod-specs">
+            <span class="spec-tag">SSD 內建</span>
+            <span class="spec-tag green">桌上型</span>
+            <span class="spec-tag">最小 NVR</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Cameras -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px; font-weight:700; color:var(--accent2); margin-bottom:10px; padding:6px 12px; background:rgba(0,196,255,0.08); border-radius:8px; display:inline-block;">🤖 AI 攝影機 — G6 / G5 系列</div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">G6 Instant</div>
+            <div class="prod-price">NT$3,499</div>
+          </div>
+          <div class="prod-model">UVC-G6-Instant</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">4K / 8MP</span>
+            <span class="spec-tag green">AI 人臉辨識</span>
+            <span class="spec-tag">PoE</span>
+            <span class="spec-tag">夜視</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">G6 PTZ</div>
+            <div class="prod-price">NT$13,999</div>
+          </div>
+          <div class="prod-model">UVC-G6-PTZ</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">4K PTZ</span>
+            <span class="spec-tag highlight">22x 光學變焦</span>
+            <span class="spec-tag green">AI 追蹤</span>
+            <span class="spec-tag orange">360° 旋轉</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">G5 Pro</div>
+            <div class="prod-price">NT$5,799</div>
+          </div>
+          <div class="prod-model">UVC-G5-Pro</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">4K / 8MP</span>
+            <span class="spec-tag">3x 光學變焦</span>
+            <span class="spec-tag green">戶外 IP67</span>
+            <span class="spec-tag">PoE</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">G5 Dome Ultra</div>
+            <div class="prod-price">NT$7,699</div>
+          </div>
+          <div class="prod-model">UVC-G5-Dome-Ultra</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2K / 4MP</span>
+            <span class="spec-tag green">魚眼全景</span>
+            <span class="spec-tag purple">AI 分析</span>
+            <span class="spec-tag">天花板型</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">G4 Doorbell Pro</div>
+            <div class="prod-price">NT$7,099</div>
+          </div>
+          <div class="prod-model">UVC-G4-Doorbell-Pro</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">2K 門鈴</span>
+            <span class="spec-tag green">雙向通話</span>
+            <span class="spec-tag purple">AI 包裹偵測</span>
+            <span class="spec-tag">PoE 或 WiFi</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">AI Theta</div>
+            <div class="prod-price">NT$9,999</div>
+          </div>
+          <div class="prod-model">UVC-AI-Theta</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">模組化設計</span>
+            <span class="spec-tag green">多鏡頭可擴充</span>
+            <span class="spec-tag purple">180° 視角</span>
+          </div>
+        </div>
+        <div class="prod-card">
+          <div class="prod-card-top">
+            <div class="prod-name">AI Port</div>
+            <div class="prod-price">NT$7,999</div>
+          </div>
+          <div class="prod-model">UVC-AI-Port</div>
+          <div class="prod-specs">
+            <span class="spec-tag highlight">AI 人流計數</span>
+            <span class="spec-tag green">PoE</span>
+            <span class="spec-tag">小型廣角</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Access -->
+<div class="section">
+  <div class="product-section">
+    <div class="product-header">
+      <div class="cat-icon">🚪</div>
+      <div>
+        <h2>UniFi Access — 門禁管理</h2>
+        <p>NFC 卡片 / 指紋 / PIN 碼 / 手機 App 解鎖，整合對講機與電鎖</p>
+      </div>
+      <div class="count-badge">43 款產品</div>
+    </div>
+
+    <div class="products-grid">
+      <!-- Readers -->
+      <div class="prod-card">
+        <div class="tier-badge tb-ent">旗艦讀卡機</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Reader G3</div>
+          <div class="prod-price">NT$5,999</div>
+        </div>
+        <div class="prod-model">UA-Reader-G3</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">指紋辨識</span>
+          <span class="spec-tag highlight">NFC/手機</span>
+          <span class="spec-tag green">觸控螢幕</span>
+          <span class="spec-tag purple">PoE</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="tier-badge tb-pro">主流</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Reader G2</div>
+          <div class="prod-price">NT$4,199</div>
+        </div>
+        <div class="prod-model">UA-Reader-G2</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">NFC 讀卡</span>
+          <span class="spec-tag green">手機藍牙解鎖</span>
+          <span class="spec-tag">PoE</span>
+        </div>
+      </div>
+
+      <!-- Hubs -->
+      <div class="prod-card">
+        <div class="tier-badge tb-ent">旗艦 Hub</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Access Enterprise Hub</div>
+          <div class="prod-price">NT$13,999</div>
+        </div>
+        <div class="prod-model">UA-Hub</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">多門控制</span>
+          <span class="spec-tag green">最多 8 門</span>
+          <span class="spec-tag purple">PoE+</span>
+          <span class="spec-tag">機架型</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="tier-badge tb-home">單門</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Access Door Hub</div>
+          <div class="prod-price">NT$4,299</div>
+        </div>
+        <div class="prod-model">UA-Door-Hub</div>
+        <div class="prod-specs">
+          <span class="spec-tag">單門控制</span>
+          <span class="spec-tag green">入門部署</span>
+          <span class="spec-tag">PoE</span>
+        </div>
+      </div>
+
+      <!-- Intercom -->
+      <div class="prod-card">
+        <div class="tier-badge tb-pro">對講機</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Access Intercom</div>
+          <div class="prod-price">NT$7,499</div>
+        </div>
+        <div class="prod-model">UA-Intercom</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">2K 影像</span>
+          <span class="spec-tag green">雙向通話</span>
+          <span class="spec-tag purple">NFC 解鎖</span>
+          <span class="spec-tag">PoE</span>
+        </div>
+      </div>
+
+      <!-- Gate -->
+      <div class="prod-card">
+        <div class="tier-badge tb-pro">閘道</div>
+        <div class="prod-card-top">
+          <div class="prod-name">Access Gate Hub</div>
+          <div class="prod-price">NT$5,999</div>
+        </div>
+        <div class="prod-model">UA-Gate-Hub</div>
+        <div class="prod-specs">
+          <span class="spec-tag highlight">閘門控制</span>
+          <span class="spec-tag green">停車場適用</span>
+          <span class="spec-tag">Wiegand</span>
+        </div>
+      </div>
+
+      <!-- Accessories -->
+      <div class="prod-card">
+        <div class="tier-badge tb-home">配件</div>
+        <div class="prod-card-top">
+          <div class="prod-name">NFC 員工卡片 (25片)</div>
+          <div class="prod-price">NT$1,099</div>
+        </div>
+        <div class="prod-model">UA-Card</div>
+        <div class="prod-specs">
+          <span class="spec-tag">NFC 感應</span>
+          <span class="spec-tag green">25片一組</span>
+          <span class="spec-tag">可程式化</span>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="tier-badge tb-home">配件</div>
+        <div class="prod-card-top">
+          <div class="prod-name">電子鎖套件</div>
+          <div class="prod-price">NT$3,299</div>
+        </div>
+        <div class="prod-model">UA-Lock</div>
+        <div class="prod-specs">
+          <span class="spec-tag">電磁鎖</span>
+          <span class="spec-tag green">與 Hub 搭配</span>
+          <span class="spec-tag">門邊安裝</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Key Concepts -->
+<div class="section">
+  <div class="section-title">💡 核心概念與技術解析</div>
+  <div class="section-desc">入手 UniFi 前必須了解的關鍵技術</div>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="c-icon">⚡</div>
+      <h3>PoE — 網路供電</h3>
+      <p>Power over Ethernet，透過網路線同時傳輸資料與電力。AP、攝影機、門禁設備不需額外電源線。PoE (15W) → PoE+ (30W) → PoE++ (90W) 三種規格。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🎮</div>
+      <h3>UniFi OS Console</h3>
+      <p>Dream Machine / Cloud Gateway 都內建 UniFi OS，是管理所有 UniFi 應用程式（Network/Protect/Access）的統一作業系統，不需額外 Controller。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🌈</div>
+      <h3>Etherlighting™</h3>
+      <p>Pro Max / XG 系列 Switch 專有功能，每個網路埠旁都有 LED 指示燈，可自訂顏色顯示埠狀態、速度或自訂效果。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🔗</div>
+      <h3>SFP / SFP+</h3>
+      <p>光纖或銅線上行模組插槽。SFP = 1G，SFP+ = 10G，SFP28 = 25G，QSFP28 = 100G。長距離或高速骨幹連線使用。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🏠</div>
+      <h3>WiFi 7 vs WiFi 6E vs WiFi 6</h3>
+      <p>WiFi 7 = 最新（6 GHz + MLO 多連結操作）；WiFi 6E = 上一代（也有 6 GHz）；WiFi 6 = 成熟主流（2.4/5 GHz）。家用選 WiFi 7 Lite 或 U6+，辦公選 U7 Pro。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🗺️</div>
+      <h3>VLAN 劃分</h3>
+      <p>在同一物理網路上建立多個隔離的虛擬網路，例如：員工網路、訪客 WiFi、IoT 設備、監控系統各自隔離，提升安全性。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🔀</div>
+      <h3>Layer 2 vs Layer 3</h3>
+      <p>L2 Switch = 一般交換器，轉發 MAC 位址；L3 Switch = 可做 IP 路由，不同 VLAN 間不需另外加 Router。Enterprise 系列支援 L3。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">📊</div>
+      <h3>Site Magic / UniFi Cloud</h3>
+      <p>免費雲端遠端管理，無需 VPN 或公網 IP。透過 unifi.ui.com 即可從全球任何地方管理所有 UniFi 設備，適合多據點部署。</p>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Compare -->
+<div class="section">
+  <div class="section-title">📋 AP 選型對照表</div>
+  <div class="section-desc">根據使用場景選擇最適合的 WiFi AP</div>
+  <div style="overflow-x:auto;">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>型號</th>
+          <th>WiFi 世代</th>
+          <th>6 GHz</th>
+          <th>2.5G+ 埠</th>
+          <th>防水</th>
+          <th>Mesh</th>
+          <th>特色</th>
+          <th>建議場景</th>
+          <th>價格</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>U7 Pro Max XGS</td>
+          <td>WiFi 7</td>
+          <td class="check">✓</td>
+          <td class="check">10G</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td>最強規格</td>
+          <td>旗艦辦公室</td>
+          <td>NT$27,999</td>
+        </tr>
+        <tr>
+          <td>U7 Pro</td>
+          <td>WiFi 7</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td>WiFi 7 性價比</td>
+          <td>辦公室</td>
+          <td>NT$6,499</td>
+        </tr>
+        <tr>
+          <td>U7 Lite</td>
+          <td>WiFi 7</td>
+          <td class="partial">△</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td>最低 WiFi 7 價</td>
+          <td>家用 / 宿舍</td>
+          <td>NT$3,699</td>
+        </tr>
+        <tr>
+          <td>U7 Outdoor</td>
+          <td>WiFi 7</td>
+          <td class="check">✓</td>
+          <td class="check">2.5G</td>
+          <td class="check">IP67</td>
+          <td class="check">✓</td>
+          <td>戶外 WiFi 7</td>
+          <td>庭院 / 停車場</td>
+          <td>NT$7,999</td>
+        </tr>
+        <tr>
+          <td>U6 Enterprise</td>
+          <td>WiFi 6E</td>
+          <td class="check">✓</td>
+          <td class="check">2.5G</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td>6E 主流</td>
+          <td>辦公 / 會議室</td>
+          <td>NT$8,299</td>
+        </tr>
+        <tr>
+          <td>U6+</td>
+          <td>WiFi 6</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td>家用 CP 首選</td>
+          <td>公寓 / 透天</td>
+          <td>NT$3,499</td>
+        </tr>
+        <tr>
+          <td>U7 Wall</td>
+          <td>WiFi 7</td>
+          <td class="partial">△</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td>壁插式 AP</td>
+          <td>旅館房間</td>
+          <td>NT$4,599</td>
+        </tr>
+        <tr>
+          <td>Building Bridge XG</td>
+          <td>橋接</td>
+          <td class="cross">N/A</td>
+          <td class="check">10G</td>
+          <td class="check">IP67</td>
+          <td class="cross">N/A</td>
+          <td>點對點橋接</td>
+          <td>建物間 200m+</td>
+          <td>NT$17,099</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- SECTION: Notes -->
+<div class="section">
+  <div class="section-title">📝 購買與部署注意事項</div>
+  <div class="section-desc">從官方店購買前必看的重點提醒</div>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="c-icon">🔑</div>
+      <h3>需要 UI Account</h3>
+      <p>所有 UniFi 設備都需要 Ubiquiti 帳號才能設定。雲端管理不需額外費用，本地 Console 也可離線運作。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">📦</div>
+      <h3>Gateway 是必要的</h3>
+      <p>UniFi 生態的起點是 Cloud Gateway。若已有其他廠牌路由器，AP/Switch 仍可以加入，但管理功能會受限（需自行架 Controller）。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">💡</div>
+      <h3>PoE 預算計算</h3>
+      <p>Switch 的 PoE Budget（如 400W）是所有 PoE 設備用電的總上限。AP 約 15~25W、攝影機約 10W，部署前需計算總需求。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🔄</div>
+      <h3>Protect 需要 NVR 或 Console</h3>
+      <p>攝影機必須搭配 NVR（UNVR/ENVR）或有 NVR 功能的 Console（UDM-Pro-Max 等）才能錄影。單獨買攝影機無法錄影。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🌐</div>
+      <h3>台灣正貨保固</h3>
+      <p>台灣官方店購買提供在地保固與技術支援，建議避免水貨，Ubiquiti 的韌體更新頻繁，在地保固很重要。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">🏗️</div>
+      <h3>部署順序建議</h3>
+      <p>① 先裝 Gateway → ② 接 PoE Switch → ③ AP 接 Switch → ④ 攝影機/門禁最後部署。每個設備上電後 App 自動偵測。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">📱</div>
+      <h3>UniFi App 手機管理</h3>
+      <p>iOS / Android 都有 UniFi Network、UniFi Protect、UniFi Access 三個 App，支援遠端即時推播通知、設備重啟、設定修改。</p>
+    </div>
+    <div class="concept-card">
+      <div class="c-icon">⚠️</div>
+      <h3>非住宅用途授權</h3>
+      <p>部分企業功能（如進階 IDS/IPS 規則、多站點管理）可能需要 UniFi Enterprise 授權，請確認使用場景是否需要額外訂閱。</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>資料來源：<a href="https://tw.store.ui.com/tw/zh-tw" target="_blank">UniFi 台灣官方授權店</a> &nbsp;|&nbsp; 整理日期：2026-05-27 &nbsp;|&nbsp; 由 Claude AI 自動研究整理</p>
+  <p style="margin-top:6px;">價格僅供參考，實際以官方網站為準。</p>
+</div>
+
+</body>
+</html>
