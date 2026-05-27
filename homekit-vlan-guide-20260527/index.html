@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HomeKit × VLAN 完全解說</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:      #006FFF;
+  --blue-lt:   #EAF2FF;
+  --dark:      #111827;
+  --mid:       #6B7280;
+  --light:     #9CA3AF;
+  --border:    #E5E7EB;
+  --bg:        #F9FAFB;
+  --white:     #FFFFFF;
+  --green:     #16A34A;
+  --green-lt:  #DCFCE7;
+  --amber:     #D97706;
+  --amber-lt:  #FEF3C7;
+  --red:       #DC2626;
+  --red-lt:    #FEE2E2;
+  --purple:    #7C3AED;
+  --purple-lt: #EDE9FE;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-h:  0 4px 12px rgba(0,0,0,.10), 0 12px 32px rgba(0,0,0,.09);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  background: var(--bg);
+  color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex; align-items: center; gap: 28px; height: 56px;
+}
+.nav-logo { font-weight: 700; font-size: 15px; color: var(--blue); display: flex; align-items: center; gap: 8px; margin-right: 8px; }
+nav a { font-size: 13px; color: var(--mid); text-decoration: none; font-weight: 500; white-space: nowrap; }
+nav a:hover { color: var(--blue); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #EAF2FF 0%, #F0F4FF 100%);
+  padding: 60px 40px 52px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 16px;
+  font-size: 12px; font-weight: 600; color: var(--blue);
+  margin-bottom: 20px;
+}
+.hero h1 { font-size: 30px; font-weight: 700; color: var(--dark); margin-bottom: 12px; line-height: 1.3; }
+.hero p  { font-size: 15px; color: var(--mid); max-width: 580px; margin: 0 auto; }
+
+/* ── LAYOUT ── */
+.wrap { max-width: 880px; margin: 0 auto; padding: 56px 40px; }
+section { margin-bottom: 72px; }
+
+.sec-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 28px; }
+.sec-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--blue); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.sec-title { font-size: 20px; font-weight: 700; color: var(--dark); }
+.sec-desc  { font-size: 13px; color: var(--mid); margin-top: 3px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--mid); margin-bottom: 20px;
+}
+.card.accent-blue   { border-left: 4px solid var(--blue); }
+.card.accent-green  { border-left: 4px solid var(--green); }
+.card.accent-amber  { border-left: 4px solid var(--amber); }
+.card.accent-red    { border-left: 4px solid var(--red); }
+.card.accent-purple { border-left: 4px solid var(--purple); }
+.card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+.card p  { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+/* ── VLAN VISUAL ── */
+.vlan-wrap { display: flex; align-items: stretch; gap: 0; margin-bottom: 20px; }
+.vlan-side {
+  flex: 1; border-radius: 12px; padding: 20px;
+  text-align: center;
+}
+.vlan-side.main { background: var(--blue-lt); border: 2px solid var(--blue); }
+.vlan-side.iot  { background: var(--amber-lt); border: 2px solid var(--amber); }
+.vlan-lbl  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--mid); margin-bottom: 6px; }
+.vlan-name { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.vlan-ip   { font-size: 12px; color: var(--mid); font-family: 'SF Mono', monospace; margin-bottom: 14px; }
+.vlan-pills { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.vpill {
+  background: white; border: 1px solid var(--border);
+  border-radius: 999px; padding: 4px 10px;
+  font-size: 12px; font-weight: 500;
+}
+.wall-col {
+  width: 64px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+}
+.wall-icon { font-size: 22px; }
+.wall-line { width: 3px; height: 52px; border-radius: 2px; }
+.wall-line.red   { background: var(--red); }
+.wall-line.green { background: var(--green); }
+.wall-txt { font-size: 10px; font-weight: 700; text-align: center; line-height: 1.3; }
+.wall-txt.red   { color: var(--red); }
+.wall-txt.green { color: var(--green); }
+
+/* ── FLOW STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; padding-bottom: 0; }
+.step-num {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+}
+.n-blue   { background: var(--blue-lt);   color: var(--blue); }
+.n-green  { background: var(--green-lt);  color: var(--green); }
+.n-amber  { background: var(--amber-lt);  color: var(--amber); }
+.n-red    { background: var(--red-lt);    color: var(--red); }
+.step h4 { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 5px; }
+.step p  { font-size: 13px; color: var(--mid); line-height: 1.55; }
+
+/* ── PACKET FLOW ── */
+.pflow { display: flex; align-items: center; overflow-x: auto; gap: 0; padding: 4px 0 12px; }
+.pnode {
+  flex-shrink: 0; min-width: 100px; text-align: center;
+  border-radius: 10px; padding: 14px 12px;
+  border: 1.5px solid var(--border); background: var(--white);
+}
+.pnode.blue   { background: var(--blue-lt);   border-color: var(--blue); }
+.pnode.amber  { background: var(--amber-lt);  border-color: var(--amber); }
+.pnode.green  { background: var(--green-lt);  border-color: var(--green); }
+.pnode.red    { background: var(--red-lt);    border-color: var(--red); }
+.pnode-ico  { font-size: 22px; margin-bottom: 5px; }
+.pnode-name { font-size: 12px; font-weight: 700; color: var(--dark); }
+.pnode-sub  { font-size: 11px; color: var(--mid); margin-top: 2px; line-height: 1.3; }
+.parrow {
+  flex-shrink: 0; width: 52px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.parrow-line {
+  height: 2px; width: 38px; border-radius: 1px; position: relative;
+}
+.parrow-line::after {
+  content: ''; position: absolute; right: -1px; top: -4px;
+  border: 5px solid transparent;
+}
+.parrow-line.ok   { background: var(--green); }
+.parrow-line.ok::after  { border-left-color: var(--green); }
+.parrow-line.bad  { background: var(--red); }
+.parrow-line.bad::after { border-left-color: var(--red); }
+.parrow-lbl { font-size: 10px; font-weight: 600; }
+.parrow-lbl.ok   { color: var(--green); }
+.parrow-lbl.bad  { color: var(--red); }
+.pflow-note { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+/* ── STATE TABLE ── */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  background: var(--bg); padding: 10px 16px;
+  font-size: 12px; font-weight: 700; text-align: left;
+  color: var(--mid); border-bottom: 2px solid var(--border);
+}
+.tbl td {
+  padding: 13px 16px; font-size: 13px;
+  border-bottom: 1px solid var(--border); vertical-align: top;
+}
+.tbl tr:last-child td { border-bottom: none; }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-flex; align-items: center;
+  border-radius: 999px; padding: 3px 10px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.b-blue   { background: var(--blue-lt);   color: var(--blue); }
+.b-green  { background: var(--green-lt);  color: var(--green); }
+.b-amber  { background: var(--amber-lt);  color: var(--amber); }
+.b-red    { background: var(--red-lt);    color: var(--red); }
+.b-gray   { background: var(--bg); color: var(--mid); border: 1px solid var(--border); }
+
+/* ── ANALOGY ── */
+.analogy {
+  background: linear-gradient(135deg, var(--purple-lt) 0%, #F5F3FF 100%);
+  border: 1px solid #C4B5FD; border-radius: var(--radius); padding: 24px;
+  margin-bottom: 16px;
+}
+.analogy-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--purple); color: white;
+  border-radius: 999px; padding: 3px 12px;
+  font-size: 11px; font-weight: 700; margin-bottom: 12px;
+}
+.analogy h4 { font-size: 15px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+.analogy p  { font-size: 13px; color: #4C1D95; line-height: 1.65; }
+
+/* ── RULE CARDS ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:620px){ .two-col { grid-template-columns: 1fr; } }
+
+.rule-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.rule-head {
+  padding: 12px 18px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.rule-head.blue   { background: var(--blue-lt); }
+.rule-head.green  { background: var(--green-lt); }
+.rule-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.rule-num.blue  { background: var(--blue); }
+.rule-num.green { background: var(--green); }
+.rule-title { font-size: 14px; font-weight: 700; color: var(--dark); }
+.rule-body  { padding: 16px 18px; }
+.rule-row   { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+.rule-row:last-child { margin-bottom: 0; }
+.rule-key { font-size: 12px; font-weight: 600; color: var(--mid); min-width: 88px; padding-top: 1px; flex-shrink: 0; }
+.rule-val { font-size: 13px; color: var(--dark); line-height: 1.5; }
+.rule-val code {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 7px;
+  font-family: 'SF Mono', monospace; font-size: 12px; color: var(--blue);
+}
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--dark); }
+.check-ico { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.checklist code {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 8px;
+  font-family: 'SF Mono', monospace; font-size: 12px; color: var(--blue);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark); color: var(--light);
+  text-align: center; padding: 28px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🏠 HomeKit × VLAN</div>
+  <a href="#s1">VLAN 是什麼</a>
+  <a href="#s2">mDNS 原理</a>
+  <a href="#s3">防火牆狀態</a>
+  <a href="#s4">完整設定</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">🔐 UniFi VLAN × HomeKit 設定說明</div>
+  <h1>HomeKit 跨 VLAN 為何顯示「無回應」？<br>三個概念搞懂，一次設定好</h1>
+  <p>針對你的環境：主 LAN 192.168.3.0/24 ↔ IoT VLAN 192.168.20.0/24，附完整設定規則</p>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════ S1 ══════════ -->
+<section id="s1">
+  <div class="sec-head">
+    <div class="sec-icon">🧱</div>
+    <div>
+      <div class="sec-title">VLAN 把什麼隔開了？</div>
+      <div class="sec-desc">先理解問題從哪裡來</div>
+    </div>
+  </div>
+
+  <!-- VLAN diagram -->
+  <div class="card" style="padding:24px;">
+    <div class="card-title">你的網路架構</div>
+    <div class="vlan-wrap">
+      <div class="vlan-side main">
+        <div class="vlan-lbl">主 LAN</div>
+        <div class="vlan-name">家用設備網段</div>
+        <div class="vlan-ip">192.168.3.0/24</div>
+        <div class="vlan-pills">
+          <span class="vpill">📱 iPhone</span>
+          <span class="vpill">💻 Mac</span>
+          <span class="vpill">🔊 HomePod</span>
+          <span class="vpill">📺 Apple TV</span>
+        </div>
+      </div>
+      <div class="wall-col">
+        <div class="wall-line red"></div>
+        <div class="wall-icon">🧱</div>
+        <div class="wall-txt red">VLAN<br>邊界</div>
+        <div class="wall-line red"></div>
+      </div>
+      <div class="vlan-side iot">
+        <div class="vlan-lbl">IoT VLAN</div>
+        <div class="vlan-name">智慧家庭設備網段</div>
+        <div class="vlan-ip">192.168.20.0/24</div>
+        <div class="vlan-pills">
+          <span class="vpill">💡 智慧燈</span>
+          <span class="vpill">🔌 智慧插座</span>
+          <span class="vpill">🌡️ 溫濕度計</span>
+          <span class="vpill">🔒 智慧門鎖</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-amber">
+    <h4>VLAN 就像公寓樓層間的防火門</h4>
+    <p>VLAN 把網路切成多個獨立的廣播域（Broadcast Domain）。兩邊的設備就算連同一台 UniFi Switch，也完全無法直接溝通。這正是你要的安全效果 — 但 HomeKit 也因此壞掉了，因為 HomeKit 依賴一種叫 mDNS 的廣播機制來尋找設備。</p>
+  </div>
+</section>
+
+<!-- ══════════ S2 ══════════ -->
+<section id="s2">
+  <div class="sec-head">
+    <div class="sec-icon">📡</div>
+    <div>
+      <div class="sec-title">HomeKit 怎麼「找到」設備？mDNS 原理</div>
+      <div class="sec-desc">Bonjour / Multicast DNS，以及為什麼它過不了 VLAN</div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-tag">💡 生活類比</div>
+    <h4>想像你走進大廳，大喊：「誰是智慧燈？」</h4>
+    <p>這就是 mDNS 的運作方式。iPhone 向整個區域網路廣播一個問題：「有沒有 HomeKit 設備？」智慧燈聽到就回答「我在這，IP 是 192.168.20.50！」這個廣播機制叫做 <strong>mDNS（Multicast DNS）</strong>，蘋果叫它 <strong>Bonjour</strong>。封包目的地是 <code style="background:#EDE9FE;border-radius:4px;padding:1px 6px;font-size:12px;font-family:monospace;">224.0.0.251:5353</code>，不是特定 IP，而是「廣播給所有人」。</p>
+  </div>
+
+  <!-- Normal flow -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">✅ 正常狀況（同一 VLAN）</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num n-blue">1</div>
+        <div>
+          <h4>iPhone 廣播詢問</h4>
+          <p>發送 mDNS query 到 <code style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;">224.0.0.251:5353</code>，問「誰是 HomeKit 設備？」廣播給整個網段所有人。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num n-blue">2</div>
+        <div>
+          <h4>智慧燈收到並回應</h4>
+          <p>同一 VLAN 的智慧燈收到廣播，回應自己的 IP 和服務（例如 192.168.20.50，HAP 服務）。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num n-green">3</div>
+        <div>
+          <h4>iPhone 建立 TCP 連線控制設備</h4>
+          <p>找到 IP 後，iPhone 用一般 TCP 封包去控制設備。發現完成 ✅</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cross-VLAN FAIL -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">❌ 跨 VLAN 的問題：mDNS 廣播被 VLAN 邊界攔截</div>
+    <div class="pflow">
+      <div class="pnode blue">
+        <div class="pnode-ico">📱</div>
+        <div class="pnode-name">iPhone</div>
+        <div class="pnode-sub">192.168.3.x<br>主 LAN</div>
+      </div>
+      <div class="parrow">
+        <div class="parrow-line ok"></div>
+        <div class="parrow-lbl ok">廣播</div>
+      </div>
+      <div class="pnode red">
+        <div class="pnode-ico">🧱</div>
+        <div class="pnode-name">VLAN 邊界</div>
+        <div class="pnode-sub">Multicast<br>不過邊界</div>
+      </div>
+      <div class="parrow">
+        <div class="parrow-line bad"></div>
+        <div class="parrow-lbl bad">❌ 擋住</div>
+      </div>
+      <div class="pnode amber">
+        <div class="pnode-ico">💡</div>
+        <div class="pnode-name">智慧燈</div>
+        <div class="pnode-sub">192.168.20.x<br>IoT VLAN</div>
+      </div>
+    </div>
+    <p class="pflow-note">Multicast 封包（廣播）預設不穿越 VLAN 邊界。智慧燈永遠收不到詢問，iPhone 永遠找不到設備 → 顯示「無回應」。</p>
+  </div>
+
+  <!-- mDNS Repeater FIX -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">✅ 開啟 mDNS Repeater 後：UniFi 扮演傳話員</div>
+    <div class="pflow">
+      <div class="pnode blue">
+        <div class="pnode-ico">📱</div>
+        <div class="pnode-name">iPhone</div>
+        <div class="pnode-sub">主 LAN</div>
+      </div>
+      <div class="parrow">
+        <div class="parrow-line ok"></div>
+        <div class="parrow-lbl ok">廣播</div>
+      </div>
+      <div class="pnode green">
+        <div class="pnode-ico">🔄</div>
+        <div class="pnode-name">UniFi<br>mDNS Repeater</div>
+        <div class="pnode-sub">複製封包<br>跨 VLAN 轉發</div>
+      </div>
+      <div class="parrow">
+        <div class="parrow-line ok"></div>
+        <div class="parrow-lbl ok">轉送</div>
+      </div>
+      <div class="pnode amber">
+        <div class="pnode-ico">💡</div>
+        <div class="pnode-name">智慧燈</div>
+        <div class="pnode-sub">IoT VLAN</div>
+      </div>
+    </div>
+    <p class="pflow-note">mDNS Repeater 把廣播訊息「複製一份」送到 IoT VLAN，反方向也一樣。兩邊都能互相找到對方。</p>
+  </div>
+
+  <div class="card accent-red">
+    <h4>⚠️ 但 mDNS Repeater 只解決「找得到」，不解決「連得上」</h4>
+    <p>找到設備 IP 之後，iPhone 還需要用 TCP 封包真正去控制設備。這些 TCP 封包會被 VLAN 間的防火牆擋住 — 這就是為什麼還需要加防火牆規則。</p>
+  </div>
+</section>
+
+<!-- ══════════ S3 ══════════ -->
+<section id="s3">
+  <div class="sec-head">
+    <div class="sec-icon">🛡️</div>
+    <div>
+      <div class="sec-title">有狀態防火牆：Match State 是什麼？</div>
+      <div class="sec-desc">Established / Related 的白話解釋，以及為什麼規則二只能勾這兩個</div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-tag">💡 生活類比</div>
+    <h4>防火牆就像便利商店的保全，會記住「誰先開口」</h4>
+    <p>
+      你（iPhone）走進店裡，跟店員（智慧燈）說「幫我開燈」。保全放你進去。<br>
+      店員說「好的！」要把回覆遞給你。<br><br>
+      <strong>沒有 Established 規則：</strong>保全說「IoT 網段的人不能進這邊」，擋回去。你永遠收不到回應。<br>
+      <strong>有 Established 規則：</strong>保全看到「這是你剛才發起的對話的回覆」，直接放行。
+    </p>
+  </div>
+
+  <!-- State table -->
+  <div class="card">
+    <div class="card-title">防火牆連線狀態說明</div>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>狀態</th>
+          <th>白話意思</th>
+          <th>HomeKit 的例子</th>
+          <th>對應規則</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge b-blue">NEW</span></td>
+          <td>全新的連線請求</td>
+          <td>iPhone 第一次發 TCP 連向智慧燈 IP</td>
+          <td><span class="badge b-green">規則一放行</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge b-green">ESTABLISHED</span></td>
+          <td>已建立中的連線，雙向封包都屬於此狀態</td>
+          <td>智慧燈回應 iPhone 的指令，或後續溝通</td>
+          <td><span class="badge b-green">規則二放行</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge b-amber">RELATED</span></td>
+          <td>與現有連線關聯的副連線</td>
+          <td>某些設備另外建立資料通道</td>
+          <td><span class="badge b-green">規則二放行</span></td>
+        </tr>
+        <tr>
+          <td><span class="badge b-gray">INVALID</span></td>
+          <td>無法識別 / 異常封包</td>
+          <td>破損封包、掃描攻擊</td>
+          <td><span class="badge b-red">預設丟棄</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Why not full open -->
+  <div class="card" style="margin-top:0;">
+    <div class="card-title">為什麼規則二不能「IoT → 主 LAN 全開」？</div>
+    <div class="two-col">
+      <div class="card accent-red" style="margin-bottom:0; box-shadow:none;">
+        <h4>❌ 如果全開的風險</h4>
+        <p>IoT 設備可以主動連進你的 Mac、NAS、路由器管理介面。<br>如果某個 IoT 設備被入侵，駭客就能從 IoT VLAN 攻擊主 LAN。VLAN 隔離完全失去意義。</p>
+      </div>
+      <div class="card accent-green" style="margin-bottom:0; box-shadow:none;">
+        <h4>✅ 只開 Established + Related</h4>
+        <p>只有「你主動發起、對方回應」的封包被放行。IoT 設備無法主動連進主 LAN。控制 IoT 設備正常，安全性也維持住。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full packet flow -->
+  <div class="card">
+    <div class="card-title">封包完整流向（設定正確後）</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num n-blue">1</div>
+        <div>
+          <h4>📱 iPhone 送出控制指令（狀態：NEW）</h4>
+          <p><code style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;">192.168.3.x → 192.168.20.50 TCP</code><br>
+          → 規則一：主 LAN → IoT 全開，<span style="color:var(--green);font-weight:600;">放行 ✅</span></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num n-green">2</div>
+        <div>
+          <h4>💡 智慧燈回應（狀態：ESTABLISHED）</h4>
+          <p><code style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;">192.168.20.50 → 192.168.3.x TCP</code><br>
+          → 規則二：狀態是 Established，<span style="color:var(--green);font-weight:600;">放行 ✅</span></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num n-red">3</div>
+        <div>
+          <h4>😈 假設駭客從 IoT 主動攻擊（狀態：NEW，主動發起）</h4>
+          <p><code style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;">192.168.20.99 → 192.168.3.x:22 SSH</code><br>
+          → 規則二：狀態是 NEW，不是 Established/Related → <span style="color:var(--red);font-weight:600;">被擋住 ✅ 安全！</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S4 ══════════ -->
+<section id="s4">
+  <div class="sec-head">
+    <div class="sec-icon">✅</div>
+    <div>
+      <div class="sec-title">你的完整設定方案</div>
+      <div class="sec-desc">三步驟，針對你的環境直接套用</div>
+    </div>
+  </div>
+
+  <div class="card accent-blue" style="margin-bottom:24px;">
+    <h4>你的環境優勢：Home Hub 在主 LAN ✅ 最佳配置</h4>
+    <p>HomePod / Apple TV 在主 LAN（192.168.3.x），這是最理想的放法。遠端控制（出門時）透過 Apple 雲端走 Home Hub 橋接，本地控制只需要 mDNS + 防火牆兩個設定即可搞定。</p>
+  </div>
+
+  <!-- Step 1 -->
+  <div style="margin-bottom:28px;">
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:12px;">Step 1 — 開啟 mDNS Repeater</p>
+    <div class="card">
+      <div class="steps" style="gap:0;">
+        <div class="step" style="padding-top:0;">
+          <div class="step-num n-blue">①</div>
+          <div>
+            <h4>Settings → Networks → 編輯 IoT VLAN</h4>
+            <p>點進去後找 <strong>Advanced</strong>，開啟 <strong>mDNS</strong> 開關。</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num n-blue">②</div>
+          <div>
+            <h4>同樣確認主 LAN 的 mDNS 也是開啟</h4>
+            <p>通常預設已開，確認一下即可。</p>
+          </div>
+        </div>
+        <div class="step" style="padding-bottom:0;">
+          <div class="step-num n-green">③</div>
+          <div>
+            <h4>儲存，UniFi 自動橋接兩個 VLAN 的 mDNS 封包</h4>
+            <p>不需要重啟設備，設定立即生效。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div style="margin-bottom:28px;">
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:12px;">Step 2 — 新增兩條防火牆規則（Settings → Security → Firewall）</p>
+    <div class="two-col">
+      <div class="rule-card">
+        <div class="rule-head blue">
+          <div class="rule-num blue">1</div>
+          <div class="rule-title">主 LAN 控制 IoT 設備</div>
+        </div>
+        <div class="rule-body">
+          <div class="rule-row">
+            <span class="rule-key">Action</span>
+            <span class="rule-val"><span class="badge b-green">Accept</span></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Type</span>
+            <span class="rule-val"><code>LAN In</code></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Source</span>
+            <span class="rule-val"><code>192.168.3.0/24</code></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Destination</span>
+            <span class="rule-val"><code>192.168.20.0/24</code></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Port</span>
+            <span class="rule-val">Any</span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Match State</span>
+            <span class="rule-val" style="color:var(--mid);">不用勾（允許 NEW 新連線）</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-head green">
+          <div class="rule-num green">2</div>
+          <div class="rule-title">IoT 回應封包放行</div>
+        </div>
+        <div class="rule-body">
+          <div class="rule-row">
+            <span class="rule-key">Action</span>
+            <span class="rule-val"><span class="badge b-green">Accept</span></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Type</span>
+            <span class="rule-val"><code>LAN In</code></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Source</span>
+            <span class="rule-val"><code>192.168.20.0/24</code></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Destination</span>
+            <span class="rule-val"><code>192.168.3.0/24</code></span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Port</span>
+            <span class="rule-val">Any</span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-key">Match State</span>
+            <span class="rule-val">
+              <span class="badge b-green" style="margin-bottom:4px;display:inline-flex;">✅ Established</span><br>
+              <span class="badge b-amber" style="display:inline-flex;">✅ Related</span><br>
+              <span style="font-size:11px;color:var(--mid);">只勾這兩個</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div>
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:12px;">Step 3 — 驗證是否正常</p>
+    <div class="card">
+      <ul class="checklist">
+        <li><span class="check-ico">📱</span>在家庭 App 把顯示「無回應」的設備移除，重新加入，確認能找到</li>
+        <li><span class="check-ico">💻</span>Mac 終端機執行 <code>dns-sd -B _hap._tcp local</code> 確認能看到 IoT 設備</li>
+        <li><span class="check-ico">🏓</span>終端機 <code>ping 192.168.20.xxx</code>（你的智慧燈 IP），確認主 LAN 能連到 IoT</li>
+        <li><span class="check-ico">🔒</span>安全驗證：從 IoT 設備 ping 主 LAN（192.168.3.1）應該要 timeout，代表隔離有效</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  由 Claude Code 生成 · HomeKit × UniFi VLAN 設定說明 · 2026-05-27
+</footer>
+</body>
+</html>
