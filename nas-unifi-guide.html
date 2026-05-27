@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAS × UniFi 設定教學</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ─── BASE ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:#fff;color:#111827;line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased}
+:root{
+  --blue:#006FFF;--blue-lt:#EAF2FF;--blue-md:#BFDBFE;
+  --dark:#111827;--mid:#6B7280;--light:#9CA3AF;
+  --border:#E5E7EB;--bg:#F9FAFB;--white:#fff;
+  --green:#16A34A;--green-lt:#DCFCE7;
+  --amber:#D97706;--amber-lt:#FEF3C7;
+  --purple:#7C3AED;--purple-lt:#EDE9FE;
+  --red:#DC2626;--red-lt:#FEE2E2;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --shadow-hover:0 4px 12px rgba(0,0,0,.10),0 12px 32px rgba(0,0,0,.09);
+}
+
+/* ─── STICKY NAV ─── */
+.topnav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px}
+.topnav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:4px;height:52px;overflow-x:auto;scrollbar-width:none}
+.topnav-inner::-webkit-scrollbar{display:none}
+.nav-brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--dark);padding-right:20px;border-right:1px solid var(--border);margin-right:8px;flex-shrink:0}
+.nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.nav-link{padding:6px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--mid);white-space:nowrap;flex-shrink:0;transition:color .15s,background .15s;cursor:pointer;border:none;background:none}
+.nav-link:hover{color:var(--blue);background:var(--blue-lt)}
+
+/* ─── HERO ─── */
+.hero{background:linear-gradient(160deg,#EAF2FF 0%,#F0F7FF 40%,#fff 100%);padding:64px 24px 56px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--mid);margin-bottom:22px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(28px,5vw,50px);font-weight:800;letter-spacing:-.03em;color:var(--dark);margin-bottom:14px;line-height:1.15}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero-sub{font-size:16px;color:var(--mid);max-width:520px;margin:0 auto 32px}
+.hero-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.chip{background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:500;box-shadow:var(--shadow)}
+.chip strong{color:var(--blue);display:block;font-size:15px;font-weight:700}
+
+/* ─── LAYOUT ─── */
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.section{padding:64px 0}
+.section+.section{border-top:1px solid var(--border)}
+.sec-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.sec-title{font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:-.02em;color:var(--dark);margin-bottom:10px}
+.sec-desc{color:var(--mid);max-width:600px;font-size:15px;margin-bottom:36px}
+
+/* ─── TOOLTIP ─── */
+.tip{display:inline;border-bottom:1.5px dotted var(--blue);color:var(--blue);cursor:help;position:relative;font-weight:500}
+.tip-box{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;font-size:12px;font-weight:400;padding:8px 12px;border-radius:8px;white-space:nowrap;max-width:260px;white-space:normal;z-index:200;line-height:1.5;box-shadow:0 4px 20px rgba(0,0,0,.3);pointer-events:none}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--dark)}
+.tip:hover .tip-box{display:block}
+
+/* ─── CONCEPT CARDS ─── */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.cc{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:22px 20px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.cc:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.cc .ci{font-size:28px;margin-bottom:12px}
+.cc h3{font-size:14px;font-weight:600;color:var(--dark);margin-bottom:6px}
+.cc p{font-size:13px;color:var(--mid);line-height:1.6}
+
+/* ─── INTERACTIVE TOPOLOGY ─── */
+.topo-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;margin-bottom:32px}
+.topo-title{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--light);margin-bottom:28px;text-align:center}
+.topo-canvas{display:flex;flex-direction:column;align-items:center;gap:0}
+.topo-row{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.topo-col{display:flex;flex-direction:column;align-items:center;gap:0}
+
+.tnode{
+  background:#fff;border:2px solid var(--border);border-radius:14px;
+  padding:14px 16px;min-width:100px;text-align:center;
+  cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s;
+  box-shadow:var(--shadow);position:relative;
+}
+.tnode:hover,.tnode.active{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-lt),var(--shadow-hover);transform:scale(1.04)}
+.tnode .ni{font-size:24px;margin-bottom:5px}
+.tnode .nn{font-size:11px;font-weight:700;color:var(--dark)}
+.tnode .nt{font-size:10px;color:var(--light);margin-top:2px}
+.tnode.hl-blue{border-color:var(--blue-md)}
+.tnode.hl-green{border-color:#BBF7D0}
+.tnode.hl-amber{border-color:#FDE68A}
+.tnode.hl-purple{border-color:#DDD6FE}
+.tnode.hl-red{border-color:#FECACA}
+
+.tline-v{width:2px;height:28px;background:var(--border);margin:0 auto;flex-shrink:0}
+.tline-h{height:2px;width:32px;background:var(--border);flex-shrink:0}
+.tline-h.long{width:48px}
+
+/* info panel */
+.topo-info{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 22px;min-height:90px;box-shadow:var(--shadow);
+  transition:all .25s;margin-top:20px
+}
+.topo-info h4{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.topo-info p{font-size:13px;color:var(--mid);line-height:1.6}
+.topo-info .badge{background:var(--blue-lt);color:var(--blue);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600}
+.topo-hint{font-size:12px;color:var(--light);text-align:center;margin-top:16px}
+
+/* ─── VLAN VISUALIZER ─── */
+.vlan-vis{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.vlan-lane{border-radius:10px;padding:14px 16px;border:2px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.vlan-lane:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.vlan-lane h4{font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.vlan-lane ul{list-style:none;font-size:12px;line-height:2}
+.vlan-lane ul li::before{content:'• ';font-weight:700}
+.vl-main{background:#EAF2FF;border-color:#BFDBFE;color:#1D4ED8}
+.vl-nas{background:#DCFCE7;border-color:#BBF7D0;color:#15803D}
+.vl-iot{background:#FEF3C7;border-color:#FDE68A;color:#92400E}
+.vl-guest{background:#FEE2E2;border-color:#FECACA;color:#991B1B}
+
+/* ─── STEP ACCORDION ─── */
+.steps{display:flex;flex-direction:column;gap:12px}
+.step{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .2s}
+.step.open{box-shadow:var(--shadow-hover);border-color:var(--blue-md)}
+.step-header{display:flex;align-items:center;gap:16px;padding:18px 22px;cursor:pointer;user-select:none}
+.step-header:hover{background:var(--bg)}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--blue-lt);color:var(--blue);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s,color .2s}
+.step.open .step-num{background:var(--blue);color:#fff}
+.step-header-text{flex:1}
+.step-header-text h3{font-size:15px;font-weight:600;color:var(--dark)}
+.step-header-text p{font-size:12px;color:var(--light);margin-top:2px}
+.step-chevron{color:var(--light);font-size:18px;transition:transform .25s;flex-shrink:0}
+.step.open .step-chevron{transform:rotate(180deg);color:var(--blue)}
+.step-body{display:none;padding:0 22px 22px;padding-top:4px}
+.step.open .step-body{display:block}
+
+/* step body内容 */
+.step-box{background:var(--bg);border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:14px;line-height:1.7}
+.step-box h4{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.step-box ul{margin-left:16px;color:var(--mid)}
+.step-box li{margin-bottom:4px}
+.step-cmd{background:#1E293B;color:#E2E8F0;border-radius:8px;padding:12px 16px;font-family:'SFMono-Regular','Fira Mono',monospace;font-size:13px;margin:12px 0;overflow-x:auto}
+.step-cmd .comment{color:#64748B}
+.step-cmd .key{color:#7DD3FC}
+.step-cmd .val{color:#86EFAC}
+
+.inline-diagram{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;padding:16px;background:var(--bg);border-radius:10px;margin:14px 0}
+.inode{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;text-align:center;min-width:80px;font-size:12px}
+.inode .ii{font-size:20px;margin-bottom:4px}
+.inode .in{font-weight:700;font-size:11px;color:var(--dark)}
+.inode .is{font-size:10px;color:var(--light)}
+.iarrow{color:var(--border);font-size:16px;padding:0 8px}
+.iarrow.active{color:var(--blue)}
+
+.tag{display:inline-block;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:500}
+.tag-blue{background:var(--blue-lt);color:var(--blue)}
+.tag-green{background:var(--green-lt);color:var(--green)}
+.tag-amber{background:var(--amber-lt);color:var(--amber)}
+.tag-purple{background:var(--purple-lt);color:var(--purple)}
+.tag-red{background:var(--red-lt);color:var(--red)}
+.tag-gray{background:var(--bg);color:var(--mid);border:1px solid var(--border)}
+
+.callout{border-left:3px solid var(--blue);background:var(--blue-lt);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:13px;color:#1D4ED8}
+.callout.warn{border-color:var(--amber);background:var(--amber-lt);color:#92400E}
+.callout.success{border-color:var(--green);background:var(--green-lt);color:#15803D}
+
+/* ─── COMPARE TABLE ─── */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:24px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:var(--bg)}
+th{padding:11px 14px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--light);border-bottom:1px solid var(--border)}
+td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+.check{color:var(--green);font-weight:700}
+.cross{color:#D1D5DB}
+
+/* ─── FAQ ─── */
+.faq-list{display:flex;flex-direction:column;gap:10px}
+.faq{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.faq-q{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;font-size:14px;font-weight:600;color:var(--dark);transition:background .15s}
+.faq-q:hover{background:var(--bg)}
+.faq-q .fq-icon{width:28px;height:28px;border-radius:50%;background:var(--blue-lt);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.faq-q .fq-chevron{margin-left:auto;color:var(--light);transition:transform .25s;font-size:16px}
+.faq.open .fq-chevron{transform:rotate(180deg);color:var(--blue)}
+.faq-a{display:none;padding:0 20px 16px 62px;font-size:13px;color:var(--mid);line-height:1.7}
+.faq.open .faq-a{display:block}
+
+/* ─── FOOTER ─── */
+.footer{background:#111827;color:#9CA3AF;padding:40px 24px;text-align:center}
+.footer p{font-size:13px;line-height:1.9}
+.footer a{color:#60A5FA}
+.footer hr{border:none;border-top:1px solid #374151;margin:14px auto;max-width:160px}
+
+/* ─── PROGRESS BAR ─── */
+.progress-bar{display:flex;align-items:center;gap:0;margin-bottom:32px;overflow-x:auto;padding-bottom:4px}
+.prog-step{display:flex;align-items:center;gap:0;flex-shrink:0}
+.prog-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--light);transition:all .2s;cursor:pointer}
+.prog-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.prog-dot.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 3px var(--blue-lt)}
+.prog-label{font-size:10px;color:var(--light);margin-top:4px;text-align:center;max-width:60px;white-space:normal;line-height:1.3}
+.prog-step-inner{display:flex;flex-direction:column;align-items:center}
+.prog-line{width:32px;height:2px;background:var(--border);flex-shrink:0}
+.prog-line.done{background:var(--green)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:640px){
+  .concept-grid{grid-template-columns:1fr 1fr}
+  .vlan-vis{grid-template-columns:1fr 1fr}
+  .topo-row{gap:8px}
+  .tline-h{width:16px}
+}
+@media(max-width:400px){
+  .concept-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="nav-brand"><div class="dot"></div>NAS × UniFi 教學</div>
+    <button class="nav-link" onclick="scrollTo('concept')">基礎概念</button>
+    <button class="nav-link" onclick="scrollTo('topology')">網路架構</button>
+    <button class="nav-link" onclick="scrollTo('vlan')">VLAN 隔離</button>
+    <button class="nav-link" onclick="scrollTo('setup')">設定步驟</button>
+    <button class="nav-link" onclick="scrollTo('remote')">遠端存取</button>
+    <button class="nav-link" onclick="scrollTo('faq')">常見問題</button>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<header class="hero">
+  <div class="hero-badge">🎓 客戶設定指南 · 適合非技術背景閱讀</div>
+  <h1>在 <em>UniFi 網路</em>上<br>架設 NAS 儲存系統</h1>
+  <p class="hero-sub">從原理到實作，圖文步驟教學。專有名詞都有即時說明，滑鼠移上去就能看到解釋。</p>
+  <div class="hero-chips">
+    <div class="chip"><strong>📦</strong>NAS 是什麼</div>
+    <div class="chip"><strong>🗺️</strong>網路架構圖</div>
+    <div class="chip"><strong>🔒</strong>VLAN 隔離</div>
+    <div class="chip"><strong>6步</strong>完整設定</div>
+    <div class="chip"><strong>🌐</strong>遠端存取</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ─── SECTION 1: 基礎概念 ─── -->
+<section class="section" id="concept">
+  <div class="sec-label">Part 1 · 基礎概念</div>
+  <div class="sec-title">先搞懂這幾個詞</div>
+  <p class="sec-desc">不需要全部背起來，看完有個印象就好。遇到不懂的專有名詞，頁面裡會有<span class="tip">這樣的提示<span class="tip-box">帶底線的藍色文字，滑鼠移上去就會顯示說明！</span></span>，滑鼠移上去就有說明。</p>
+
+  <div class="concept-grid">
+    <div class="cc">
+      <div class="ci">📦</div>
+      <h3>NAS 是什麼？</h3>
+      <p><strong>Network Attached Storage</strong>，直譯「網路附加儲存」。簡單說就是一台接在網路上的<strong>共用硬碟</strong>，全家或公司的人都能存取，還能自動備份。</p>
+    </div>
+    <div class="cc">
+      <div class="ci">🌐</div>
+      <h3>為什麼要接網路？</h3>
+      <p>普通外接硬碟只能接在一台電腦。NAS 接在網路上，任何裝置（電腦、手機、電視）都能直接連進去取檔案，甚至在外面用網路也能存取。</p>
+    </div>
+    <div class="cc">
+      <div class="ci">🔵</div>
+      <h3>UniFi 在這裡做什麼？</h3>
+      <p>UniFi 是管理整個網路的系統，負責讓 NAS 有穩定的固定 IP、隔離安全網段、設定誰可以存取 NAS、以及建立安全的遠端連線通道。</p>
+    </div>
+    <div class="cc">
+      <div class="ci">🏠</div>
+      <h3>常見 NAS 品牌</h3>
+      <p><strong>Synology</strong>（群暉）最易用，介面像 Windows；<strong>QNAP</strong>（威聯通）功能強大；<strong>TrueNAS</strong> 開源免費。本教學以 Synology 為主要範例。</p>
+    </div>
+    <div class="cc">
+      <div class="ci">🔌</div>
+      <h3>NAS 需要 PoE 嗎？</h3>
+      <p><strong>不需要。</strong>NAS 有獨立的電源變壓器，自己插電。它只需要一條網路線接到 UniFi Switch 的任意埠，普通埠或 PoE 埠都可以。</p>
+    </div>
+    <div class="cc">
+      <div class="ci">📁</div>
+      <h3>NAS 能做什麼？</h3>
+      <p>檔案共享、相片自動備份、影片串流、Docker 跑應用程式、監控錄影備份、Time Machine（Mac 備份）、甚至架設私有雲端。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 2: TOPOLOGY ─── -->
+<section class="section" id="topology">
+  <div class="sec-label">Part 2 · 網路架構</div>
+  <div class="sec-title">NAS 在網路裡的位置</div>
+  <p class="sec-desc">點擊下方任一個裝置，右側會顯示它的說明和功能。</p>
+
+  <div class="topo-wrap">
+    <div class="topo-title">互動式網路架構圖 — 點擊裝置查看說明</div>
+    <div class="topo-canvas">
+      <!-- Row 1: ISP -->
+      <div class="topo-row">
+        <div class="tnode" id="tn-isp" onclick="selectNode('isp')">
+          <div class="ni">🌐</div>
+          <div class="nn">ISP / WAN</div>
+          <div class="nt">電信商</div>
+        </div>
+      </div>
+      <div class="tline-v"></div>
+      <!-- Row 2: Gateway -->
+      <div class="topo-row">
+        <div class="tnode hl-blue" id="tn-gw" onclick="selectNode('gw')">
+          <div class="ni">🛡️</div>
+          <div class="nn">Cloud Gateway</div>
+          <div class="nt">路由器 / 防火牆</div>
+        </div>
+      </div>
+      <div class="tline-v"></div>
+      <!-- Row 3: Switch -->
+      <div class="topo-row">
+        <div class="tnode hl-green" id="tn-sw" onclick="selectNode('sw')">
+          <div class="ni">🔌</div>
+          <div class="nn">PoE Switch</div>
+          <div class="nt">交換器</div>
+        </div>
+      </div>
+      <!-- Row 4: Devices from switch -->
+      <div style="display:flex;align-items:flex-start;justify-content:center;gap:0;margin-top:0">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div class="tline-v"></div>
+          <div style="display:flex;align-items:flex-start;gap:0">
+            <!-- Left branch: AP -->
+            <div style="display:flex;flex-direction:column;align-items:center">
+              <div class="tline-v" style="height:14px"></div>
+              <div style="display:flex;align-items:center">
+                <div class="tline-h" style="width:40px;margin-right:0"></div>
+                <div style="display:flex;flex-direction:column;gap:16px">
+                  <div class="tnode hl-blue" id="tn-ap" onclick="selectNode('ap')">
+                    <div class="ni">📡</div>
+                    <div class="nn">WiFi AP</div>
+                    <div class="nt">無線基地台</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Center: NAS -->
+            <div style="display:flex;flex-direction:column;align-items:center">
+              <div class="tline-v"></div>
+              <div class="tnode hl-green" id="tn-nas" onclick="selectNode('nas')" style="border-width:2.5px">
+                <div class="ni">📦</div>
+                <div class="nn" style="color:var(--green)">NAS</div>
+                <div class="nt">儲存設備</div>
+              </div>
+            </div>
+            <!-- Right branch: PC / Phone -->
+            <div style="display:flex;flex-direction:column;align-items:center">
+              <div class="tline-v" style="height:14px"></div>
+              <div style="display:flex;align-items:center">
+                <div style="display:flex;flex-direction:column;gap:16px">
+                  <div class="tnode" id="tn-pc" onclick="selectNode('pc')">
+                    <div class="ni">💻</div>
+                    <div class="nn">電腦 / 手機</div>
+                    <div class="nt">用戶端裝置</div>
+                  </div>
+                </div>
+                <div class="tline-h" style="width:40px;margin-left:0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topo-info" id="topo-info">
+      <p style="color:var(--light);font-size:13px;text-align:center;padding:16px 0">☝️ 點擊上方任一個裝置，這裡會顯示詳細說明</p>
+    </div>
+    <div class="topo-hint">提示：NAS 直接用網路線接到 Switch，不需要經過 Gateway</div>
+  </div>
+
+  <!-- 重點說明 -->
+  <div class="callout">
+    💡 <strong>核心觀念：</strong>NAS 跟電腦一樣，都是「接在 Switch 上的裝置」。Gateway 負責對外的網路，Switch 負責讓同一個網路內的裝置互相通訊。電腦和 NAS 都在同一個 Switch 下，所以能互相傳檔案，速度快、不耗 WAN 頻寬。
+  </div>
+</section>
+
+<!-- ─── SECTION 3: VLAN ─── -->
+<section class="section" id="vlan">
+  <div class="sec-label">Part 3 · 安全隔離</div>
+  <div class="sec-title">VLAN 是什麼？為什麼 NAS 需要它？</div>
+  <p class="sec-desc">不做 VLAN 也能用，但做了之後安全性大幅提升。這一段解釋原理，不需要現在就設定。</p>
+
+  <div class="callout warn">
+    ⚠️ <strong>沒有 VLAN 的問題：</strong>如果你家的智慧燈泡、電視、NAS 全部在同一個網路，一旦任何一個 IoT 設備被入侵，攻擊者就能直接存取 NAS 裡的所有資料。
+  </div>
+
+  <div style="margin:24px 0 16px;font-size:14px;font-weight:600;color:var(--dark)">✅ VLAN 設定後的網路分區（點擊各區域查看說明）</div>
+  <div class="vlan-vis" id="vlan-vis">
+    <div class="vlan-lane vl-main" onclick="showVlan('main')">
+      <h4>🏠 主網段 <span class="tag tag-blue">VLAN 1</span></h4>
+      <ul>
+        <li>個人電腦</li>
+        <li>Mac / iPad</li>
+        <li>可信任裝置</li>
+      </ul>
+    </div>
+    <div class="vlan-lane vl-nas" onclick="showVlan('nas')">
+      <h4>📦 NAS 專屬 <span class="tag tag-green">VLAN 10</span></h4>
+      <ul>
+        <li>Synology NAS</li>
+        <li>備份裝置</li>
+        <li>僅主網段可存取</li>
+      </ul>
+    </div>
+    <div class="vlan-lane vl-iot" onclick="showVlan('iot')">
+      <h4>💡 IoT 設備 <span class="tag tag-amber">VLAN 20</span></h4>
+      <ul>
+        <li>智慧燈泡</li>
+        <li>智慧插座</li>
+        <li>電視 / 串流盒</li>
+      </ul>
+    </div>
+    <div class="vlan-lane vl-guest" onclick="showVlan('guest')">
+      <h4>🌐 訪客 WiFi <span class="tag tag-red">VLAN 99</span></h4>
+      <ul>
+        <li>訪客手機</li>
+        <li>臨時裝置</li>
+        <li>完全隔離</li>
+      </ul>
+    </div>
+  </div>
+  <div id="vlan-info" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px 20px;font-size:13px;color:var(--mid);min-height:64px;transition:all .2s">
+    點擊上方任一網段，查看該網段的存取規則說明。
+  </div>
+
+  <div style="margin-top:28px">
+    <div class="callout success">
+      ✅ <strong>總結：</strong>IoT 設備和訪客 WiFi <strong>無法</strong>直接存取 NAS。只有主網段（你的電腦、手機）才能連進去。就算智慧燈泡被入侵，攻擊者也碰不到 NAS。
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 4: SETUP STEPS ─── -->
+<section class="section" id="setup">
+  <div class="sec-label">Part 4 · 實際設定</div>
+  <div class="sec-title">六個步驟完成設定</div>
+  <p class="sec-desc">點擊每個步驟展開詳細說明。建議依序完成，每完成一步可以打勾確認。</p>
+
+  <!-- 進度條 -->
+  <div class="progress-bar" id="progress-bar">
+    <div class="prog-step">
+      <div class="prog-step-inner">
+        <div class="prog-dot active" id="pd-1" onclick="jumpStep(0)">1</div>
+        <div class="prog-label">實體連線</div>
+      </div>
+      <div class="prog-line" id="pl-1"></div>
+    </div>
+    <div class="prog-step">
+      <div class="prog-step-inner">
+        <div class="prog-dot" id="pd-2" onclick="jumpStep(1)">2</div>
+        <div class="prog-label">找到 NAS IP</div>
+      </div>
+      <div class="prog-line" id="pl-2"></div>
+    </div>
+    <div class="prog-step">
+      <div class="prog-step-inner">
+        <div class="prog-dot" id="pd-3" onclick="jumpStep(2)">3</div>
+        <div class="prog-label">固定 IP</div>
+      </div>
+      <div class="prog-line" id="pl-3"></div>
+    </div>
+    <div class="prog-step">
+      <div class="prog-step-inner">
+        <div class="prog-dot" id="pd-4" onclick="jumpStep(3)">4</div>
+        <div class="prog-label">VLAN 隔離</div>
+      </div>
+      <div class="prog-line" id="pl-4"></div>
+    </div>
+    <div class="prog-step">
+      <div class="prog-step-inner">
+        <div class="prog-dot" id="pd-5" onclick="jumpStep(4)">5</div>
+        <div class="prog-label">防火牆規則</div>
+      </div>
+      <div class="prog-line" id="pl-5"></div>
+    </div>
+    <div class="prog-step">
+      <div class="prog-step-inner">
+        <div class="prog-dot" id="pd-6" onclick="jumpStep(5)">6</div>
+        <div class="prog-label">驗證測試</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="steps" id="steps-list">
+
+    <!-- Step 1 -->
+    <div class="step open" id="step-0">
+      <div class="step-header" onclick="toggleStep(0)">
+        <div class="step-num">1</div>
+        <div class="step-header-text">
+          <h3>實體連線 — 把 NAS 接進網路</h3>
+          <p>最簡單的一步，只需要一條網路線</p>
+        </div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="inline-diagram">
+          <div class="inode"><div class="ii">📦</div><div class="in">NAS</div><div class="is">LAN 埠</div></div>
+          <div class="iarrow active">━━━▶</div>
+          <div class="inode"><div class="ii">🔌</div><div class="in">Switch</div><div class="is">任意埠</div></div>
+          <div class="iarrow active">━━━▶</div>
+          <div class="inode"><div class="ii">🛡️</div><div class="in">Gateway</div><div class="is">自動分配 IP</div></div>
+        </div>
+        <div class="step-box">
+          <h4>🔧 操作步驟</h4>
+          <ul>
+            <li>準備一條 <span class="tip">Cat 5e 或 Cat 6<span class="tip-box">網路線規格，Cat 5e 支援 1Gbps，Cat 6 支援 10Gbps。一般 NAS 用 Cat 5e 就夠，若 NAS 有 2.5G 網口則建議 Cat 6。</span></span> 網路線</li>
+            <li>一端接 NAS 的 LAN 埠（一般在機器背面）</li>
+            <li>另一端接 UniFi Switch 的任意埠（PoE 或非 PoE 都可以）</li>
+            <li>接好後開機，等待 NAS 啟動（約 2–3 分鐘）</li>
+          </ul>
+        </div>
+        <div class="callout">
+          💡 NAS 有自己的電源，網路線只負責傳輸資料，不提供電力。不要接 WiFi，有線才能保證穩定速度。
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" id="step-1">
+      <div class="step-header" onclick="toggleStep(1)">
+        <div class="step-num">2</div>
+        <div class="step-header-text">
+          <h3>找到 NAS 的 IP 位址</h3>
+          <p>確認 NAS 已成功加入網路</p>
+        </div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-box">
+          <h4>📱 方法一：UniFi App 查看（推薦）</h4>
+          <ul>
+            <li>開啟手機 <strong>UniFi Network App</strong></li>
+            <li>進入 <strong>Clients（客戶端）</strong> 清單</li>
+            <li>找到 NAS 的 <span class="tip">MAC Address<span class="tip-box">每個網路設備都有的唯一識別碼，格式像 AA:BB:CC:DD:EE:FF，通常印在 NAS 底部的標籤上。</span></span>（貼在機器背面）</li>
+            <li>即可看到 Gateway 自動分配的 IP，例如 <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.1.105</code></li>
+          </ul>
+        </div>
+        <div class="step-box">
+          <h4>🖥️ 方法二：Synology Assistant 軟體</h4>
+          <ul>
+            <li>在電腦下載並安裝 <strong>Synology Assistant</strong>（官網免費）</li>
+            <li>它會自動掃描區域網路，找到 NAS 並顯示 IP</li>
+            <li>或直接瀏覽器輸入 <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">find.synology.com</code></li>
+          </ul>
+        </div>
+        <div class="callout warn">
+          ⚠️ 這個 IP 目前是 <span class="tip">DHCP<span class="tip-box">Dynamic Host Configuration Protocol，動態主機設定協定。路由器自動分配 IP 的機制，每次重新開機 IP 可能會變。</span></span> 自動分配的，下次重開機可能會變。Step 3 我們會把它固定住。
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step" id="step-2">
+      <div class="step-header" onclick="toggleStep(2)">
+        <div class="step-num">3</div>
+        <div class="step-header-text">
+          <h3>設定固定 IP（DHCP Reservation）</h3>
+          <p>讓 NAS 每次開機都有同樣的 IP，這樣書籤和設定不會失效</p>
+        </div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="callout">
+          💡 <strong>為什麼要固定 IP？</strong>如果 NAS 的 IP 一直變，電腦上設定的「網路磁碟機」路徑就會失效，每次都要重新找 IP 很麻煩。
+        </div>
+        <div class="step-box">
+          <h4>🔧 在 UniFi Network 設定 DHCP Reservation</h4>
+          <ul>
+            <li>開啟 <strong>UniFi Network App</strong> 或 <strong>unifi.ui.com</strong></li>
+            <li>點選左側 <strong>Clients</strong> → 找到 NAS</li>
+            <li>點選 NAS，進入裝置詳情頁</li>
+            <li>找到 <strong>「Fixed IP」</strong> 或 <strong>「IP Address Reservation」</strong></li>
+            <li>輸入想要固定的 IP，例如 <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.1.200</code></li>
+            <li>點 <strong>Apply</strong>，重啟 NAS 後生效</li>
+          </ul>
+        </div>
+        <div class="step-box">
+          <h4>💡 建議的 IP 命名規則</h4>
+          <ul>
+            <li><code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.1.200</code> — Synology NAS 主機</li>
+            <li><code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.1.201</code> — 第二台 NAS（如有）</li>
+            <li>建議 <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">.100</code> 以後的 IP 留給固定設備，前面留給 DHCP 動態分配</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step" id="step-3">
+      <div class="step-header" onclick="toggleStep(3)">
+        <div class="step-num">4</div>
+        <div class="step-header-text">
+          <h3>建立 NAS 專屬 VLAN（進階，強烈建議）</h3>
+          <p>把 NAS 隔離在獨立網段，大幅提升安全性</p>
+        </div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="callout warn">
+          ⚠️ 這步稍微複雜，做完後設定也需要調整。如果客戶是一般家庭，可先跳過。如果是商業環境或有 IoT 設備，強烈建議做。
+        </div>
+        <div class="step-box">
+          <h4>① 建立新的 Network（網段）</h4>
+          <ul>
+            <li>UniFi Network → <strong>Settings → Networks → Add New Network</strong></li>
+            <li>Name: <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">NAS-Storage</code></li>
+            <li>VLAN ID: <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">10</code>（自訂，不與其他衝突即可）</li>
+            <li>Gateway IP: <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.10.1</code></li>
+            <li>DHCP 開啟，範圍: <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.10.100 – 192.168.10.199</code></li>
+          </ul>
+        </div>
+        <div class="step-box">
+          <h4>② 把 NAS 連接的 Switch 埠指定到這個 VLAN</h4>
+          <ul>
+            <li>UniFi Network → <strong>Devices</strong> → 點選你的 Switch</li>
+            <li>找到 NAS 接的那個埠（例如 Port 8）</li>
+            <li>點選 Port 8 → <strong>Profile</strong> → 選擇 <strong>NAS-Storage</strong> Network</li>
+            <li>設為 <span class="tip">Untagged (Access Port)<span class="tip-box">Access Port：這個埠只能屬於一個 VLAN，連接的設備（NAS）不需要知道 VLAN 的存在，網路會自動處理標籤。適合連接 NAS、電腦等終端設備。</span></span></li>
+          </ul>
+        </div>
+        <div class="step-box">
+          <h4>③ 給 NAS 設定新的固定 IP</h4>
+          <ul>
+            <li>NAS 移到 VLAN 10 後，IP 會變成 <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.10.x</code></li>
+            <li>同樣做 DHCP Reservation，固定在例如 <code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">192.168.10.200</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step" id="step-4">
+      <div class="step-header" onclick="toggleStep(4)">
+        <div class="step-num">5</div>
+        <div class="step-header-text">
+          <h3>設定防火牆規則（搭配 VLAN 使用）</h3>
+          <p>控制哪些網段可以存取 NAS，哪些不行</p>
+        </div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="callout">
+          💡 做完 VLAN 隔離後，預設情況下各 VLAN 之間無法互通。我們需要加一條規則：允許「主網段」的裝置存取「NAS VLAN」。
+        </div>
+        <div class="step-box">
+          <h4>🔧 在 UniFi 建立防火牆規則</h4>
+          <ul>
+            <li>UniFi Network → <strong>Settings → Firewall & Security → Rules</strong></li>
+            <li>點 <strong>Add New Rule</strong></li>
+          </ul>
+          <div class="step-cmd">
+<span class="comment"># 規則 1：允許主網段存取 NAS</span>
+Name: <span class="val">Allow-Main-to-NAS</span>
+Action: <span class="key">Accept</span>
+Protocol: <span class="val">All</span>
+Source Network: <span class="val">主網段 (VLAN 1)</span>
+Destination: <span class="val">192.168.10.200</span> <span class="comment">(NAS 的 IP)</span>
+
+<span class="comment"># 規則 2：阻擋其他 VLAN 存取 NAS</span>
+Name: <span class="val">Block-Others-to-NAS</span>
+Action: <span class="key">Drop</span>
+Protocol: <span class="val">All</span>
+Source: <span class="val">Any</span>
+Destination: <span class="val">192.168.10.200</span>
+          </div>
+          <div style="font-size:12px;color:var(--light);margin-top:4px">規則按順序執行：先符合規則 1 的允許，其餘全 Drop</div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>網段</th><th>能存取 NAS？</th><th>說明</th></tr></thead>
+            <tbody>
+              <tr><td>🏠 主網段 (VLAN 1)</td><td class="check">✓ 允許</td><td>你的電腦、手機</td></tr>
+              <tr><td>💡 IoT (VLAN 20)</td><td class="cross">✗ 封鎖</td><td>智慧燈泡、電視等</td></tr>
+              <tr><td>🌐 訪客 WiFi (VLAN 99)</td><td class="cross">✗ 封鎖</td><td>訪客裝置</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step" id="step-5">
+      <div class="step-header" onclick="toggleStep(5)">
+        <div class="step-num">6</div>
+        <div class="step-header-text">
+          <h3>驗證設定是否成功</h3>
+          <p>確認電腦能連到 NAS，手機 App 也能正常使用</p>
+        </div>
+        <div class="step-chevron">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-box">
+          <h4>🖥️ 從電腦連線測試</h4>
+          <ul>
+            <li><strong>瀏覽器輸入 NAS IP：</strong><code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">http://192.168.1.200:5000</code>（Synology DSM 預設埠）</li>
+            <li>應該出現 Synology DSM 登入頁面 ✅</li>
+          </ul>
+        </div>
+        <div class="step-box">
+          <h4>📂 掛載網路磁碟機（Mac）</h4>
+          <ul>
+            <li>Finder → <strong>前往 → 連接伺服器</strong></li>
+            <li>輸入：<code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">smb://192.168.1.200</code></li>
+            <li>輸入 NAS 的帳號密碼，就能看到共用資料夾</li>
+          </ul>
+        </div>
+        <div class="step-box">
+          <h4>📂 掛載網路磁碟機（Windows）</h4>
+          <ul>
+            <li>檔案總管 → <strong>本機 → 右鍵 → 連線網路磁碟機</strong></li>
+            <li>資料夾輸入：<code style="background:var(--bg);padding:1px 6px;border-radius:4px;font-size:12px">\\192.168.1.200\共用資料夾名稱</code></li>
+          </ul>
+        </div>
+        <div class="callout success">
+          ✅ <strong>設定完成！</strong>NAS 已穩定接入 UniFi 網路，有固定 IP，有安全隔離，有防火牆保護。
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── SECTION 5: REMOTE ─── -->
+<section class="section" id="remote">
+  <div class="sec-label">Part 5 · 遠端存取</div>
+  <div class="sec-title">在外面也能存取 NAS</div>
+  <p class="sec-desc">離開家或辦公室後，想連回 NAS 有三種方法，各有優缺點。</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>方法</th>
+          <th>安全性</th>
+          <th>設定難度</th>
+          <th>速度</th>
+          <th>適合對象</th>
+          <th>說明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-green">🔒 UniFi VPN</span></td>
+          <td class="check">最高</td>
+          <td>中等</td>
+          <td>普通</td>
+          <td>進階用戶</td>
+          <td>用 UniFi 內建 <span class="tip">WireGuard VPN<span class="tip-box">現代化 VPN 協定，速度快、設定簡單，比舊版 OpenVPN 效能好很多。UniFi 已內建，不需要額外的 VPN 伺服器。</span></span>，手機連 VPN 後就像在家一樣存取 NAS</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">☁️ Synology QuickConnect</span></td>
+          <td>中等</td>
+          <td class="check">最簡單</td>
+          <td>普通</td>
+          <td>一般用戶</td>
+          <td>Synology 官方中繼服務，不需要固定 IP，App 設定好就能用，但流量經過 Synology 伺服器</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-amber">🌐 Port Forwarding</span></td>
+          <td>較低</td>
+          <td>中等</td>
+          <td>最快</td>
+          <td>進階用戶</td>
+          <td>直接在 Gateway 開一個 <span class="tip">Port<span class="tip-box">連接埠，像是網路的「門牌號碼」。一個 IP 有 65535 個 Port，不同服務用不同 Port，例如網頁用 80/443，NAS 管理介面用 5000/5001。</span></span> 對外，速度最快但暴露較多，需搭配強密碼和 2FA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- VPN 設定說明 -->
+  <div class="step-box" style="margin-top:0">
+    <h4>🔧 推薦：設定 UniFi WireGuard VPN（給進階用戶）</h4>
+    <ul>
+      <li>UniFi Network → <strong>Settings → VPN → VPN Server</strong></li>
+      <li>選擇 <strong>WireGuard</strong>，點 <strong>Create New</strong></li>
+      <li>設定名稱、<span class="tip">VPN 子網段<span class="tip-box">VPN 連線的客戶端會被分配到這個網段的 IP，例如 10.6.0.0/24，與家庭網路分開但可以互通。</span></span>（例如 10.6.0.0/24）</li>
+      <li>建立完成後，匯出 <strong>.conf 設定檔</strong> 或 <strong>QR Code</strong></li>
+      <li>手機安裝 WireGuard App，掃描 QR Code 匯入，開啟 VPN 就完成</li>
+    </ul>
+  </div>
+  <div class="callout">
+    💡 連上 VPN 後，你的手機就像在家裡一樣，可以用 <code style="background:rgba(255,255,255,.15);padding:1px 6px;border-radius:4px;font-size:12px">192.168.1.200</code> 直接存取 NAS，完全加密，最安全。
+  </div>
+</section>
+
+<!-- ─── SECTION 6: FAQ ─── -->
+<section class="section" id="faq">
+  <div class="sec-label">Part 6 · 常見問題</div>
+  <div class="sec-title">客戶最常問的問題</div>
+  <p class="sec-desc">點擊問題展開答案。</p>
+
+  <div class="faq-list">
+    <div class="faq" onclick="toggleFaq(this)">
+      <div class="faq-q"><div class="fq-icon">Q</div>NAS 要幾個硬碟？買什麼規格？<div class="fq-chevron">▾</div></div>
+      <div class="faq-a">
+        <strong>最少 2 顆</strong>，可以設定 <span class="tip">RAID 1（鏡像）<span class="tip-box">RAID 1 = 兩顆硬碟存完全相同的資料，一顆壞掉，資料不會遺失。缺點是可用容量只有總容量的一半（2 × 4TB = 只能用 4TB）。</span></span>，一顆壞掉不會失去資料。<br><br>
+        建議買 <strong>NAS 專用硬碟</strong>（如 Seagate IronWolf、WD Red），比桌上型硬碟更耐久，設計成 24 小時運轉。容量視需求，家用 2 × 4TB 通常夠用，商業可考慮 2 × 8TB 以上。
+      </div>
+    </div>
+    <div class="faq" onclick="toggleFaq(this)">
+      <div class="faq-q"><div class="fq-icon">Q</div>NAS 會影響網路速度嗎？<div class="fq-chevron">▾</div></div>
+      <div class="faq-a">
+        <strong>在區域網路內不會影響對外網速。</strong>NAS 跟其他電腦傳檔案走的是 Switch 的內網頻寬（1Gbps），不走對外的 WAN。只有遠端存取時才會占用上傳頻寬。<br><br>
+        如果 NAS 有多個使用者同時在上傳/下載大檔案，可能影響同一個 Switch 上的流量。建議 NAS 接在有 <span class="tip">QoS<span class="tip-box">Quality of Service，服務品質設定，可以設定不同類型流量的優先順序，例如讓視訊會議優先於 NAS 備份。</span></span> 功能的 Switch 以確保優先級。
+      </div>
+    </div>
+    <div class="faq" onclick="toggleFaq(this)">
+      <div class="faq-q"><div class="fq-icon">Q</div>斷電後 NAS 會自動開機嗎？<div class="fq-chevron">▾</div></div>
+      <div class="faq-a">
+        大部分 Synology / QNAP NAS 支援 <strong>「斷電後自動重啟」</strong>功能。在 NAS 的控制台 → 硬體設定 → 開啟「恢復供電後自動開機」即可。<br><br>
+        另外建議搭配 <span class="tip">UPS（不斷電系統）<span class="tip-box">Uninterruptible Power Supply，停電後提供短暫電力讓設備安全關機，避免突然斷電損壞資料或硬碟。</span></span>，停電時可讓 NAS 安全關機，避免硬碟損壞。
+      </div>
+    </div>
+    <div class="faq" onclick="toggleFaq(this)">
+      <div class="faq-q"><div class="fq-icon">Q</div>手機的照片怎麼自動備份到 NAS？<div class="fq-chevron">▾</div></div>
+      <div class="faq-a">
+        <strong>Synology：</strong>安裝 <strong>Synology Photos</strong> App（iOS / Android），登入後開啟自動備份，家用 WiFi 連到同一個網路就會自動上傳。<br><br>
+        <strong>QNAP：</strong>使用 <strong>Qfile</strong> 或 <strong>QuMagie</strong> App 同樣效果。<br><br>
+        好處：不占 iCloud / Google Photos 空間，自己的伺服器資料隱私有保障。
+      </div>
+    </div>
+    <div class="faq" onclick="toggleFaq(this)">
+      <div class="faq-q"><div class="fq-icon">Q</div>NAS 的 IP 如果設定在 VLAN 10，Mac 還能 Time Machine 備份嗎？<div class="fq-chevron">▾</div></div>
+      <div class="faq-a">
+        可以，但需要設定防火牆允許規則讓 Mac 所在的主網段（VLAN 1）能存取 NAS VLAN（VLAN 10）的 <span class="tip">Port 548<span class="tip-box">AFP (Apple Filing Protocol) 用的連接埠，也是 Time Machine 備份用的通訊協定。現代也可以改用 SMB（Port 445）。</span></span>（AFP）或 <strong>Port 445</strong>（SMB）。UniFi 防火牆規則在 Step 5 已說明如何設定。
+      </div>
+    </div>
+    <div class="faq" onclick="toggleFaq(this)">
+      <div class="faq-q"><div class="fq-icon">Q</div>NAS 有安全風險嗎？怎麼保護？<div class="fq-chevron">▾</div></div>
+      <div class="faq-a">
+        有風險，但可控。建議以下幾點：<br><br>
+        ① <strong>不要對外直接開放 NAS 管理埠</strong>（5000/5001），用 VPN 取代 Port Forwarding<br>
+        ② <strong>開啟 2FA（兩步驟驗證）</strong>，帳號被盜也沒用<br>
+        ③ <strong>定期更新 DSM 系統</strong>，Synology 有持續發布安全修補<br>
+        ④ <strong>VLAN 隔離</strong>，不讓 IoT 設備接觸到 NAS<br>
+        ⑤ <strong>定期異地備份</strong>（3-2-1 備份原則：3 份備份、2 種媒介、1 份異地）
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <p>本教學文件由 Claude AI 整理製作 · 2026-05-27</p>
+  <hr>
+  <p>適用機種：Synology、QNAP、TrueNAS · 管理平台：Ubiquiti UniFi Network</p>
+</footer>
+
+<script>
+// ── TOPOLOGY NODE DATA ──
+const nodeData = {
+  isp: {
+    title: '🌐 ISP / WAN — 網際網路服務提供商',
+    badge: '外部網路',
+    desc: '就是你的電信公司（中華電信、台灣大寬頻等）提供的對外網路連線。這條線進來後，接到你的 Cloud Gateway。NAS 的資料平常不會走這條線，只有遠端存取時才會用到。'
+  },
+  gw: {
+    title: '🛡️ Cloud Gateway — 路由器 / 防火牆',
+    badge: 'UniFi 核心',
+    desc: '整個 UniFi 網路的大腦。負責：① 管理對外網路連線；② 分配 IP 給所有設備（DHCP）；③ 防火牆阻擋外部攻擊；④ 控制各網段（VLAN）之間的流量。NAS 的 IP Reservation 和防火牆規則都在這裡設定。'
+  },
+  sw: {
+    title: '🔌 PoE Switch — 交換器',
+    badge: '區域網路核心',
+    desc: '負責讓同一個網路內的所有設備能互相通訊。NAS、電腦、AP 都接在 Switch 上，Switch 把流量在設備之間轉發。支援 PoE 可以供電給 AP 和攝影機，但 NAS 有自己的電源，不需要 PoE。'
+  },
+  ap: {
+    title: '📡 WiFi AP — 無線接入點',
+    badge: 'PoE 供電',
+    desc: '提供 WiFi 訊號，讓手機、平板、筆電能無線連網。AP 透過網路線接在 Switch 上，Switch 同時提供電力（PoE）和資料傳輸。連上 WiFi 的手機，也可以存取同一個 Switch 下的 NAS。'
+  },
+  nas: {
+    title: '📦 NAS — 網路附加儲存',
+    badge: '⭐ 本次設定重點',
+    desc: 'NAS 用一條普通網路線接在 Switch 上，就像多了一台「共用電腦」在網路裡。一旦設定好固定 IP，任何在同一個網路的裝置都能連線存取檔案。建議放在 VLAN 隔離的專屬網段，提升安全性。'
+  },
+  pc: {
+    title: '💻 電腦 / 手機 — 用戶端裝置',
+    badge: '存取 NAS 的裝置',
+    desc: '你的電腦、手機、平板都是存取 NAS 的「客戶端」。有線連接走 Switch，無線連接先到 AP 再到 Switch。透過設定好的固定 IP，可以在瀏覽器輸入 NAS IP 或掛載為網路磁碟機，直接傳輸檔案。'
+  }
+};
+
+function selectNode(id) {
+  document.querySelectorAll('.tnode').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById('tn-' + id);
+  if (el) el.classList.add('active');
+  const d = nodeData[id];
+  document.getElementById('topo-info').innerHTML = `
+    <h4><span class="badge">${d.badge}</span> ${d.title}</h4>
+    <p>${d.desc}</p>
+  `;
+}
+
+// ── VLAN INFO ──
+const vlanData = {
+  main: {
+    title: '🏠 主網段 (VLAN 1)',
+    desc: '你的主要裝置所在的網段。這個網段<strong>可以</strong>存取 NAS、可以出外網、可以管理 UniFi 設備。電腦、手機等信任裝置放在這裡。'
+  },
+  nas: {
+    title: '📦 NAS 專屬網段 (VLAN 10)',
+    desc: 'NAS 所在的隔離網段。只有主網段（VLAN 1）的設備可以透過防火牆規則存取這裡。IoT 設備和訪客完全無法碰到。即使其他網段被入侵，NAS 資料依然安全。'
+  },
+  iot: {
+    title: '💡 IoT 設備網段 (VLAN 20)',
+    desc: '智慧燈泡、電視、插座等 IoT 設備放在這裡。這些設備可以出外網（讓它們的 App 能控制），但<strong>無法</strong>存取主網段或 NAS。IoT 設備安全漏洞最多，隔離它們是最重要的安全措施之一。'
+  },
+  guest: {
+    title: '🌐 訪客 WiFi (VLAN 99)',
+    desc: '給訪客或臨時設備用的 WiFi。只能出外網（上網），完全無法存取你的 NAS、家用電腦、或 IoT 設備。訪客離開後，他們的裝置記錄也不會影響你的網路安全。'
+  }
+};
+
+function showVlan(id) {
+  const d = vlanData[id];
+  document.getElementById('vlan-info').innerHTML = `<strong>${d.title}</strong><br><br>${d.desc}`;
+}
+
+// ── STEP ACCORDION ──
+function toggleStep(idx) {
+  const step = document.getElementById('step-' + idx);
+  const isOpen = step.classList.contains('open');
+  step.classList.toggle('open', !isOpen);
+  updateProgress(idx, !isOpen);
+}
+
+function jumpStep(idx) {
+  const step = document.getElementById('step-' + idx);
+  step.classList.add('open');
+  step.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updateProgress(idx, true);
+}
+
+function updateProgress(idx, open) {
+  for (let i = 0; i <= 5; i++) {
+    const dot = document.getElementById('pd-' + (i+1));
+    const line = document.getElementById('pl-' + (i+1));
+    if (i < idx) {
+      dot.classList.remove('active'); dot.classList.add('done');
+      if (line) line.classList.add('done');
+    } else if (i === idx) {
+      dot.classList.remove('done'); dot.classList.add('active');
+    } else {
+      dot.classList.remove('active','done');
+      if (line) line.classList.remove('done');
+    }
+  }
+}
+
+// ── FAQ ──
+function toggleFaq(el) {
+  el.classList.toggle('open');
+}
+
+// ── SCROLL TO ──
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
