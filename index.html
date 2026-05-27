@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>築睿科技 DUCTECH — 智能產品研究報告</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #18181f;
+      --surface2: #22222c;
+      --border: #2e2e3a;
+      --accent: #6c63ff;
+      --accent2: #00d4aa;
+      --accent3: #ff6b6b;
+      --accent4: #ffd166;
+      --text: #e8e8f0;
+      --text-muted: #8888a0;
+      --text-dim: #555568;
+      --card-hover: #1e1e28;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0f0f13 0%, #1a1535 50%, #0f1a20 100%);
+      padding: 80px 24px 60px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,99,255,.15), transparent);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(108,99,255,.15);
+      border: 1px solid rgba(108,99,255,.4);
+      color: #a89fff;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(135deg, #fff 0%, #a89fff 60%, #00d4aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    .hero-tags {
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    }
+    .tag {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .tag .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    section { padding: 60px 0; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); font-weight: 700; margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 40px;
+    }
+
+    /* ── Protocol Pills ── */
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .protocol-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: transform .2s, border-color .2s;
+    }
+    .protocol-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .protocol-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+    .protocol-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .protocol-card p { font-size: 13px; color: var(--text-muted); }
+    .badge-new {
+      display: inline-block;
+      background: rgba(0,212,170,.15);
+      color: var(--accent2);
+      border: 1px solid rgba(0,212,170,.3);
+      font-size: 10px; padding: 2px 8px; border-radius: 6px;
+      margin-left: 8px; vertical-align: middle; font-weight: 700;
+    }
+
+    /* ── Products ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108,99,255,.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,.4);
+    }
+    .product-header {
+      padding: 24px 24px 0;
+    }
+    .product-type {
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .product-type-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .product-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .product-price {
+      font-size: 22px; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+    .product-desc {
+      font-size: 13px; color: var(--text-muted);
+      padding: 0 24px 20px;
+    }
+    .feature-list {
+      padding: 0 24px;
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    .feature-list li {
+      font-size: 13px;
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 4px 0;
+      color: var(--text-muted);
+    }
+    .feature-list li .icon { flex-shrink: 0; margin-top: 1px; }
+    .spec-table {
+      margin: 0 24px 24px;
+      background: var(--bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .spec-row {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-key {
+      flex: 0 0 130px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      border-right: 1px solid var(--border);
+    }
+    .spec-val {
+      flex: 1;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* ── Install Steps ── */
+    .install-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .install-step {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .step-num {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 2px solid transparent;
+    }
+    .step-line {
+      width: 2px;
+      flex: 1;
+      margin: 4px 0;
+      min-height: 24px;
+    }
+    .install-step:last-child .step-line { display: none; }
+    .step-content {
+      flex: 1;
+      padding: 0 0 32px;
+    }
+    .step-content h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .step-content p { font-size: 14px; color: var(--text-muted); }
+    .step-warn {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(255,107,107,.08);
+      border: 1px solid rgba(255,107,107,.2);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #ffaaaa;
+    }
+
+    /* ── Wiring Diagram ── */
+    .wiring-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) { .wiring-grid { grid-template-columns: 1fr; } }
+    .wiring-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .wiring-card h4 {
+      font-size: 15px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 16px;
+    }
+    .wire-diagram {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .wire-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .wire-row:last-child { border-bottom: none; }
+    .wire-color {
+      width: 40px; height: 8px; border-radius: 4px; flex-shrink: 0;
+    }
+    .wire-label {
+      font-size: 13px; font-weight: 700; min-width: 60px;
+    }
+    .wire-desc {
+      font-size: 12px; color: var(--text-muted);
+    }
+
+    /* ── Notes ── */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .note-card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 20px;
+      border-left: 4px solid;
+    }
+    .note-card.warn  { border-color: var(--accent4); background: rgba(255,209,102,.04); }
+    .note-card.info  { border-color: var(--accent);  background: rgba(108,99,255,.04); }
+    .note-card.tip   { border-color: var(--accent2); background: rgba(0,212,170,.04); }
+    .note-card.alert { border-color: var(--accent3); background: rgba(255,107,107,.04); }
+    .note-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .note-icon { font-size: 20px; }
+    .note-title { font-size: 14px; font-weight: 700; }
+    .note-card p { font-size: 13px; color: var(--text-muted); }
+
+    /* ── Partner logos ── */
+    .partner-row {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .partner-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ── Comparison Table ── */
+    .compare-wrap { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th {
+      background: var(--surface2);
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:hover td { background: var(--card-hover); }
+    .check { color: var(--accent2); font-size: 16px; }
+    .cross { color: #555; font-size: 16px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .protocol-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<div class="hero">
+  <div class="hero-badge">智能居家研究報告</div>
+  <h1>築睿科技 DUCTECH</h1>
+  <p>台灣本土 HomeKit / Matter 智能家居品牌，深耕 Thread 無線技術，提供從燈光、窗簾到空調的全方位智能化解決方案</p>
+  <div class="hero-tags">
+    <span class="tag"><span class="dot" style="background:#6c63ff"></span>Apple HomeKit</span>
+    <span class="tag"><span class="dot" style="background:#00d4aa"></span>Matter 協議</span>
+    <span class="tag"><span class="dot" style="background:#ffd166"></span>Thread 網狀網路</span>
+    <span class="tag"><span class="dot" style="background:#ff6b6b"></span>台灣製造</span>
+    <span class="tag"><span class="dot" style="background:#a89fff"></span>Siri 語音控制</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══════════════════ 支援協議 ══════════════════ -->
+  <section>
+    <div class="section-label">Technology Protocols</div>
+    <div class="section-title">支援的無線協議 🔌</div>
+    <div class="section-sub">DUCTECH 產品以 Thread 為核心骨幹，搭配 Matter 統一標準，兼容主流智能家居生態</div>
+    <div class="protocol-grid">
+
+      <div class="protocol-card">
+        <div class="protocol-icon" style="background:rgba(0,212,170,.12)">🌐</div>
+        <h3>Matter <span class="badge-new">NEW</span></h3>
+        <p>新一代智能家居統一標準，由 Apple、Google、Amazon、三星共同制定。讓不同品牌裝置無縫互通，告別生態鎖定問題。</p>
+      </div>
+
+      <div class="protocol-card">
+        <div class="protocol-icon" style="background:rgba(108,99,255,.12)">🕸️</div>
+        <h3>Thread</h3>
+        <p>基於 IEEE 802.15.4 的 IPv6 低功耗 Mesh 網狀網路。不依賴 Wi-Fi Hub，每個節點都是路由器，網路越多裝置越穩定。</p>
+      </div>
+
+      <div class="protocol-card">
+        <div class="protocol-icon" style="background:rgba(100,180,255,.12)">📱</div>
+        <h3>Apple HomeKit</h3>
+        <p>蘋果官方智能家居框架，透過「家庭」App 管理。支援 Siri 語音控制、自動化、場景模式與遠端存取（需 Apple TV / HomePod 中樞）。</p>
+      </div>
+
+      <div class="protocol-card">
+        <div class="protocol-icon" style="background:rgba(255,150,50,.12)">📡</div>
+        <h3>BLE（藍牙低功耗）</h3>
+        <p>用於設備首次配對與近距離通訊。配對完成後主要透過 Thread 傳輸，BLE 消耗極少電量。頻率：2402–2480 MHz。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════ 產品總覽 ══════════════════ -->
+  <section>
+    <div class="section-label">Products</div>
+    <div class="section-title">主打智能產品 🛒</div>
+    <div class="section-sub">以下為目前在售的智能產品系列</div>
+    <div class="product-grid">
+
+      <!-- ─ KASTEN Switch ─ -->
+      <div class="product-card">
+        <div class="product-header">
+          <div class="product-type">
+            <span class="product-type-dot" style="background:#6c63ff"></span>
+            智能開關
+          </div>
+          <h3>DUC KASTEN Light Switch</h3>
+          <div class="product-price">NT$ 3,280</div>
+        </div>
+        <p class="product-desc">以 Thread 網路為傳輸核心的 HomeKit 智慧開關，支援單火線（2線）或零火線（3線）安裝，無需重新拉線。面板相容 Panasonic Glatima 全系列。</p>
+        <ul class="feature-list">
+          <li><span class="icon">🔵</span> Thread 網狀無線傳輸</li>
+          <li><span class="icon">⚡</span> 單火線 / 零火線雙模供電</li>
+          <li><span class="icon">🔀</span> Thread 無線對切（無需拉線）</li>
+          <li><span class="icon">🎨</span> 白色 / 綠色可選；橫式 / 直式</li>
+          <li><span class="icon">🧱</span> 可換 Panasonic Glatima 面板</li>
+          <li><span class="icon">🍎</span> Apple HomeKit 相容</li>
+        </ul>
+        <div class="spec-table">
+          <div class="spec-row"><div class="spec-key">型號</div><div class="spec-val">SA-7559</div></div>
+          <div class="spec-row"><div class="spec-key">額定電壓</div><div class="spec-val">AC 100–120V, 50/60Hz</div></div>
+          <div class="spec-row"><div class="spec-key">最大電流</div><div class="spec-val">5A</div></div>
+          <div class="spec-row"><div class="spec-key">最小負載</div><div class="spec-val">13W（2線無中性線）</div></div>
+          <div class="spec-row"><div class="spec-key">無線技術</div><div class="spec-val">BLE + Thread</div></div>
+          <div class="spec-row"><div class="spec-key">工作溫度</div><div class="spec-val">0°C ~ 40°C</div></div>
+          <div class="spec-row"><div class="spec-key">濕度</div><div class="spec-val">0 ~ 95%RH</div></div>
+        </div>
+      </div>
+
+      <!-- ─ SmartWings 捲簾 ─ -->
+      <div class="product-card">
+        <div class="product-header">
+          <div class="product-type">
+            <span class="product-type-dot" style="background:#00d4aa"></span>
+            電動窗簾
+          </div>
+          <h3>SmartWings 電動捲簾系列</h3>
+          <div class="product-price">NT$ 5,850 起</div>
+        </div>
+        <p class="product-desc">客製化尺寸電動捲簾，可選配 Matter 智能馬達，透過 HomeKit / Google Home 等平台控制。三種系列對應不同遮光需求。</p>
+        <ul class="feature-list">
+          <li><span class="icon">☀️</span> 遮陽簾 95% 穿透（Aventus）NT$5,850+</li>
+          <li><span class="icon">🌓</span> 50% 遮光 PVC（Blackout）NT$6,000+</li>
+          <li><span class="icon">⬛</span> 100% 全遮光 Essential NT$6,300+</li>
+          <li><span class="icon">⬛</span> 100% 全遮光 Safari NT$6,900+</li>
+          <li><span class="icon">🔧</span> Matter 智能馬達升級 +NT$2,850</li>
+          <li><span class="icon">📡</span> 遙控器可選 +NT$780</li>
+        </ul>
+        <div class="spec-table">
+          <div class="spec-row"><div class="spec-key">馬達類型</div><div class="spec-val">純電動 / Matter 智能</div></div>
+          <div class="spec-row"><div class="spec-key">安裝方式</div><div class="spec-val">框內 / 框外</div></div>
+          <div class="spec-row"><div class="spec-key">尺寸</div><div class="spec-val">16"–109"（客製化）</div></div>
+          <div class="spec-row"><div class="spec-key">出貨時間</div><div class="spec-val">15–30 工作天</div></div>
+          <div class="spec-row"><div class="spec-key">退換貨</div><div class="spec-val">客製品不適用七天鑑賞期</div></div>
+        </div>
+      </div>
+
+      <!-- ─ SmartWings 蜂巢簾 ─ -->
+      <div class="product-card">
+        <div class="product-header">
+          <div class="product-type">
+            <span class="product-type-dot" style="background:#ffd166"></span>
+            電動窗簾
+          </div>
+          <h3>SmartWings 電動蜂巢簾 Nowa</h3>
+          <div class="product-price">NT$ 10,170 起</div>
+        </div>
+        <p class="product-desc">懸浮蜂巢結構提供卓越隔熱保溫效果，兼具美觀與節能。分為濾光、遮光、日夜雙層三種版本。</p>
+        <ul class="feature-list">
+          <li><span class="icon">🌸</span> 濾光懸浮蜂巢簾 NT$10,170+</li>
+          <li><span class="icon">🌑</span> 遮光懸浮蜂巢簾 NT$10,350+</li>
+          <li><span class="icon">🌗</span> 日/夜雙層蜂巢簾 NT$11,850+</li>
+          <li><span class="icon">🎨</span> 6色可選：White / Cream / Dark Grey / Medium Grey / Slate Blue / Wheat</li>
+          <li><span class="icon">🔧</span> Matter 智能馬達升級 +NT$2,850</li>
+          <li><span class="icon">🌡️</span> 蜂巢結構隔熱保溫</li>
+        </ul>
+        <div class="spec-table">
+          <div class="spec-row"><div class="spec-key">馬達</div><div class="spec-val">純電動 / Matter 智能</div></div>
+          <div class="spec-row"><div class="spec-key">遙控</div><div class="spec-val">9段式 +NT$780</div></div>
+          <div class="spec-row"><div class="spec-key">安裝</div><div class="spec-val">框內 / 框外</div></div>
+          <div class="spec-row"><div class="spec-key">出貨</div><div class="spec-val">15–30 工作天</div></div>
+        </div>
+      </div>
+
+      <!-- ─ TARUIE AC Controller ─ -->
+      <div class="product-card">
+        <div class="product-header">
+          <div class="product-type">
+            <span class="product-type-dot" style="background:#ff6b6b"></span>
+            空調控制
+          </div>
+          <h3>TARUIE 紅外線冷氣控制器</h3>
+          <div class="product-price">NT$ 1,850 起</div>
+        </div>
+        <p class="product-desc">由築睿科技獨家引進的日本人氣品牌 TARUIE，世界首創電池供電設計，免插電、免拉線，秒升級舊冷氣為智能家居設備。</p>
+        <ul class="feature-list">
+          <li><span class="icon">🔋</span> 世界首創！電池安裝，免插電</li>
+          <li><span class="icon">📡</span> 內建 IR 碼庫，支援 90% 冷氣品牌</li>
+          <li><span class="icon">🌐</span> Matter 傳輸協議</li>
+          <li><span class="icon">🕸️</span> Thread 網路，不依賴 Wi-Fi</li>
+          <li><span class="icon">🌡️</span> 內建溫濕度感測器，自動調控</li>
+          <li><span class="icon">🇯🇵🇹🇼</span> 日本設計 × 台灣製造</li>
+        </ul>
+        <div class="spec-table">
+          <div class="spec-row"><div class="spec-key">尺寸</div><div class="spec-val">6 × 6 × 2.5 cm</div></div>
+          <div class="spec-row"><div class="spec-key">重量</div><div class="spec-val">約 62g</div></div>
+          <div class="spec-row"><div class="spec-key">電源</div><div class="spec-val">1/2AA 電池 × 1</div></div>
+          <div class="spec-row"><div class="spec-key">版本</div><div class="spec-val">一般版 / 三菱重工版</div></div>
+          <div class="spec-row"><div class="spec-key">保固</div><div class="spec-val">1 年</div></div>
+          <div class="spec-row"><div class="spec-key">產地</div><div class="spec-val">台灣</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════ 安裝流程（服務） ══════════════════ -->
+  <section>
+    <div class="section-label">Installation Service</div>
+    <div class="section-title">專業安裝服務流程 🔧</div>
+    <div class="section-sub">DUCTECH 提供到府評估、施工、設定一條龍服務</div>
+    <div class="install-flow">
+
+      <div class="install-step">
+        <div class="step-left">
+          <div class="step-num" style="background:rgba(108,99,255,.15);border-color:rgba(108,99,255,.4);font-size:22px;">📋</div>
+          <div class="step-line" style="background:linear-gradient(to bottom, rgba(108,99,255,.4), rgba(0,212,170,.3))"></div>
+        </div>
+        <div class="step-content">
+          <h4>01 — 評估與規劃</h4>
+          <p>免費提供室內空間評估、工程規劃與需求建議。簽約付訂後立即啟動專案。包含線路評估、設備清單確認、工期排程。</p>
+        </div>
+      </div>
+
+      <div class="install-step">
+        <div class="step-left">
+          <div class="step-num" style="background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.3);font-size:22px;">⚡</div>
+          <div class="step-line" style="background:linear-gradient(to bottom, rgba(0,212,170,.3), rgba(255,209,102,.3))"></div>
+        </div>
+        <div class="step-content">
+          <h4>02 — 進場與施工</h4>
+          <p>確認電力系統後，派員安裝各控制器。確保裝置運作安全無虞。包含開關底盒更換、線路整理、設備固定。</p>
+          <div class="step-warn">
+            ⚠️ 涉及電力施工需關閉電源迴路，建議由專業電工或 DUCTECH 人員操作，避免觸電或短路風險。
+          </div>
+        </div>
+      </div>
+
+      <div class="install-step">
+        <div class="step-left">
+          <div class="step-num" style="background:rgba(255,209,102,.1);border-color:rgba(255,209,102,.3);font-size:22px;">📱</div>
+          <div class="step-line" style="background:linear-gradient(to bottom, rgba(255,209,102,.3), rgba(0,212,170,.3))"></div>
+        </div>
+        <div class="step-content">
+          <h4>03 — 安裝與測試</h4>
+          <p>工程師與業主溝通智能需求後，協助完成設備配對、情境模式設定、自動化規則建立與功能測試。</p>
+        </div>
+      </div>
+
+      <div class="install-step">
+        <div class="step-left">
+          <div class="step-num" style="background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.3);font-size:22px;">🏠</div>
+          <div class="step-line"></div>
+        </div>
+        <div class="step-content">
+          <h4>04 — 驗收享受</h4>
+          <p>產品驗收完成後即可享受智能生活，後續提供售後服務支援。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════ DIY 安裝指南 ══════════════════ -->
+  <section>
+    <div class="section-label">DIY Installation Guide</div>
+    <div class="section-title">KASTEN 開關 DIY 接線指南 🔌</div>
+    <div class="section-sub">如果你已有電工執照或基礎電學知識，可參考以下接線方式</div>
+
+    <div class="wiring-grid">
+
+      <!-- 3線（有中性線） -->
+      <div class="wiring-card">
+        <h4>
+          <span style="background:rgba(0,212,170,.15);border-radius:8px;padding:4px 10px;font-size:13px;color:var(--accent2);">✅ 3線安裝（推薦）</span>
+          有中性線 Neutral Wire
+        </h4>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">底盒有 L（火線）、N（零線）、L'（燈線）三條線，功能最完整，無最小負載限制。</p>
+        <div class="wire-diagram">
+          <div class="wire-row">
+            <div class="wire-color" style="background:#ff4444"></div>
+            <div class="wire-label" style="color:#ff8888">L（火線）</div>
+            <div class="wire-desc">→ 開關 L 端子（輸入電源）</div>
+          </div>
+          <div class="wire-row">
+            <div class="wire-color" style="background:#4488ff"></div>
+            <div class="wire-label" style="color:#88aaff">N（零線）</div>
+            <div class="wire-desc">→ 開關 N 端子（中性線）</div>
+          </div>
+          <div class="wire-row">
+            <div class="wire-color" style="background:#ffaa00"></div>
+            <div class="wire-label" style="color:#ffcc66">L'（燈線）</div>
+            <div class="wire-desc">→ 開關 L' 端子（輸出燈具）</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--accent2);margin-top:12px;">✔ 無最小功率限制，相容任何燈具</p>
+      </div>
+
+      <!-- 2線（無中性線） -->
+      <div class="wiring-card">
+        <h4>
+          <span style="background:rgba(255,209,102,.1);border-radius:8px;padding:4px 10px;font-size:13px;color:var(--accent4);">⚠️ 2線安裝</span>
+          無中性線 No Neutral
+        </h4>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">底盒只有 L（火線）和 L'（燈線），適合舊裝潢改裝，但有最小負載限制（需 13W 以上燈具）。</p>
+        <div class="wire-diagram">
+          <div class="wire-row">
+            <div class="wire-color" style="background:#ff4444"></div>
+            <div class="wire-label" style="color:#ff8888">L（火線）</div>
+            <div class="wire-desc">→ 開關 L 端子（輸入電源）</div>
+          </div>
+          <div class="wire-row">
+            <div class="wire-color" style="background:#ffaa00"></div>
+            <div class="wire-label" style="color:#ffcc66">L'（燈線）</div>
+            <div class="wire-desc">→ 開關 L' 端子（輸出燈具）</div>
+          </div>
+        </div>
+        <div style="background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.2);border-radius:10px;padding:12px;margin-top:12px;font-size:12px;color:#ffdd88;">
+          ⚠️ 燈具需 13W 以上才能維持開關正常運作。建議避免搭配極低功率 LED 燈泡。
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Thread 對切說明 -->
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:20px;">
+      <h4 style="font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:24px;">🔀</span> Thread 無線對切設定
+      </h4>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:16px;">KASTEN 支援透過 Thread 網路達成多點控制（傳統需要3線對切），完全無需額外拉線。</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+        <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">📦</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Step 1</div>
+          <div style="font-size:12px;color:var(--text-muted);">各別安裝兩組 KASTEN 開關（各自接好電源）</div>
+        </div>
+        <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">📱</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Step 2</div>
+          <div style="font-size:12px;color:var(--text-muted);">透過 HomeKit App 將兩個開關加入同一個「房間」</div>
+        </div>
+        <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">⚙️</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Step 3</div>
+          <div style="font-size:12px;color:var(--text-muted);">設定自動化讓兩個開關連動同一迴路燈具</div>
+        </div>
+        <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:28px;margin-bottom:8px;">✅</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px;">完成！</div>
+          <div style="font-size:12px;color:var(--text-muted);">任一開關均可控制燈具，實現無線對切</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ TARUIE 安裝 ══════════════════ -->
+  <section>
+    <div class="section-label">Quick Install</div>
+    <div class="section-title">TARUIE 冷氣控制器安裝步驟 🧊</div>
+    <div class="section-sub">超簡單！免插電、免拉線，5分鐘完成安裝</div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:12px;">🔋</div>
+        <div style="font-size:13px;font-weight:800;color:var(--accent2);margin-bottom:6px;">Step 1 — 裝電池</div>
+        <div style="font-size:12px;color:var(--text-muted);">放入 1/2AA 電池，裝置即自動開機</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:12px;">📌</div>
+        <div style="font-size:13px;font-weight:800;color:var(--accent2);margin-bottom:6px;">Step 2 — 安裝位置</div>
+        <div style="font-size:12px;color:var(--text-muted);">貼近冷氣 IR 接收窗，建議正面朝向，黏貼或夾掛</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:12px;">📲</div>
+        <div style="font-size:13px;font-weight:800;color:var(--accent2);margin-bottom:6px;">Step 3 — App 配對</div>
+        <div style="font-size:12px;color:var(--text-muted);">透過 HomeKit 或 Google Home 掃描 QR Code 完成 Matter 配對</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:12px;">❄️</div>
+        <div style="font-size:13px;font-weight:800;color:var(--accent2);margin-bottom:6px;">Step 4 — 選擇品牌</div>
+        <div style="font-size:12px;color:var(--text-muted);">App 內選擇冷氣廠牌，自動載入 IR 碼庫</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:12px;">🎉</div>
+        <div style="font-size:13px;font-weight:800;color:var(--accent2);margin-bottom:6px;">完成！</div>
+        <div style="font-size:12px;color:var(--text-muted);">Siri 聲控、自動化、離家遠端控制全部可用</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ 產品比較 ══════════════════ -->
+  <section>
+    <div class="section-label">Comparison</div>
+    <div class="section-title">產品協議支援比較 📊</div>
+    <div class="section-sub">快速了解各產品的平台兼容性</div>
+    <div class="compare-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>產品</th>
+            <th>Matter</th>
+            <th>Thread</th>
+            <th>HomeKit</th>
+            <th>Google Home</th>
+            <th>無線對切</th>
+            <th>溫濕感測</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🔵 KASTEN Light Switch</td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr>
+            <td>🟢 SmartWings 捲簾（Matter馬達）</td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr>
+            <td>🟡 SmartWings 蜂巢簾（Matter馬達）</td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+          <tr>
+            <td>🔴 TARUIE 冷氣控制器</td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="check">✔</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="check">✔</span></td>
+          </tr>
+          <tr>
+            <td>⚪ SmartWings（純電動馬達）</td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+            <td><span class="cross">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══════════════════ 注意事項 ══════════════════ -->
+  <section>
+    <div class="section-label">Important Notes</div>
+    <div class="section-title">安裝與使用注意事項 ⚠️</div>
+    <div class="section-sub">購買前與安裝前請仔細確認</div>
+    <div class="notes-grid">
+
+      <div class="note-card alert">
+        <div class="note-header">
+          <span class="note-icon">⚡</span>
+          <span class="note-title">電力安全</span>
+        </div>
+        <p>更換智慧開關前務必在電箱關閉對應迴路的無熔絲開關（NFB）。不確定線路配置時請勿自行動手，避免觸電或火災風險。</p>
+      </div>
+
+      <div class="note-card warn">
+        <div class="note-header">
+          <span class="note-icon">💡</span>
+          <span class="note-title">2線安裝最小負載</span>
+        </div>
+        <p>KASTEN 以無中性線（2線）安裝時，燈具需至少 13W 才能提供足夠電流讓開關運作。若搭配超低功率 LED 可能導致燈閃爍或開關不穩定。</p>
+      </div>
+
+      <div class="note-card info">
+        <div class="note-header">
+          <span class="note-icon">🏠</span>
+          <span class="note-title">需要 HomeKit 中樞</span>
+        </div>
+        <p>要啟用離家遠端控制與自動化功能，需要 HomeKit 家庭中樞（Apple TV 4K、HomePod、HomePod mini 其中一台）常駐家中並連網。</p>
+      </div>
+
+      <div class="note-card tip">
+        <div class="note-header">
+          <span class="note-icon">🕸️</span>
+          <span class="note-title">Thread 網路建立</span>
+        </div>
+        <p>Thread 為 Mesh 網路，裝置越多越穩定。Apple TV 4K（2021起）和 HomePod mini 內建 Thread Border Router，是最佳家庭中樞選擇。</p>
+      </div>
+
+      <div class="note-card warn">
+        <div class="note-header">
+          <span class="note-icon">📐</span>
+          <span class="note-title">窗簾為客製化商品</span>
+        </div>
+        <p>SmartWings 所有窗簾均為客製化尺寸生產，下單後不適用消費者保護法七天鑑賞期。訂購前請精確測量窗框尺寸（注意框內/框外的測量方式不同）。</p>
+      </div>
+
+      <div class="note-card info">
+        <div class="note-header">
+          <span class="note-icon">⏱️</span>
+          <span class="note-title">窗簾出貨時程</span>
+        </div>
+        <p>客製化窗簾出貨時間為 15–30 個工作天（不含例假日）。如有裝潢時程需求，建議提早下單，避免工期延誤。</p>
+      </div>
+
+      <div class="note-card tip">
+        <div class="note-header">
+          <span class="note-icon">🔴</span>
+          <span class="note-title">TARUIE 電池注意</span>
+        </div>
+        <p>使用 1/2AA 規格電池（非一般 AA），請確認購買對應電池。裝置為低功耗設計，一般電池壽命可達數月至一年。</p>
+      </div>
+
+      <div class="note-card alert">
+        <div class="note-header">
+          <span class="note-icon">📡</span>
+          <span class="note-title">IR 冷氣距離限制</span>
+        </div>
+        <p>TARUIE 透過紅外線（IR）控制冷氣，需確保裝置與冷氣 IR 接收窗之間無遮擋，建議安裝距離在 8 公尺以內並保持視線通暢。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════ 合作夥伴 ══════════════════ -->
+  <section>
+    <div class="section-label">Partners</div>
+    <div class="section-title">合作夥伴 🤝</div>
+    <div class="section-sub">DUCTECH 與以下機構和品牌合作，確保產品品質與技術先進性</div>
+    <div class="partner-row">
+      <div class="partner-chip">🦊 Foxconn 鴻海</div>
+      <div class="partner-chip">🔷 Dexatek</div>
+      <div class="partner-chip">🏛️ ITRI 工業技術研究院</div>
+      <div class="partner-chip">⚡ Erise</div>
+      <div class="partner-chip">🔋 EVE Energy</div>
+      <div class="partner-chip">🏢 TWDC</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>本頁面由 Claude AI 整理自 <a href="https://ductech.tw" style="color:var(--accent)">ductech.tw</a> 公開資訊 · 2026-05-27</p>
+  <p style="margin-top:8px;color:var(--text-dim)">築睿科技 DUCTECH Co., Ltd. — Smart Your Home</p>
+</footer>
+
+</body>
+</html>
