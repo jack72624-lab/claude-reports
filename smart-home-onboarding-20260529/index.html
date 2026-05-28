@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能家庭入職培訓手冊</title>
+  <style>
+    :root {
+      --navy:    #161D26;
+      --blue:    #0073BB;
+      --blue-dk: #005A94;
+      --accent:  #F3F3F7;
+      --white:   #FFFFFF;
+      --text:    #16191F;
+      --mid:     #545B64;
+      --light:   #879596;
+      --border:  #DDE1E6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --orange:  #D35400;
+      --r:       2px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: var(--text); background: var(--white); font-size: 15px; line-height: 1.7; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); color: var(--white);
+      padding: 0 24px; display: flex; align-items: center; gap: 0;
+      border-bottom: 2px solid var(--blue); min-height: 52px;
+    }
+    .nav-brand { font-weight: 700; font-size: 15px; color: var(--white); margin-right: 32px; white-space: nowrap; }
+    .nav-links { display: flex; gap: 4px; overflow-x: auto; }
+    .nav-links a {
+      color: #C8D0D9; text-decoration: none; font-size: 13px;
+      padding: 6px 12px; border-radius: var(--r); white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #1E2D40 100%);
+      color: var(--white); padding: 56px 32px 48px;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-block; background: var(--blue);
+      color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .8px;
+      text-transform: uppercase; padding: 3px 10px; border-radius: var(--r);
+      margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+    .hero p { color: #9FB3C8; font-size: 16px; max-width: 620px; }
+    .hero-meta { margin-top: 24px; display: flex; gap: 24px; flex-wrap: wrap; }
+    .hero-meta span { font-size: 13px; color: #7B8D9E; }
+    .hero-meta strong { color: #C8D0D9; }
+
+    /* LAYOUT */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* SECTION */
+    .section { padding: 48px 0 32px; border-bottom: 1px solid var(--border); }
+    .section:last-child { border-bottom: none; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .section-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section h2 { font-size: 22px; font-weight: 700; color: var(--navy); }
+    .section h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin: 24px 0 10px; }
+
+    /* CARDS GRID */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card {
+      border: 1px solid var(--border); border-radius: var(--r);
+      border-top: 3px solid var(--blue); padding: 18px;
+      background: var(--white);
+    }
+    .card.green { border-top-color: var(--green); }
+    .card.orange { border-top-color: var(--orange); }
+    .card.red { border-top-color: var(--red); }
+    .card-title { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+    .card p { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+    /* CALLOUT */
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: var(--accent); padding: 14px 18px;
+      border-radius: 0 var(--r) var(--r) 0;
+      margin: 20px 0; font-size: 14px;
+    }
+    .callout.warn { border-left-color: var(--orange); }
+    .callout.danger { border-left-color: var(--red); }
+    .callout.success { border-left-color: var(--green); }
+    .callout-label { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; color: var(--blue); }
+    .callout.warn .callout-label { color: var(--orange); }
+    .callout.danger .callout-label { color: var(--red); }
+    .callout.success .callout-label { color: var(--green); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: var(--r); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      background: var(--navy); color: var(--white);
+      font-weight: 600; text-align: left;
+      padding: 10px 14px; font-size: 12px; letter-spacing: .3px;
+    }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #FAFBFC; }
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px; white-space: nowrap;
+    }
+    .badge-blue  { background: #E8F4FD; color: var(--blue-dk); }
+    .badge-green { background: #E8F6EF; color: #145A32; }
+    .badge-gray  { background: #EAECEE; color: var(--mid); }
+    .badge-orange{ background: #FEF5E7; color: #784212; }
+
+    /* FLOW */
+    .flow { display: flex; align-items: stretch; flex-wrap: wrap; gap: 0; margin: 20px 0; }
+    .flow-item {
+      flex: 1; min-width: 120px; background: var(--accent);
+      border: 1px solid var(--border); padding: 14px 16px;
+      position: relative; text-align: center;
+    }
+    .flow-item:not(:last-child)::after {
+      content: "";
+      position: absolute; right: -1px; top: 50%;
+      transform: translateY(-50%);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 10px solid var(--blue);
+      z-index: 1;
+    }
+    .flow-title { font-weight: 700; font-size: 13px; color: var(--navy); margin-bottom: 4px; }
+    .flow-sub { font-size: 11px; color: var(--mid); }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin: 20px 0; }
+    .stat { background: var(--accent); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 12px; color: var(--mid); }
+
+    /* WIRE DIAGRAM */
+    .wire-diagram {
+      background: var(--navy); color: #E0E0E0;
+      font-family: "SF Mono", "Courier New", monospace;
+      font-size: 12px; line-height: 1.8;
+      padding: 20px 24px; border-radius: var(--r);
+      margin: 16px 0; overflow-x: auto;
+    }
+    .wire-l { color: #FF6B6B; font-weight: 700; }
+    .wire-n { color: #74B9FF; font-weight: 700; }
+    .wire-e { color: #55EFC4; font-weight: 700; }
+    .wire-com { color: #FFC107; }
+
+    /* LIST */
+    ul.check-list { list-style: none; padding: 0; }
+    ul.check-list li { padding: 5px 0 5px 24px; position: relative; font-size: 14px; color: var(--mid); }
+    ul.check-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 12px; height: 7px; border-left: 2px solid var(--green); border-bottom: 2px solid var(--green); transform: rotate(-45deg); }
+
+    /* BEFORE/AFTER */
+    .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .ba-box { border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
+    .ba-box.before { border-top: 3px solid var(--red); }
+    .ba-box.after  { border-top: 3px solid var(--green); }
+    .ba-label { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 8px; }
+    .ba-box.before .ba-label { color: var(--red); }
+    .ba-box.after  .ba-label { color: var(--green); }
+    .ba-box p { font-size: 13px; color: var(--mid); }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: #7B8D9E;
+      text-align: center; padding: 28px 24px;
+      font-size: 13px; margin-top: 40px;
+    }
+    footer strong { color: #C8D0D9; }
+
+    @media (max-width: 600px) {
+      .ba { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; }
+      .flow-item:not(:last-child)::after { display: none; }
+      nav { padding: 0 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">智能家庭入職手冊</span>
+  <div class="nav-links">
+    <a href="#s1">認識智能家庭</a>
+    <a href="#s2">通訊協定</a>
+    <a href="#s3">HomeKit</a>
+    <a href="#s4">電氣知識</a>
+    <a href="#s5">網路架構</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">新人入職培訓</span>
+    <h1>智能家庭技術入門手冊</h1>
+    <p>從零開始，了解智能家庭的核心概念、主流協定、Apple HomeKit 生態、基礎電氣配線，以及網路架構規劃。</p>
+    <div class="hero-meta">
+      <span><strong>版本</strong> v1.0</span>
+      <span><strong>更新</strong> 2026-05-29</span>
+      <span><strong>適合對象</strong> 智能家庭領域新進人員</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ───────────────────────────── SECTION 1 ───────────────────────────── -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>認識智能家庭</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:20px;">智能家庭（Smart Home）透過網路連接各種家用設備，讓使用者能用手機、語音或自動化情境來控制照明、空調、安全、娛樂等系統。</p>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">6+</div><div class="stat-label">主流通訊協定</div></div>
+      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">常見設備類型</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">主要生態系統</div></div>
+      <div class="stat"><div class="stat-num">110V</div><div class="stat-label">台灣標準電壓</div></div>
+    </div>
+
+    <h3>常見智能家庭設備分類</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">照明系統</div>
+        <p>智能燈泡、智能開關、調光器、燈帶。最常見的入門設備，效益最直接。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">安全監控</div>
+        <p>智能門鎖、門磁感應器、動作感應器、攝影機、煙霧偵測器。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">環境控制</div>
+        <p>智能溫控器、空調控制、窗簾/捲簾馬達、空氣品質感應器。</p>
+      </div>
+      <div class="card red">
+        <div class="card-title">能源管理</div>
+        <p>智能插座（含電量監控）、電費計算、太陽能系統整合。</p>
+      </div>
+    </div>
+
+    <h3>三大生態系統比較</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color: #0073BB;">
+        <div class="ba-label" style="color:#0073BB;">Apple HomeKit</div>
+        <p>嚴格認證、隱私保護強、操作最流暢，但相容配件較少且售價偏高。</p>
+      </div>
+      <div class="ba-box after" style="border-top-color: #34A853;">
+        <div class="ba-label" style="color:#34A853;">Google Home</div>
+        <p>Android 整合佳、AI 語音能力強，跨品牌支援廣泛，隱私爭議較多。</p>
+      </div>
+    </div>
+    <div class="ba">
+      <div class="ba-box" style="border-top: 3px solid #FF9900;">
+        <div class="ba-label" style="color:#FF9900;">Amazon Alexa</div>
+        <p>相容設備最多、技能生態豐富，但在台灣支援度有限。</p>
+      </div>
+      <div class="ba-box" style="border-top: 3px solid var(--blue);">
+        <div class="ba-label" style="color:var(--blue);">Matter（跨平台）</div>
+        <p>2022 年推出的統一標準，同一設備可同時接受 HomeKit / Google / Alexa 控制。</p>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-label">重點觀念</div>
+      智能家庭的核心是「互聯」與「自動化」。單一設備不是智能家庭，設備彼此能感知、聯動才是真正的智能。
+    </div>
+  </div>
+
+  <!-- ───────────────────────────── SECTION 2 ───────────────────────────── -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>相關通訊協定總覽</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:20px;">不同設備使用不同的無線/有線協定溝通。了解各協定的特性，才能在安裝時做出正確的設備選擇。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>協定</th>
+            <th>頻段</th>
+            <th>拓撲</th>
+            <th>耗電</th>
+            <th>需要 Hub</th>
+            <th>適合設備</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wi-Fi</strong></td>
+            <td>2.4 / 5 GHz</td>
+            <td>Star</td>
+            <td><span class="badge badge-orange">高</span></td>
+            <td><span class="badge badge-green">不需要</span></td>
+            <td>攝影機、冰箱、洗衣機</td>
+            <td>直接連路由器，設定最簡單</td>
+          </tr>
+          <tr>
+            <td><strong>Zigbee</strong></td>
+            <td>2.4 GHz</td>
+            <td>Mesh</td>
+            <td><span class="badge badge-green">低</span></td>
+            <td><span class="badge badge-orange">需要</span></td>
+            <td>燈泡、開關、感應器</td>
+            <td>最多 65000 個節點，市佔率高</td>
+          </tr>
+          <tr>
+            <td><strong>Z-Wave</strong></td>
+            <td>868/908 MHz</td>
+            <td>Mesh</td>
+            <td><span class="badge badge-green">低</span></td>
+            <td><span class="badge badge-orange">需要</span></td>
+            <td>門鎖、開關、感應器</td>
+            <td>不受 2.4GHz 干擾，穿牆效果佳</td>
+          </tr>
+          <tr>
+            <td><strong>Thread</strong></td>
+            <td>2.4 GHz</td>
+            <td>Mesh</td>
+            <td><span class="badge badge-green">極低</span></td>
+            <td><span class="badge badge-blue">Border Router</span></td>
+            <td>感應器、開關、Matter 設備</td>
+            <td>基於 IPv6，Matter 的底層傳輸協定之一</td>
+          </tr>
+          <tr>
+            <td><strong>Matter</strong></td>
+            <td>Wi-Fi / Thread</td>
+            <td>Star/Mesh</td>
+            <td>依底層</td>
+            <td><span class="badge badge-green">不需要</span></td>
+            <td>新世代跨平台設備</td>
+            <td>應用層標準，跑在 Wi-Fi 或 Thread 上</td>
+          </tr>
+          <tr>
+            <td><strong>Bluetooth LE</strong></td>
+            <td>2.4 GHz</td>
+            <td>Star</td>
+            <td><span class="badge badge-green">低</span></td>
+            <td><span class="badge badge-green">不需要</span></td>
+            <td>門鎖、體重計、感應器</td>
+            <td>距離短（約 10m），適合近距離設備</td>
+          </tr>
+          <tr>
+            <td><strong>KNX</strong></td>
+            <td>有線（雙絞線）</td>
+            <td>Bus</td>
+            <td><span class="badge badge-gray">N/A</span></td>
+            <td><span class="badge badge-orange">需要</span></td>
+            <td>商業建築、豪宅</td>
+            <td>工業級可靠性，工程複雜，造價高</td>
+          </tr>
+          <tr>
+            <td><strong>RS-485</strong></td>
+            <td>有線</td>
+            <td>Bus</td>
+            <td><span class="badge badge-gray">N/A</span></td>
+            <td><span class="badge badge-orange">需要</span></td>
+            <td>大樓門禁、中央空調</td>
+            <td>工業通訊標準，Modbus 協定常用此物理層</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>協定選擇建議</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">一般住宅新裝</div>
+        <p>優先選 <strong>Matter + Thread</strong> 生態設備。未來相容性最好，不鎖單一平台。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">預算有限 / 改裝</div>
+        <p>選 <strong>Zigbee</strong> 生態（飛利浦 Hue、IKEA Tradfri）。設備選擇多、價格親民。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">商業 / 豪宅</div>
+        <p>考慮 <strong>KNX</strong> 有線系統。穩定度最高，但需要專業工程師配線。</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">注意</div>
+      Zigbee 與 Z-Wave 都需要 Hub（橋接器）才能接入 HomeKit 或 Google Home。常見 Hub：Philips Hue Bridge、Samsung SmartThings、Home Assistant。
+    </div>
+
+    <h3>協定關係圖</h3>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-title">實體設備</div>
+        <div class="flow-sub">燈 / 開關 / 感應器</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">無線協定</div>
+        <div class="flow-sub">Zigbee / Thread / Wi-Fi</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">Hub / 橋接</div>
+        <div class="flow-sub">Border Router / Bridge</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">應用平台</div>
+        <div class="flow-sub">HomeKit / Google / Alexa</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">用戶介面</div>
+        <div class="flow-sub">App / 語音 / 自動化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────── SECTION 3 ───────────────────────────── -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Apple HomeKit 深入了解</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:20px;">HomeKit 是 Apple 於 2014 年推出的智能家庭框架，透過「家庭」App 統一管理所有認證設備，並以隱私保護著稱。</p>
+
+    <h3>HomeKit 架構組成</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">Home Hub（家庭中樞）</div>
+        <p>Apple TV 4K、HomePod、HomePod mini。讓你在外也能遠端存取設備，並執行自動化。<br><br><strong>至少需要一台</strong>才能啟用遠端控制與自動化。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">HomeKit 配件</div>
+        <p>通過 MFi（Made for iPhone）認證的設備。認證確保加密通訊與資料安全，所有資料不經 Apple 伺服器，直接點對點傳輸。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">家庭 App</div>
+        <p>iOS / iPadOS / macOS 內建。管理設備、建立自動化、共享家庭成員存取權限。</p>
+      </div>
+      <div class="card red">
+        <div class="card-title">Siri 語音控制</div>
+        <p>「嘿 Siri，關掉客廳的燈」、「把溫度設定到 25 度」。透過 HomePod 可做到全屋語音控制。</p>
+      </div>
+    </div>
+
+    <h3>HomeKit 支援的服務類型</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>類別</th>
+            <th>包含設備</th>
+            <th>常用指令範例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>照明</td>
+            <td>燈泡、燈帶、調光器、開關</td>
+            <td>「打開臥室燈」、「把亮度調到 50%」、「切換成暖白色」</td>
+          </tr>
+          <tr>
+            <td>氣候</td>
+            <td>溫控器、冷氣、暖氣、空氣清淨機</td>
+            <td>「把客廳溫度設為 24 度」</td>
+          </tr>
+          <tr>
+            <td>安全</td>
+            <td>門鎖、攝影機、門磁、動作感應</td>
+            <td>「鎖上前門」、「查看門口攝影機」</td>
+          </tr>
+          <tr>
+            <td>窗簾/遮陽</td>
+            <td>電動窗簾、百葉窗、捲簾</td>
+            <td>「把臥室窗簾打開一半」</td>
+          </tr>
+          <tr>
+            <td>插座/開關</td>
+            <td>智能插座、智能排插</td>
+            <td>「關掉咖啡機」</td>
+          </tr>
+          <tr>
+            <td>感應器</td>
+            <td>溫濕度、空氣品質、漏水偵測</td>
+            <td>自動化觸發條件</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>情境（Scene）與自動化（Automation）</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color:var(--blue)">
+        <div class="ba-label" style="color:var(--blue);">情境（Scene）</div>
+        <p>手動觸發一組設備狀態。<br><br>例如「電影模式」= 燈光調暗至 20%、窗簾關閉、電視開啟。</p>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">自動化（Automation）</div>
+        <p>依條件自動執行。<br><br>例如「早上 7:00 打開臥室燈」、「我回家時開冷氣」、「最後一個人離家後關閉所有燈」。</p>
+      </div>
+    </div>
+
+    <h3>Matter 與 HomeKit 的關係</h3>
+    <div class="callout">
+      <div class="callout-label">重要</div>
+      Matter 設備可直接加入 HomeKit，無需任何 Hub 或橋接器。從 iOS 16 起，Home Hub 同時可作為 Matter Border Router，讓 Thread 設備透過它連接 HomeKit。這是未來智能家庭的主流方向。
+    </div>
+
+    <h3>HomeKit 安裝注意事項</h3>
+    <ul class="check-list">
+      <li>確認設備包裝上有 HomeKit 標誌（或 Works with Apple Home）</li>
+      <li>家庭 App 掃描設備背面或說明書的 8 位數配對碼（HAP code）</li>
+      <li>設備需在同一 Wi-Fi 或透過 Hub 連線</li>
+      <li>每個家庭最多可加 150 個配件，16 個房間，100 個情境</li>
+      <li>家庭成員共享需邀請（需有 Apple ID），可設定不同權限等級</li>
+    </ul>
+  </div>
+
+  <!-- ───────────────────────────── SECTION 4 ───────────────────────────── -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>接燈與開關的電氣知識</h2>
+    </div>
+
+    <div class="callout danger">
+      <div class="callout-label">安全警告</div>
+      進行任何電氣作業前，<strong>必須先至配電盤關閉對應迴路的無熔絲開關（NFB）</strong>，並用驗電筆確認無電後再施工。切勿帶電作業。
+    </div>
+
+    <h3>台灣家用電基礎</h3>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">110V</div><div class="stat-label">一般用電（照明/插座）</div></div>
+      <div class="stat"><div class="stat-num">220V</div><div class="stat-num" style="font-size:14px;color:var(--mid);">冷氣/烘衣機</div></div>
+      <div class="stat"><div class="stat-num">60Hz</div><div class="stat-label">電源頻率</div></div>
+      <div class="stat"><div class="stat-num">15A</div><div class="stat-label">一般迴路額定電流</div></div>
+    </div>
+
+    <h3>三條電線認識</h3>
+    <div class="wire-diagram">
+<span class="wire-l">火線 L（Live）</span>   ─── 黑色（舊式）或紅色  ──→  帶電，電壓 110V
+<span class="wire-n">中性線 N（Neutral）</span> ─── 白色              ──→  回路，近似 0V
+<span class="wire-e">接地線 E（Earth）</span>  ─── 綠色或裸銅線      ──→  安全保護，不通電流
+
+<span class="wire-com">配電盤 NFB</span>
+    │
+    ├─── <span class="wire-l">L（黑）</span> ──→ 開關 ──→ 燈具
+    │
+    └─── <span class="wire-n">N（白）</span> ──────────→ 燈具（直通）
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-label">重要差異</div>
+      <strong>傳統開關只切斷火線，沒有引中性線到開關盒。</strong>智能開關需要中性線（N）維持待機電源，因此安裝前必須先確認開關盒內是否有 N 線。如果沒有，需要選擇「無需中性線」型號，或請水電師傅重新配線。
+    </div>
+
+    <h3>開關接線類型</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>類型</th>
+            <th>線數</th>
+            <th>用途</th>
+            <th>智能開關相容性</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>單切開關</strong><br>Single Pole</td>
+            <td>2 條（L、N）或 2 條（L-in、L-out）</td>
+            <td>一個位置控制一盞燈</td>
+            <td><span class="badge badge-green">需確認是否有 N 線</span></td>
+          </tr>
+          <tr>
+            <td><strong>雙切開關</strong><br>3-Way</td>
+            <td>3 條（L、兩條 Traveler）</td>
+            <td>兩個位置都能控制同一盞燈（如樓梯）</td>
+            <td><span class="badge badge-orange">需成對更換，較複雜</span></td>
+          </tr>
+          <tr>
+            <td><strong>調光開關</strong><br>Dimmer</td>
+            <td>2～3 條</td>
+            <td>控制亮度</td>
+            <td><span class="badge badge-orange">必須確認燈具支援調光</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>LED 燈與調光器相容性</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">LED 不一定可調光</div>
+        <p>LED 燈泡包裝上若有「可調光」（Dimmable）標示才能搭配調光器。一般 LED 硬接調光器可能閃爍或損壞。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">前沿 vs 後沿調光</div>
+        <p>LED 建議使用<strong>後沿（Trailing Edge）</strong>調光器，效果較平順。前沿（Leading Edge）適合鎢絲燈，用於 LED 易有閃爍問題。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">最低負載限制</div>
+        <p>調光器有最低負載要求（如 40W）。若 LED 燈瓦數太低，可能無法正常運作，需選購支援低負載的調光器。</p>
+      </div>
+    </div>
+
+    <h3>常用工具</h3>
+    <ul class="check-list">
+      <li>驗電筆（非接觸式）：在不拆線的情況下確認是否帶電</li>
+      <li>三用電表：量測電壓、電流、電阻</li>
+      <li>絕緣膠帶：包覆裸露線頭</li>
+      <li>壓線帽 / Wire Connector：連接多條電線</li>
+      <li>一字 / 十字螺絲起子（含絕緣手柄）</li>
+    </ul>
+
+    <div class="callout success">
+      <div class="callout-label">新人建議</div>
+      第一次安裝智能開關時，先從「有確認 N 線、單切開關控制一般 LED 燈」的情況開始練習，是最安全、最容易成功的組合。
+    </div>
+  </div>
+
+  <!-- ───────────────────────────── SECTION 5 ───────────────────────────── -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>網路架構基礎認識</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:20px;">穩定的家庭網路是智能家庭的基礎。了解基本的網路架構，才能有效排除設備掉線等問題。</p>
+
+    <h3>基本網路設備</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">數據機（Modem）</div>
+        <p>將 ISP（電信商）提供的訊號（光纖/ADSL）轉換為乙太網路訊號。通常由 ISP 提供，不需自行設定。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">路由器（Router）</div>
+        <p>負責分配 IP 位址（DHCP）、管理所有設備的網路流量。是家庭網路的核心，也提供 Wi-Fi 功能。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">交換器（Switch）</div>
+        <p>擴充有線網路埠。當路由器的有線埠不夠用時，透過交換器增加接口。智能交換器支援 VLAN 設定。</p>
+      </div>
+      <div class="card red">
+        <div class="card-title">無線基地台（AP）</div>
+        <p>單純提供 Wi-Fi，本身沒有路由功能。大坪數住宅可部署多台 AP 延伸訊號覆蓋範圍。</p>
+      </div>
+    </div>
+
+    <h3>IP 位址基礎</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>名詞</th>
+            <th>說明</th>
+            <th>範例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>IP 位址</strong></td>
+            <td>網路上每台設備的地址，就像門牌號碼</td>
+            <td>192.168.1.100</td>
+          </tr>
+          <tr>
+            <td><strong>子網路遮罩</strong></td>
+            <td>定義哪些設備在同一個網段內</td>
+            <td>255.255.255.0 (/24)</td>
+          </tr>
+          <tr>
+            <td><strong>閘道（Gateway）</strong></td>
+            <td>通往外部網路的出口，通常是路由器的 IP</td>
+            <td>192.168.1.1</td>
+          </tr>
+          <tr>
+            <td><strong>DHCP</strong></td>
+            <td>路由器自動分配 IP 給新連線設備</td>
+            <td>設備插上就能用，無需手動設定</td>
+          </tr>
+          <tr>
+            <td><strong>靜態 IP</strong></td>
+            <td>手動指定固定 IP，設備重啟後不會改變</td>
+            <td>智能 Hub、NAS、攝影機建議使用</td>
+          </tr>
+          <tr>
+            <td><strong>DNS</strong></td>
+            <td>將網址轉換為 IP（域名解析服務）</td>
+            <td>8.8.8.8（Google DNS）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Wi-Fi 頻段選擇</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color:#0073BB">
+        <div class="ba-label" style="color:#0073BB;">2.4 GHz</div>
+        <p><strong>穿透力強、距離遠</strong>，但速度較慢（理論最高 600Mbps），干擾多。<br><br>智能家庭大多數設備（Zigbee 橋、智能插座、低功耗感應器）只支援 2.4GHz。</p>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">5 GHz</div>
+        <p><strong>速度快、干擾少</strong>，但距離短、穿牆差。<br><br>適合手機、電腦、Apple TV、NAS 等高頻寬設備。</p>
+      </div>
+    </div>
+
+    <h3>IoT VLAN 隔離（重要安全概念）</h3>
+    <div class="callout warn">
+      <div class="callout-label">安全建議</div>
+      智能家庭設備（尤其是便宜的中國廠牌）安全性參差不齊，建議將 IoT 設備放在獨立的 VLAN，與主要設備（電腦、手機）網段隔離，防止 IoT 設備被入侵後波及主網路。
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">VLAN 主網路（VLAN 1）</div>
+        <p>電腦、手機、NAS、Apple TV（Home Hub）。最高安全等級，可訪問所有其他 VLAN。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">VLAN IoT（VLAN 20）</div>
+        <p>智能燈、插座、感應器、空調控制器。可訪問 Internet，但隔離於主網路。</p>
+      </div>
+      <div class="card red">
+        <div class="card-title">VLAN 攝影機（VLAN 30）</div>
+        <p>監控攝影機、門鈴。最高隔離，禁止訪問 Internet，只允許錄影到本地 NVR。</p>
+      </div>
+    </div>
+
+    <h3>Mesh Wi-Fi 系統</h3>
+    <p style="color:var(--mid); margin-bottom:12px;">傳統的 Wi-Fi 延伸器（Repeater）會降低一半頻寬，現代 Mesh 系統透過多個節點（Node）智慧切換，提供無縫漫遊體驗。</p>
+
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-title">ISP 數據機</div>
+        <div class="flow-sub">光纖入戶</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">Mesh 主節點</div>
+        <div class="flow-sub">Router + AP（如 UniFi Dream Machine）</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">Mesh 子節點</div>
+        <div class="flow-sub">純 AP（有線回傳最佳）</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">IoT 設備</div>
+        <div class="flow-sub">自動連最近節點</div>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-label">新人建議</div>
+      <strong>有線回傳（Wired Backhaul）= 最佳效能。</strong>若條件允許，Mesh 子節點應透過網路線連回主節點，而非無線回傳。這能讓每個節點都有完整的頻寬給客戶端設備。
+    </div>
+
+    <h3>常見網路問題排查</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>問題</th>
+            <th>可能原因</th>
+            <th>排查步驟</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>設備無法加入 HomeKit</td>
+            <td>設備只支援 2.4GHz，但路由器 SSID 混頻</td>
+            <td>分開 2.4/5GHz SSID，確保設備連到 2.4GHz</td>
+          </tr>
+          <tr>
+            <td>設備頻繁掉線</td>
+            <td>Wi-Fi 干擾、IP 衝突、DHCP 租約問題</td>
+            <td>改用靜態 IP，或在 DHCP 中固定設備 IP</td>
+          </tr>
+          <tr>
+            <td>遠端無法控制</td>
+            <td>Home Hub 離線或網路問題</td>
+            <td>確認 Apple TV / HomePod 是否在線，重啟 Home Hub</td>
+          </tr>
+          <tr>
+            <td>Zigbee 設備信號差</td>
+            <td>Zigbee（2.4GHz）與 Wi-Fi 頻道衝突</td>
+            <td>將 Wi-Fi 設定在 1、6 或 11 頻道，避免與 Zigbee 重疊</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>智能家庭入職培訓手冊</strong> &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026-05-29<br>
+  <span style="margin-top:6px; display:block;">如有疑問請洽詢資深工程師</span>
+</footer>
+
+</body>
+</html>
