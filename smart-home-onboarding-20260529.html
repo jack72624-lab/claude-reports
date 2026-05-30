@@ -1422,6 +1422,27 @@
       </div>
     </div>
 
+    <h3>PoE（乙太網路供電）</h3>
+    <p style="color:var(--mid);margin-bottom:14px;">PoE（Power over Ethernet）讓網路線在傳輸資料的同時也能供電，設備不需要額外的電源插座，走線更簡潔。</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">PoE 交換器（PoE Switch）</div>
+        <p>具備供電能力的交換器，每個埠可輸出 15W（802.3af）或 30W（802.3at / PoE+）。是大量部署 AP 或攝影機的標準配置。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">PoE 注入器（Injector）</div>
+        <p>單埠供電轉接器，插在現有路由器/交換器與設備之間。適合只有一兩台 PoE 設備時的低成本方案。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">常見 PoE 設備</div>
+        <p>無線基地台（AP）、IP 攝影機、智能門鈴、門禁讀卡機、部分 IoT Hub。確認設備的 PoE 標準（af / at）再選購對應交換器。</p>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">注意</div>
+      PoE 規格需匹配：af（15W）用於輕量設備，at / PoE+（30W）用於高功耗 AP 或攝影機加熱器。線材需達 Cat5e 以上。
+    </div>
+
     <h3>IP 位址基礎</h3>
     <div class="table-wrap">
       <table>
@@ -1471,33 +1492,17 @@
     <div class="ba">
       <div class="ba-box before" style="border-top-color:#0073BB">
         <div class="ba-label" style="color:#0073BB;">2.4 GHz</div>
-        <p><strong>穿透力強、距離遠</strong>，但速度較慢（理論最高 600Mbps），干擾多。<br><br>智能家庭大多數設備（Zigbee 橋、智能插座、低功耗感應器）只支援 2.4GHz。</p>
+        <p><strong>穿透力強、距離遠</strong>，但速度較慢（理論最高 600Mbps），干擾多。<br><br>智能家庭大多數設備（Thread Border Router、智能插座、低功耗感應器）只支援 2.4GHz。</p>
       </div>
       <div class="ba-box after">
         <div class="ba-label">5 GHz</div>
         <p><strong>速度快、干擾少</strong>，但距離短、穿牆差。<br><br>適合手機、電腦、Apple TV、NAS 等高頻寬設備。</p>
       </div>
     </div>
-
-    <h3>IoT VLAN 隔離（重要安全概念）</h3>
-    <div class="callout warn">
-      <div class="callout-label">安全建議</div>
-      智能家庭設備（尤其是便宜的中國廠牌）安全性參差不齊，建議將 IoT 設備放在獨立的 VLAN，與主要設備（電腦、手機）網段隔離，防止 IoT 設備被入侵後波及主網路。
-    </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">VLAN 主網路（VLAN 1）</div>
-        <p>電腦、手機、NAS、Apple TV（Home Hub）。最高安全等級，可訪問所有其他 VLAN。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">VLAN IoT（VLAN 20）</div>
-        <p>智能燈、插座、感應器、空調控制器。可訪問 Internet，但隔離於主網路。</p>
-      </div>
-      <div class="card red">
-        <div class="card-title">VLAN 攝影機（VLAN 30）</div>
-        <p>監控攝影機、門鈴。最高隔離，禁止訪問 Internet，只允許錄影到本地 NVR。</p>
-      </div>
+    <div class="callout" style="margin-top:16px;">
+      <div class="callout-label">為什麼 2.4GHz 要選頻道 1、6 或 11？</div>
+      2.4GHz 共有 13 個頻道（台灣），每個頻道佔用 20MHz 頻寬，但頻道間距只有 5MHz，相鄰頻道會互相重疊。只有頻道 1、6、11 彼此間距恰好 25MHz（5 個頻道 × 5MHz），完全不重疊，稱為「非重疊頻道（Non-overlapping channels）」。<br><br>
+      若鄰居 Wi-Fi 使用頻道 3，你設在頻道 1 就不會和他干擾；若你選頻道 2，則同時與頻道 1 和頻道 3 的網路重疊，造成雙倍干擾。多台 AP 部署時，也建議交錯使用這三個頻道。
     </div>
 
     <h3>常見網路問題排查</h3>
@@ -1527,9 +1532,9 @@
             <td>確認 Apple TV / HomePod 是否在線，重啟 Home Hub</td>
           </tr>
           <tr>
-            <td>Zigbee 設備信號差</td>
-            <td>Zigbee（2.4GHz）與 Wi-Fi 頻道衝突</td>
-            <td>將 Wi-Fi 設定在 1、6 或 11 頻道，避免與 Zigbee 重疊</td>
+            <td>Thread 設備信號差</td>
+            <td>Thread（2.4GHz）與 Wi-Fi 頻道衝突</td>
+            <td>將 Wi-Fi 設定在 1、6 或 11 頻道，避免與 Thread 重疊</td>
           </tr>
         </tbody>
       </table>
