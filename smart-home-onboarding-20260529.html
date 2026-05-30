@@ -1499,12 +1499,6 @@
         <p><strong>速度快、干擾少</strong>，但距離短、穿牆差。<br><br>適合手機、電腦、Apple TV、NAS 等高頻寬設備。</p>
       </div>
     </div>
-    <div class="callout" style="margin-top:16px;">
-      <div class="callout-label">為什麼 2.4GHz 要選頻道 1、6 或 11？</div>
-      2.4GHz 共有 13 個頻道（台灣），每個頻道佔用 20MHz 頻寬，但頻道間距只有 5MHz，相鄰頻道會互相重疊。只有頻道 1、6、11 彼此間距恰好 25MHz（5 個頻道 × 5MHz），完全不重疊，稱為「非重疊頻道（Non-overlapping channels）」。<br><br>
-      若鄰居 Wi-Fi 使用頻道 3，你設在頻道 1 就不會和他干擾；若你選頻道 2，則同時與頻道 1 和頻道 3 的網路重疊，造成雙倍干擾。多台 AP 部署時，也建議交錯使用這三個頻道。
-    </div>
-
     <h3>常見網路問題排查</h3>
     <div class="table-wrap">
       <table>
@@ -1538,6 +1532,12 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-label">為什麼 2.4GHz 要選頻道 1、6 或 11？</div>
+      2.4GHz 共有 13 個頻道（台灣），每個頻道佔用 20MHz 頻寬，但頻道間距只有 5MHz，相鄰頻道會互相重疊。只有頻道 1、6、11 彼此間距恰好 25MHz（5 個頻道 × 5MHz），完全不重疊，稱為「非重疊頻道（Non-overlapping channels）」。<br><br>
+      若鄰居 Wi-Fi 使用頻道 3，你設在頻道 1 就不會和他干擾；若你選頻道 2，則同時與頻道 1 和頻道 3 的網路重疊，造成雙倍干擾。多台 AP 部署時，也建議交錯使用這三個頻道。<br><br>
+      <strong>Thread 的頻段</strong>：Thread 同樣工作在 2.4GHz，使用 IEEE 802.15.4 標準，頻道編號 11–26（共 16 個，每個 5MHz 寬）。這與 Wi-Fi 的頻道號碼系統<strong>完全不同</strong>，不可混用。Thread 建議使用頻道 15、20、25 或 26，這些頻道恰好落在 Wi-Fi 頻道 1、6、11 的空隙或邊緣，干擾最小。將 Wi-Fi 固定在 1、6、11 非重疊頻道後，Thread 也能在相對乾淨的頻譜環境中運作。
     </div>
   </div>
 
