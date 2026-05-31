@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能家庭入門介紹</title>
+  <style>
+    :root {
+      --navy:    #161D26;
+      --blue:    #0073BB;
+      --blue-dk: #005A94;
+      --accent:  #F3F3F7;
+      --white:   #FFFFFF;
+      --text:    #16191F;
+      --mid:     #545B64;
+      --light:   #879596;
+      --border:  #DDE1E6;
+      --green:   #1D8348;
+      --red:     #C0392B;
+      --orange:  #D35400;
+      --r:       2px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: var(--text); background: var(--white); font-size: 15px; line-height: 1.7; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); color: var(--white);
+      padding: 0 24px; display: flex; align-items: center; gap: 0;
+      border-bottom: 2px solid var(--blue); min-height: 52px;
+    }
+    .nav-brand { font-weight: 700; font-size: 15px; color: var(--white); margin-right: 32px; white-space: nowrap; }
+    .nav-links { display: flex; gap: 4px; overflow-x: auto; }
+    .nav-links a {
+      color: #C8D0D9; text-decoration: none; font-size: 13px;
+      padding: 6px 12px; border-radius: var(--r); white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #1E2D40 100%);
+      color: var(--white); padding: 56px 32px 48px;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .eyebrow {
+      display: inline-block; background: var(--blue);
+      color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .8px;
+      text-transform: uppercase; padding: 3px 10px; border-radius: var(--r);
+      margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
+    .hero p { color: #9FB3C8; font-size: 16px; max-width: 620px; }
+    .hero-meta { margin-top: 24px; display: flex; gap: 24px; flex-wrap: wrap; }
+    .hero-meta span { font-size: 13px; color: #7B8D9E; }
+    .hero-meta strong { color: #C8D0D9; }
+
+    /* LAYOUT */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* SECTION */
+    .section { padding: 48px 0 32px; border-bottom: 1px solid var(--border); }
+    .section:last-child { border-bottom: none; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+    .section-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section h2 { font-size: 22px; font-weight: 700; color: var(--navy); }
+    .section h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin: 24px 0 10px; }
+
+    /* CARDS GRID */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+    .card {
+      border: 1px solid var(--border); border-radius: var(--r);
+      border-top: 3px solid var(--blue); padding: 18px;
+      background: var(--white);
+    }
+    .card.green { border-top-color: var(--green); }
+    .card.orange { border-top-color: var(--orange); }
+    .card.red { border-top-color: var(--red); }
+    .card-title { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 8px; }
+    .card p { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+    /* CALLOUT */
+    .callout {
+      border-left: 4px solid var(--blue);
+      background: var(--accent); padding: 14px 18px;
+      border-radius: 0 var(--r) var(--r) 0;
+      margin: 20px 0; font-size: 14px;
+    }
+    .callout.warn { border-left-color: var(--orange); }
+    .callout.danger { border-left-color: var(--red); }
+    .callout.success { border-left-color: var(--green); }
+    .callout-label { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; color: var(--blue); }
+    .callout.warn .callout-label { color: var(--orange); }
+    .callout.danger .callout-label { color: var(--red); }
+    .callout.success .callout-label { color: var(--green); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: var(--r); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      background: var(--navy); color: var(--white);
+      font-weight: 600; text-align: left;
+      padding: 10px 14px; font-size: 12px; letter-spacing: .3px;
+    }
+    td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #FAFBFC; }
+    .badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px; white-space: nowrap;
+    }
+    .badge-blue  { background: #E8F4FD; color: var(--blue-dk); }
+    .badge-green { background: #E8F6EF; color: #145A32; }
+    .badge-gray  { background: #EAECEE; color: var(--mid); }
+    .badge-orange{ background: #FEF5E7; color: #784212; }
+
+    /* FLOW */
+    .flow { display: flex; align-items: stretch; flex-wrap: wrap; gap: 0; margin: 20px 0; }
+    .flow-item {
+      flex: 1; min-width: 120px; background: var(--accent);
+      border: 1px solid var(--border); padding: 14px 16px;
+      position: relative; text-align: center;
+    }
+    .flow-item:not(:last-child)::after {
+      content: "";
+      position: absolute; right: -1px; top: 50%;
+      transform: translateY(-50%);
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 10px solid var(--blue);
+      z-index: 1;
+    }
+    .flow-title { font-weight: 700; font-size: 13px; color: var(--navy); margin-bottom: 4px; }
+    .flow-sub { font-size: 11px; color: var(--mid); }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin: 20px 0; }
+    .stat { background: var(--accent); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 12px; color: var(--mid); }
+
+    /* WIRE DIAGRAM */
+    .wire-diagram {
+      background: var(--navy); color: #E0E0E0;
+      font-family: "SF Mono", "Courier New", monospace;
+      font-size: 12px; line-height: 1.8;
+      padding: 20px 24px; border-radius: var(--r);
+      margin: 16px 0; overflow-x: auto;
+    }
+    .wire-l { color: #FF6B6B; font-weight: 700; }
+    .wire-n { color: #74B9FF; font-weight: 700; }
+    .wire-e { color: #55EFC4; font-weight: 700; }
+    .wire-com { color: #FFC107; }
+
+    /* LIST */
+    ul.check-list { list-style: none; padding: 0; }
+    ul.check-list li { padding: 5px 0 5px 24px; position: relative; font-size: 14px; color: var(--mid); }
+    ul.check-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 12px; height: 7px; border-left: 2px solid var(--green); border-bottom: 2px solid var(--green); transform: rotate(-45deg); }
+
+    /* BEFORE/AFTER */
+    .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .ba-box { border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
+    .ba-box.before { border-top: 3px solid var(--red); }
+    .ba-box.after  { border-top: 3px solid var(--green); }
+    .ba-label { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 8px; }
+    .ba-box.before .ba-label { color: var(--red); }
+    .ba-box.after  .ba-label { color: var(--green); }
+    .ba-box p { font-size: 13px; color: var(--mid); }
+
+    /* PROTO PROS/CONS */
+    .proto-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+    .proto-card { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+    .proto-name { background: var(--navy); color: #fff; font-weight: 700; font-size: 14px; padding: 10px 16px; }
+    .proto-body { padding: 12px 16px; }
+    .proto-label { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin: 10px 0 4px; }
+    .proto-label.pos { color: var(--green); }
+    .proto-label.neg { color: var(--red); }
+    .proto-body ul { list-style: none; padding: 0; }
+    .proto-body ul li { font-size: 13px; color: var(--mid); padding: 3px 0 3px 16px; position: relative; line-height: 1.5; }
+    .proto-body ul.pros li::before { content: "+"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+    .proto-body ul.cons li::before { content: "−"; position: absolute; left: 0; color: var(--red); font-weight: 700; }
+    .proto-name.matter { background: #6C3483; }
+
+    /* ARCH DIAGRAM */
+    .arch-diagram { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin: 20px 0; }
+    .arch-assistants { background: var(--navy); padding: 20px 24px; display: flex; justify-content: center; gap: 48px; }
+    .arch-assistant { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .arch-assistant svg { width: 36px; height: 36px; color: #9FB3C8; }
+    .arch-assistant span { font-size: 11px; color: #7B8D9E; font-weight: 600; white-space: nowrap; }
+    .arch-matter-bar { background: #6C3483; color: #fff; padding: 11px 24px; text-align: center; font-weight: 700; font-size: 14px; letter-spacing: .4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .arch-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; background: var(--white); }
+    .arch-col { padding: 20px 14px; display: flex; flex-direction: column; align-items: center; gap: 14px; border-right: 1px solid var(--border); }
+    .arch-col:last-child { border-right: none; }
+    .arch-gw-box { width: 100%; border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .arch-gw-box.hub    { border-color: var(--blue);   background: #EBF5FB; }
+    .arch-gw-box.direct { border-color: var(--orange); background: #FEF9F0; }
+    .arch-gw-box.brouter{ border-color: var(--green);  background: #EAFAF1; }
+    .arch-gw-box svg { width: 28px; height: 28px; }
+    .arch-gw-box.hub     svg { color: var(--blue); }
+    .arch-gw-box.direct  svg { color: var(--orange); }
+    .arch-gw-box.brouter svg { color: var(--green); }
+    .arch-gw-name { font-weight: 700; font-size: 13px; color: var(--navy); }
+    .arch-gw-sub  { font-size: 11px; color: var(--mid); }
+    .arch-arrow   { color: var(--light); font-size: 18px; line-height: 1; }
+    .arch-devices { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .arch-dev { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .arch-dev svg { width: 26px; height: 26px; color: var(--mid); }
+    .arch-dev-label { font-size: 10px; color: var(--mid); font-weight: 600; text-align: center; line-height: 1.4; }
+    .arch-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: .3px; }
+    .arch-badge.zigbee { background: #EBF5FB; color: var(--blue-dk); }
+    .arch-badge.thread { background: #EAFAF1; color: #1A5632; }
+    .arch-badge.wifi   { background: #FEF5E7; color: #784212; }
+    .arch-badge.bt     { background: #EEF0FF; color: #4527A0; }
+    @media (max-width: 600px) {
+      .arch-cols { grid-template-columns: 1fr; }
+      .arch-col { border-right: none; border-bottom: 1px solid var(--border); }
+      .arch-col:last-child { border-bottom: none; }
+      .arch-assistants { gap: 24px; }
+    }
+
+    /* WIRE COLOR CARDS */
+    .wc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; margin: 16px 0; }
+    .wc-card { display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--border); border-radius: var(--r); padding: 14px; background: var(--white); }
+    .wc-dot { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .wc-name { font-weight: 700; font-size: 13px; color: var(--navy); margin-bottom: 3px; }
+    .wc-role { font-size: 12px; color: var(--blue-dk); font-weight: 600; margin-bottom: 3px; }
+    .wc-note { font-size: 11px; color: var(--mid); }
+
+    /* CIRCUIT SVG */
+    .circuit-svg-wrap { border: 1px solid var(--border); border-radius: var(--r); padding: 20px 16px; background: var(--white); margin: 16px 0; overflow-x: auto; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+    .faq-q {
+      font-weight: 700; font-size: 14px; color: var(--navy);
+      padding: 13px 16px; background: var(--accent);
+      border-left: 4px solid var(--blue); cursor: default;
+    }
+    .faq-a {
+      font-size: 13px; color: var(--mid); line-height: 1.7;
+      padding: 12px 16px; background: var(--white);
+      border-left: 4px solid transparent;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--navy); color: #7B8D9E;
+      text-align: center; padding: 28px 24px;
+      font-size: 13px; margin-top: 40px;
+    }
+    footer strong { color: #C8D0D9; }
+
+    @media (max-width: 600px) {
+      .ba { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; }
+      .flow-item:not(:last-child)::after { display: none; }
+      nav { padding: 0 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-brand">智能家庭入門介紹</span>
+  <div class="nav-links">
+    <a href="#intro">引言</a>
+    <a href="#s1">認識智能家庭</a>
+    <a href="#s2">通訊協定</a>
+    <a href="#s3">HomeKit</a>
+    <a href="#s4">電氣知識</a>
+    <a href="#s5">網路架構</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">新人入門</div>
+    <h1>智能家庭入門介紹</h1>
+    <p>從零開始，了解智能家庭的核心概念、主流協定、Apple HomeKit 生態、基礎電氣配線，以及網路架構規劃。</p>
+    <div class="hero-meta">
+      <span><strong>閱讀時間</strong> 約 30–40 分鐘</span>
+      <span><strong>適用對象</strong> 新進工程師、技術支援人員</span>
+      <span><strong>版本</strong> v1.0 · 2026-05-29</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ─────────────────────────── 引言 INTRO ───────────────────────────── -->
+  <div class="section" id="intro">
+
+    <div class="section-header">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" style="flex-shrink:0;">
+        <circle cx="16" cy="16" r="16" fill="#0073BB"/>
+        <text x="16" y="21" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#fff">引</text>
+      </svg>
+      <h2>寫在前面</h2>
+    </div>
+
+    <p style="color:var(--mid);margin-bottom:20px;">歡迎加入！在你開始接觸真實案場之前，這份文件會幫你建立一套完整的心智模型——不只是「這個開關怎麼接線」，而是理解整個智能家庭系統背後的邏輯：<strong>電從哪裡來、訊號怎麼傳、設備如何被控制</strong>。</p>
+
+    <div class="callout" style="margin-bottom:28px;">
+      <div class="callout-label">讀完這份文件，你能做到什麼</div>
+      獨立判斷客戶家適合哪種智能開關（零火 vs 單火）；看懂並繪製基本電氣迴路圖；向客戶解釋 Thread、Matter、HomeKit 的差異；排查設備掉線、Wi-Fi 干擾等常見問題。
+    </div>
+
+    <h3>智能家庭 = 三個領域的交叉點</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">很多人以為智能家庭只是「裝個 App 控制的燈」，但真正做工程時，你會發現它橫跨三個完全不同的領域：</p>
+
+    <div class="cards" style="margin-bottom:28px;">
+      <div class="card red">
+        <div class="card-title" style="color:var(--red);">電氣基礎</div>
+        <p style="font-size:13px;color:var(--mid);">火線、零線、開關接線方式、迴路規劃。這是最底層的基礎——接錯線，再好的設備也沒用。對應 <strong>Section 4</strong>。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title" style="color:var(--green);">通訊協定</div>
+        <p style="font-size:13px;color:var(--mid);">Thread、Matter、Wi-Fi、Bluetooth。設備之間「說哪種語言」，決定了穩定性、擴充性與廠牌相容度。對應 <strong>Section 2</strong>。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title" style="color:var(--orange);">網路架構</div>
+        <p style="font-size:13px;color:var(--mid);">IP、DHCP、VLAN、Wi-Fi 頻道。設備再好，網路不穩就一切白費。掉線排查 90% 都跟網路有關。對應 <strong>Section 5</strong>。</p>
+      </div>
+    </div>
+
+    <h3>你會在工作中碰到的真實場景</h3>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">場景 1 ── 客戶舊屋想換智能開關，但開關盒沒有零線</div>
+        <div class="faq-a">需要判斷是否能用單火開關、是否需要加電容防止 LED 鬼火，以及施工難度。<br>→ 讀完 <strong>Section 4</strong> 電氣知識後你會有能力評估。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">場景 2 ── 新裝修客戶要做全屋智能，問你該選哪個品牌</div>
+        <div class="faq-a">需要了解 HomeKit、Matter、Thread 的差異，以及各協定的優缺點與適用場景。<br>→ 讀完 <strong>Section 1–3</strong> 後你能提出完整建議。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">場景 3 ── 設備安裝後頻繁掉線，客戶反映不穩定</div>
+        <div class="faq-a">需要排查 Wi-Fi 頻道衝突、IP 衝突、DHCP 租約、Thread 網狀網路覆蓋等問題。<br>→ 讀完 <strong>Section 5</strong> 網路架構後你能系統性排查。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">場景 4 ── 客戶問 HomeKit 能不能控制小米的設備</div>
+        <div class="faq-a">需要了解 Matter 認證、HomeKit 相容性，以及 Home Assistant 作為橋接方案的可能性。<br>→ 讀完 <strong>Section 2–3</strong> 後你能清楚回答並設定正確預期。</div>
+      </div>
+    </div>
+
+    <h3>建議閱讀路徑</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">完全新手</div>
+        <p style="font-size:13px;color:var(--mid);">依序讀完全部五個 Section，不要跳讀。電氣基礎是很多概念的前提。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">有電工背景</div>
+        <p style="font-size:13px;color:var(--mid);">可跳過 Section 4 基礎部分，重點看「智能化改裝」與「單火開關」段落，再補讀 Section 2–3。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">有網路 / IT 背景</div>
+        <p style="font-size:13px;color:var(--mid);">可跳過 Section 5 IP 基礎，重點看 Thread / Matter 協定（Section 2）與電氣基礎（Section 4）。</p>
+      </div>
+    </div>
+
+  </div><!-- /intro -->
+
+  <!-- ───────────────────────────── SECTION 1 ───────────────────────────── -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>認識智能家庭</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:16px;">智能家庭（Smart Home）是指透過網路將家中各種設備串連在一起，讓你能用手機 App、語音指令，甚至是自動排程來控制它們。</p>
+    <p style="color:var(--mid); margin-bottom:16px;">舉個最簡單的例子：以前回家要一個一個手動開燈，現在走進門，燈自動亮；出門時一個按鈕，全屋關燈、鎖門、空調關閉，全部同時完成。</p>
+    <p style="color:var(--mid); margin-bottom:24px;">智能家庭的三個核心概念是：<strong>控制</strong>（隨時隨地操作設備）、<strong>自動化</strong>（設定條件讓設備自己動作）、<strong>整合</strong>（不同品牌設備能互相溝通聯動）。</p>
+
+    <h3>常見智能家庭設備分類</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">照明系統</div>
+        <p>智能燈泡、智能開關、調光器、燈帶。最常見的入門設備，改裝簡單、效益立竿見影。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">環境控制</div>
+        <p>空調控制、電動窗簾/捲簾馬達。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">安全監控</div>
+        <p>智能門鎖、門磁感應器、動作感應器、攝影機、煙霧偵測器。</p>
+      </div>
+    </div>
+
+    <h3>三大生態系統比較</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color: #0073BB;">
+        <div class="ba-label" style="color:#0073BB;">Apple HomeKit</div>
+        <p>嚴格認證、隱私保護強、操作最流暢，但相容配件較少且售價偏高。</p>
+      </div>
+      <div class="ba-box after" style="border-top-color: #34A853;">
+        <div class="ba-label" style="color:#34A853;">Google Home</div>
+        <p>Android 整合佳、AI 語音能力強，跨品牌支援廣泛，隱私爭議較多。</p>
+      </div>
+    </div>
+    <div class="ba">
+      <div class="ba-box" style="border-top: 3px solid #FF9900;">
+        <div class="ba-label" style="color:#FF9900;">Amazon Alexa</div>
+        <p>相容設備最多、技能生態豐富，但在台灣支援度有限。</p>
+      </div>
+      <div class="ba-box" style="border-top: 3px solid var(--blue);">
+        <div class="ba-label" style="color:var(--blue);">Matter（跨平台）</div>
+        <p>2022 年推出的統一標準，同一設備可同時接受 HomeKit / Google / Alexa 控制。</p>
+      </div>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-label">重點觀念</div>
+      智能家庭的核心是「互聯」與「自動化」。單一設備不是智能家庭，設備彼此能感知、聯動才是真正的智能。
+    </div>
+  </div>
+
+  <!-- ───────────────────────────── SECTION 2 ───────────────────────────── -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>相關通訊協定總覽</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:20px;">不同設備使用不同的無線/有線協定溝通。了解各協定的特性，才能在安裝時做出正確的設備選擇。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>協定</th>
+            <th>頻段</th>
+            <th>拓撲</th>
+            <th>耗電</th>
+            <th>需要 Hub</th>
+            <th>適合設備</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Wi-Fi</strong></td>
+            <td>2.4 / 5 GHz</td>
+            <td>Star</td>
+            <td><span class="badge badge-orange">高</span></td>
+            <td><span class="badge badge-green">不需要</span></td>
+            <td>攝影機、冰箱、洗衣機</td>
+            <td>直接連路由器，設定最簡單</td>
+          </tr>
+          <tr>
+            <td><strong>Thread</strong></td>
+            <td>2.4 GHz</td>
+            <td>Mesh</td>
+            <td><span class="badge badge-green">極低</span></td>
+            <td><span class="badge badge-blue">Border Router</span></td>
+            <td>感應器、開關、Matter 設備</td>
+            <td>基於 IPv6，Matter 的底層傳輸協定之一</td>
+          </tr>
+          <tr>
+            <td><strong>Zigbee</strong></td>
+            <td>2.4 GHz</td>
+            <td>Mesh</td>
+            <td><span class="badge badge-green">低</span></td>
+            <td><span class="badge badge-orange">需要</span></td>
+            <td>燈泡、開關、感應器</td>
+            <td>最多 65000 個節點，市佔率高</td>
+          </tr>
+          <tr>
+            <td><strong>Z-Wave</strong></td>
+            <td>868/908 MHz</td>
+            <td>Mesh</td>
+            <td><span class="badge badge-green">低</span></td>
+            <td><span class="badge badge-orange">需要</span></td>
+            <td>門鎖、開關、感應器</td>
+            <td>不受 2.4GHz 干擾，穿牆效果佳</td>
+          </tr>
+          <tr>
+            <td><strong>Bluetooth LE</strong></td>
+            <td>2.4 GHz</td>
+            <td>Star</td>
+            <td><span class="badge badge-green">低</span></td>
+            <td><span class="badge badge-green">不需要</span></td>
+            <td>門鎖、體重計、感應器</td>
+            <td>距離短（約 10m），適合近距離設備</td>
+          </tr>
+          <tr>
+            <td><strong>Matter</strong></td>
+            <td>Wi-Fi / Thread</td>
+            <td>Star/Mesh</td>
+            <td>依底層</td>
+            <td><span class="badge badge-green">不需要</span></td>
+            <td>新世代跨平台設備</td>
+            <td>應用層標準，跑在 Wi-Fi 或 Thread 上</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>各協定優缺點</h3>
+    <div class="proto-grid">
+      <div class="proto-card">
+        <div class="proto-name">Wi-Fi</div>
+        <div class="proto-body">
+          <div class="proto-label pos">優點</div>
+          <ul class="pros">
+            <li>幾乎所有智能設備皆支援，無需額外 Hub</li>
+            <li>速度快，適合攝影機等高頻寬需求</li>
+            <li>直接連家庭路由器，即插即用</li>
+          </ul>
+          <div class="proto-label neg">缺點</div>
+          <ul class="cons">
+            <li>耗電量大，不適合電池供電設備</li>
+            <li>設備過多時容易造成網路壅塞</li>
+            <li>需額外注意網路安全設定</li>
+          </ul>
+        </div>
+      </div>
+      <div class="proto-card">
+        <div class="proto-name">Thread</div>
+        <div class="proto-body">
+          <div class="proto-label pos">優點</div>
+          <ul class="pros">
+            <li>極低功耗，基於 IPv6 的新世代 Mesh 協定</li>
+            <li>自組織網路，設備加入自動形成最佳路徑</li>
+            <li>加密與身份驗證機制完善</li>
+          </ul>
+          <div class="proto-label neg">缺點</div>
+          <ul class="cons">
+            <li>支援設備仍在成長中，選擇相對較少</li>
+            <li>需搭配 Matter 或 Border Router 才能完整發揮</li>
+          </ul>
+        </div>
+      </div>
+      <div class="proto-card">
+        <div class="proto-name">Zigbee</div>
+        <div class="proto-body">
+          <div class="proto-label pos">優點</div>
+          <ul class="pros">
+            <li>低功耗，電池設備可長時間運作</li>
+            <li>Mesh 架構：設備間自動中繼，覆蓋範圍廣</li>
+            <li>內建加密，資料傳輸安全</li>
+          </ul>
+          <div class="proto-label neg">缺點</div>
+          <ul class="cons">
+            <li>不同廠牌的 Zigbee 晶片有微小差異，未必互通</li>
+            <li>需要橋接 Hub 才能接入 HomeKit / Google Home</li>
+          </ul>
+        </div>
+      </div>
+      <div class="proto-card">
+        <div class="proto-name">Z-Wave</div>
+        <div class="proto-body">
+          <div class="proto-label pos">優點</div>
+          <ul class="pros">
+            <li>低功耗，適合長時間運行的電池設備</li>
+            <li>使用 868/908 MHz，避開 2.4GHz 干擾，穿牆佳</li>
+            <li>加密安全性良好</li>
+          </ul>
+          <div class="proto-label neg">缺點</div>
+          <ul class="cons">
+            <li>需要協調器（Hub）來管理網路</li>
+            <li>可選設備比 Zigbee 少，部分產品售價偏高</li>
+          </ul>
+        </div>
+      </div>
+      <div class="proto-card">
+        <div class="proto-name">Bluetooth LE</div>
+        <div class="proto-body">
+          <div class="proto-label pos">優點</div>
+          <ul class="pros">
+            <li>低功耗，適合電池供電的感應器、門鎖</li>
+            <li>配對簡單，不需 Hub 即可使用</li>
+            <li>模組成本低，設備售價相對親民</li>
+          </ul>
+          <div class="proto-label neg">缺點</div>
+          <ul class="cons">
+            <li>通訊距離短，通常在 10 公尺以內</li>
+            <li>多設備同時連線時容易產生干擾</li>
+            <li>無法跨越多個房間遠端控制</li>
+          </ul>
+        </div>
+      </div>
+      <div class="proto-card">
+        <div class="proto-name matter">Matter <span style="font-size:11px; font-weight:400; opacity:.8;">整合平台</span></div>
+        <div class="proto-body">
+          <div class="proto-label pos">優點</div>
+          <ul class="pros">
+            <li>跨平台：同一設備可同時被 HomeKit / Google / Alexa 控制</li>
+            <li>開源標準，促進不同品牌設備互通</li>
+            <li>強調隱私與安全，資料不經雲端中轉</li>
+          </ul>
+          <div class="proto-label neg">缺點</div>
+          <ul class="cons">
+            <li>目前支援設備仍在擴展，部分平台尚未全面兼容</li>
+            <li>需要支援 Matter 的 Hub 或 Border Router</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3>協定選擇建議</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">一般住宅新裝</div>
+        <p>優先選 <strong>Matter + Thread</strong> 生態設備。未來相容性最好，不鎖單一平台。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">預算有限 / 改裝</div>
+        <p>選 <strong>Zigbee</strong> 生態（Aqara、飛利浦 Hue、IKEA Tradfri）。設備選擇多、價格親民。</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">注意</div>
+      Zigbee 與 Z-Wave 都需要 Hub（橋接器）才能接入 HomeKit 或 Google Home。常見 Hub：Philips Hue Bridge、Samsung SmartThings、Home Assistant。
+    </div>
+
+    <h3>Hub / Bridge 與 Border Router 的差別</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color:var(--blue)">
+        <div class="ba-label" style="color:var(--blue)">Hub / Bridge（協定橋接）</div>
+        <p>Zigbee、Z-Wave、Bluetooth 設備<strong>本身沒有 IP 位址</strong>，無法直接跟網路溝通。Hub 的工作是把這些「非 IP 協定」翻譯成 IP 訊號，再轉交給 HomeKit 或 Google Home。</p>
+        <p style="margin-top:8px; font-size:13px; color:var(--mid)">常見例子：Aqara Hub M2、Philips Hue Bridge</p>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">Border Router（邊界路由器）</div>
+        <p>Thread 設備<strong>本身就是 IPv6 設備</strong>，有自己的 IP 位址。Border Router 不做協定翻譯，只負責把 Thread 的 Mesh 網路「接通」到家庭 Wi-Fi 網路。</p>
+        <p style="margin-top:8px; font-size:13px; color:var(--mid)">常見例子：Apple TV 4K、HomePod（內建 Thread Border Router）</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-bottom:28px;">
+      <div class="callout-label">一句話記住</div>
+      Hub 是「翻譯官」── 設備不懂 IP，Hub 幫它翻譯。Border Router 是「橋樑」── 設備本身懂 IP（IPv6），Border Router 只幫它接通道路。
+    </div>
+
+    <h3>協定架構圖</h3>
+    <div class="arch-diagram">
+      <!-- 語音助理 / 控制平台 -->
+      <div class="arch-assistants">
+        <div class="arch-assistant">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="4" width="14" height="24" rx="7"/>
+            <circle cx="16" cy="14" r="3"/>
+            <line x1="12" y1="21" x2="20" y2="21"/>
+          </svg>
+          <span>HomePod</span>
+        </div>
+        <div class="arch-assistant">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 6 C10 6 8 8 8 13 C8 18 10 20 10 20 L22 20 C22 20 24 18 24 13 C24 8 22 6 22 6 Z"/>
+            <circle cx="16" cy="13" r="3"/>
+            <line x1="13" y1="20" x2="13" y2="24"/>
+            <line x1="19" y1="20" x2="19" y2="24"/>
+            <line x1="11" y1="24" x2="21" y2="24"/>
+          </svg>
+          <span>Google Home</span>
+        </div>
+        <div class="arch-assistant">
+          <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="5" width="16" height="22" rx="4"/>
+            <circle cx="16" cy="14" r="3"/>
+            <line x1="11" y1="20" x2="21" y2="20"/>
+            <line x1="13" y1="23" x2="19" y2="23"/>
+          </svg>
+          <span>Amazon Echo</span>
+        </div>
+      </div>
+      <!-- Matter 整合層 -->
+      <div class="arch-matter-bar">
+        <svg viewBox="0 0 18 18" fill="currentColor" width="16" height="16">
+          <path d="M9 1l1.8 5.4H17l-4.6 3.3 1.8 5.4L9 12 4.8 15.1l1.8-5.4L2 6.4h6.2z"/>
+        </svg>
+        Matter 整合平台
+      </div>
+      <!-- 三條路徑 -->
+      <div class="arch-cols">
+        <!-- Hub / Bridge 路徑 -->
+        <div class="arch-col">
+          <div class="arch-gw-box hub">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="11" width="28" height="10" rx="2"/>
+              <circle cx="8"  cy="16" r="1.5" fill="currentColor"/>
+              <circle cx="14" cy="16" r="1.5" fill="currentColor"/>
+              <circle cx="20" cy="16" r="1.5" fill="currentColor"/>
+              <circle cx="26" cy="16" r="1.5" fill="currentColor"/>
+              <line x1="8"  y1="21" x2="8"  y2="25"/>
+              <line x1="16" y1="21" x2="16" y2="25"/>
+              <line x1="24" y1="21" x2="24" y2="25"/>
+            </svg>
+            <div class="arch-gw-name">Hub / Bridge</div>
+            <div class="arch-gw-sub">協定翻譯，轉為 IP</div>
+          </div>
+          <div class="arch-arrow">↑</div>
+          <div class="arch-devices">
+            <div class="arch-dev">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4C11 4 7 8 7 13C7 17 9 20 12 21.5V25H20V21.5C23 20 25 17 25 13C25 8 21 4 16 4Z"/>
+                <line x1="12" y1="27" x2="20" y2="27"/>
+              </svg>
+              <div class="arch-dev-label">燈 / 開關</div>
+              <span class="arch-badge zigbee">Zigbee</span>
+            </div>
+            <div class="arch-dev">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="7" y="14" width="18" height="13" rx="2"/>
+                <path d="M11 14V11A5 5 0 0121 11V14"/>
+                <circle cx="16" cy="21" r="2"/>
+              </svg>
+              <div class="arch-dev-label">門鎖 / 感應</div>
+              <span class="arch-badge bt">BT</span>
+            </div>
+          </div>
+        </div>
+        <!-- Wi-Fi 直連路徑 -->
+        <div class="arch-col">
+          <div class="arch-gw-box direct">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M5 16C8.5 9 12.5 6.5 16 6.5S23.5 9 27 16"/>
+              <path d="M9 19.5C11.5 14.5 13.5 12 16 12S20.5 14.5 23 19.5"/>
+              <path d="M13 23C14.5 20.5 15.2 19 16 19S17.5 20.5 19 23"/>
+              <circle cx="16" cy="26" r="1.5" fill="currentColor"/>
+            </svg>
+            <div class="arch-gw-name">Wi-Fi 直連</div>
+            <div class="arch-gw-sub">不需中介設備</div>
+          </div>
+          <div class="arch-arrow">↑</div>
+          <div class="arch-devices">
+            <div class="arch-dev">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="11" width="16" height="15" rx="3"/>
+                <line x1="12" y1="11" x2="12" y2="8"/>
+                <line x1="20" y1="11" x2="20" y2="8"/>
+                <rect x="13" y="17" width="6" height="4" rx="1"/>
+              </svg>
+              <div class="arch-dev-label">插座 / 電器</div>
+              <span class="arch-badge wifi">Wi-Fi</span>
+            </div>
+            <div class="arch-dev">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12H19L24 8V24L19 20H2V12Z"/>
+                <circle cx="11" cy="16" r="3"/>
+              </svg>
+              <div class="arch-dev-label">攝影機</div>
+              <span class="arch-badge wifi">Wi-Fi</span>
+            </div>
+          </div>
+        </div>
+        <!-- Border Router 路徑 -->
+        <div class="arch-col">
+          <div class="arch-gw-box brouter">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="15" width="24" height="11" rx="2"/>
+              <line x1="11" y1="15" x2="9"  y2="7"/>
+              <line x1="21" y1="15" x2="23" y2="7"/>
+              <circle cx="10" cy="21" r="1.5"/>
+              <circle cx="22" cy="21" r="1.5"/>
+            </svg>
+            <div class="arch-gw-name">Border Router</div>
+            <div class="arch-gw-sub">Thread 路由橋通</div>
+          </div>
+          <div class="arch-arrow">↑</div>
+          <div class="arch-devices">
+            <div class="arch-dev">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4C11 4 7 8 7 13C7 17 9 20 12 21.5V25H20V21.5C23 20 25 17 25 13C25 8 21 4 16 4Z"/>
+                <line x1="12" y1="27" x2="20" y2="27"/>
+              </svg>
+              <div class="arch-dev-label">燈 / 開關</div>
+              <span class="arch-badge thread">Thread</span>
+            </div>
+            <div class="arch-dev">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="7" y="5" width="18" height="22" rx="3"/>
+                <line x1="11" y1="12" x2="21" y2="12"/>
+                <line x1="11" y1="16" x2="21" y2="16"/>
+                <line x1="11" y1="20" x2="17" y2="20"/>
+              </svg>
+              <div class="arch-dev-label">溫濕度感應</div>
+              <span class="arch-badge thread">Thread</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────── SECTION 3 ───────────────────────────── -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Apple HomeKit 深入了解</h2>
+    </div>
+
+    <!-- 1. 什麼是 HomeKit -->
+    <p style="color:var(--mid); margin-bottom:16px;">HomeKit 是 Apple 打造的智能家庭「<strong>架構（Framework）</strong>」，而非單一 App。它的核心理念是：在一個安全、私密且易用的平台上，整合所有來自不同品牌的相容配件，讓它們和諧協作。</p>
+    <p style="color:var(--mid); margin-bottom:20px;">許多人把 HomeKit 和 iPhone 上的「家庭 App」搞混：<strong>家庭 App 是操作介面</strong>，HomeKit 是背後支撐一切運作的技術基礎。</p>
+
+    <div class="cards" style="margin-bottom:0;">
+      <div class="card">
+        <div class="card-title">無縫整合</div>
+        <p>在單一介面中管理所有配件，無論品牌為何，統一由「家庭 App」控制。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">強大安全性</div>
+        <p>隱私保護為設計基石，所有資料端對端加密，不經 Apple 伺服器中轉。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">Siri 語音控制</div>
+        <p>透過 iPhone、iPad、Apple Watch 或 HomePod，用語音指令控制全屋設備。</p>
+      </div>
+    </div>
+
+    <div class="callout success" style="margin-top:20px;">
+      <div class="callout-label">隱私核心</div>
+      所有裝置間通訊採用<strong>端對端加密（E2E）</strong>，除你之外無人（含 Apple）可讀取。無需依賴雲端、無需強制註冊帳號、不追蹤個人行為。所有認證配件均通過 <strong>MFi 嚴格審核</strong>。
+    </div>
+
+    <!-- 2. 三大基石 -->
+    <h3>打造 HomeKit 智能家庭的三大基石</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">基石 1 — iPhone / iPad</div>
+        <p>內建「家庭 App」是你的控制中心。可新增配件、分配房間、建立情境，並透過「控制中心」一滑即達常用設備。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">基石 2 — 家庭中樞（Home Hub）</div>
+        <p>由 <strong>HomePod / HomePod mini / Apple TV</strong> 擔任。啟用遠端控制與自動化的大腦，同時也是 Thread Border Router，大幅提升設備穩定性。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">基石 3 — HomeKit 配件</div>
+        <p>認明包裝上的「<strong>Works with Apple Home</strong>」標章，代表通過 Apple 認證，確保最佳相容性與安全性。</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-label">重要</div>
+      <strong>不需要 Home Hub 也能控制設備</strong>（在同一 Wi-Fi 下即可）。但若要啟用<strong>遠端控制、自動化、HomeKit 安全錄影（HKSV）</strong>等進階功能，必須設定至少一台 Home Hub。
+    </div>
+
+    <!-- 3. 四步驟設定教學 -->
+    <h3>四步驟完成第一個 HomeKit 設備設定</h3>
+    <div class="flow">
+      <div class="flow-item">
+        <div class="flow-title">第一步：準備</div>
+        <div class="flow-sub">iPhone 連上 Wi-Fi、開啟藍牙、設備通電確認指示燈亮起</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">第二步：掃描配對碼</div>
+        <div class="flow-sub">家庭 App → 「+」→ 掃描設備背面的 8 位數 HomeKit 設定碼</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">第三步：設定資訊</div>
+        <div class="flow-sub">為配件命名（如「客廳立燈」）、分配房間、加入喜好項目</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-title">第四步：測試</div>
+        <div class="flow-sub">點圖示測試開關，再說「嘿 Siri，打開客廳立燈」確認語音控制</div>
+      </div>
+    </div>
+
+    <!-- 4. 支援設備類型表 -->
+    <h3>HomeKit 支援的服務類型</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>類別</th>
+            <th>包含設備</th>
+            <th>常用指令範例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>照明</td>
+            <td>燈泡、燈帶、調光器、開關</td>
+            <td>「打開臥室燈」、「把亮度調到 50%」、「切換成暖白色」</td>
+          </tr>
+          <tr>
+            <td>氣候</td>
+            <td>溫控器、冷氣、暖氣、空氣清淨機</td>
+            <td>「把客廳溫度設為 24 度」</td>
+          </tr>
+          <tr>
+            <td>安全</td>
+            <td>門鎖、攝影機、門磁感應、動作感應</td>
+            <td>「鎖上前門」、「查看門口攝影機」</td>
+          </tr>
+          <tr>
+            <td>窗簾/遮陽</td>
+            <td>電動窗簾、百葉窗、捲簾</td>
+            <td>「把臥室窗簾打開一半」</td>
+          </tr>
+          <tr>
+            <td>插座/開關</td>
+            <td>智能插座、智能排插</td>
+            <td>「關掉咖啡機」</td>
+          </tr>
+          <tr>
+            <td>感應器</td>
+            <td>溫濕度、空氣品質、漏水偵測、門窗感應</td>
+            <td>自動化觸發條件</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. 情境 vs 自動化 -->
+    <h3>情境（Scene）與自動化（Automation）</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color:var(--blue)">
+        <div class="ba-label" style="color:var(--blue);">情境（Scene）</div>
+        <p>手動觸發一組設備狀態。輕觸一下或說 Siri 指令即可啟動。</p>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">自動化（Automation）</div>
+        <p>依條件自動執行，完全無需介入。是 HomeKit 真正的「大腦」。</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:24px;">實用情境範例</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">早安情境</div>
+        <p>燈條緩緩亮起模擬日出，同時智能插座啟動咖啡機，溫和開啟一天。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">我出門了</div>
+        <p>一鍵關閉所有燈光、鎖上門鎖、啟動保全攝影機，確保家中安全。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">電影之夜</div>
+        <p>燈光自動調暗至 20%、窗簾關閉、電視開啟，瞬間沉浸於影音世界。</p>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:16px;">
+      <table>
+        <thead>
+          <tr>
+            <th>自動化類型</th>
+            <th>觸發條件</th>
+            <th>執行動作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>時間驅動</strong></td>
+            <td>每天日落時</td>
+            <td>自動開啟戶外燈光</td>
+          </tr>
+          <tr>
+            <td><strong>地點驅動</strong></td>
+            <td>回到家附近（GPS）</td>
+            <td>玄關燈亮起、空調啟動</td>
+          </tr>
+          <tr>
+            <td><strong>感測器驅動</strong></td>
+            <td>門窗被意外開啟</td>
+            <td>推播警報 + 攝影機錄影 + 全屋燈光開啟</td>
+          </tr>
+          <tr>
+            <td><strong>離家自動化</strong></td>
+            <td>最後一人離家</td>
+            <td>關閉所有燈光、鎖門、降低空調設定</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6. Matter + Thread 未來 -->
+    <h3>Matter 與 Thread：HomeKit 的未來</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color:#6C3483;">
+        <div class="ba-label" style="color:#6C3483;">Matter — 跨品牌互通標準</div>
+        <p>打破品牌壁壘，讓所有支援 Matter 的設備順暢溝通。同一設備可同時被 HomeKit / Google / Alexa 控制，不再鎖定單一平台。</p>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">Thread — 低功耗 Mesh 連線</div>
+        <p>每個 Thread 設備都能作為訊號中繼點，形成可自我修復的 Mesh 網路。即使某設備離線，網路自動找最佳路徑，反應更快、更穩定。</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">三位一體</div>
+      <strong>HomeKit 高標準隱私 + Matter 跨平台互通 + Thread 穩定 Mesh 網路</strong>，三者共同構成現代智能家庭的最佳標準。<br>
+      HomePod / Apple TV 4K（第 2 代後）會自動擔任 Thread Border Router，無需額外購買設備。
+    </div>
+
+  </div>
+
+  <!-- ───────────────────────────── SECTION 4 ───────────────────────────── -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>接燈與開關的電氣知識</h2>
+    </div>
+
+    <!-- 台灣家用電基礎 -->
+    <h3>台灣家用電基礎</h3>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">110V</div><div class="stat-label">一般用電（照明/插座）</div></div>
+      <div class="stat"><div class="stat-num">220V</div><div class="stat-label">冷氣 / 烘衣機</div></div>
+      <div class="stat"><div class="stat-num">60Hz</div><div class="stat-label">電源頻率</div></div>
+      <div class="stat"><div class="stat-num">15A</div><div class="stat-label">一般迴路額定電流</div></div>
+    </div>
+
+    <!-- 電線顏色與用途 -->
+    <h3>電線顏色與用途</h3>
+    <div class="wc-grid">
+      <div class="wc-card">
+        <div class="wc-dot" style="background:#C0392B;"></div>
+        <div>
+          <div class="wc-name">紅色</div>
+          <div class="wc-role">火線 L — 電燈迴路</div>
+          <div class="wc-note">帶電 110V，需謹慎操作</div>
+        </div>
+      </div>
+      <div class="wc-card">
+        <div class="wc-dot" style="background:#1A252F;"></div>
+        <div>
+          <div class="wc-name">黑色</div>
+          <div class="wc-role">火線 L — 插座迴路</div>
+          <div class="wc-note">帶電 110V，舊式配線常見</div>
+        </div>
+      </div>
+      <div class="wc-card">
+        <div class="wc-dot" style="background:#BDC3C7; border:2px solid #95A5A6;"></div>
+        <div>
+          <div class="wc-name">白色 / 灰色</div>
+          <div class="wc-role">中性線 N（零線）</div>
+          <div class="wc-note">回路，近似 0V，直通燈具</div>
+        </div>
+      </div>
+      <div class="wc-card">
+        <div class="wc-dot" style="background:#1D8348;"></div>
+        <div>
+          <div class="wc-name">綠色</div>
+          <div class="wc-role">接地線 E（Earth）</div>
+          <div class="wc-note">安全保護，正常不通電流</div>
+        </div>
+      </div>
+      <div class="wc-card">
+        <div class="wc-dot" style="background:#D4AC0D;"></div>
+        <div>
+          <div class="wc-name">黃色 / 藍色</div>
+          <div class="wc-role">燈線（控制線）</div>
+          <div class="wc-note">開關到燈具的控制段，也帶電</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 一般迴路原理 -->
+    <h3>一般迴路原理</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">家中的燈具控制迴路，由電箱（配電盤）出發。火線（L）必須<strong>經過開關</strong>後才接到燈具，中性線（N）則<strong>直接</strong>從電箱拉到燈具，形成完整迴路。</p>
+
+    <div class="circuit-svg-wrap">
+      <svg viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto;">
+        <!-- 電箱 -->
+        <rect x="20" y="52" width="90" height="95" rx="2" fill="#EBF5FB" stroke="#0073BB" stroke-width="2"/>
+        <text x="65" y="85" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#16191F">電箱</text>
+        <text x="65" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#545B64">配電盤 NFB</text>
+        <circle cx="110" cy="80" r="4" fill="#C0392B"/>
+        <circle cx="65" cy="147" r="4" fill="#879596"/>
+
+        <!-- 開關 body -->
+        <rect x="278" y="45" width="108" height="100" rx="2" fill="#FEF9F0" stroke="#D35400" stroke-width="2"/>
+        <text x="332" y="68" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#16191F">開關</text>
+        <!-- 0 terminal (L-in) -->
+        <circle cx="278" cy="80" r="5" fill="#C0392B"/>
+        <text x="270" y="72" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#C0392B" font-weight="700">0</text>
+        <!-- 1 terminal (L-out) -->
+        <circle cx="386" cy="80" r="5" fill="#D4AC0D"/>
+        <text x="394" y="72" font-family="system-ui,sans-serif" font-size="9" fill="#B7950B" font-weight="700">1</text>
+        <!-- Switch schematic: two contact circles + lever (closed) -->
+        <circle cx="308" cy="114" r="5" fill="none" stroke="#D35400" stroke-width="2"/>
+        <circle cx="356" cy="114" r="5" fill="none" stroke="#D35400" stroke-width="2"/>
+        <line x1="313" y1="114" x2="351" y2="114" stroke="#D35400" stroke-width="3"/>
+        <text x="308" y="130" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#545B64">0</text>
+        <text x="356" y="130" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#545B64">1</text>
+
+        <!-- 燈具 -->
+        <circle cx="568" cy="90" r="46" fill="#FFFBF0" stroke="#E67E22" stroke-width="2"/>
+        <path d="M568 56 C556 56 546 66 546 78 C546 88 552 95 560 99 L560 107 L576 107 L576 99 C584 95 590 88 590 78 C590 66 580 56 568 56Z" fill="none" stroke="#E67E22" stroke-width="2"/>
+        <line x1="562" y1="107" x2="574" y2="107" stroke="#E67E22" stroke-width="2"/>
+        <line x1="564" y1="112" x2="572" y2="112" stroke="#E67E22" stroke-width="2"/>
+        <text x="568" y="38" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#16191F">燈具</text>
+        <circle cx="522" cy="80" r="4" fill="#D4AC0D"/>
+        <circle cx="568" cy="136" r="4" fill="#879596"/>
+
+        <!-- ① L 火線: 電箱 → 開關 COM -->
+        <line x1="114" y1="80" x2="273" y2="80" stroke="#C0392B" stroke-width="2.5"/>
+        <polygon points="268,76 278,80 268,84" fill="#C0392B"/>
+        <text x="193" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#C0392B" font-weight="700">L 火線（紅）</text>
+
+        <!-- ② 燈線: 開關 L → 燈具 -->
+        <line x1="391" y1="80" x2="518" y2="80" stroke="#D4AC0D" stroke-width="2.5"/>
+        <polygon points="513,76 523,80 513,84" fill="#D4AC0D"/>
+        <text x="455" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#B7950B" font-weight="700">燈線（黃）</text>
+
+        <!-- ③ N 零線: 燈具底部 → 下方繞過 → 電箱底部（箭頭朝電箱）-->
+        <polyline points="568,140 568,202 65,202 65,151" stroke="#879596" stroke-width="2" stroke-dasharray="7,4" fill="none"/>
+        <polygon points="61,157 65,147 69,157" fill="#879596"/>
+        <text x="316" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#879596" font-weight="700">N 零線（白）繞過開關，回路至電箱</text>
+      </svg>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">重點觀念</div>
+      <strong>開關只安裝在火線（L）上。</strong>開關斷開後，開關後段的燈線不帶電，但電箱到開關的火線<strong>仍然帶電</strong>。N 零線完全繞過開關，直接連回電箱，不受開關控制。
+    </div>
+
+    <!-- 開關接線方式 -->
+    <h3>開關接線方式</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">開關盒內有固定的接線端子，了解各端子功能是智能開關改裝的基礎。單切開關控制單一燈具，雙切開關讓兩個位置都能控制同一盞燈（如樓梯）。</p>
+
+    <div class="ba">
+      <!-- 單切開關 -->
+      <div class="ba-box" style="border-top:3px solid var(--blue);">
+        <div class="ba-label" style="color:var(--blue);">單切開關（Single Pole）</div>
+        <p style="font-size:13px;color:var(--mid);margin-bottom:10px;"><strong>0</strong>（火線進）、<strong>1</strong>（燈線出）兩個端子（台灣標準）。</p>
+        <svg viewBox="0 0 440 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin-bottom:8px;">
+          <!-- 電箱 -->
+          <rect x="10" y="60" width="65" height="72" rx="2" fill="#EBF5FB" stroke="#0073BB" stroke-width="1.5"/>
+          <text x="42" y="87" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="#16191F">電箱</text>
+          <text x="42" y="101" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#545B64">NFB</text>
+          <circle cx="75" cy="77" r="3.5" fill="#C0392B"/>
+          <circle cx="42" cy="132" r="3.5" fill="#879596"/>
+          <!-- 單切開關 body -->
+          <rect x="150" y="38" width="105" height="90" rx="2" fill="#FEF9F0" stroke="#D35400" stroke-width="1.5"/>
+          <text x="202" y="57" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="#16191F">單切開關</text>
+          <!-- 0 terminal (COM) -->
+          <circle cx="150" cy="77" r="4.5" fill="#C0392B"/>
+          <text x="143" y="70" text-anchor="end" font-family="system-ui,sans-serif" font-size="9" fill="#C0392B" font-weight="700">0</text>
+          <!-- 1 terminal (L) -->
+          <circle cx="255" cy="77" r="4.5" fill="#D4AC0D"/>
+          <text x="262" y="70" font-family="system-ui,sans-serif" font-size="9" fill="#B7950B" font-weight="700">1</text>
+          <!-- Switch symbol: two circles + lever (open = angled) -->
+          <circle cx="178" cy="105" r="5" fill="none" stroke="#D35400" stroke-width="1.5"/>
+          <circle cx="226" cy="105" r="5" fill="none" stroke="#D35400" stroke-width="1.5"/>
+          <line x1="183" y1="105" x2="222" y2="97" stroke="#D35400" stroke-width="2"/>
+          <text x="178" y="120" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#545B64">0</text>
+          <text x="226" y="120" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#545B64">1</text>
+          <!-- 燈具 -->
+          <text x="375" y="45" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="#16191F">燈具</text>
+          <circle cx="375" cy="90" r="36" fill="#FFFBF0" stroke="#E67E22" stroke-width="1.5"/>
+          <path d="M375 62 C367 62 360 69 360 78 C360 85 364 91 370 94 L370 100 L380 100 L380 94 C386 91 390 85 390 78 C390 69 383 62 375 62Z" fill="none" stroke="#E67E22" stroke-width="1.5"/>
+          <line x1="372" y1="100" x2="378" y2="100" stroke="#E67E22" stroke-width="1.5"/>
+          <circle cx="339" cy="83" r="3.5" fill="#D4AC0D"/>
+          <circle cx="375" cy="126" r="3.5" fill="#879596"/>
+          <!-- L: 電箱 → 0 -->
+          <line x1="79" y1="77" x2="145" y2="77" stroke="#C0392B" stroke-width="2"/>
+          <polygon points="141,73 150,77 141,81" fill="#C0392B"/>
+          <!-- 燈線: 1 → 燈具 -->
+          <line x1="260" y1="77" x2="335" y2="83" stroke="#D4AC0D" stroke-width="2"/>
+          <polygon points="331,79 339,84 331,89" fill="#D4AC0D"/>
+          <!-- N: 燈具底部 → 下 → 電箱 -->
+          <polyline points="375,130 375,165 42,165 42,136" stroke="#879596" stroke-width="1.5" stroke-dasharray="5,3" fill="none"/>
+          <polygon points="39,142 42,132 45,142" fill="#879596"/>
+          <text x="208" y="178" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#879596">N 回路</text>
+        </svg>
+        <p style="font-size:12px;color:var(--mid);">0 接火線（L），1 端接燈線。智能開關需在 0 與 1 之間加入中性線（N）供電。</p>
+      </div>
+
+      <!-- 雙切開關 -->
+      <div class="ba-box" style="border-top:3px solid var(--orange);">
+        <div class="ba-label" style="color:var(--orange);">雙切開關（3-Way）</div>
+        <p style="font-size:13px;color:var(--mid);margin-bottom:10px;"><strong>0</strong>（公共端）、<strong>1</strong>、<strong>3</strong> 三個端子（台灣標準）。兩個開關之間以「雙切線 1」和「雙切線 3」互連。</p>
+        <svg viewBox="0 0 520 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin-bottom:8px;">
+          <!-- 電箱 -->
+          <rect x="8" y="72" width="58" height="64" rx="2" fill="#EBF5FB" stroke="#0073BB" stroke-width="1.5"/>
+          <text x="37" y="97" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="#16191F">電箱</text>
+          <text x="37" y="111" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#545B64">NFB</text>
+          <circle cx="66" cy="87" r="3.5" fill="#C0392B"/>
+          <circle cx="37" cy="136" r="3.5" fill="#879596"/>
+          <!-- SW1 body -->
+          <rect x="98" y="46" width="88" height="108" rx="2" fill="#FEF9F0" stroke="#D35400" stroke-width="1.5"/>
+          <text x="142" y="64" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#16191F">雙切開關 1</text>
+          <!-- SW1 0號孔（公共端） -->
+          <circle cx="98" cy="87" r="4" fill="#C0392B"/>
+          <text x="90" y="81" text-anchor="end" font-family="system-ui,sans-serif" font-size="8" fill="#C0392B" font-weight="700">0</text>
+          <!-- SW1 1號孔 -->
+          <circle cx="186" cy="78" r="4" fill="#5D6D7E"/>
+          <text x="192" y="74" font-family="system-ui,sans-serif" font-size="8" fill="#5D6D7E" font-weight="700">1</text>
+          <!-- SW1 3號孔 -->
+          <circle cx="186" cy="112" r="4" fill="#5D6D7E"/>
+          <text x="192" y="116" font-family="system-ui,sans-serif" font-size="8" fill="#5D6D7E" font-weight="700">3</text>
+          <!-- SW1 switch symbol: COM → T1 (solid), COM → T3 (dotted) -->
+          <circle cx="122" cy="100" r="4" fill="none" stroke="#D35400" stroke-width="1.5"/>
+          <circle cx="164" cy="82" r="3" fill="none" stroke="#5D6D7E" stroke-width="1.2"/>
+          <circle cx="164" cy="118" r="3" fill="none" stroke="#5D6D7E" stroke-width="1.2"/>
+          <line x1="122" y1="100" x2="161" y2="82" stroke="#D35400" stroke-width="2"/>
+          <line x1="122" y1="100" x2="161" y2="118" stroke="#D35400" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- SW2 body -->
+          <rect x="310" y="46" width="88" height="108" rx="2" fill="#FEF9F0" stroke="#D35400" stroke-width="1.5"/>
+          <text x="354" y="64" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="700" fill="#16191F">雙切開關 2</text>
+          <!-- SW2 1號孔 -->
+          <circle cx="310" cy="78" r="4" fill="#5D6D7E"/>
+          <text x="302" y="74" text-anchor="end" font-family="system-ui,sans-serif" font-size="8" fill="#5D6D7E" font-weight="700">1</text>
+          <!-- SW2 3號孔 -->
+          <circle cx="310" cy="112" r="4" fill="#5D6D7E"/>
+          <text x="302" y="116" text-anchor="end" font-family="system-ui,sans-serif" font-size="8" fill="#5D6D7E" font-weight="700">3</text>
+          <!-- SW2 0號孔（公共端） -->
+          <circle cx="398" cy="95" r="4" fill="#D4AC0D"/>
+          <text x="406" y="99" font-family="system-ui,sans-serif" font-size="8" fill="#B7950B" font-weight="700">0</text>
+          <!-- SW2 switch symbol: T1 → COM (solid), T3 → COM (dotted) -->
+          <circle cx="330" cy="82" r="3" fill="none" stroke="#5D6D7E" stroke-width="1.2"/>
+          <circle cx="330" cy="118" r="3" fill="none" stroke="#5D6D7E" stroke-width="1.2"/>
+          <circle cx="374" cy="95" r="4" fill="none" stroke="#D35400" stroke-width="1.5"/>
+          <line x1="374" y1="95" x2="333" y2="82" stroke="#D35400" stroke-width="2"/>
+          <line x1="374" y1="95" x2="333" y2="118" stroke="#D35400" stroke-width="1" stroke-dasharray="3,2"/>
+          <!-- 燈具 -->
+          <circle cx="467" cy="95" r="32" fill="#FFFBF0" stroke="#E67E22" stroke-width="1.5"/>
+          <path d="M467 70 C460 70 454 76 454 84 C454 91 458 96 463 98 L463 104 L471 104 L471 98 C476 96 480 91 480 84 C480 76 474 70 467 70Z" fill="none" stroke="#E67E22" stroke-width="1.5"/>
+          <line x1="465" y1="104" x2="469" y2="104" stroke="#E67E22" stroke-width="1.5"/>
+          <text x="467" y="55" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="#16191F">燈具</text>
+          <circle cx="435" cy="88" r="3.5" fill="#D4AC0D"/>
+          <circle cx="467" cy="127" r="3.5" fill="#879596"/>
+          <!-- L: 電箱 → SW1 COM -->
+          <line x1="69" y1="87" x2="94" y2="87" stroke="#C0392B" stroke-width="2"/>
+          <polygon points="90,83 98,87 90,91" fill="#C0392B"/>
+          <!-- 雙切線1: SW1 1號 → SW2 1號 -->
+          <line x1="190" y1="78" x2="306" y2="78" stroke="#5D6D7E" stroke-width="1.5"/>
+          <text x="248" y="70" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#5D6D7E">雙切線 1</text>
+          <!-- 雙切線3: SW1 3號 → SW2 3號 -->
+          <line x1="190" y1="112" x2="306" y2="112" stroke="#5D6D7E" stroke-width="1.5"/>
+          <text x="248" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#5D6D7E">雙切線 3</text>
+          <!-- 燈線: SW2 COM → 燈具 -->
+          <line x1="402" y1="95" x2="431" y2="88" stroke="#D4AC0D" stroke-width="2"/>
+          <polygon points="427,84 435,89 427,94" fill="#D4AC0D"/>
+          <!-- N: 燈具底部 → 下 → 電箱 -->
+          <polyline points="467,131 467,183 37,183 37,140" stroke="#879596" stroke-width="1.5" stroke-dasharray="5,3" fill="none"/>
+          <polygon points="34,146 37,136 40,146" fill="#879596"/>
+          <text x="252" y="197" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#879596">N 回路至電箱</text>
+        </svg>
+        <p style="font-size:12px;color:var(--mid);">撥動任一開關都改變 1/3 號孔的通斷組合，使電路導通或斷開，實現樓梯上下各控一燈的效果。</p>
+      </div>
+    </div>
+
+    <!-- 智能化後的迴路變化 -->
+    <h3>智能化後的迴路變化</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">安裝智能開關控制器，等於把控制器「串入」原有迴路。控制器需同時接 <strong>L 火線</strong>與 <strong>N 零線</strong>才能待機運作，並可獨立控制多組燈具，支援遠端控制、排程與語音指令。</p>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <!-- 一般迴路（上） -->
+      <div class="ba-box before" style="border-top-color:var(--mid);">
+        <div class="ba-label" style="color:var(--mid);">一般迴路</div>
+        <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;margin:12px auto;display:block;">
+          <!-- 電箱 -->
+          <rect x="20" y="55" width="75" height="80" rx="2" fill="#EBF5FB" stroke="#0073BB" stroke-width="1.5"/>
+          <text x="57" y="84" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#16191F">電箱</text>
+          <text x="57" y="99" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#545B64">NFB</text>
+          <circle cx="95" cy="75" r="3.5" fill="#C0392B"/>
+          <circle cx="57" cy="135" r="3.5" fill="#879596"/>
+          <!-- 開關 -->
+          <rect x="195" y="42" width="92" height="88" rx="2" fill="#FEF9F0" stroke="#D35400" stroke-width="1.5"/>
+          <text x="241" y="64" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#16191F">開關</text>
+          <circle cx="195" cy="75" r="4" fill="#C0392B"/>
+          <circle cx="287" cy="75" r="4" fill="#D4AC0D"/>
+          <!-- Switch symbol: two circles + lever (closed) -->
+          <circle cx="218" cy="106" r="4" fill="none" stroke="#D35400" stroke-width="1.5"/>
+          <circle cx="264" cy="106" r="4" fill="none" stroke="#D35400" stroke-width="1.5"/>
+          <line x1="222" y1="106" x2="260" y2="106" stroke="#D35400" stroke-width="2.5"/>
+          <text x="218" y="120" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#545B64">0</text>
+          <text x="264" y="120" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#545B64">1</text>
+          <!-- 燈具 -->
+          <circle cx="460" cy="85" r="44" fill="#FFFBF0" stroke="#E67E22" stroke-width="1.5"/>
+          <path d="M460 53 C449 53 440 62 440 73 C440 82 445 89 452 93 L452 100 L468 100 L468 93 C475 89 480 82 480 73 C480 62 471 53 460 53Z" fill="none" stroke="#E67E22" stroke-width="1.5"/>
+          <line x1="454" y1="100" x2="466" y2="100" stroke="#E67E22" stroke-width="1.5"/>
+          <text x="460" y="33" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#16191F">燈具</text>
+          <circle cx="416" cy="75" r="3.5" fill="#D4AC0D"/>
+          <circle cx="460" cy="129" r="3.5" fill="#879596"/>
+          <!-- L: 電箱→開關COM -->
+          <line x1="99" y1="75" x2="191" y2="75" stroke="#C0392B" stroke-width="2"/>
+          <polygon points="187,71 195,75 187,79" fill="#C0392B"/>
+          <text x="145" y="65" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#C0392B" font-weight="700">L 火線</text>
+          <!-- 燈線: 開關L→燈具 -->
+          <line x1="291" y1="75" x2="412" y2="75" stroke="#D4AC0D" stroke-width="2"/>
+          <polygon points="408,71 416,75 408,79" fill="#D4AC0D"/>
+          <text x="352" y="65" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#B7950B" font-weight="700">燈線</text>
+          <!-- N: 燈具底部→下→電箱 -->
+          <polyline points="460,133 460,178 57,178 57,139" stroke="#879596" stroke-width="1.5" stroke-dasharray="5,3" fill="none"/>
+          <polygon points="54,145 57,135 60,145" fill="#879596"/>
+          <text x="258" y="193" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#879596">N 零線繞過開關，回路至電箱</text>
+        </svg>
+        <p style="font-size:13px;color:var(--mid);">開關僅做火線通斷，一個開關對應一盞燈，無遠端控制或排程功能。</p>
+      </div>
+
+      <!-- 智能迴路（下） -->
+      <div class="ba-box after" style="border-top-color:var(--blue);">
+        <div class="ba-label" style="color:var(--blue);">智能迴路</div>
+        <svg viewBox="0 0 600 278" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;margin:12px auto;display:block;">
+          <!-- 電箱 -->
+          <rect x="15" y="78" width="68" height="75" rx="2" fill="#EBF5FB" stroke="#0073BB" stroke-width="1.5"/>
+          <text x="49" y="103" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="700" fill="#16191F">電箱</text>
+          <text x="49" y="117" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#545B64">NFB</text>
+          <circle cx="83" cy="96" r="3.5" fill="#C0392B"/>
+          <circle cx="49" cy="153" r="3.5" fill="#879596"/>
+          <!-- 控制器 -->
+          <rect x="130" y="50" width="140" height="155" rx="2" fill="#E8F6EF" stroke="#1D8348" stroke-width="1.5"/>
+          <text x="200" y="74" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#16191F">開關控制器</text>
+          <circle cx="148" cy="110" r="8" fill="#C0392B"/>
+          <text x="148" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="white" font-weight="700">L</text>
+          <circle cx="172" cy="110" r="8" fill="#D4AC0D"/>
+          <text x="172" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="white" font-weight="700">L1</text>
+          <circle cx="196" cy="110" r="8" fill="#D4AC0D"/>
+          <text x="196" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="white" font-weight="700">L2</text>
+          <circle cx="220" cy="110" r="8" fill="#D4AC0D"/>
+          <text x="220" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="7" fill="white" font-weight="700">L3</text>
+          <circle cx="252" cy="110" r="8" fill="#879596"/>
+          <text x="252" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="white" font-weight="700">N</text>
+          <!-- 燈1 -->
+          <circle cx="468" cy="60" r="28" fill="#FFFBF0" stroke="#E67E22" stroke-width="1.5"/>
+          <text x="468" y="64" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#16191F">燈 1</text>
+          <!-- 燈2 -->
+          <circle cx="468" cy="128" r="28" fill="#FFFBF0" stroke="#E67E22" stroke-width="1.5"/>
+          <text x="468" y="132" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#16191F">燈 2</text>
+          <!-- 燈3 -->
+          <circle cx="468" cy="196" r="28" fill="#FFFBF0" stroke="#E67E22" stroke-width="1.5"/>
+          <text x="468" y="200" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#16191F">燈 3</text>
+          <!-- L: 電箱→控制器 -->
+          <line x1="86" y1="96" x2="125" y2="105" stroke="#C0392B" stroke-width="1.5"/>
+          <polygon points="121,101 130,106 122,111" fill="#C0392B"/>
+          <text x="89" y="90" font-family="system-ui,sans-serif" font-size="9" fill="#C0392B" font-weight="700">L</text>
+          <!-- N: 電箱→控制器 -->
+          <line x1="53" y1="153" x2="243" y2="118" stroke="#879596" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polygon points="239,114 248,119 240,124" fill="#879596"/>
+          <text x="12" y="158" font-family="system-ui,sans-serif" font-size="9" fill="#879596" font-weight="700">N</text>
+          <!-- L1→燈1 -->
+          <line x1="270" y1="106" x2="440" y2="63" stroke="#D4AC0D" stroke-width="1.5"/>
+          <polygon points="436,59 443,64 437,69" fill="#D4AC0D"/>
+          <!-- L2→燈2 -->
+          <line x1="270" y1="110" x2="440" y2="128" stroke="#D4AC0D" stroke-width="1.5"/>
+          <polygon points="436,124 443,129 437,134" fill="#D4AC0D"/>
+          <!-- L3→燈3 -->
+          <line x1="270" y1="120" x2="440" y2="193" stroke="#D4AC0D" stroke-width="1.5"/>
+          <polygon points="436,189 443,194 437,199" fill="#D4AC0D"/>
+          <!-- N: 各燈具底部 → 右側匯流 → 電箱 -->
+          <circle cx="468" cy="88" r="3" fill="#879596"/>
+          <circle cx="468" cy="156" r="3" fill="#879596"/>
+          <circle cx="468" cy="224" r="3" fill="#879596"/>
+          <line x1="468" y1="88" x2="512" y2="88" stroke="#879596" stroke-width="1.2" stroke-dasharray="4,2"/>
+          <line x1="468" y1="156" x2="512" y2="156" stroke="#879596" stroke-width="1.2" stroke-dasharray="4,2"/>
+          <line x1="468" y1="224" x2="512" y2="224" stroke="#879596" stroke-width="1.2" stroke-dasharray="4,2"/>
+          <line x1="512" y1="88" x2="512" y2="248" stroke="#879596" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <polyline points="512,248 49,248 49,157" stroke="#879596" stroke-width="1.5" stroke-dasharray="4,2" fill="none"/>
+          <polygon points="46,163 49,153 52,163" fill="#879596"/>
+          <text x="280" y="265" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#879596">N 零線回路至電箱</text>
+        </svg>
+        <p style="font-size:13px;color:var(--mid);">控制器需接 L 與 N 雙線供電，可獨立控制多組燈具，支援 App 遠端、排程、語音控制。</p>
+      </div>
+    </div>
+
+    <div class="callout warn" style="margin-top:16px;">
+      <div class="callout-label">重要差異</div>
+      智能開關控制器<strong>需要同時接 L 火線與 N 零線</strong>才能待機供電。原本沒有引 N 線到開關盒的迴路，需先重新配線補拉 N 線，或改選「免 N 線」型號的智能開關。
+    </div>
+
+    <!-- 單火版本 -->
+    <h3>單火（免中性線）智能開關</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">若開關盒內沒有中性線（N），可選用「單火版本」智能開關。它不需要獨立的 N 線，僅靠 L（火線）與燈線之間的微弱電流維持待機。</p>
+
+    <div class="ba" style="margin-bottom:16px;">
+      <div class="ba-box" style="border-top:3px solid var(--blue);">
+        <div class="ba-label" style="color:var(--blue);">零火版（需 N 線）</div>
+        <p style="font-size:13px;color:var(--mid);line-height:1.7;">開關盒需要接入 <strong>L 火線</strong> 和 <strong>N 零線</strong> 兩條線。控制器透過 L→N 直接取電，電源穩定、功能完整（支援所有燈具類型）。</p>
+        <div style="margin-top:10px;padding:10px 12px;background:var(--accent);border-radius:var(--r);font-size:12px;color:var(--mid);">
+          <strong style="color:var(--navy);">適用：</strong>新裝修或已預留 N 線的開關盒<br>
+          <strong style="color:var(--navy);">優點：</strong>穩定供電，支援 LED / 節能燈<br>
+          <strong style="color:var(--navy);">缺點：</strong>舊有線路需補拉 N 線
+        </div>
+      </div>
+      <div class="ba-box" style="border-top:3px solid var(--orange);">
+        <div class="ba-label" style="color:var(--orange);">單火版（免 N 線）</div>
+        <p style="font-size:13px;color:var(--mid);line-height:1.7;">僅接 <strong>L 火線</strong> 與 <strong>燈線</strong>，不需 N 線。控制器在「關閉」狀態下，透過燈具微量洩漏電流（＜1mA）為自身待機電路充電。</p>
+        <div style="margin-top:10px;padding:10px 12px;background:var(--accent);border-radius:var(--r);font-size:12px;color:var(--mid);">
+          <strong style="color:var(--navy);">適用：</strong>舊式線路、無 N 線開關盒<br>
+          <strong style="color:var(--navy);">優點：</strong>免重新配線，安裝簡單<br>
+          <strong style="color:var(--navy);">缺點：</strong>部分 LED 燈具關燈後仍有微弱電流，可能造成燈泡閃爍
+        </div>
+      </div>
+    </div>
+
+    <h3>為什麼要加「電容」？</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">在傳統家庭電線佈局中，牆壁開關盒內通常只有火線（Live），沒有零線（Neutral），這就是所謂的「單火線路」。當你想把傳統開關換成智慧開關時，智慧開關本身需要電能來維持 Wi-Fi / Zigbee 晶片的運作。在燈具兩端並聯一個「電容」（或稱單火適配器），主要有以下兩個核心原因：</p>
+
+    <div class="cards" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title" style="color:var(--red);">原因 1 — 解決微電流閃爍與鬼火</div>
+        <p style="line-height:1.8;">
+          <strong>問題所在：</strong>智慧開關為了保持通電，即使在「關燈」狀態下，也必須讓微弱電流通過燈具形成迴路（稱為<em>持功電流</em>）。<br>
+          <strong>導致後果：</strong>LED 燈啟動功率極低，這股微弱電流會不斷為 LED 內部電容充電，累積到一定程度就會閃爍（微閃），或在夜間呈現隱隱發光的「鬼火」現象。<br>
+          <strong>電容的作用：</strong>電容在交流電路中扮演「旁路（Bypass）」角色。並聯在燈具兩端後，關燈時的微弱電流會優先從電容通過，而不是流進 LED 驅動晶片，相當於把會讓燈閃爍的微電流「分流」掉，消除閃爍與鬼火。
+        </p>
+      </div>
+      <div class="card green">
+        <div class="card-title">原因 2 — 提供智慧開關穩定的工作迴路</div>
+        <p style="line-height:1.8;">
+          <strong>問題所在：</strong>智慧開關自己需要用電，但單火線路沒有零線，關燈時必須透過「火線 → 智慧開關 → 燈具 → 零線」抓取微弱電力。若燈具阻抗太大或不穩定，開關可能因供電不足而不斷重啟或掉線。<br>
+          <strong>電容的作用：</strong>並聯電容後，等同於在關燈狀態下，為智慧開關建立一條低阻抗的交流通道（火線 → 智慧開關 → 電容 → 零線），確保控制晶片即使在關燈時也能獲得足夠且穩定的工作電壓。
+        </p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">安裝建議</div>
+        <p>電容並聯在燈線與 N 之間，通常安裝於燈具接線盒或天花板接線盒內。</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">選購建議</div>
+      若開關盒有 N 線，優先選零火版，穩定度更高。確定無 N 線才選單火版，並事先確認燈具品牌是否與開關相容（部分 LED 燈仍會閃爍），必要時再補裝電容或更換相容燈具。
+    </div>
+
+    <!-- 活電作業注意事項（置於最後） -->
+    <h3>活電作業注意事項</h3>
+    <p style="color:var(--mid);margin-bottom:16px;">確認迴路時，通常需要在<strong>通電狀態下</strong>以驗電筆判斷各線的角色（L 火線、N 零線、燈線）。這是合理的操作需求，但必須嚴格遵守以下步驟：</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>步驟</th><th>操作</th><th>注意事項</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. 確認帶電線</strong></td>
+            <td>用非接觸式驗電筆靠近各導線，觀察指示燈是否閃亮</td>
+            <td>驗電筆不需碰觸線體；切勿用手指感知</td>
+          </tr>
+          <tr>
+            <td><strong>2. 標記各線</strong></td>
+            <td>確認後立即以膠帶標記 L、N、燈線各自功能</td>
+            <td>避免放下工具後忘記，造成二次混淆</td>
+          </tr>
+          <tr>
+            <td><strong>3. 關閉 NFB</strong></td>
+            <td>至配電盤關閉對應迴路的無熔絲開關</td>
+            <td>關閉後再次用驗電筆確認無電，才能動手接線</td>
+          </tr>
+          <tr>
+            <td><strong>4. 施工完成</strong></td>
+            <td>確認線頭包覆、螺絲鎖緊後才恢復供電測試</td>
+            <td>不要帶電測試接線正確與否</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cards" style="margin-top:16px;">
+      <div class="card">
+        <div class="card-title">必備工具</div>
+        <p><strong>非接觸式驗電筆</strong>：不碰線體即可確認帶電狀態<br>
+        <strong>三用電表</strong>：量測電壓、確認 N 線是否到位<br>
+        <strong>絕緣手柄工具</strong>：螺絲起子、尖嘴鉗須有絕緣外皮</p>
+      </div>
+      <div class="card red">
+        <div class="card-title">絕對禁止</div>
+        <p>雙手同時觸碰 L 線與 N 線<br>
+        在潮濕環境進行電氣作業<br>
+        用手直接觸碰裸露線頭確認是否帶電<br>
+        未確認無電就拆接線</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ───────────────────────────── SECTION 5 ───────────────────────────── -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>網路架構基礎認識</h2>
+    </div>
+
+    <p style="color:var(--mid); margin-bottom:20px;">穩定的家庭網路是智能家庭的基礎。了解基本的網路架構，才能有效排除設備掉線等問題。</p>
+
+    <h3>基本網路設備</h3>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">數據機（Modem）</div>
+        <p>將 ISP（電信商）提供的訊號（光纖/ADSL）轉換為乙太網路訊號。通常由 ISP 提供，不需自行設定。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">路由器（Router）</div>
+        <p>負責分配 IP 位址（DHCP）、管理所有設備的網路流量。是家庭網路的核心，也提供 Wi-Fi 功能。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">交換器（Switch）</div>
+        <p>擴充有線網路埠。當路由器的有線埠不夠用時，透過交換器增加接口。智能交換器支援 VLAN 設定。</p>
+      </div>
+      <div class="card red">
+        <div class="card-title">無線基地台（AP）</div>
+        <p>單純提供 Wi-Fi，本身沒有路由功能。大坪數住宅可部署多台 AP 延伸訊號覆蓋範圍。</p>
+      </div>
+    </div>
+
+    <h3>PoE（乙太網路供電）</h3>
+    <p style="color:var(--mid);margin-bottom:14px;">PoE（Power over Ethernet）讓網路線在傳輸資料的同時也能供電，設備不需要額外的電源插座，走線更簡潔。</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">PoE 交換器（PoE Switch）</div>
+        <p>具備供電能力的交換器，每個埠可輸出 15W（802.3af）或 30W（802.3at / PoE+）。是大量部署 AP 或攝影機的標準配置。</p>
+      </div>
+      <div class="card green">
+        <div class="card-title">PoE 注入器（Injector）</div>
+        <p>單埠供電轉接器，插在現有路由器/交換器與設備之間。適合只有一兩台 PoE 設備時的低成本方案。</p>
+      </div>
+      <div class="card orange">
+        <div class="card-title">常見 PoE 設備</div>
+        <p>無線基地台（AP）、IP 攝影機、智能門鈴、門禁讀卡機、部分 IoT Hub。確認設備的 PoE 標準（af / at）再選購對應交換器。</p>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">注意</div>
+      PoE 規格需匹配：af（15W）用於輕量設備，at / PoE+（30W）用於高功耗 AP 或攝影機加熱器。線材需達 Cat5e 以上。
+    </div>
+
+    <h3>IP 位址基礎</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>名詞</th>
+            <th>說明</th>
+            <th>範例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>IP 位址</strong></td>
+            <td>網路上每台設備的地址，就像門牌號碼</td>
+            <td>192.168.1.100</td>
+          </tr>
+          <tr>
+            <td><strong>子網路遮罩</strong></td>
+            <td>定義哪些設備在同一個網段內</td>
+            <td>255.255.255.0 (/24)</td>
+          </tr>
+          <tr>
+            <td><strong>閘道（Gateway）</strong></td>
+            <td>通往外部網路的出口，通常是路由器的 IP</td>
+            <td>192.168.1.1</td>
+          </tr>
+          <tr>
+            <td><strong>DHCP</strong></td>
+            <td>路由器自動分配 IP 給新連線設備</td>
+            <td>設備插上就能用，無需手動設定</td>
+          </tr>
+          <tr>
+            <td><strong>靜態 IP</strong></td>
+            <td>手動指定固定 IP，設備重啟後不會改變</td>
+            <td>智能 Hub、NAS、攝影機建議使用</td>
+          </tr>
+          <tr>
+            <td><strong>DNS</strong></td>
+            <td>將網址轉換為 IP（域名解析服務）</td>
+            <td>8.8.8.8（Google DNS）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Wi-Fi 頻段選擇</h3>
+    <div class="ba">
+      <div class="ba-box before" style="border-top-color:#0073BB">
+        <div class="ba-label" style="color:#0073BB;">2.4 GHz</div>
+        <p><strong>穿透力強、距離遠</strong>，但速度較慢（理論最高 600Mbps），干擾多。<br><br>智能家庭大多數設備（Thread Border Router、智能插座、低功耗感應器）只支援 2.4GHz。</p>
+      </div>
+      <div class="ba-box after">
+        <div class="ba-label">5 GHz</div>
+        <p><strong>速度快、干擾少</strong>，但距離短、穿牆差。<br><br>適合手機、電腦、Apple TV、NAS 等高頻寬設備。</p>
+      </div>
+    </div>
+    <h3>常見網路問題排查</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>問題</th>
+            <th>可能原因</th>
+            <th>排查步驟</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>設備無法加入 HomeKit</td>
+            <td>設備只支援 2.4GHz，但路由器 SSID 混頻</td>
+            <td>分開 2.4/5GHz SSID，確保設備連到 2.4GHz</td>
+          </tr>
+          <tr>
+            <td>設備頻繁掉線</td>
+            <td>Wi-Fi 干擾、IP 衝突、DHCP 租約問題</td>
+            <td>改用靜態 IP，或在 DHCP 中固定設備 IP</td>
+          </tr>
+          <tr>
+            <td>遠端無法控制</td>
+            <td>Home Hub 離線或網路問題</td>
+            <td>確認 Apple TV / HomePod 是否在線，重啟 Home Hub</td>
+          </tr>
+          <tr>
+            <td>Thread 設備信號差</td>
+            <td>Thread（2.4GHz）與 Wi-Fi 頻道衝突</td>
+            <td>將 Wi-Fi 設定在 1、6 或 11 頻道，避免與 Thread 重疊</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-label">為什麼 2.4GHz 要選頻道 1、6 或 11？</div>
+      2.4GHz 共有 13 個頻道（台灣），每個頻道佔用 20MHz 頻寬，但頻道間距只有 5MHz，相鄰頻道會互相重疊。只有頻道 1、6、11 彼此間距恰好 25MHz（5 個頻道 × 5MHz），完全不重疊，稱為「非重疊頻道（Non-overlapping channels）」。<br><br>
+      若鄰居 Wi-Fi 使用頻道 3，你設在頻道 1 就不會和他干擾；若你選頻道 2，則同時與頻道 1 和頻道 3 的網路重疊，造成雙倍干擾。多台 AP 部署時，也建議交錯使用這三個頻道。<br><br>
+      <strong>Thread 的頻段</strong>：Thread 同樣工作在 2.4GHz，使用 IEEE 802.15.4 標準，頻道編號 11–26（共 16 個，每個 5MHz 寬）。這與 Wi-Fi 的頻道號碼系統<strong>完全不同</strong>，不可混用。Thread 建議使用頻道 15、20、25 或 26，這些頻道恰好落在 Wi-Fi 頻道 1、6、11 的空隙或邊緣，干擾最小。將 Wi-Fi 固定在 1、6、11 非重疊頻道後，Thread 也能在相對乾淨的頻譜環境中運作。
+      <svg viewBox="0 0 800 218" style="width:100%;max-width:780px;display:block;margin:20px auto 4px;" font-family="system-ui,sans-serif">
+        <!-- dashed arches: ch 2,3,4,5,7,8,9,10,12,13 -->
+        <g fill="none" stroke="#C0CBD4" stroke-width="1.2" stroke-dasharray="5,3">
+          <path d="M55,172 Q156,-68 257,172"/>
+          <path d="M101,172 Q202,-68 303,172"/>
+          <path d="M147,172 Q248,-68 349,172"/>
+          <path d="M193,172 Q294,-68 395,172"/>
+          <path d="M285,172 Q386,-68 487,172"/>
+          <path d="M331,172 Q432,-68 533,172"/>
+          <path d="M377,172 Q478,-68 579,172"/>
+          <path d="M423,172 Q524,-68 625,172"/>
+          <path d="M515,172 Q616,-68 717,172"/>
+          <path d="M561,172 Q662,-68 763,172"/>
+        </g>
+        <!-- solid highlighted arches: ch 1, 6, 11 -->
+        <path d="M9,172 Q110,-68 211,172" fill="rgba(0,115,187,0.09)" stroke="#0073BB" stroke-width="2.2"/>
+        <path d="M239,172 Q340,-68 441,172" fill="rgba(0,115,187,0.09)" stroke="#0073BB" stroke-width="2.2"/>
+        <path d="M469,172 Q570,-68 671,172" fill="rgba(0,115,187,0.09)" stroke="#0073BB" stroke-width="2.2"/>
+        <!-- baseline -->
+        <line x1="5" y1="172" x2="740" y2="172" stroke="#545B64" stroke-width="1.5"/>
+        <!-- ch2 dashed reference arrow (for 5MHz annotation) -->
+        <line x1="156" y1="172" x2="156" y2="32" stroke="#879596" stroke-width="1" stroke-dasharray="3,2"/>
+        <polygon points="156,23 152.5,33 159.5,33" fill="#879596"/>
+        <!-- upward arrows for ch 1, 6, 11 -->
+        <line x1="110" y1="172" x2="110" y2="32" stroke="#161D26" stroke-width="1.5"/>
+        <polygon points="110,23 106.5,33 113.5,33" fill="#161D26"/>
+        <line x1="340" y1="172" x2="340" y2="32" stroke="#161D26" stroke-width="1.5"/>
+        <polygon points="340,23 336.5,33 343.5,33" fill="#161D26"/>
+        <line x1="570" y1="172" x2="570" y2="32" stroke="#161D26" stroke-width="1.5"/>
+        <polygon points="570,23 566.5,33 573.5,33" fill="#161D26"/>
+        <!-- channel labels -->
+        <text x="110" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="#0073BB">1</text>
+        <text x="156" y="14" text-anchor="middle" font-size="12" fill="#879596">2</text>
+        <text x="202" y="14" text-anchor="middle" font-size="12" fill="#879596">3</text>
+        <text x="248" y="14" text-anchor="middle" font-size="12" fill="#879596">4</text>
+        <text x="294" y="14" text-anchor="middle" font-size="12" fill="#879596">5</text>
+        <text x="340" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="#0073BB">6</text>
+        <text x="386" y="14" text-anchor="middle" font-size="12" fill="#879596">7</text>
+        <text x="432" y="14" text-anchor="middle" font-size="12" fill="#879596">8</text>
+        <text x="478" y="14" text-anchor="middle" font-size="12" fill="#879596">9</text>
+        <text x="524" y="14" text-anchor="middle" font-size="12" fill="#879596">10</text>
+        <text x="570" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="#0073BB">11</text>
+        <text x="616" y="14" text-anchor="middle" font-size="12" fill="#879596">12</text>
+        <text x="662" y="14" text-anchor="middle" font-size="12" fill="#879596">13</text>
+        <text x="718" y="14" font-size="11" fill="#879596" font-style="italic">Channel</text>
+        <!-- 5MHz dimension between ch1 and ch2 -->
+        <line x1="110" y1="40" x2="156" y2="40" stroke="#545B64" stroke-width="0.9"/>
+        <line x1="110" y1="36" x2="110" y2="45" stroke="#545B64" stroke-width="0.9"/>
+        <line x1="156" y1="36" x2="156" y2="45" stroke="#545B64" stroke-width="0.9"/>
+        <text x="133" y="35" text-anchor="middle" font-size="9" fill="#545B64">5 MHz</text>
+        <!-- 22MHz bracket below baseline -->
+        <line x1="9" y1="188" x2="211" y2="188" stroke="#161D26" stroke-width="1.5"/>
+        <line x1="9" y1="183" x2="9" y2="193" stroke="#161D26" stroke-width="1.5"/>
+        <line x1="211" y1="183" x2="211" y2="193" stroke="#161D26" stroke-width="1.5"/>
+        <text x="110" y="210" text-anchor="middle" font-size="10.5" font-weight="600" fill="#161D26">22 MHz</text>
+      </svg>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>智能家庭入門介紹</strong> &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026-05-29
+</footer>
+
+</body>
+</html>
