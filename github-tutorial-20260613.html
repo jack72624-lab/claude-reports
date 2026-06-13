@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub 入門教學</title>
+  <style>
+    :root {
+      --bg-alt:  #f5f5f7;
+      --white:   #ffffff;
+      --black:   #1d1d1f;
+      --gray:    #6e6e73;
+      --light:   #86868b;
+      --blue:    #0071e3;
+      --green:   #28cd41;
+      --green-dk:#1a8f2e;
+      --red:     #ff3b30;
+      --orange:  #ff9500;
+      --purple:  #bf5af2;
+      --border:  #d2d2d7;
+      --r:       18px;
+      --r-sm:    12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      color: var(--black); background: #ffffff;
+      font-size: 17px; line-height: 1.65;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      padding: 0 24px; display: flex; align-items: center;
+      min-height: 48px;
+    }
+    .nav-brand { font-size: 14px; font-weight: 600; color: var(--black); margin-right: 28px; white-space: nowrap; text-decoration: none; }
+    .nav-links { display: flex; gap: 2px; overflow-x: auto; }
+    .nav-links a {
+      color: var(--gray); text-decoration: none; font-size: 13px;
+      padding: 6px 12px; border-radius: 20px; white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .nav-links a:hover { background: rgba(0,0,0,0.06); color: var(--black); }
+
+    /* ── HERO ── */
+    .hero { background: #ffffff; overflow: hidden; }
+    .hero-inner {
+      max-width: 1080px; margin: 0 auto; padding: 80px 40px 0;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: end; gap: 60px;
+    }
+    .hero-text { padding-bottom: 80px; }
+    .hero-eyebrow { font-size: 12px; font-weight: 600; color: var(--blue); display: block; margin-bottom: 16px; text-transform: uppercase; letter-spacing: .6px; }
+    .hero h1 {
+      font-size: clamp(42px, 5vw, 62px); font-weight: 700;
+      letter-spacing: -2px; line-height: 1.04; margin-bottom: 22px;
+    }
+    .hero-sub { font-size: 19px; color: var(--gray); line-height: 1.65; max-width: 440px; margin-bottom: 40px; }
+    .hero-meta { display: flex; gap: 28px; flex-wrap: wrap; }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .hero-meta-label { font-size: 11px; color: var(--light); font-weight: 600; text-transform: uppercase; letter-spacing: .7px; }
+    .hero-meta-value { font-size: 14px; color: var(--gray); }
+    .hero-image { border-radius: 20px 20px 0 0; overflow: hidden; }
+    .hero-image img { width: 100%; height: 480px; object-fit: cover; display: block; }
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; padding: 48px 24px 0; gap: 32px; }
+      .hero-text { padding-bottom: 0; }
+      .hero-image { border-radius: 16px; }
+      .hero-image img { height: 260px; }
+    }
+
+    /* ── SECTION BANDS ── */
+    .sec { padding: 80px 40px; background: #ffffff; }
+    .sec-alt { background: var(--bg-alt); }
+    .sec-inner { max-width: 1080px; margin: 0 auto; }
+
+    .sec-label { font-size: 12px; font-weight: 600; letter-spacing: .5px; color: var(--light); text-transform: uppercase; margin-bottom: 10px; }
+    .sec-title { font-size: 32px; font-weight: 700; letter-spacing: -.8px; line-height: 1.12; margin-bottom: 40px; }
+    .sec-title strong { color: var(--black); }
+    .sec-title span { color: var(--gray); font-weight: 400; }
+
+    .sec-img { border-radius: var(--r); overflow: hidden; margin-bottom: 40px; }
+    .sec-img img { width: 100%; height: 340px; object-fit: cover; display: block; }
+
+    .sec-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; margin-bottom: 48px; }
+    .sec-2col-img { border-radius: var(--r); overflow: hidden; }
+    .sec-2col-img img { width: 100%; height: 400px; object-fit: cover; display: block; }
+    @media (max-width: 768px) { .sec-2col { grid-template-columns: 1fr; gap: 28px; } }
+
+    .sec-inner h3 { font-size: 22px; font-weight: 600; color: var(--black); margin: 44px 0 14px; letter-spacing: -.3px; }
+    .sec-inner p { color: var(--gray); margin-bottom: 14px; font-size: 17px; }
+
+    /* ── CARDS ── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 16px 0; }
+    .card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 20px; }
+    .card-title { font-weight: 700; font-size: 15px; color: var(--black); margin-bottom: 8px; }
+    .card p { font-size: 14px; color: var(--gray); line-height: 1.6; margin: 0; }
+
+    /* ── CALLOUT ── */
+    .callout { background: var(--bg-alt); border-radius: var(--r-sm); padding: 20px 24px; margin: 24px 0; font-size: 15px; color: var(--black); line-height: 1.7; }
+    .sec-alt .callout { background: #ffffff; border: 1px solid var(--border); }
+    .callout-label { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--blue); margin-bottom: 8px; }
+    .callout.warn .callout-label { color: var(--red); }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--r-sm); border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th { background: var(--bg-alt); color: var(--black); font-weight: 600; text-align: left; padding: 12px 16px; font-size: 12px; letter-spacing: .3px; border-bottom: 1px solid var(--border); }
+    .sec-alt th { background: #ebebeb; }
+    td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--gray); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    code { background: var(--bg-alt); border-radius: 5px; padding: 2px 6px; font-size: 13px; font-family: "SF Mono", Menlo, monospace; color: var(--black); }
+    .sec-alt code { background: #ffffff; border: 1px solid var(--border); }
+
+    /* ── FLOW ── */
+    .flow { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+    .flow-item { flex: 1; min-width: 150px; background: #ffffff; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 20px 16px; text-align: center; }
+    .flow-step { width: 30px; height: 30px; border-radius: 50%; background: var(--blue); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+    .flow-title { font-weight: 700; font-size: 14px; color: var(--black); margin-bottom: 6px; }
+    .flow-sub { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+    /* ── STATS ── */
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+    .stat { background: #ffffff; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 24px 16px; text-align: center; }
+    .stat-num { font-size: 32px; font-weight: 700; color: var(--blue); line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
+    .stat-label { font-size: 13px; color: var(--gray); line-height: 1.4; }
+
+    /* ── BEFORE/AFTER ── */
+    .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+    @media (max-width: 600px) { .ba { grid-template-columns: 1fr; } }
+    .ba-box { background: #ffffff; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 20px; }
+    .ba-box.b-blue   { border-left: 3px solid var(--blue); }
+    .ba-box.b-green  { border-left: 3px solid var(--green-dk); }
+    .ba-box.b-orange { border-left: 3px solid var(--orange); }
+    .ba-box.b-purple { border-left: 3px solid var(--purple); }
+    .ba-label { font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 10px; color: var(--blue); }
+    .ba-box.b-green  .ba-label { color: var(--green-dk); }
+    .ba-box.b-orange .ba-label { color: #c05000; }
+    .ba-box.b-purple .ba-label { color: #8f3cc5; }
+    .ba-box p { font-size: 14px; color: var(--gray); line-height: 1.7; margin: 0; }
+
+    /* ── DIAGRAM ── */
+    .diagram-wrap { border-radius: var(--r-sm); padding: 24px 16px; background: #ffffff; border: 1px solid var(--border); margin: 16px 0; overflow-x: auto; }
+
+    /* ── RECAP BOX ── */
+    .recap { background: var(--black); color: #d0d0d5; border-radius: var(--r-sm); padding: 24px 28px; margin: 44px 0 0; }
+    .recap-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--blue); margin-bottom: 16px; }
+    .recap ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .recap li { font-size: 14px; display: flex; gap: 14px; line-height: 1.6; }
+    .recap li::before { content: ""; flex-shrink: 0; margin-top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
+
+    /* ── GLOSSARY ── */
+    .glossary-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin: 18px 0; }
+    .glossary-item { background: #ffffff; border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px 18px; }
+    .glossary-term { font-weight: 700; font-size: 15px; color: var(--black); margin-bottom: 6px; font-family: "SF Mono", Menlo, monospace; }
+    .glossary-def { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--black); color: var(--gray); text-align: center; padding: 40px 24px; font-size: 13px; }
+    footer strong { color: #d0d0d5; }
+
+    @media (max-width: 600px) {
+      .flow { flex-direction: column; }
+      nav { padding: 0 16px; }
+      .sec { padding: 60px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">GitHub 入門教學</a>
+  <div class="nav-links">
+    <a href="#s1">Git vs GitHub</a>
+    <a href="#s2">核心概念</a>
+    <a href="#s3">工作流程</a>
+    <a href="#s4">協作功能</a>
+    <a href="#s5">Pages 與自動化</a>
+    <a href="#s6">常見問題</a>
+    <a href="#glossary">術語速查</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-eyebrow">開發者基礎</span>
+      <h1>GitHub<br>入門教學</h1>
+      <p class="hero-sub">從 Git 版本控制的核心概念，到 GitHub 上的協作流程、常用指令速查與 Pages 自動架站，建立完整的心智模型。</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">閱讀時間</span>
+          <span class="hero-meta-value">約 35–45 分鐘</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">適用對象</span>
+          <span class="hero-meta-value">想理解 Git/GitHub 架構與協作的開發者</span>
+        </div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">版本</span>
+          <span class="hero-meta-value">v1.0 · C Style</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=900&auto=format&fit=crop&q=80" alt="程式碼畫面">
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECTION 1: Git vs GitHub (white) ─── -->
+<section class="sec" id="s1">
+  <div class="sec-inner">
+    <div class="sec-label">01 — 基礎概念</div>
+    <h2 class="sec-title"><strong>Git 與 GitHub 是什麼？</strong> <span>先分清楚工具和平台.</span></h2>
+
+    <div class="sec-2col">
+      <div>
+        <p><strong>Git</strong> 是一套「分散式版本控制系統」，2005 年由 Linux 創始人 Linus Torvalds 開發。它安裝在你的電腦上，負責記錄程式碼每一次的修改歷史，讓你能隨時回到過去任何一個版本。</p>
+        <p><strong>GitHub</strong> 則是建立在 Git 之上的雲端託管平台。它讓你把本地的 Git 儲存庫推送到雲端，並加上一整套協作工具：Pull Request、Issues、Code Review、Actions（自動化）、Pages（免費架站）等。</p>
+        <p>簡單來說：<strong>Git 是工具，GitHub 是用這個工具來協作的社群平台。</strong>類似平台還有 GitLab、Bitbucket，核心 Git 操作完全相同，差別主要在協作介面與附加功能。</p>
+      </div>
+      <div class="sec-2col-img">
+        <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=900&auto=format&fit=crop&q=80" alt="筆電上的程式碼">
+      </div>
+    </div>
+
+    <h3>Git 管理的三個區域</h3>
+    <div class="cards">
+      <div class="card"><div class="card-title">工作目錄 Working Directory</div><p>你在編輯器裡實際看到、修改的檔案，Git 視為「已修改 (modified)」或「未追蹤 (untracked)」。</p></div>
+      <div class="card"><div class="card-title">暫存區 Staging Area</div><p>執行 <code>git add</code> 後檔案進入這裡，代表「準備好要被記錄成下一個版本」。</p></div>
+      <div class="card"><div class="card-title">本地儲存庫 Repository</div><p>執行 <code>git commit</code> 後，變更被永久記錄成一個版本快照，存在 <code>.git</code> 資料夾裡。</p></div>
+    </div>
+
+    <h3>為什麼需要版本控制</h3>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">2005</div><div class="stat-label">Git 誕生年（Linus Torvalds）</div></div>
+      <div class="stat"><div class="stat-num">2008</div><div class="stat-label">GitHub 上線年</div></div>
+      <div class="stat"><div class="stat-num">100M+</div><div class="stat-label">GitHub 開發者數</div></div>
+      <div class="stat"><div class="stat-num">免費</div><div class="stat-label">Repo 與 Pages 皆可免費使用</div></div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">重點觀念</div>
+      沒有版本控制時，多人協作常靠「複製整個資料夾改名 v1 / v2 / final / final2」。版本控制讓每個人都能在獨立分支上工作、互不干擾，且任何錯誤都能追溯回去、隨時復原。
+    </div>
+
+    <div class="recap">
+      <div class="recap-label">Section 1 · 本節重點</div>
+      <ul>
+        <li>Git = 本地版本控制工具；GitHub = 雲端協作平台，兩者不是同一個東西</li>
+        <li>Git 的三個區域：工作目錄 → 暫存區 → 本地儲存庫，分別對應 <code>git add</code> 與 <code>git commit</code> 兩個動作</li>
+        <li>多人協作的本質是「每個人在自己的分支上工作，再透過 GitHub 整合」</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 2: 核心概念 (gray) ─── -->
+<section class="sec sec-alt" id="s2">
+  <div class="sec-inner">
+    <div class="sec-label">02 — 核心概念</div>
+    <h2 class="sec-title"><strong>核心概念與術語.</strong> <span>看懂這些字，文件就讀得懂了.</span></h2>
+
+    <p>開始操作前，先建立正確的詞彙地圖。下表整理 Git/GitHub 最常見、也最容易混淆的術語。</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>術語</th><th>英文</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td><strong>儲存庫</strong></td><td>Repository / Repo</td><td>一個專案的完整版本歷史與檔案集合，可以是本地或遠端</td></tr>
+          <tr><td><strong>提交</strong></td><td>Commit</td><td>一次變更的「快照」，附帶訊息說明改了什麼，每個 commit 有唯一 hash ID</td></tr>
+          <tr><td><strong>分支</strong></td><td>Branch</td><td>一條獨立的開發線，預設分支通常叫 <code>main</code></td></tr>
+          <tr><td><strong>HEAD</strong></td><td>HEAD</td><td>目前所在分支 / commit 的指標，代表「你現在站在哪裡」</td></tr>
+          <tr><td><strong>遠端</strong></td><td>Remote / origin</td><td>遠端儲存庫的別名，預設叫 <code>origin</code>，通常指向 GitHub 上的 repo</td></tr>
+          <tr><td><strong>複製</strong></td><td>Clone</td><td>把遠端儲存庫完整複製一份到本機，包含所有歷史</td></tr>
+          <tr><td><strong>合併</strong></td><td>Merge</td><td>把另一條分支的變更整合進目前分支</td></tr>
+          <tr><td><strong>忽略清單</strong></td><td>.gitignore</td><td>列出不該被 Git 追蹤的檔案/資料夾（如 <code>node_modules</code>、<code>.env</code>）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>分支（Branch）是 Git 的核心精神</h3>
+    <p>每個分支都是獨立的開發線。在 <code>main</code> 之外開一個 feature 分支進行開發，完成後再合併回 <code>main</code>，這樣主分支永遠保持「可運作」的狀態，不會被未完成的功能搞壞。</p>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:800px;display:block;margin:0 auto;">
+        <line x1="40" y1="140" x2="760" y2="140" stroke="#1d1d1f" stroke-width="2.5"/>
+        <path d="M220,140 C260,140 260,50 300,50 L480,50 C520,50 520,140 560,140" fill="none" stroke="#0071e3" stroke-width="2.5"/>
+        <circle cx="60" cy="140" r="7" fill="#1d1d1f"/>
+        <circle cx="220" cy="140" r="7" fill="#1d1d1f"/>
+        <circle cx="560" cy="140" r="8" fill="#28cd41" stroke="#1a8f2e" stroke-width="2"/>
+        <circle cx="740" cy="140" r="7" fill="#1d1d1f"/>
+        <circle cx="320" cy="50" r="7" fill="#0071e3"/>
+        <circle cx="440" cy="50" r="7" fill="#0071e3"/>
+        <text x="40" y="172" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#1d1d1f">main</text>
+        <text x="300" y="30" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#0071e3">feature/login</text>
+        <text x="220" y="120" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#6e6e73">git checkout -b</text>
+        <text x="560" y="172" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="700" fill="#1a8f2e">merge commit</text>
+        <text x="740" y="120" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#6e6e73">HEAD</text>
+      </svg>
+    </div>
+
+    <div class="ba">
+      <div class="ba-box b-blue"><div class="ba-label">main 分支</div><p>永遠是穩定、可部署的版本，團隊共同的「事實版本」。一般情況下不會有人直接在這裡開發。</p></div>
+      <div class="ba-box b-green"><div class="ba-label">feature 分支</div><p>從 <code>main</code> 切出來的暫時分支，完成後透過 Pull Request 合併回 <code>main</code>，再刪除。</p></div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">命名慣例</div>
+      分支名稱沒有強制規則，但團隊常見慣例如 <code>feature/xxx</code>、<code>fix/xxx</code>、<code>release/x.x</code>，方便一眼辨識用途。
+    </div>
+
+    <div class="recap">
+      <div class="recap-label">Section 2 · 本節重點</div>
+      <ul>
+        <li>Repo / Commit / Branch / Remote / Merge 是最基本的五個詞，先搞懂這些其他文件就八九不離十</li>
+        <li><code>main</code> 分支代表穩定版本，所有開發都在獨立的 feature 分支上進行，完成後合併回 <code>main</code></li>
+        <li><code>origin</code> 是「遠端」的預設別名，通常就是 GitHub 上的那份 repo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 3: 基本工作流程 (white) ─── -->
+<section class="sec" id="s3">
+  <div class="sec-inner">
+    <div class="sec-label">03 — 操作流程</div>
+    <h2 class="sec-title"><strong>基本工作流程.</strong> <span>從複製專案到推送變更.</span></h2>
+
+    <p>下圖是 Git 四個主要區域之間的資料流動，搭配對應的指令。理解這張圖，後面所有操作都只是在這幾個步驟之間移動。</p>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 900 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:900px;display:block;margin:0 auto;">
+        <rect x="10" y="50" width="170" height="90" rx="10" fill="#fff3e2" stroke="#ff9500" stroke-width="2"/>
+        <text x="95" y="85" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#1d1d1f">工作目錄</text>
+        <text x="95" y="105" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#6e6e73">Working Directory</text>
+        <text x="95" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#c05000">未追蹤 / 已修改</text>
+
+        <line x1="184" y1="95" x2="246" y2="95" stroke="#1d1d1f" stroke-width="2"/>
+        <polygon points="246,95 236,90 236,100" fill="#1d1d1f"/>
+        <text x="215" y="78" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#0071e3">git add</text>
+
+        <rect x="250" y="50" width="170" height="90" rx="10" fill="#e8f0fe" stroke="#0071e3" stroke-width="2"/>
+        <text x="335" y="85" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#1d1d1f">暫存區</text>
+        <text x="335" y="105" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#6e6e73">Staging Area</text>
+        <text x="335" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#1967d2">已 add，待 commit</text>
+
+        <line x1="424" y1="95" x2="486" y2="95" stroke="#1d1d1f" stroke-width="2"/>
+        <polygon points="486,95 476,90 476,100" fill="#1d1d1f"/>
+        <text x="455" y="78" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#1a8f2e">git commit</text>
+
+        <rect x="490" y="50" width="170" height="90" rx="10" fill="#e6f9ec" stroke="#1a8f2e" stroke-width="2"/>
+        <text x="575" y="85" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#1d1d1f">本地儲存庫</text>
+        <text x="575" y="105" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#6e6e73">Local Repository</text>
+        <text x="575" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#1a8f2e">已記錄版本歷史</text>
+
+        <line x1="664" y1="95" x2="726" y2="95" stroke="#1d1d1f" stroke-width="2"/>
+        <polygon points="726,95 716,90 716,100" fill="#1d1d1f"/>
+        <text x="695" y="78" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#1d1d1f">git push</text>
+
+        <rect x="730" y="50" width="160" height="90" rx="10" fill="#f1f3f4" stroke="#1d1d1f" stroke-width="2"/>
+        <text x="810" y="85" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#1d1d1f">遠端儲存庫</text>
+        <text x="810" y="105" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" fill="#6e6e73">Remote (GitHub)</text>
+        <text x="810" y="124" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#545b64">團隊共用版本</text>
+
+        <line x1="810" y1="140" x2="810" y2="165" stroke="#bf5af2" stroke-width="2"/>
+        <line x1="95" y1="140" x2="95" y2="165" stroke="#bf5af2" stroke-width="2"/>
+        <path d="M 810 165 L 105 165" stroke="#bf5af2" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+        <polygon points="95,165 105,160 105,170" fill="#bf5af2"/>
+        <text x="450" y="190" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="700" fill="#8f3cc5">git pull = fetch + merge（把遠端更新拉回本地與工作目錄）</text>
+      </svg>
+    </div>
+
+    <h3>日常開發六步驟</h3>
+    <div class="flow">
+      <div class="flow-item"><div class="flow-step">1</div><div class="flow-title">Clone / Pull</div><div class="flow-sub">取得最新程式碼：<code>git clone</code> 或 <code>git pull</code></div></div>
+      <div class="flow-item"><div class="flow-step">2</div><div class="flow-title">開分支</div><div class="flow-sub">為新功能建立獨立分支：<code>git checkout -b feature/xxx</code></div></div>
+      <div class="flow-item"><div class="flow-step">3</div><div class="flow-title">修改檔案</div><div class="flow-sub">在工作目錄編輯程式碼</div></div>
+      <div class="flow-item"><div class="flow-step">4</div><div class="flow-title">Add &amp; Commit</div><div class="flow-sub"><code>git add .</code> 後 <code>git commit -m "..."</code></div></div>
+      <div class="flow-item"><div class="flow-step">5</div><div class="flow-title">Push</div><div class="flow-sub">推送分支到 GitHub：<code>git push origin feature/xxx</code></div></div>
+      <div class="flow-item"><div class="flow-step">6</div><div class="flow-title">開 PR</div><div class="flow-sub">在 GitHub 上建立 Pull Request，等待 review 與合併</div></div>
+    </div>
+
+    <h3>常用指令速查表</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>指令</th><th>說明</th><th>範例</th></tr></thead>
+        <tbody>
+          <tr><td><code>git clone</code></td><td>複製遠端 repo 到本機</td><td><code>git clone https://github.com/user/repo.git</code></td></tr>
+          <tr><td><code>git status</code></td><td>查看目前哪些檔案被修改 / 暫存</td><td><code>git status</code></td></tr>
+          <tr><td><code>git add</code></td><td>把檔案加入暫存區</td><td><code>git add .</code>（全部加入）</td></tr>
+          <tr><td><code>git commit -m</code></td><td>把暫存區內容記錄成一個版本</td><td><code>git commit -m "fix: 修正登入錯誤"</code></td></tr>
+          <tr><td><code>git push</code></td><td>推送本地 commit 到遠端</td><td><code>git push origin main</code></td></tr>
+          <tr><td><code>git pull</code></td><td>拉取遠端最新版本並合併</td><td><code>git pull origin main</code></td></tr>
+          <tr><td><code>git branch</code></td><td>列出 / 建立分支</td><td><code>git branch feature/login</code></td></tr>
+          <tr><td><code>git checkout -b</code></td><td>建立並切換到新分支</td><td><code>git checkout -b feature/login</code></td></tr>
+          <tr><td><code>git merge</code></td><td>把指定分支合併進目前分支</td><td><code>git merge feature/login</code></td></tr>
+          <tr><td><code>git log</code></td><td>查看 commit 歷史</td><td><code>git log --oneline</code></td></tr>
+          <tr><td><code>git diff</code></td><td>查看尚未提交的差異</td><td><code>git diff</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">Commit Message 慣例</div>
+      好的 commit message 讓歷史紀錄變成「專案的日記」。常見慣例是 Conventional Commits：<code>feat:</code> 新功能、<code>fix:</code> 修錯誤、<code>docs:</code> 文件、<code>refactor:</code> 重構、<code>chore:</code> 雜項。例如 <code>fix: 修正登入後跳轉錯誤頁面</code>。
+    </div>
+
+    <div class="recap">
+      <div class="recap-label">Section 3 · 本節重點</div>
+      <ul>
+        <li>標準流程：clone/pull → 開分支 → 修改 → add/commit → push → 開 PR</li>
+        <li><code>git add</code> 是「選要記錄什麼」，<code>git commit</code> 是「正式記錄一個版本」，兩者缺一不可</li>
+        <li>養成寫 commit message 的習慣（如 feat/fix/docs 前綴），未來回溯歷史會輕鬆很多</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 4: 協作功能 (gray) ─── -->
+<section class="sec sec-alt" id="s4">
+  <div class="sec-inner">
+    <div class="sec-label">04 — 團隊協作</div>
+    <h2 class="sec-title"><strong>GitHub 協作功能.</strong> <span>Pull Request 是團隊合作的核心.</span></h2>
+
+    <div class="sec-img">
+      <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&auto=format&fit=crop&q=80" alt="團隊協作">
+    </div>
+
+    <p>GitHub 真正的價值不在於「備份程式碼」，而是這一整套讓多人協作不互相干擾的流程。</p>
+
+    <h3>Fork vs Branch</h3>
+    <div class="ba">
+      <div class="ba-box b-blue"><div class="ba-label">Branch（分支）</div><p>在同一個 repo 裡開一條新的開發線，需要該 repo 的寫入權限，團隊內部協作常用。</p></div>
+      <div class="ba-box b-orange"><div class="ba-label">Fork（複刻）</div><p>把別人的 repo 完整複製一份到你自己的帳號下，可自由修改，完成後再用 PR 提交回原 repo，常用於開源貢獻。</p></div>
+    </div>
+
+    <h3>Pull Request (PR) 流程</h3>
+    <div class="flow">
+      <div class="flow-item"><div class="flow-step">1</div><div class="flow-title">推送分支</div><div class="flow-sub">在 feature 分支完成開發後 push 到 GitHub</div></div>
+      <div class="flow-item"><div class="flow-step">2</div><div class="flow-title">開啟 PR</div><div class="flow-sub">選擇來源分支與目標分支，寫清楚改了什麼、為什麼改</div></div>
+      <div class="flow-item"><div class="flow-step">3</div><div class="flow-title">Code Review</div><div class="flow-sub">團隊成員留言、建議修改，可直接在程式碼行上註解</div></div>
+      <div class="flow-item"><div class="flow-step">4</div><div class="flow-title">CI 檢查</div><div class="flow-sub">GitHub Actions 自動跑測試 / lint，確保品質</div></div>
+      <div class="flow-item"><div class="flow-step">5</div><div class="flow-title">Merge</div><div class="flow-sub">確認沒問題後合併進目標分支，分支可刪除</div></div>
+    </div>
+
+    <h3>Issues、Projects 與 Discussions</h3>
+    <div class="cards">
+      <div class="card"><div class="card-title">Issues</div><p>用來追蹤 bug、功能需求、任務，可指派負責人、加標籤、連結到對應的 PR。</p></div>
+      <div class="card"><div class="card-title">Projects</div><p>以看板（Kanban）形式管理 Issue 與 PR 的進度，適合追蹤整體專案狀態。</p></div>
+      <div class="card"><div class="card-title">Discussions</div><p>適合放討論、Q&amp;A、公告，不一定要變成正式任務的內容。</p></div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">重點觀念</div>
+      在 repo 設定中可以對 <code>main</code> 分支設定「分支保護（Branch Protection）」規則：禁止直接 push、要求至少一人 review 通過、要求 CI 測試通過才能合併。這是團隊協作的安全網，避免有人不小心把壞掉的程式碼直接推上 <code>main</code>。
+    </div>
+
+    <div class="recap">
+      <div class="recap-label">Section 4 · 本節重點</div>
+      <ul>
+        <li>Branch 用於團隊內部協作；Fork 用於對你沒有寫入權限的 repo（如開源專案）貢獻程式碼</li>
+        <li>Pull Request 不只是「合併程式碼」，更是 Code Review 與討論發生的地方</li>
+        <li>設定 main 分支保護規則、強制走 PR review，是團隊協作的基本安全措施</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 5: Pages 與自動化 (white) ─── -->
+<section class="sec" id="s5">
+  <div class="sec-inner">
+    <div class="sec-label">05 — 進階功能</div>
+    <h2 class="sec-title"><strong>GitHub Pages 與自動化.</strong> <span>把 repo 變成網站、把流程變成自動化.</span></h2>
+
+    <p>GitHub 除了存放程式碼，還能直接把 repo 內容變成一個公開網站，或是在特定事件發生時自動執行腳本。</p>
+
+    <h3>GitHub Pages 是什麼</h3>
+    <p>GitHub Pages 是 GitHub 提供的免費靜態網站服務。只要 repo 裡有 HTML 檔案，啟用 Pages 後就能透過 <code>https://&lt;帳號&gt;.github.io/&lt;repo&gt;/</code> 這樣的網址直接存取，常用於專案文件、Demo 頁面、個人作品集。</p>
+
+    <div class="cards">
+      <div class="card"><div class="card-title">啟用方式</div><p>Repo → Settings → Pages → 選擇要發布的分支與資料夾（如 <code>main</code> 分支的 <code>/</code> 或 <code>/docs</code>）。</p></div>
+      <div class="card"><div class="card-title">更新方式</div><p>推送新的 commit 到對應分支，Pages 會在數十秒內自動重新部署，無需手動操作。</p></div>
+      <div class="card"><div class="card-title">自訂網域</div><p>可在 Pages 設定中綁定自己的網域名稱，需在網域服務商設定對應的 DNS 紀錄。</p></div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">實際案例</div>
+      這份教學頁面本身、以及你日常的 HTML 報告，都是透過 GitHub API 推送到 <code>jack72624-lab/claude-reports</code> 這個 repo，再由 GitHub Pages 自動發布成可分享的網址。
+    </div>
+
+    <h3>GitHub Actions（自動化）</h3>
+    <p>GitHub Actions 讓你在 repo 裡定義「workflow」（通常是 <code>.github/workflows/</code> 下的 YAML 檔），在特定事件（如 push、開 PR）發生時自動執行，例如跑測試、building、部署。</p>
+
+    <div class="cards">
+      <div class="card"><div class="card-title">CI 持續整合</div><p>每次 push 自動跑測試與 lint，盡早抓到錯誤，再合併進主分支。</p></div>
+      <div class="card"><div class="card-title">CD 持續部署</div><p>測試通過後自動部署到伺服器或 GitHub Pages，省去手動發布步驟。</p></div>
+      <div class="card"><div class="card-title">排程任務</div><p>用 cron 語法定時執行，例如每天自動整理報告或同步資料。</p></div>
+    </div>
+
+    <div class="recap">
+      <div class="recap-label">Section 5 · 本節重點</div>
+      <ul>
+        <li>GitHub Pages：repo 裡放 HTML，開啟 Pages 設定就能變成公開網址，免費且自動更新</li>
+        <li>GitHub Actions：用 YAML 定義自動化流程，最常見用途是 CI（自動測試）與 CD（自動部署）</li>
+        <li>你目前的 <code>claude-reports</code> repo 就是 GitHub Pages 的實際應用範例</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SECTION 6: 常見問題 (gray) ─── -->
+<section class="sec sec-alt" id="s6">
+  <div class="sec-inner">
+    <div class="sec-label">06 — 常見問題</div>
+    <h2 class="sec-title"><strong>常見問題與安全須知.</strong> <span>新手最常踩到的坑.</span></h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>問題</th><th>原因</th><th>處理方式</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Merge Conflict（衝突）</strong></td><td>兩個分支修改了同一個檔案的同一處</td><td>開啟衝突檔案，手動選擇要保留的內容，刪除衝突標記後重新 add/commit</td></tr>
+          <tr><td><strong>不小心 commit 到錯誤分支</strong></td><td>在 <code>main</code> 上直接修改並 commit</td><td><code>git reset --soft HEAD~1</code> 取消最後一次 commit（保留修改），切到正確分支重新 commit</td></tr>
+          <tr><td><strong>想撤銷某次 commit</strong></td><td>發現某次變更有問題</td><td><code>git revert &lt;commit&gt;</code>，建立新 commit 來抵銷該次變更，保留歷史記錄</td></tr>
+          <tr><td><strong>誤刪檔案 / 分支</strong></td><td>操作失誤</td><td><code>git reflog</code> 可找回近期的 commit / 分支指標，再用 <code>git checkout</code> 還原</td></tr>
+          <tr><td><strong>.env 等敏感檔案被 commit</strong></td><td>沒設定 .gitignore</td><td>加入 <code>.gitignore</code> 並用 <code>git rm --cached</code> 移除追蹤；金鑰已外流需立即更換</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-label">安全須知</div>
+      絕對不要把 API Key、密碼、Token 直接寫進程式碼後 commit，即使之後刪除，舊版本的歷史紀錄裡仍然存在。正確做法是用環境變數（<code>.env</code>）並把它加進 <code>.gitignore</code>。
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-label">Force Push 風險</div>
+      <code>git push --force</code> 會覆蓋遠端的歷史紀錄。如果別人已經基於舊版本開發，會造成混亂甚至遺失他們的 commit。<strong>共用分支（如 main）絕對不要 force push。</strong>
+    </div>
+
+    <div class="recap">
+      <div class="recap-label">Section 6 · 本節重點</div>
+      <ul>
+        <li>Merge Conflict 是正常現象，不是錯誤——手動解決後重新 commit 即可</li>
+        <li><code>git revert</code>（安全，新增一筆抵銷紀錄）vs <code>git reset</code>（會改寫歷史，謹慎使用）</li>
+        <li>敏感資訊永遠不要進 Git 歷史；共用分支永遠不要 force push</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GLOSSARY (white) ─── -->
+<section class="sec" id="glossary">
+  <div class="sec-inner">
+    <div class="sec-label">術語速查</div>
+    <h2 class="sec-title"><strong>術語速查表.</strong> <span>常見技術名詞整理.</span></h2>
+
+    <div class="glossary-grid">
+      <div class="glossary-item"><div class="glossary-term">Repository</div><div class="glossary-def">專案的版本歷史與檔案集合，可以是本地或遠端（GitHub 上的那份）</div></div>
+      <div class="glossary-item"><div class="glossary-term">Commit</div><div class="glossary-def">一次變更的快照，附帶訊息說明，有唯一的 hash ID</div></div>
+      <div class="glossary-item"><div class="glossary-term">Branch</div><div class="glossary-def">獨立的開發線，可平行存在、互不干擾，最後可合併回主分支</div></div>
+      <div class="glossary-item"><div class="glossary-term">main / master</div><div class="glossary-def">預設的主分支，代表專案目前的穩定版本</div></div>
+      <div class="glossary-item"><div class="glossary-term">HEAD</div><div class="glossary-def">指向目前所在分支或 commit 的指標</div></div>
+      <div class="glossary-item"><div class="glossary-term">origin</div><div class="glossary-def">遠端儲存庫的預設別名，通常就是 GitHub 上的 repo</div></div>
+      <div class="glossary-item"><div class="glossary-term">Clone</div><div class="glossary-def">把遠端 repo 完整複製一份到本機，包含所有歷史</div></div>
+      <div class="glossary-item"><div class="glossary-term">Fork</div><div class="glossary-def">把別人的 repo 複製一份到自己帳號下，用於沒有寫入權限時的貢獻流程</div></div>
+      <div class="glossary-item"><div class="glossary-term">Pull Request (PR)</div><div class="glossary-def">請求把某分支的變更合併進目標分支，並附帶 Code Review 流程</div></div>
+      <div class="glossary-item"><div class="glossary-term">Merge</div><div class="glossary-def">把一條分支的變更整合進另一條分支</div></div>
+      <div class="glossary-item"><div class="glossary-term">Merge Conflict</div><div class="glossary-def">兩條分支修改了同一處內容，需要手動解決才能完成合併</div></div>
+      <div class="glossary-item"><div class="glossary-term">Staging Area</div><div class="glossary-def"><code>git add</code> 之後、<code>git commit</code> 之前的暫存區域</div></div>
+      <div class="glossary-item"><div class="glossary-term">.gitignore</div><div class="glossary-def">列出不被 Git 追蹤的檔案 / 資料夾清單，如 .env、node_modules</div></div>
+      <div class="glossary-item"><div class="glossary-term">Issue</div><div class="glossary-def">用於追蹤 bug、任務、需求的紀錄，可指派、加標籤、連結 PR</div></div>
+      <div class="glossary-item"><div class="glossary-term">Code Review</div><div class="glossary-def">在 PR 上對程式碼進行檢查、留言與討論的過程</div></div>
+      <div class="glossary-item"><div class="glossary-term">GitHub Actions</div><div class="glossary-def">GitHub 的自動化工作流程引擎，常用於 CI/CD</div></div>
+      <div class="glossary-item"><div class="glossary-term">GitHub Pages</div><div class="glossary-def">GitHub 提供的免費靜態網站服務，把 repo 內容變成公開網址</div></div>
+      <div class="glossary-item"><div class="glossary-term">git revert</div><div class="glossary-def">建立一個新 commit 來抵銷某次變更，不改寫歷史，較安全</div></div>
+      <div class="glossary-item"><div class="glossary-term">git reset</div><div class="glossary-def">移動 HEAD 指標到指定 commit，可能改寫歷史，需謹慎使用</div></div>
+      <div class="glossary-item"><div class="glossary-term">Branch Protection</div><div class="glossary-def">對特定分支設定的保護規則，如禁止直接 push、強制 review</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>GitHub 入門教學</strong> &nbsp;|&nbsp; v1.0 · C Style &nbsp;|&nbsp; 2026-06-13
+</footer>
+
+</body>
+</html>
