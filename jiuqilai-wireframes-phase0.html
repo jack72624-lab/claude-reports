@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>揪起來 — 階段零 線框圖</title>
+<style>
+  :root {
+    --navy: #161D26;
+    --blue: #0073BB;
+    --accent: #F3F3F7;
+    --white: #FFFFFF;
+    --text: #16191F;
+    --mid: #545B64;
+    --light: #879596;
+    --border: #DDE1E6;
+    --green: #1D8348;
+    --r: 2px;
+
+    /* App mockup palette */
+    --app-bg: #F7F5F0;
+    --app-grass: #D4EAC8;
+    --app-grass-dk: #A8D494;
+    --app-green: #3A7D44;
+    --app-green-lt: #EBF5EC;
+    --app-card: #FFFFFF;
+    --app-text: #1A1A1A;
+    --app-sub: #6B6B6B;
+    --app-border: #E8E4DF;
+    --app-badge: #FF6B35;
+    --app-blue: #2B7FD4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--accent);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--navy);
+    color: white;
+    padding: 0 32px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav .logo { font-weight: 700; font-size: 16px; }
+  nav .badge {
+    background: #F39C12;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 2px;
+    letter-spacing: .5px;
+  }
+  nav .meta { margin-left: auto; color: #879596; font-size: 12px; }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    color: white;
+    padding: 40px 32px 32px;
+    border-bottom: 3px solid var(--blue);
+  }
+  .hero h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .hero p { color: #A8B2BC; max-width: 640px; line-height: 1.6; }
+  .hero .tags { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .tag {
+    background: rgba(0,115,187,.25);
+    color: #5BB8F5;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: .3px;
+  }
+
+  /* ── FLOW BAR ── */
+  .flow-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .flow-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .flow-num {
+    width: 28px; height: 28px;
+    background: var(--blue);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .flow-label { font-size: 13px; font-weight: 600; }
+  .flow-sub { font-size: 11px; color: var(--mid); }
+  .flow-arrow {
+    color: var(--light);
+    font-size: 20px;
+    padding: 0 12px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--blue);
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    background: var(--blue);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 20px; font-weight: 700; }
+  .section-sub { color: var(--mid); font-size: 13px; }
+
+  .screen-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .phone-group {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .phone-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .phone-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+
+  /* ── PHONE FRAME ── */
+  .phone {
+    width: 260px;
+    height: 560px;
+    background: #1A1A1A;
+    border-radius: 36px;
+    padding: 10px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.08);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .phone-inner {
+    width: 100%;
+    height: 100%;
+    background: var(--app-bg);
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .status-bar {
+    height: 30px;
+    background: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+  .notch {
+    width: 80px; height: 18px;
+    background: #1A1A1A;
+    border-radius: 0 0 14px 14px;
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+  }
+  .screen-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ── ANNOTATIONS ── */
+  .annotations { display: flex; flex-direction: column; gap: 14px; }
+  .ann {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    border-left: 3px solid var(--blue);
+  }
+  .ann-num {
+    display: inline-flex;
+    width: 20px; height: 20px;
+    background: var(--blue);
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .ann-title { font-weight: 600; font-size: 13px; display: inline; }
+  .ann p { color: var(--mid); font-size: 12px; margin-top: 6px; line-height: 1.5; }
+  .ann.warn { border-left-color: #E67E22; }
+  .ann.warn .ann-num { background: #E67E22; }
+  .ann.ok { border-left-color: var(--green); }
+  .ann.ok .ann-num { background: var(--green); }
+
+  .arrow-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--light);
+    padding: 0 4px;
+    padding-top: 220px;
+  }
+
+  /* ── APP COMPONENTS ── */
+  .app-header {
+    padding: 8px 16px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--app-bg);
+  }
+  .app-title { font-size: 15px; font-weight: 700; color: var(--app-text); }
+  .app-back { font-size: 13px; color: var(--app-green); display: flex; align-items: center; gap: 3px; }
+
+  .btn {
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+  }
+  .btn-hero {
+    background: var(--app-green);
+    color: white;
+    padding: 14px 24px;
+    font-size: 17px;
+    border-radius: 14px;
+    width: 200px;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(58,125,68,.35);
+  }
+  .btn-sub {
+    background: var(--app-green-lt);
+    color: var(--app-green);
+    padding: 10px 20px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--app-sub);
+    padding: 8px 16px;
+    font-size: 12px;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+  }
+  .btn-join {
+    background: var(--app-green);
+    color: white;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 14px;
+    width: 100%;
+  }
+
+  /* ── GRASS SCENE ── */
+  .grass-scene {
+    background: linear-gradient(180deg, #B8DFFC 0%, #D4EFB8 60%, #A8D494 100%);
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .grass-scene.small { height: 140px; }
+  .sun {
+    width: 40px; height: 40px;
+    background: #FFD700;
+    border-radius: 50%;
+    position: absolute;
+    top: 16px; right: 24px;
+    box-shadow: 0 0 20px rgba(255,215,0,.5);
+  }
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,.85);
+    border-radius: 20px;
+  }
+  .ground {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: #7CB867;
+    border-radius: 60px 60px 0 0;
+  }
+  .ground-line {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 8px;
+    background: #5A9C50;
+  }
+
+  /* avatars */
+  .av {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 3px solid white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    position: absolute;
+    box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  }
+  .av-sm {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .field {
+    padding: 0 16px;
+    margin-bottom: 10px;
+  }
+  .field-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--app-sub);
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .field-input {
+    background: white;
+    border: 1.5px solid var(--app-border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 13px;
+    width: 100%;
+    color: var(--app-text);
+  }
+  .field-input.filled { border-color: var(--app-green); color: var(--app-text); }
+  .field-input.placeholder { color: var(--app-sub); }
+  .vibe-row {
+    display: flex;
+    gap: 6px;
+    padding: 0 16px 10px;
+    overflow-x: auto;
+  }
+  .vibe-chip {
+    background: white;
+    border: 1.5px solid var(--app-border);
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .vibe-chip.sel {
+    background: var(--app-green-lt);
+    border-color: var(--app-green);
+    color: var(--app-green);
+    font-weight: 600;
+  }
+  .scope-row {
+    display: flex;
+    background: var(--app-border);
+    border-radius: 10px;
+    padding: 2px;
+    margin: 0 16px 10px;
+  }
+  .scope-btn {
+    flex: 1;
+    text-align: center;
+    padding: 6px 4px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--app-sub);
+  }
+  .scope-btn.sel {
+    background: white;
+    color: var(--app-green);
+    box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  }
+
+  /* ── CHAT ── */
+  .chat-area {
+    flex: 1;
+    padding: 8px 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .chat-sys {
+    text-align: center;
+    font-size: 10px;
+    color: var(--app-sub);
+    background: rgba(0,0,0,.05);
+    border-radius: 10px;
+    padding: 4px 10px;
+    align-self: center;
+  }
+  .chat-msg {
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+  }
+  .chat-msg.mine { flex-direction: row-reverse; }
+  .chat-bubble {
+    background: white;
+    border-radius: 16px 16px 16px 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--app-text);
+    max-width: 160px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  .chat-bubble.mine {
+    background: var(--app-green);
+    color: white;
+    border-radius: 16px 16px 4px 16px;
+  }
+  .chat-time { font-size: 9px; color: var(--app-sub); margin-top: 2px; }
+  .chat-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border-top: 1px solid var(--app-border);
+    flex-shrink: 0;
+  }
+  .chat-input {
+    flex: 1;
+    background: var(--app-bg);
+    border: 1px solid var(--app-border);
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 12px;
+    color: var(--app-sub);
+  }
+  .send-btn {
+    width: 32px; height: 32px;
+    background: var(--app-green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .online-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    background: rgba(58,125,68,.08);
+    font-size: 10px;
+    color: var(--app-green);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ── DESIGN DECISIONS ── */
+  .decisions {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 32px 60px;
+  }
+  .dec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .dec-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px;
+  }
+  .dec-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .dec-card p { font-size: 12px; color: var(--mid); line-height: 1.5; }
+  .dec-card.open { border-left: 3px solid #E67E22; }
+  .dec-card.done { border-left: 3px solid var(--green); }
+  .dec-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    letter-spacing: .5px;
+  }
+  .dec-badge.open { background: #FEF3E2; color: #E67E22; }
+  .dec-badge.done { background: #E8F5E9; color: var(--green); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* scrollable phone area */
+  .phone-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .phone-scroll::-webkit-scrollbar { display: none; }
+
+  /* otp boxes */
+  .otp-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 0 16px;
+  }
+  .otp-box {
+    width: 36px; height: 44px;
+    background: white;
+    border: 2px solid var(--app-border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--app-text);
+  }
+  .otp-box.filled { border-color: var(--app-green); }
+
+  /* trust card */
+  .trust-card {
+    margin: 8px 12px;
+    background: var(--app-green-lt);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .trust-icon { font-size: 18px; }
+  .trust-text { font-size: 11px; color: var(--app-green); font-weight: 600; line-height: 1.4; }
+
+  /* activity header */
+  .act-header {
+    padding: 12px 16px 8px;
+    background: white;
+    border-bottom: 1px solid var(--app-border);
+  }
+  .act-vibe {
+    font-size: 24px;
+    line-height: 1;
+  }
+  .act-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--app-text);
+    margin-top: 4px;
+  }
+  .act-meta {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .act-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--app-sub);
+  }
+
+  .participants-row {
+    display: flex;
+    align-items: center;
+    gap: -4px;
+    padding: 8px 16px;
+  }
+  .participants-row .av-sm { margin-left: -8px; }
+  .participants-row .av-sm:first-child { margin-left: 0; }
+  .part-count { font-size: 11px; color: var(--app-sub); margin-left: 8px; }
+
+  .confirm-scene {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 20px 0;
+    text-align: center;
+    gap: 12px;
+  }
+  .confirm-emoji { font-size: 52px; }
+  .confirm-q { font-size: 16px; font-weight: 700; color: var(--app-text); line-height: 1.3; }
+  .confirm-sub { font-size: 12px; color: var(--app-sub); }
+  .confirm-btns { display: flex; flex-direction: column; gap: 8px; padding: 16px; width: 100%; flex-shrink: 0; }
+  .confirm-yes {
+    background: var(--app-green);
+    color: white;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    width: 100%;
+  }
+  .confirm-no {
+    background: transparent;
+    color: var(--app-sub);
+    padding: 10px;
+    font-size: 13px;
+    border: none;
+    width: 100%;
+  }
+
+  .section-divider {
+    background: var(--border);
+    height: 1px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="logo">揪起來</span>
+  <span class="badge">PHASE 0 · WIREFRAME</span>
+  <span class="meta">2026-06-16 ・ 內部對齊用，非最終設計</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>階段零・核心流程線框圖</h1>
+  <p>這份文件展示揪起來 App 的 5 個核心畫面，供團隊對齊 UI 邏輯與互動設計。目標是「兩三週可以跑起來的最小版本」——先驗證一群真朋友用不用得起來，再做更多。</p>
+  <div class="tags">
+    <span class="tag">Expo / React Native</span>
+    <span class="tag">iOS TestFlight 先行</span>
+    <span class="tag">Plan 打頭陣（Now 延後）</span>
+    <span class="tag">Supabase + RLS</span>
+    <span class="tag">手機號碼認證</span>
+  </div>
+</div>
+
+<!-- FLOW BAR -->
+<div class="flow-bar">
+  <div class="flow-item">
+    <div class="flow-num">1</div>
+    <div>
+      <div class="flow-label">登入</div>
+      <div class="flow-sub">手機號碼 + OTP</div>
+    </div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-num">2</div>
+    <div>
+      <div class="flow-label">建立 Plan</div>
+      <div class="flow-sub">I'm Free → 填欄位</div>
+    </div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-num">3</div>
+    <div>
+      <div class="flow-label">加入活動</div>
+      <div class="flow-sub">朋友收到邀請</div>
+    </div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-num">4</div>
+    <div>
+      <div class="flow-label">聊天室</div>
+      <div class="flow-sub">草皮 + 群聊</div>
+    </div>
+  </div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-item">
+    <div class="flow-num">5</div>
+    <div>
+      <div class="flow-label">見面確認</div>
+      <div class="flow-sub">事後輕量問一下</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 1: 登入
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">登入</div>
+      <div class="section-sub">手機號碼為主，OTP 驗證，通訊錄比對</div>
+    </div>
+  </div>
+
+  <div class="screen-grid">
+    <div class="phone-group">
+      <!-- State A: Phone input -->
+      <div class="phone-wrap">
+        <div class="phone-label">步驟 A・輸入號碼</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span>
+              <span style="margin-left:40px"></span>
+              <span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 20px; gap:24px">
+                <!-- Logo -->
+                <div style="text-align:center">
+                  <div style="font-size:36px; margin-bottom:4px">🌿</div>
+                  <div style="font-size:24px; font-weight:800; color:var(--app-green); letter-spacing:-1px">揪起來</div>
+                  <div style="font-size:11px; color:var(--app-sub); margin-top:4px">讓「我有空，誰要一起？」變得理所當然</div>
+                </div>
+
+                <!-- Phone input -->
+                <div style="width:100%">
+                  <div class="field-label" style="padding:0 0 4px">手機號碼</div>
+                  <div style="display:flex; gap:8px; align-items:center">
+                    <div style="background:white; border:1.5px solid var(--app-border); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--app-sub); white-space:nowrap">+886</div>
+                    <div class="field-input filled" style="font-size:13px; padding:10px 12px">09XX XXX XXX</div>
+                  </div>
+                  <div style="font-size:10px; color:var(--app-sub); margin-top:6px; text-align:center">你的手機號碼只用來確認你是真人</div>
+                </div>
+
+                <button class="btn btn-hero" style="width:100%; font-size:15px; padding:14px">傳送驗證碼</button>
+
+                <div style="font-size:10px; color:var(--app-sub); text-align:center; line-height:1.5; padding:0 8px">
+                  繼續即代表你同意我們的<span style="color:var(--app-green)">服務條款</span>與<span style="color:var(--app-green)">隱私政策</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label">→</div>
+
+      <!-- State B: OTP -->
+      <div class="phone-wrap">
+        <div class="phone-label">步驟 B・驗證碼</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span>
+              <span></span>
+              <span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px 20px; gap:24px">
+                <div style="text-align:center">
+                  <div style="font-size:32px; margin-bottom:8px">📱</div>
+                  <div style="font-size:17px; font-weight:700; color:var(--app-text)">輸入驗證碼</div>
+                  <div style="font-size:11px; color:var(--app-sub); margin-top:6px; line-height:1.5">已傳送至 +886 09XX XXX XXX</div>
+                </div>
+
+                <div class="otp-row">
+                  <div class="otp-box filled">3</div>
+                  <div class="otp-box filled">8</div>
+                  <div class="otp-box filled">7</div>
+                  <div class="otp-box" style="border-color:var(--app-green); box-shadow:0 0 0 2px rgba(58,125,68,.2)"></div>
+                  <div class="otp-box"></div>
+                  <div class="otp-box"></div>
+                </div>
+
+                <div style="text-align:center; font-size:11px; color:var(--app-sub)">
+                  沒收到？<span style="color:var(--app-green); font-weight:600">重新傳送</span>（55 秒後）
+                </div>
+
+                <div style="background:var(--app-green-lt); border-radius:12px; padding:10px 14px; text-align:center; font-size:11px; color:var(--app-green); font-weight:600">
+                  💡 支援 iOS WebOTP 自動填入
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label">→</div>
+
+      <!-- State C: Contacts -->
+      <div class="phone-wrap">
+        <div class="phone-label">步驟 C・加入朋友</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span>
+              <span></span>
+              <span>●●●</span>
+            </div>
+            <div class="screen-content phone-scroll">
+              <div style="padding:20px 16px; display:flex; flex-direction:column; gap:16px; align-items:center">
+                <div style="text-align:center">
+                  <div style="font-size:32px; margin-bottom:8px">👥</div>
+                  <div style="font-size:16px; font-weight:700; color:var(--app-text)">找到你的朋友</div>
+                  <div style="font-size:11px; color:var(--app-sub); margin-top:6px; line-height:1.5">比對通訊錄後<strong>立即刪除</strong>，只找到「已在 App 上的人」</div>
+                </div>
+
+                <!-- Friend suggestions -->
+                <div style="width:100%; display:flex; flex-direction:column; gap:8px">
+                  <div style="font-size:11px; font-weight:700; color:var(--app-sub); letter-spacing:.5px">找到 5 位朋友</div>
+
+                  <div style="background:white; border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; border:1px solid var(--app-border)">
+                    <div class="av-sm" style="background:#FFE4B5; width:38px; height:38px; font-size:18px">🐻</div>
+                    <div style="flex:1">
+                      <div style="font-size:13px; font-weight:600">小熊</div>
+                      <div style="font-size:10px; color:var(--app-sub)">已加入</div>
+                    </div>
+                    <div style="background:var(--app-green-lt); color:var(--app-green); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px">加為好友</div>
+                  </div>
+
+                  <div style="background:white; border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; border:1px solid var(--app-border)">
+                    <div class="av-sm" style="background:#E6E0FF; width:38px; height:38px; font-size:18px">🦊</div>
+                    <div style="flex:1">
+                      <div style="font-size:13px; font-weight:600">阿狐</div>
+                      <div style="font-size:10px; color:var(--app-sub)">已加入</div>
+                    </div>
+                    <div style="background:var(--app-green-lt); color:var(--app-green); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px">加為好友</div>
+                  </div>
+
+                  <div style="background:white; border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; border:1px solid var(--app-border); opacity:.5">
+                    <div class="av-sm" style="background:#E0F4FF; width:38px; height:38px; font-size:18px">🐬</div>
+                    <div style="flex:1">
+                      <div style="font-size:13px; font-weight:600">海豚子</div>
+                      <div style="font-size:10px; color:var(--app-sub)">還沒加入，傳邀請？</div>
+                    </div>
+                    <div style="background:var(--app-border); color:var(--app-sub); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px">邀請</div>
+                  </div>
+                </div>
+
+                <button class="btn" style="background:var(--app-green); color:white; padding:13px; font-size:14px; font-weight:700; border-radius:14px; width:100%; border:none">加入 5 位好友，繼續</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann">
+        <span class="ann-num">1</span><span class="ann-title">手機號碼為主</span>
+        <p>手機號碼是天然去重主鍵，且通訊錄本來就存了。不靠 LINE 拿好友名單（LINE 不開放 API），只當登入/分享邀請通道。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">2</span><span class="ann-title">OTP 支援自動填入</span>
+        <p>iOS WebOTP API 讓系統自動帶入簡訊驗證碼，降低 ~30% 流失。</p>
+      </div>
+      <div class="ann ok">
+        <span class="ann-num">3</span><span class="ann-title">Compare-and-forget（PDPA）</span>
+        <p>通訊錄比對後立即刪除非用戶資料，不落地儲存。文案明確告知目的，MVP 前找律師確認合規。</p>
+      </div>
+      <div class="ann warn">
+        <span class="ann-num">4</span><span class="ann-title">⚠️ Onboarding 完成條件</span>
+        <p>必須加到至少 5 位已在 App 上的朋友才算「啟用完成」，否則整個核心迴圈是空的。Zenly 模式。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">5</span><span class="ann-title">沒有在 App 的朋友</span>
+        <p>顯示「傳邀請」入口，走 LINE 分享連結，繞開代非用戶同意的問題。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 2: 主畫面 → 建立 Plan
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">主畫面 → 建立 Plan</div>
+      <div class="section-sub">I'm Free 英雄按鈕展開，填 Plan 欄位</div>
+    </div>
+  </div>
+
+  <div class="screen-grid">
+    <div class="phone-group">
+
+      <!-- State A: Home -->
+      <div class="phone-wrap">
+        <div class="phone-label">A・主畫面</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <!-- Grass scene (home) -->
+              <div class="grass-scene" style="height:320px; flex-shrink:0">
+                <div class="sun"></div>
+                <div class="cloud" style="width:60px;height:18px;top:40px;left:20px"></div>
+                <div class="cloud" style="width:40px;height:14px;top:55px;left:28px"></div>
+                <div class="ground"></div>
+                <div class="ground-line"></div>
+
+                <!-- MY avatar, center stage -->
+                <div class="av" style="background:#E6E0FF; bottom:28px; left:50%; transform:translateX(-50%); width:56px; height:56px; font-size:28px; border-width:4px; z-index:2">🦁</div>
+              </div>
+
+              <!-- Bottom: I'm Free button -->
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:16px 20px; gap:12px">
+                <div style="font-size:12px; color:var(--app-sub)">今天有空嗎？</div>
+                <button class="btn btn-hero">🙋 I'm Free！</button>
+                <div style="font-size:10px; color:var(--app-sub)">按下去，揪你的朋友出來</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label">→</div>
+
+      <!-- State B: Create Plan form -->
+      <div class="phone-wrap">
+        <div class="phone-label">B・建立 Plan 表單</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div class="app-header">
+                <span class="app-back">‹ 取消</span>
+                <span class="app-title">計畫一場活動</span>
+                <span style="width:40px"></span>
+              </div>
+              <div class="phone-scroll" style="flex:1">
+                <div style="padding:10px 0 80px">
+
+                  <!-- Vibe -->
+                  <div class="field">
+                    <div class="field-label">要幹嘛</div>
+                  </div>
+                  <div class="vibe-row">
+                    <div class="vibe-chip">🍜 吃飯</div>
+                    <div class="vibe-chip sel">🏀 打球</div>
+                    <div class="vibe-chip">☕ 咖啡</div>
+                    <div class="vibe-chip">🚶 散步</div>
+                    <div class="vibe-chip">🎲 隨便</div>
+                  </div>
+
+                  <!-- What -->
+                  <div class="field">
+                    <div class="field-label">說清楚一點（選填）</div>
+                    <div class="field-input filled" style="font-size:13px">週五打場三對三，大安森林公園附近</div>
+                  </div>
+
+                  <!-- When -->
+                  <div class="field">
+                    <div class="field-label">時間</div>
+                    <div class="field-input filled">週五 2026/06/19 ・ 19:00</div>
+                  </div>
+
+                  <!-- Where -->
+                  <div class="field">
+                    <div class="field-label">地點</div>
+                    <div class="field-input filled">大安區（精確地點進聊天室再說）</div>
+                  </div>
+
+                  <!-- People -->
+                  <div class="field">
+                    <div class="field-label">人數上限（選填）</div>
+                    <div style="display:flex; align-items:center; gap:12px">
+                      <div style="background:white; border:1.5px solid var(--app-border); border-radius:10px; padding:8px 16px; font-size:20px">−</div>
+                      <div style="font-size:18px; font-weight:700; color:var(--app-text)">6</div>
+                      <div style="background:white; border:1.5px solid var(--app-green); border-radius:10px; padding:8px 16px; font-size:20px; color:var(--app-green)">+</div>
+                      <div style="font-size:11px; color:var(--app-sub)">人</div>
+                    </div>
+                  </div>
+
+                  <!-- Deadline -->
+                  <div class="field">
+                    <div class="field-label">幾點前確認</div>
+                    <div class="field-input filled">週五 2026/06/19 ・ 中午 12:00</div>
+                    <div style="font-size:10px; color:var(--app-sub); margin-top:4px">過了截止時間，活動自動安靜結束</div>
+                  </div>
+
+                  <!-- Scope -->
+                  <div class="field">
+                    <div class="field-label">給誰看</div>
+                  </div>
+                  <div class="scope-row">
+                    <div class="scope-btn">摯友</div>
+                    <div class="scope-btn sel">全部朋友</div>
+                    <div class="scope-btn">標籤</div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Submit CTA (fixed bottom) -->
+              <div style="padding:10px 16px 16px; background:var(--app-bg); border-top:1px solid var(--app-border); flex-shrink:0">
+                <button class="btn btn-join">🌿 揪起來！</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label">→</div>
+
+      <!-- State C: Waiting -->
+      <div class="phone-wrap">
+        <div class="phone-label">C・等待中（正向等待）</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div class="grass-scene" style="height:220px; flex-shrink:0">
+                <div class="sun"></div>
+                <div class="ground"></div>
+                <div class="ground-line"></div>
+                <div class="av" style="background:#E6E0FF; bottom:28px; left:50%; transform:translateX(-50%); width:52px; height:52px; font-size:26px; border-width:3px">🦁</div>
+                <!-- Activity tag -->
+                <div style="position:absolute; top:16px; left:12px; right:12px; background:rgba(255,255,255,.9); border-radius:12px; padding:8px 12px; backdrop-filter:blur(4px)">
+                  <div style="font-size:12px; font-weight:700; color:var(--app-text)">🏀 打球 ・ 週五 19:00</div>
+                  <div style="font-size:10px; color:var(--app-sub); margin-top:2px">大安區 ・ 截止週五中午</div>
+                </div>
+              </div>
+
+              <div style="flex:1; padding:16px; display:flex; flex-direction:column; gap:12px">
+                <div style="text-align:center; font-size:13px; color:var(--app-sub)">已發出邀請，等你的朋友回應～</div>
+
+                <!-- Positive signal only -->
+                <div style="background:var(--app-green-lt); border-radius:12px; padding:12px 14px; text-align:center">
+                  <div style="font-size:12px; font-weight:600; color:var(--app-green)">👀 你的朋友正在看…</div>
+                  <div style="font-size:10px; color:var(--app-sub); margin-top:4px">有人加入會馬上通知你</div>
+                </div>
+
+                <!-- Adjust scope -->
+                <div style="background:white; border:1px solid var(--app-border); border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between">
+                  <div style="font-size:12px; color:var(--app-text)">📢 目前給「全部朋友」看</div>
+                  <div style="font-size:11px; color:var(--app-blue); font-weight:600">調整</div>
+                </div>
+
+                <!-- No negative: NEVER show "0 人回應" -->
+                <div style="font-size:10px; color:var(--app-sub); text-align:center; font-style:italic">截止前可隨時取消或調整範圍</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann">
+        <span class="ann-num">1</span><span class="ann-title">一顆鈕再展開</span>
+        <p>主畫面只有 Avatar + I'm Free。按下去才問 Now/Plan，符合「先表達衝動再細化」的心理順序。Phase 0 先只有 Plan。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">2</span><span class="ann-title">Vibe 必選，但零成本</span>
+        <p>一排 emoji 一鍵選，沒有「不選不讓過」的壓迫感——但每則廣播都帶意圖，避免看板淪為空氣廣播。</p>
+      </div>
+      <div class="ann ok">
+        <span class="ann-num">3</span><span class="ann-title">限時自動結束</span>
+        <p>截止點到了安靜過期，不倒數催促，不跳「還沒有人」。到點自動熄燈，零愧疚。</p>
+      </div>
+      <div class="ann warn">
+        <span class="ann-num">4</span><span class="ann-title">⚠️ 永不顯示「0 人回應」</span>
+        <p>等待畫面只顯示正向語氣（「你的朋友正在看」），至少有 1 人加入後才顯示參與者數量。這是生死題。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">5</span><span class="ann-title">可見範圍可調</span>
+        <p>不自動擴大，但發起人在等待畫面可自行調整「給誰看」，主導權完全在發起人手上。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 3: 加入活動
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div>
+      <div class="section-title">加入活動</div>
+      <div class="section-sub">朋友收到推播，看到活動詳情，決定要不要加入</div>
+    </div>
+  </div>
+
+  <div class="screen-grid">
+    <div class="phone-group">
+      <!-- Notification first -->
+      <div class="phone-wrap">
+        <div class="phone-label">A・收到推播</div>
+        <div class="phone">
+          <div class="phone-inner" style="background:#1A1A1A">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px; color:white">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <!-- Lock screen -->
+            <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:20px; padding:20px 16px">
+              <div style="color:white; text-align:center">
+                <div style="font-size:13px; opacity:.7">週五, 06月 19日</div>
+                <div style="font-size:48px; font-weight:200; letter-spacing:-2px; line-height:1">19:08</div>
+              </div>
+
+              <!-- Notification banner -->
+              <div style="background:rgba(255,255,255,.15); backdrop-filter:blur(20px); border-radius:16px; padding:14px; width:100%; border:1px solid rgba(255,255,255,.2)">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px">
+                  <div style="width:32px; height:32px; background:var(--app-green); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px">🌿</div>
+                  <div>
+                    <div style="font-size:12px; font-weight:700; color:white">揪起來</div>
+                    <div style="font-size:10px; color:rgba(255,255,255,.6)">現在</div>
+                  </div>
+                </div>
+                <div style="font-size:13px; font-weight:600; color:white; line-height:1.4">🦁 獅子頭 要你一起打球！</div>
+                <div style="font-size:11px; color:rgba(255,255,255,.7); margin-top:4px">週五 19:00 ・ 大安區</div>
+              </div>
+
+              <div style="color:rgba(255,255,255,.4); font-size:11px">往上滑解鎖查看</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label">→</div>
+
+      <!-- Activity detail view -->
+      <div class="phone-wrap">
+        <div class="phone-label">B・活動詳情</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div class="app-header">
+                <span class="app-back">‹ 回去</span>
+                <span class="app-title">活動邀請</span>
+                <span style="width:40px"></span>
+              </div>
+
+              <div class="phone-scroll" style="flex:1">
+                <!-- Activity summary -->
+                <div class="act-header">
+                  <div class="act-vibe">🏀</div>
+                  <div class="act-title">打球</div>
+                  <div style="font-size:12px; color:var(--app-sub); margin-top:3px">週五打場三對三，大安森林公園附近</div>
+                  <div class="act-meta">
+                    <div class="act-meta-item">📅 週五 19:00</div>
+                    <div class="act-meta-item">📍 大安區</div>
+                    <div class="act-meta-item">👤 最多 6 人</div>
+                  </div>
+                  <div style="font-size:10px; color:var(--app-sub); margin-top:4px">截止：週五中午 12:00 前確認</div>
+                </div>
+
+                <!-- Trust signal (KEY) -->
+                <div class="trust-card">
+                  <div class="trust-icon">🤝</div>
+                  <div class="trust-text">
+                    由你的朋友 <strong>小熊</strong> 邀請你<br>
+                    你們有 3 位共同朋友
+                  </div>
+                </div>
+
+                <!-- Creator -->
+                <div style="margin:8px 12px; background:white; border-radius:12px; padding:10px 12px; border:1px solid var(--app-border)">
+                  <div style="font-size:10px; font-weight:700; color:var(--app-sub); letter-spacing:.5px; margin-bottom:8px">發起人</div>
+                  <div style="display:flex; align-items:center; gap:10px">
+                    <div class="av-sm" style="background:#E6E0FF; width:40px; height:40px; font-size:20px">🦁</div>
+                    <div>
+                      <div style="font-size:13px; font-weight:600">獅子頭</div>
+                      <div style="font-size:10px; color:var(--app-sub)">透過小熊邀請你 ・ 你們有 2 位共同朋友</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Participants -->
+                <div style="margin:8px 12px; background:white; border-radius:12px; padding:10px 12px; border:1px solid var(--app-border)">
+                  <div style="font-size:10px; font-weight:700; color:var(--app-sub); letter-spacing:.5px; margin-bottom:8px">目前參與</div>
+                  <div class="participants-row">
+                    <div class="av-sm" style="background:#E6E0FF">🦁</div>
+                    <div class="av-sm" style="background:#FFE4B5">🐻</div>
+                    <div class="av-sm" style="background:#E0F4FF">🐬</div>
+                    <div style="font-size:11px; color:var(--app-sub); margin-left:10px">獅子頭、小熊 和 1 位</div>
+                  </div>
+                  <div style="font-size:10px; color:var(--app-sub); margin-top:6px">還有 3 個名額</div>
+                </div>
+
+                <div style="height:80px"></div>
+              </div>
+
+              <!-- Join CTA -->
+              <div style="padding:10px 16px 16px; background:var(--app-bg); border-top:1px solid var(--app-border); flex-shrink:0">
+                <button class="btn btn-join">加入這場</button>
+                <div style="text-align:center; font-size:10px; color:var(--app-sub); margin-top:8px">加入後進入群聊，不會通知你「被加入」的壓力</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann">
+        <span class="ann-num">1</span><span class="ann-title">推播只給摯友</span>
+        <p>發起人設為摯友的朋友才會收到「叮」（震動推播）。普通朋友只會在綠燈看板被動看到，不被打擾。</p>
+      </div>
+      <div class="ann ok">
+        <span class="ann-num">2</span><span class="ann-title">社會擔保要顯眼</span>
+        <p>「透過誰邀請你 + 你們有幾位共同朋友」是最重要的信任鉤子，要放在最顯眼的位置。這就是 LINE 做不到的差異化。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">3</span><span class="ann-title">加入前只給必要資訊</span>
+        <p>B（2度朋友）只看到活動簡介、「透過誰」、區域級地點，以及他認識的人。不攤出完整參與者名單——這保護所有人的隱私。</p>
+      </div>
+      <div class="ann warn">
+        <span class="ann-num">4</span><span class="ann-title">⚠️ Phase 0 先不做 FoF</span>
+        <p>10 人熟人圈大家已互相認識，FoF 擴散根本不會用到。這個畫面在 Phase 0 的 B 只是普通朋友，不是 2 度朋友。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 4: 聊天室
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div>
+      <div class="section-title">聊天室</div>
+      <div class="section-sub">草皮 + Avatar 臨場感 ＋ 群聊，無已讀</div>
+    </div>
+  </div>
+
+  <div class="screen-grid">
+    <div class="phone-group">
+      <!-- Chat main -->
+      <div class="phone-wrap">
+        <div class="phone-label">A・有人剛加入</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <!-- Grass scene top -->
+              <div class="grass-scene small">
+                <div class="sun" style="width:24px; height:24px; top:10px; right:16px"></div>
+                <div class="ground"></div>
+                <div class="ground-line"></div>
+                <!-- Avatars on grass -->
+                <div class="av" style="background:#E6E0FF; bottom:24px; left:40px; width:40px; height:40px; font-size:20px; border-width:3px">🦁</div>
+                <div class="av" style="background:#FFE4B5; bottom:24px; left:90px; width:40px; height:40px; font-size:20px; border-width:3px">🐻</div>
+                <!-- Avatar walking in animation hint -->
+                <div class="av" style="background:#E0F4FF; bottom:24px; left:150px; width:40px; height:40px; font-size:20px; border-width:3px; opacity:.7; box-shadow:0 0 0 4px rgba(58,125,68,.3)">🐬</div>
+
+                <!-- Activity header on grass -->
+                <div style="position:absolute; top:8px; left:8px; right:8px; background:rgba(255,255,255,.85); border-radius:10px; padding:6px 10px; backdrop-filter:blur(4px)">
+                  <div style="font-size:11px; font-weight:700; color:var(--app-text)">🏀 打球 ・ 週五 19:00 ・ 大安區</div>
+                </div>
+              </div>
+
+              <!-- Online presence bar -->
+              <div class="online-bar">
+                <span>●</span> 3 人在線
+              </div>
+
+              <!-- Chat messages -->
+              <div class="chat-area">
+                <div class="chat-sys">🐻 小熊 加入了</div>
+
+                <div class="chat-msg">
+                  <div class="av-sm" style="background:#E6E0FF">🦁</div>
+                  <div>
+                    <div class="chat-bubble">大家好！球場我來查 🏀</div>
+                    <div class="chat-time">週四 20:12</div>
+                  </div>
+                </div>
+
+                <div class="chat-msg mine">
+                  <div class="av-sm" style="background:#FFE4B5">🐻</div>
+                  <div style="text-align:right">
+                    <div class="chat-bubble mine">我來～幾個人了？</div>
+                    <div class="chat-time" style="text-align:right">20:14 ・ 無已讀</div>
+                  </div>
+                </div>
+
+                <!-- System: new member walks in -->
+                <div style="background:var(--app-green-lt); border-radius:12px; padding:8px 12px; display:flex; align-items:center; gap:8px; align-self:center; margin:4px 0">
+                  <span style="font-size:16px">🎉</span>
+                  <div style="font-size:11px; color:var(--app-green); font-weight:600">🐬 海豚子 也有空了！</div>
+                </div>
+              </div>
+
+              <!-- Chat input -->
+              <div class="chat-input-bar">
+                <div class="chat-input">說點什麼…</div>
+                <div class="send-btn">↑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label" style="font-size:14px; color:var(--light); padding-top:180px">活動<br>結束後</div>
+
+      <!-- Post activity -->
+      <div class="phone-wrap">
+        <div class="phone-label">B・活動結束前夕</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div class="grass-scene small">
+                <div class="ground"></div>
+                <div class="ground-line"></div>
+                <div class="av" style="background:#E6E0FF; bottom:24px; left:30px; width:40px; height:40px; font-size:20px">🦁</div>
+                <div class="av" style="background:#FFE4B5; bottom:24px; left:80px; width:40px; height:40px; font-size:20px">🐻</div>
+                <div class="av" style="background:#E0F4FF; bottom:24px; left:130px; width:40px; height:40px; font-size:20px">🐬</div>
+                <div class="av" style="background:#FFE4E4; bottom:24px; left:180px; width:40px; height:40px; font-size:20px">🐱</div>
+                <div style="position:absolute; top:8px; left:8px; right:8px; background:rgba(255,255,255,.85); border-radius:10px; padding:6px 10px; backdrop-filter:blur(4px)">
+                  <div style="font-size:11px; font-weight:700; color:var(--app-text)">🏀 4 人集合！週五 19:00 出發</div>
+                </div>
+              </div>
+
+              <div class="online-bar">
+                <span>●</span> 4 人 ・ 截止明天中午
+              </div>
+
+              <div class="chat-area">
+                <div class="chat-sys">🐱 貓貓 也加入了</div>
+
+                <div class="chat-msg">
+                  <div class="av-sm" style="background:#FFE4E4">🐱</div>
+                  <div>
+                    <div class="chat-bubble">我也來！帶我！</div>
+                    <div class="chat-time">週五 09:30</div>
+                  </div>
+                </div>
+
+                <div class="chat-msg mine">
+                  <div class="av-sm" style="background:#E6E0FF">🦁</div>
+                  <div style="text-align:right">
+                    <div class="chat-bubble mine">揪成了！🎉<br>球場傳一下</div>
+                    <div class="chat-time" style="text-align:right">09:35</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chat-input-bar">
+                <div class="chat-input">說點什麼…</div>
+                <div class="send-btn">↑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann ok">
+        <span class="ann-num">1</span><span class="ann-title">草皮 + Avatar 是招牌氣質</span>
+        <p>每當有人加入，他的 Avatar 走進草皮——「活動正在長大」的即時正向回饋。Phase 0 先用簡單頭像，動畫留之後。</p>
+      </div>
+      <div class="ann ok">
+        <span class="ann-num">2</span><span class="ann-title">完全不做已讀</span>
+        <p>訊息旁只顯示時間，沒有「X 人已讀」。這不只是技術省略，而是品牌承諾——對外說清楚「揪起來沒有已讀壓力」。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">3</span><span class="ann-title">加入訊息一律正向</span>
+        <p>「🐬 海豚子 也有空了！」而非「XX 已加入群組」，用語氣強化「活動正在長大」的感覺。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">4</span><span class="ann-title">Online presence 取代已讀</span>
+        <p>「N 人在線」的 presence bar 取代逐則已讀，給發起人輕量的「有人看到了」感，同時不產生壓力。</p>
+      </div>
+      <div class="ann warn">
+        <span class="ann-num">5</span><span class="ann-title">⚠️ 不做通用 1 對 1 私訊</span>
+        <p>新朋友的互動先在群體空間發生。1 對 1 私訊要互加好友後才解鎖。在台灣永遠贏不了 LINE，不用試。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     SCREEN 5: 見面確認
+     ════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div>
+      <div class="section-title">見面確認</div>
+      <div class="section-sub">活動結束後的輕量 opt-in，北極星指標的唯一資料來源</div>
+    </div>
+  </div>
+
+  <div class="screen-grid">
+    <div class="phone-group">
+
+      <!-- Confirmation prompt -->
+      <div class="phone-wrap">
+        <div class="phone-label">A・見面確認（推播）</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div class="confirm-scene">
+                <!-- Dimmed/post-event grass -->
+                <div style="width:120px; height:80px; background:linear-gradient(180deg, #C9E8B8 0%, #8EC97A 100%); border-radius:60px 60px 0 0; display:flex; align-items:flex-end; justify-content:center; padding-bottom:8px; opacity:.6; gap:-8px; position:relative">
+                  <span style="font-size:22px">🦁</span>
+                  <span style="font-size:22px; margin-left:-4px">🐻</span>
+                  <span style="font-size:22px; margin-left:-4px">🐬</span>
+                  <span style="font-size:22px; margin-left:-4px">🐱</span>
+                </div>
+
+                <div class="confirm-emoji">🌟</div>
+                <div class="confirm-q">打球那場，<br>有見到面嗎？</div>
+                <div class="confirm-sub">週五 19:00 ・ 大安區 ・ 4 人</div>
+              </div>
+
+              <div class="confirm-btns">
+                <button class="confirm-yes">有！超好玩 🎉</button>
+                <button class="confirm-no">這次沒去成，下次再揪</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label" style="padding-top:200px">有去→</div>
+
+      <!-- Success follow-up -->
+      <div class="phone-wrap">
+        <div class="phone-label">B・見面成功後續</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div style="flex:1; padding:24px 20px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center">
+                <div style="font-size:48px">🎊</div>
+                <div style="font-size:18px; font-weight:800; color:var(--app-text)">太好了！</div>
+                <div style="font-size:13px; color:var(--app-sub); line-height:1.6">跟獅子頭、小熊、海豚子<br>打了一場球 🏀</div>
+
+                <!-- Group save prompt -->
+                <div style="background:var(--app-green-lt); border:1.5px solid var(--app-green); border-radius:16px; padding:16px; width:100%">
+                  <div style="font-size:13px; font-weight:700; color:var(--app-green); margin-bottom:8px">把這群人存起來？</div>
+                  <div style="font-size:11px; color:var(--app-sub); margin-bottom:12px">下次一鍵再揪，不用重新選人</div>
+                  <div style="display:flex; gap:8px">
+                    <div class="av-sm" style="background:#E6E0FF">🦁</div>
+                    <div class="av-sm" style="background:#FFE4B5">🐻</div>
+                    <div class="av-sm" style="background:#E0F4FF">🐬</div>
+                    <div class="av-sm" style="background:#FFE4E4">🐱</div>
+                    <div style="font-size:11px; color:var(--app-sub); line-height:32px; margin-left:4px">你 + 3 人</div>
+                  </div>
+                </div>
+
+                <button class="btn" style="background:var(--app-green); color:white; padding:13px; font-size:14px; font-weight:700; border-radius:14px; width:100%; border:none">✓ 存成常用群組</button>
+                <button class="btn" style="background:transparent; color:var(--app-sub); padding:8px; font-size:12px; border:none; width:100%">先不用，謝謝</button>
+
+                <!-- Re-invite CTA -->
+                <div style="background:white; border:1px solid var(--app-border); border-radius:12px; padding:12px 14px; width:100%; text-align:left">
+                  <div style="font-size:12px; font-weight:700; color:var(--app-text); margin-bottom:4px">🔁 再揪一次？</div>
+                  <div style="font-size:10px; color:var(--app-sub)">沿用同一批人 + 同樣活動，一鍵重發</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-label" style="padding-top:200px; font-size:14px; color:var(--light)">沒去→</div>
+
+      <!-- Soft landing -->
+      <div class="phone-wrap">
+        <div class="phone-label">C・沒去成的軟著陸</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="notch"></div>
+            <div class="status-bar" style="padding-top:6px">
+              <span>9:41</span><span></span><span>●●●</span>
+            </div>
+            <div class="screen-content">
+              <div style="flex:1; padding:24px 20px; display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center">
+                <div style="font-size:48px">🌙</div>
+                <div style="font-size:17px; font-weight:700; color:var(--app-text)">沒關係！</div>
+                <div style="font-size:13px; color:var(--app-sub); line-height:1.6">這次沒約成，下次就有機會了。<br>揪一下而已，零壓力。</div>
+
+                <!-- No shame, no failure label -->
+                <div style="background:var(--app-bg); border-radius:16px; padding:16px; width:100%; border:1px solid var(--app-border)">
+                  <div style="font-size:12px; color:var(--app-sub); margin-bottom:10px">想試試看？</div>
+                  <div style="font-size:11px; color:var(--app-sub); margin-bottom:8px">💡 週五晚上人比較多，下次試試</div>
+                  <button class="btn" style="background:var(--app-green-lt); color:var(--app-green); padding:10px; font-size:13px; font-weight:700; border-radius:12px; width:100%; border:none">重新揪一場</button>
+                </div>
+
+                <div style="font-size:11px; color:var(--app-sub)">或者直接傳訊息給獅子頭？</div>
+                <div style="display:flex; align-items:center; gap:10px; background:white; border-radius:12px; padding:10px 14px; border:1px solid var(--app-border); width:100%">
+                  <div class="av-sm" style="background:#E6E0FF">🦁</div>
+                  <div style="flex:1; font-size:12px; font-weight:600">獅子頭</div>
+                  <div style="font-size:11px; color:var(--app-blue)">戳一下</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotations">
+      <div class="ann warn">
+        <span class="ann-num">1</span><span class="ann-title">⚠️ 這個畫面是北極星的命脈</span>
+        <p>沒有見面確認，就無法量測「約成見面轉換率」——唯一重要的指標。Phase 0 第一天就要有，哪怕只是一個問句。</p>
+      </div>
+      <div class="ann ok">
+        <span class="ann-num">2</span><span class="ann-title">完全 opt-in，不強迫回答</span>
+        <p>跳過也沒關係。不顯示「幾人沒回答」。沒有已讀。這個問句要讓人覺得是對話，不是數據收集。</p>
+      </div>
+      <div class="ann ok">
+        <span class="ann-num">3</span><span class="ann-title">沒去成：零失敗標記</span>
+        <p>永遠不出現「揪失敗」「沒人來」等字眼。沒去成就是沒去成，溫暖收尾，下次繼續揪。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">4</span><span class="ann-title">見面成功：升級群組</span>
+        <p>「要不要存成常用群組」是有機長大的關鍵——讓一場成功的活動升級為固定團，且新朋友需本人同意才加入。</p>
+      </div>
+      <div class="ann">
+        <span class="ann-num">5</span><span class="ann-title">再揪一次</span>
+        <p>「一鍵重發」直接降低下次發起的摩擦——發起人是稀缺資源，讓重複揪的成本趨近於零。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     DESIGN DECISIONS
+     ════════════════════════════════════ -->
+<div class="decisions">
+  <div class="section-header" style="max-width:none; padding:0; margin-bottom:24px; border-bottom:2px solid var(--border)">
+    <div class="section-num" style="background:var(--mid)">!</div>
+    <div>
+      <div class="section-title">設計決策 & 待確認事項</div>
+      <div class="section-sub">開始寫 code 前需要團隊對齊的問題</div>
+    </div>
+  </div>
+
+  <div class="dec-grid">
+    <div class="dec-card done">
+      <div class="dec-badge done">已拍板</div>
+      <h4>不做已讀</h4>
+      <p>全產品不顯示已讀狀態。這是品牌承諾，不是技術省略。聊天室用「N 人在線」的 presence 替代。</p>
+    </div>
+    <div class="dec-card done">
+      <div class="dec-badge done">已拍板</div>
+      <h4>Plan 打頭陣，Now 延後</h4>
+      <p>Phase 0 只做 Plan。Now 對同時在線密度要求最高，10 人圈子裡很容易跑出「0 人理我」的誤導性失敗。</p>
+    </div>
+    <div class="dec-card done">
+      <div class="dec-badge done">已拍板</div>
+      <h4>FoF 不進 Phase 0</h4>
+      <p>10 人熟人圈大家已互相認識，FoF 擴散根本不會發生。資料結構先預留，但 UI 不做。</p>
+    </div>
+    <div class="dec-card open">
+      <div class="dec-badge open">待確認</div>
+      <h4>那 10 個朋友 iOS / Android 比例？</h4>
+      <p>若有 Android 朋友，要同時開 Android 內測管道。否則密度假設從一開始就失真，核心迴圈測不到。</p>
+    </div>
+    <div class="dec-card open">
+      <div class="dec-badge open">待確認</div>
+      <h4>「幾點前確認」到期後的行為？</h4>
+      <p>自動成團？自動取消？還是提醒發起人手動拍板？這個邏輯要在動工前定案。</p>
+    </div>
+    <div class="dec-card open">
+      <div class="dec-badge open">待確認</div>
+      <h4>接收方叮控制</h4>
+      <p>A 把 B 設摯友（叮 B），但 B 不認識 A ——B 被陌生人的叮轟炸。Phase 0 先有全域勿擾開關，完整接收方控制之後再做。</p>
+    </div>
+    <div class="dec-card open">
+      <div class="dec-badge open">待確認</div>
+      <h4>Avatar 規格幾時定？</h4>
+      <p>可換件結構要早定（骨架 / slot / glTF），但也可以等核心迴圈驗證後再做。Phase 0 先用照片頭像。</p>
+    </div>
+    <div class="dec-card open">
+      <div class="dec-badge open">待確認</div>
+      <h4>Supabase vs Firebase 最終拍板</h4>
+      <p>概念書傾向 Supabase（RLS 管隱私最乾淨）。開始前定案，之後換很痛。</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="background:var(--navy); color:rgba(255,255,255,.4); text-align:center; padding:20px; font-size:11px;">
+  揪起來 ・ Phase 0 線框圖 ・ 2026-06-16 ・ 內部對齊用，非最終設計
+</div>
+
+</body>
+</html>
