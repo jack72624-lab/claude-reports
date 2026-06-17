@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Clippings 重點整理 · 2026-06-17</title>
+<style>
+  :root{
+    --bg:#f4f3ef; --card:#ffffff; --ink:#1a1a1a; --sub:#5c5c5c;
+    --line:#e3e1da; --accent:#2f4f6f; --accent-soft:#eaf0f5;
+    --tag-bg:#edeae3; --hi:#fff6e6; --hi-line:#e7c97a;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+    line-height:1.7; font-size:16px; letter-spacing:.01em;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:28px 18px 64px}
+  header.top{padding:8px 2px 22px; border-bottom:1px solid var(--line); margin-bottom:24px}
+  header.top .kicker{font-size:13px; color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-weight:600}
+  header.top h1{font-size:25px; margin:8px 0 6px; line-height:1.3}
+  header.top p{margin:0; color:var(--sub); font-size:14px}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pill{background:var(--tag-bg); color:#4a4a4a; font-size:12.5px; padding:3px 10px; border-radius:999px}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:26px}
+  .toc h2{font-size:14px; margin:0 0 10px; color:var(--sub); letter-spacing:.06em; font-weight:600}
+  .toc ol{margin:0; padding-left:20px}
+  .toc li{margin:5px 0; font-size:15px}
+  .toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent}
+  .toc a:active,.toc a:hover{border-bottom-color:var(--accent)}
+  .toc .grp{font-size:12px; color:var(--accent); font-weight:600; margin:12px 0 4px; letter-spacing:.04em}
+
+  article.clip{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:16px}
+  .clip .num{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:8px; background:var(--accent); color:#fff; font-size:14px; font-weight:600; margin-right:10px; vertical-align:middle}
+  .clip h3{font-size:19px; margin:0 0 6px; line-height:1.35; display:flex; align-items:flex-start; gap:0}
+  .clip h3 .t{flex:1}
+  .clip .src{font-size:12.5px; color:var(--sub); margin:0 0 14px}
+  .oneline{background:var(--hi); border-left:3px solid var(--hi-line); padding:10px 14px; border-radius:0 8px 8px 0; font-size:15.5px; margin:0 0 16px}
+  .oneline b{font-weight:600}
+  .sec{margin:14px 0}
+  .sec .lab{font-size:12.5px; font-weight:700; color:var(--accent); letter-spacing:.06em; margin-bottom:6px; display:flex; align-items:center; gap:6px}
+  .sec .lab svg{flex:none}
+  .sec p{margin:0; font-size:15px; color:#2a2a2a}
+  ul.pts{margin:4px 0 0; padding-left:0; list-style:none}
+  ul.pts li{position:relative; padding-left:18px; margin:6px 0; font-size:14.7px}
+  ul.pts li::before{content:""; position:absolute; left:2px; top:10px; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  .use li::before{background:#7a8c3f}
+  .rel{margin-top:16px; padding-top:14px; border-top:1px dashed var(--line)}
+  .rel .lab{color:var(--sub)}
+  .rel .badge{display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:6px; margin-right:8px}
+  .b-comp{background:#e6f0e6; color:#3a6b3a}   /* 互補 */
+  .b-new{background:var(--accent-soft); color:var(--accent)} /* 新主題 */
+  .b-dup{background:#f1e8e0; color:#8a6a45}    /* 重疊/合併 */
+  .rel p{font-size:14px; color:#3a3a3a; margin:8px 0 0}
+  .rel code{background:#f0eee8; padding:1px 6px; border-radius:4px; font-size:13px; font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  .closing{background:var(--accent); color:#eef3f7; border-radius:16px; padding:22px 20px; margin-top:30px}
+  .closing h2{margin:0 0 12px; font-size:17px; color:#fff}
+  .closing ul{margin:0; padding-left:18px}
+  .closing li{margin:7px 0; font-size:14.5px; color:#dfe8ef}
+  .closing b{color:#fff}
+  footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:30px; line-height:1.6}
+  a.toplink{color:var(--accent); text-decoration:none; font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">Clippings 重點整理</div>
+    <h1>7 篇 AI / Claude Code 剪輯重點</h1>
+    <p>2026-06-17 · NotebookLM 第一手分析 → Claude 統整 · 只分析未寫入知識庫</p>
+    <div class="meta-row">
+      <span class="pill">建站 / 前端 5 篇</span>
+      <span class="pill">內容生成 1 篇</span>
+      <span class="pill">Agentic OS 2 篇</span>
+    </div>
+  </header>
+
+  <nav class="toc" id="top">
+    <h2>本期清單</h2>
+    <div class="grp">A · AI 建站與前端視覺</div>
+    <ol>
+      <li><a href="#c1">Claude Code = Insane Custom Websites FAST（Higgsfield MCP + Figma）</a></li>
+      <li><a href="#c2">Build $10,000 Websites using Claude Code</a></li>
+      <li><a href="#c3">Claude Code + Google AI Image Gen：Apple 風格網頁</a></li>
+      <li><a href="#c4">How I Built INSANE Claude Design Websites In 10 Minutes</a></li>
+    </ol>
+    <div class="grp">B · AI 內容 / 社群生成</div>
+    <ol start="5">
+      <li><a href="#c5">Claude + Nano Banana：社群內容系統</a></li>
+    </ol>
+    <div class="grp">C · Agentic OS / AI 作業系統</div>
+    <ol start="6">
+      <li><a href="#c6">I Turned Claude Opus 4.8 Into My Entire AI Operating System</a></li>
+      <li><a href="#c7">Stop Using Claude Code Without an Agentic OS</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <article class="clip" id="c1">
+    <h3><span class="num">1</span><span class="t">Claude Code = Insane Custom Websites FAST</span></h3>
+    <p class="src">主題：Higgsfield MCP + Figma Dev Mode 在終端內生成網站與 AI 影像資產</p>
+    <div class="oneline"><b>一句話：</b>把 Figma 設計、AI 影像/影片生成、部署全收進 Claude Code，「不切換開發環境」做出含動態資產的網頁。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>用 Figma Dev Mode 的 MCP 把真實 CSS/React 程式碼（不是截圖）丟給 Claude，再用 Higgsfield MCP 直接在終端生成 16:9 背景、產品圖、10 秒影片，一站完成設計到部署。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>Figma Dev Mode + MCP＝把設計稿原始碼直接導入，網頁結構貼合原設計</li>
+        <li>「一次一個 section、由上而下」做，避免 context window 失準</li>
+        <li>Nano Banana Pro 用特徵參考維持角色/產品視覺一致；Seedance 把靜圖轉 10 秒 16:9 影片</li>
+        <li>實用指令：把圖轉透明 PNG、collapse nav 成漢堡選單、推上 GitHub 並走 Cloudflare Pages</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>客戶報價/提案系統的展示頁，用這套 MCP 流程快速做品牌級 landing</li>
+        <li>App 行銷頁與素材生成（角色一致性 + 動態背景）</li>
+        <li>作品集頁：用 AI 動態資產做沉浸式呈現</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-comp">互補</span>
+      <p>補進 <code>前端設計與Screenshot Loop</code>：新增「MCP 資產生成 + Figma Dev Mode」一節；MCP 設定面可連到 <code>MCP 機制與常用 server</code>。</p>
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article class="clip" id="c2">
+    <h3><span class="num">2</span><span class="t">Build $10,000 Websites using Claude Code</span></h3>
+    <p class="src">主題：用「設計干預」把 AI 從模板生成器變成高價量身網站</p>
+    <div class="oneline"><b>一句話：</b>$10K 網站的差別不在程式碼量，在品味、實質、感知品質——靠安裝設計護欄 + 高品質 brief + 打磨 pass 做出「昂貴感」。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>從「工具使用者」升級成「數位建築師」：用官方 Frontend Design、UI/UX Pro Max 等 skill 當設計護欄，避免 AI 滑向平庸；再用意圖導向指令做 QA 打磨。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>八大支柱：觀點/排版/色彩、層次/圖像/文案、動效/行動端/隱形細節</li>
+        <li>裝 skill 拉高審美：Frontend Design 過濾 Inter、UI/UX Pro Max（57 風格 / 95 配色）</li>
+        <li>字體換 Fraunces（標題）+ Geist（內文）；文案走節制（「Six dishes, one fire」）</li>
+        <li>打磨指令：「讓這區塊更昂貴精緻」會加膠卷顆粒、延遲隨動光暈（lagging motion）</li>
+        <li>部署陷阱：壓縮要選「資料夾內所有檔案」而非整個資料夾，否則路徑多一層載入空白</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>接案/自用網站時，把「設計護欄 skill + 打磨 pass」當標準流程，產出穩定拉高</li>
+        <li>成本 ~$70 對應客戶價值結構，可作為對外服務的報價邏輯參考</li>
+        <li>「延遲隨動」「節制文案」直接套用到任何品牌頁的質感升級</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-comp">互補</span>
+      <p>補進 <code>前端設計與Screenshot Loop</code>「設計護欄 / skill 清單 / 打磨指令」段；字體與文案節制可獨立成一個可重用 checklist。</p>
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article class="clip" id="c3">
+    <h3><span class="num">3</span><span class="t">Claude Code + Google AI Image Gen：Apple 風格網頁</span></h3>
+    <p class="src">主題：用「影格序列」模擬 3D 產品互動，無需 WebGL</p>
+    <div class="oneline"><b>一句話：</b>把 AI 生成影片用 FFmpeg 拆成 PNG 序列，靠 scroll/hover 切換影格，假裝 3D，20 分鐘做出 Apple 質感互動頁。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>核心是「以影格序列模擬 3D 空間互動」而非寫 3D 引擎：Nano Banana 生起始/結束圖 → Kling 3.0 補間成影片 → FFmpeg 拆 100 影格 → JS 把捲動進度映射到影格索引。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>資產管線：Mobbin（參考）→ Claude Design（骨架）→ Higgsfield/Nano Banana（圖）→ Kling（影片）→ FFmpeg（序列）→ Vercel</li>
+        <li>提取 ~100 影格達到 60fps 般捲動順暢；`ffmpeg -i in.mp4 -vf "fps=30" out%03d.png`</li>
+        <li>互動邏輯＝交互狀態映射到預載影格陣列索引（hover/scroll 雙向同步）</li>
+        <li>微調：影格太慢就 snappier 化、背景色差用 mix-blend-mode、首尾跳動檢查兩圖比例一致</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>硬體/產品展示頁：用影格序列做產品旋轉、開箱式互動</li>
+        <li>App 功能展示，免 3D 引擎也能做高質感動效</li>
+        <li>把 FFmpeg 影格化做成一個可重用 skill</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-comp">互補</span>
+      <p>補進 <code>前端設計與Screenshot Loop</code>：新增「影格序列模擬 3D / FFmpeg 資產管線」技法，跟既有截圖回饋迴圈互補。</p>
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article class="clip" id="c4">
+    <h3><span class="num">4</span><span class="t">How I Built INSANE Claude Design Websites In 10 Minutes</span></h3>
+    <p class="src">主題：Claude Design → Claude Code → Next.js + GSAP 的一鍵流程</p>
+    <div class="oneline"><b>一句話：</b>用品牌設計系統 + claude.md 藍圖，把 Claude Design 原型一鍵轉成含 GSAP 動畫的 Next.js 5 頁網站。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>三要素交集：品牌規範（getdesign.md 的 68 品牌）、佈局結構（Dribbble 截圖當骨架）、指令藍圖（claude.md 當唯一事實來源），10 分鐘出可上線網站。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>claude.md 是「系統提示詞藍圖」＝防止 AI 設計幻覺的唯一事實來源</li>
+        <li>Claude Design 的 Comment / Draw＝對話式迭代修正，取代手動 CSS 偵錯</li>
+        <li>關鍵 prompt 加「without it looking cheesy」讓 GSAP 動畫保持商業重量感</li>
+        <li>上線前必做：占位符（Jonas Mercer）全局替換、配自定義網域</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>需要快出高保真提案頁時的標準流程（MVP / 行銷頁）</li>
+        <li>getdesign.md 跟你已有的 awesome-design-md 品牌風格庫可互相對照</li>
+        <li>claude.md 藍圖寫法直接呼應你正在累積的 CLAUDE.md 撰寫原則</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-comp">互補</span>
+      <p>補進 <code>前端設計與Screenshot Loop</code>（Claude Design→Code→Next.js+GSAP 流程）；claude.md 藍圖部分連 <code>CLAUDE.md撰寫原則</code>。與第 1-3 篇同屬「AI 建站」主題，建議在前端筆記裡開一個「AI 建站工作流」彙整段一起收。</p>
+    </div>
+  </article>
+
+  <!-- 5 -->
+  <article class="clip" id="c5">
+    <h3><span class="num">5</span><span class="t">Claude + Nano Banana：社群內容系統</span></h3>
+    <p class="src">主題：用品牌系統 + JSON Prompt 量產一致性社群內容</p>
+    <div class="oneline"><b>一句話：</b>平庸 AI 內容的問題不是工具，是缺系統——用 Identity Stack + JSON Prompt 把品牌 DNA 封裝成可複用的內容產線。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>「圖像工具看見像素，Claude 看見意圖」：靠品牌身份堆疊（色碼/受眾/語氣）和 JSON 結構化 prompt，讓 Claude 管理敘事節奏、負空間、視覺隱喻，產出不可複製的輪播內容。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>三層框架：L1 直接轉換 → L2 品牌化 Identity Stack → L3 敘事能量整合（節奏檢核）</li>
+        <li>JSON Prompt 當「數據橋樑」把視覺風格 API 化，避免自然語言模糊</li>
+        <li>批次產 20-30 張 B-roll 背景，建立數週用的獨家視覺庫</li>
+        <li>IG 輪播：1080×1350、7-10 張、發布加音樂進 Reels 演算法流（互動 +30%、3 倍曝光）</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>App / 品牌社群行銷產線：建一次 Identity Stack，後續穩定量產</li>
+        <li>個人品牌的 IG 內容，用 JSON Prompt 維持視覺一致</li>
+        <li>JSON Prompt 工作流可抽象成 skill，跨專案重用</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-new">新主題</span>
+      <p>現有 <code>主題知識/AI/</code> 無對應檔（偏社群內容/視覺生產）。建議開新檔，例如 <code>主題知識/AI/AI 內容生成與社群產線.md</code> 或新分類；JSON Prompt 概念與第 1、3 篇的 Nano Banana 用法可交叉連結。</p>
+    </div>
+  </article>
+
+  <!-- 6 -->
+  <article class="clip" id="c6">
+    <h3><span class="num">6</span><span class="t">I Turned Claude Opus 4.8 Into My Entire AI Operating System</span></h3>
+    <p class="src">主題：四 C 架構 + 漸進式授權，把 AI 從對話變持久系統</p>
+    <div class="oneline"><b>一句話：</b>從「瀏覽器對話」轉到「編輯器 + 本地檔案系統」，用 Context/Connections/Capabilities/Cadence 四層蓋出可自動化的 AIOS。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>模型只是引擎、你的數據是燃料、工具可替換；核心是本地檔案系統。按四 C 層級循序建構，並用「單車法」分階段把權限交給 agent。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>四 C：Context（claude.md/逐字稿）→ Connections（API/MCP）→ Capabilities（skills）→ Cadence（自動化）</li>
+        <li>每天更新 claude.md＝「儲存遊戲進度」；`/insights` 產 HTML 報告找自動化機會</li>
+        <li>單車法四階段：手貼數據 → 只讀+人工確認寫入 → 監看獨立執行 → 全自動</li>
+        <li>安全教訓：別把高風險能力（如發信）交給未驗證的 agent（曾誤發 15 萬訂閱者）</li>
+        <li>技能逆向工程（推薦）：先手動做成功，再讓 AI 回顧封裝成 skill；Session Handoff 五要素交接</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>你的 Obsidian + Claude 系統正是 AIOS 雛形，四 C 可當體檢框架補齊缺的層</li>
+        <li>「單車法」對應漸進授權思路：先唯讀、再人工確認寫入、最後才自動</li>
+        <li>Session Handoff 可做成 skill，解決長對話 context 混亂</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-comp">互補</span><span class="badge b-dup">與第 7 篇重疊</span>
+      <p>高度相關 <code>Obsidian+Claude AI OS架構</code>：四 C、單車法、Session Handoff、/insights 都可補進去；授權面連 <code>Subagent建立與使用</code>。與第 7 篇主題重疊高，<b>建議兩篇合併成一段「AIOS 架構與授權」一起寫</b>，避免重複。</p>
+    </div>
+  </article>
+
+  <!-- 7 -->
+  <article class="clip" id="c7">
+    <h3><span class="num">7</span><span class="t">Stop Using Claude Code Without an Agentic OS</span></h3>
+    <p class="src">主題：把「拉霸機式」隨機使用系統化成代理作業系統</p>
+    <div class="oneline"><b>一句話：</b>停止隨機下指令——用「領域→技能→自動化→架構」四階段，把 Claude Code 變成可追蹤、可交付的系統資產。</div>
+    <div class="sec"><div class="lab">在講什麼</div><p>三支柱：Architecture（領域拆解 + 技能編碼）、Memory（Obsidian markdown 當輕量 RAG）、Observability（headless `-p` + 視覺化儀表板），讓非技術成員也能一鍵啟動技能。</p></div>
+    <div class="sec"><div class="lab">學到什麼</div>
+      <ul class="pts">
+        <li>演進四階段：Workflows → Skills → Automations → Architecture</li>
+        <li>99.9% 的人不需要向量資料庫，純 Markdown 結構對 Claude Code 已足夠且省 token</li>
+        <li>建議 Vault 結構：raw / wiki / content / projects / ops / archive / personal</li>
+        <li>claude.md 要含「記憶地圖」讓 Claude 用最低 token 精準定位資訊</li>
+        <li>headless 模式（`-p`）把技能封裝成一鍵按鈕；追蹤 5 小時/週 token 用量</li>
+      </ul>
+    </div>
+    <div class="sec"><div class="lab">能怎麼運用</div>
+      <ul class="pts use">
+        <li>「記憶地圖省 token」正好呼應你想用索引降低探索 vault token 的目標</li>
+        <li>raw/wiki 分層可對照你現有的 Clippings→主題知識→outputs 複利循環</li>
+        <li>headless `-p` 儀表板＝每日簡報 / 排程機制可延伸的方向</li>
+      </ul>
+    </div>
+    <div class="rel"><div class="lab">跟現有主題知識的關係</div>
+      <span class="badge b-comp">互補</span><span class="badge b-dup">與第 6 篇重疊</span>
+      <p>高度相關 <code>Obsidian+Claude AI OS架構</code> 與 <code>Claude Token 效率策略</code>（記憶地圖省 token）；遞歸 Skill Creator 連 <code>Subagent建立與使用</code>。與第 6 篇合併處理最有效率。</p>
+    </div>
+  </article>
+
+  <section class="closing">
+    <h2>整體建議（回來再決定寫入）</h2>
+    <ul>
+      <li><b>第 1-4 篇</b>同屬「AI 建站工作流」，建議在 <b>前端設計與Screenshot Loop</b> 開一個彙整段一起收，而不是各寫各的。</li>
+      <li><b>第 6、7 篇</b>主題高度重疊（AIOS / Agentic OS），建議<b>合併成一段</b>補進 <b>Obsidian+Claude AI OS架構</b>，授權面連 Subagent、省 token 面連 Token 效率策略。</li>
+      <li><b>第 5 篇</b>是唯一新主題（AI 社群內容產線），建議<b>開新檔</b>。</li>
+      <li>全部 NotebookLM 報告已存 <code>outputs/2026-06-17-*.md</code>；clipping 原檔未動、未寫入主題知識，等你逐篇點頭。</li>
+    </ul>
+  </section>
+
+  <footer>
+    NotebookLM 第一手分析 + Claude Opus 統整 · 2026-06-17<br>
+    <a class="toplink" href="#top">回到頂端</a>
+  </footer>
+
+</div>
+</body>
+</html>
