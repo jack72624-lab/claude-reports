@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>線上燒烏龜 — 線框圖 (Wireframe v1)</title>
+<style>
+  /* ---- 低保真線框圖風格：灰階、虛線框、佔位塊 ---- */
+  :root{
+    --ink:#2b2b2b; --line:#9a9a9a; --fill:#ededed; --fill2:#f6f6f6;
+    --note:#1f6feb; --noteBg:#eaf2ff; --add:#197a3d; --addBg:#e7f5ec;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#cfcfcf;color:var(--ink);
+    font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;
+    padding:28px;line-height:1.55;}
+  h1{font-size:18px;margin:0 0 2px;}
+  .sub{font-size:12px;color:#555;margin:0 0 22px;}
+  .wrap{display:flex;gap:34px;flex-wrap:wrap;align-items:flex-start;}
+
+  /* 手機框 */
+  .phone{width:340px;flex:none;background:#fff;border:2px solid var(--ink);
+    border-radius:30px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);}
+  .notch{width:120px;height:6px;background:#bbb;border-radius:3px;margin:2px auto 10px;}
+  .screen{border:1.5px dashed var(--line);border-radius:18px;padding:14px;background:var(--fill2);}
+
+  .zone{border:1.5px dashed var(--line);border-radius:12px;background:#fff;
+    padding:10px;margin-bottom:12px;position:relative;}
+  .tag{position:absolute;top:-10px;left:10px;background:var(--ink);color:#fff;
+    font:600 10px/1.6 var(--mono);padding:1px 7px;border-radius:8px;}
+  .lbl{font-size:11px;color:#666;font-family:var(--mono);}
+  .ph{color:#888;}
+
+  /* 佔位元件 */
+  .placeholder{background:var(--fill);border:1px solid #ccc;border-radius:7px;}
+  .inp{display:inline-block;border:1px solid #bbb;background:#fff;border-radius:6px;
+    padding:5px 8px;font-size:11px;color:#777;min-width:96px;}
+  .btn{display:inline-block;border:1px solid #999;background:var(--fill);border-radius:7px;
+    padding:6px 10px;font-size:11px;color:#444;text-align:center;}
+
+  /* 氛圍區 */
+  .sky{height:54px;border-radius:10px;background:repeating-linear-gradient(135deg,#fafafa,#fafafa 8px,#f0f0f0 8px,#f0f0f0 16px);
+    display:flex;align-items:center;justify-content:center;border:1px solid #ddd;}
+  .circle{width:30px;height:30px;border-radius:50%;border:1.5px dashed #aaa;
+    display:flex;align-items:center;justify-content:center;font:600 8px var(--mono);color:#888;}
+
+  /* 烏龜陣 */
+  .turtleGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+  .turtle{aspect-ratio:1;border-radius:6px;border:1px solid #cfcfcf;background:var(--fill);
+    display:flex;align-items:center;justify-content:center;font:600 9px var(--mono);color:#9a9a9a;}
+
+  /* 火焰區 */
+  .fireRow{display:flex;align-items:flex-end;justify-content:center;gap:6px;height:64px;}
+  .flame{width:22px;height:30px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+    border:1px solid #c9a96a;background:#f4e6cf;}
+  .pit{width:64px;height:64px;border-radius:50%;border:2px dashed #c98b3a;background:#fbeede;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    font:600 8px/1.2 var(--mono);color:#b9742b;}
+
+  .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .between{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .foot{font-size:10px;color:#999;text-align:center;margin-top:4px;}
+
+  /* 右側註解 */
+  .panel{flex:1;min-width:300px;max-width:460px;}
+  .card{background:#fff;border:1px solid #ccc;border-radius:12px;padding:14px 16px;margin-bottom:16px;}
+  .card h3{margin:0 0 10px;font-size:13px;}
+  ol.notes{margin:0;padding-left:18px;font-size:12.5px;}
+  ol.notes li{margin-bottom:9px;}
+  .pin{display:inline-block;min-width:18px;height:18px;line-height:18px;text-align:center;
+    background:var(--ink);color:#fff;border-radius:50%;font:600 10px var(--mono);margin-right:5px;}
+  .flow li{margin-bottom:6px;font-size:12.5px;}
+  .addchip{display:inline-block;background:var(--addBg);color:var(--add);border:1px solid #b7dcc3;
+    border-radius:5px;font:600 10px var(--mono);padding:1px 6px;margin-right:4px;}
+  .q{background:var(--noteBg);border:1px solid #bcd6ff;border-radius:5px;
+    padding:8px 10px;font-size:12px;color:#23415f;margin-bottom:8px;}
+  .legend span{display:inline-block;font:600 10px var(--mono);padding:2px 7px;border-radius:6px;margin:0 6px 6px 0;}
+  .lg-core{background:var(--fill);border:1px solid #ccc;color:#555;}
+  .lg-add{background:var(--addBg);border:1px solid #b7dcc3;color:var(--add);}
+</style>
+</head>
+<body>
+  <h1>線上燒烏龜 — 線框圖 v1（低保真）</h1>
+  <p class="sub">手機網頁版 · 單頁互動 · 灰階佔位（烏龜🐢／火焰🔥／太陽☀️ 實作時才換成圖像，此處用標註方塊代替）</p>
+
+  <div class="legend" style="margin-bottom:18px;">
+    <span class="lg-core">■ 灰塊＝沿用原版核心</span>
+    <span class="lg-add">＋ 綠色＝建議新增（待你決定）</span>
+  </div>
+
+  <div class="wrap">
+    <!-- ============ 手機線框 ============ -->
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+
+        <!-- 1 標題列 -->
+        <div class="zone">
+          <span class="tag">1 標題 / 品牌</span>
+          <div class="between">
+            <div><strong style="font-size:13px;">線上燒烏龜</strong><div class="lbl">146 小隻小資女</div></div>
+            <div class="circle">分享</div>
+          </div>
+        </div>
+
+        <!-- 氛圍 -->
+        <div class="sky">
+          <div class="circle">太陽</div>
+          <span class="lbl" style="margin-left:8px;">天空背景（可自訂）</span>
+        </div>
+
+        <!-- 2 儀式紀錄卡 -->
+        <div class="zone" style="margin-top:12px;">
+          <span class="tag">2 儀式紀錄卡</span>
+          <div class="lbl">時間</div>
+          <span class="inp">📅 2026/06/18 ▾</span>
+          <div class="lbl" style="margin-top:7px;">地點</div>
+          <div class="between">
+            <span class="inp">臺灣</span>
+            <span class="btn">清除</span>
+          </div>
+          <div style="margin-top:8px;">
+            <span class="addchip">＋ 新增</span>
+            <span class="lbl">「燒給誰／燒什麼」一句話輸入框（出氣對象）</span>
+          </div>
+        </div>
+
+        <!-- 3 烏龜陣 -->
+        <div class="zone">
+          <span class="tag">3 烏龜陣（待燒）</span>
+          <div class="turtleGrid">
+            <!-- 5×7 佔位 -->
+            <div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div>
+            <div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div>
+            <div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div>
+            <div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div>
+            <div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div><div class="turtle">龜</div>
+          </div>
+          <div class="between" style="margin-top:8px;">
+            <span class="addchip">＋ 計數</span><span class="lbl" style="flex:1;">已燒 0 隻 · 點/拖烏龜往下丟</span>
+            <span class="btn">＋加龜</span>
+          </div>
+        </div>
+
+        <!-- 4 火焰區 -->
+        <div class="zone">
+          <span class="tag">4 火焰區（拖放目標）</span>
+          <div class="fireRow">
+            <div class="flame"></div><div class="flame"></div><div class="flame"></div>
+            <div class="pit">火坑<br>拖龜進來燒</div>
+            <div class="flame"></div><div class="flame"></div><div class="flame"></div>
+          </div>
+        </div>
+
+        <!-- 5 控制鈕 -->
+        <div class="zone">
+          <span class="tag">5 背景控制</span>
+          <div class="row">
+            <span class="btn">上傳背景</span>
+            <span class="btn">背景色</span>
+            <span class="btn">移除背景</span>
+          </div>
+        </div>
+
+        <div class="foot">作者：146 小隻小資女 · 協同作者連結</div>
+      </div>
+    </div>
+
+    <!-- ============ 右側註解 ============ -->
+    <div class="panel">
+      <div class="card">
+        <h3>區塊說明</h3>
+        <ol class="notes" style="list-style:none;padding-left:0;">
+          <li><span class="pin">1</span><b>標題 / 品牌</b>：App 名＋作者署名。右側「分享」為建議新增。</li>
+          <li><span class="pin">2</span><b>儀式紀錄卡</b>：日期（原生 date picker，預設今天）＋地點輸入＋清除。<span class="addchip">＋</span>建議多一個「燒給誰」短輸入，讓出氣有對象、截圖更有梗。</li>
+          <li><span class="pin">3</span><b>烏龜陣</b>：一片待燒的烏龜。原版固定一片；<span class="addchip">＋</span>建議加「已燒計數」與「加龜」補貨。</li>
+          <li><span class="pin">4</span><b>火焰區</b>：核心互動。中央火坑是拖放目標，烏龜拖入→燃燒動畫→消失。火焰持續竄動氛圍。</li>
+          <li><span class="pin">5</span><b>背景控制</b>：上傳圖／選色／移除，自訂底圖（沿用原版）。</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>核心互動流程</h3>
+        <ol class="flow">
+          <li>進站 → 自動帶今天日期、地點臺灣</li>
+          <li>（選用）輸入「燒給誰／燒什麼」</li>
+          <li>按住烏龜 → 拖進火坑（或點烏龜自動飛入）</li>
+          <li>火坑放大 + 燃燒動畫 + 輕震/音效 → 該烏龜消失、計數 +1</li>
+          <li>燒完可「再加龜」繼續，或「截圖分享」炫耀戰果</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>待你拍板（不擅自做）</h3>
+        <div class="q">A. 互動方式：<b>拖放</b>進火坑，還是<b>點一下</b>就燒？（手機上點擊較順、拖放較有儀式感，可兩者都留）</div>
+        <div class="q">B. 要不要加 <b>「燒給誰」輸入</b> + <b>截圖分享</b>？（綠色標記處）</div>
+        <div class="q">C. 純沿用原版功能就好，還是要我把它「app 化」（計數、補貨、分享、音效）？</div>
+        <div class="q">D. 維持<b>手機網頁</b>，還是要做成可上架的原生 App？</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
