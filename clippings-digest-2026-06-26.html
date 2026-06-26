@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Clippings 消化報告 · Claude Tag / Design 2.0 · 2026-06-26</title>
+<style>
+  :root{
+    --bg:#f4f3ef; --card:#ffffff; --ink:#1a1a1a; --sub:#5c5c5c;
+    --line:#e3e1da; --accent:#2f4f6f; --accent-soft:#eaf0f5;
+    --tag-bg:#edeae3; --hi:#fff6e6; --hi-line:#e7c97a;
+    --warn:#fbf1ec; --warn-line:#d9a283;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+    line-height:1.7; font-size:16px; letter-spacing:.01em;
+  }
+  .wrap{max-width:780px; margin:0 auto; padding:28px 18px 64px}
+  header.top{padding:8px 2px 22px; border-bottom:1px solid var(--line); margin-bottom:24px}
+  header.top .kicker{font-size:13px; color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-weight:600}
+  header.top h1{font-size:25px; margin:8px 0 6px; line-height:1.3}
+  header.top p{margin:0; color:var(--sub); font-size:14px}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pill{background:var(--tag-bg); color:#4a4a4a; font-size:12.5px; padding:3px 10px; border-radius:999px}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:26px}
+  .toc h2{font-size:14px; margin:0 0 10px; color:var(--sub); letter-spacing:.06em; font-weight:600}
+  .toc ol{margin:0; padding-left:20px}
+  .toc li{margin:5px 0; font-size:15px}
+  .toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent}
+  .toc a:active,.toc a:hover{border-bottom-color:var(--accent)}
+
+  article.clip{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:16px}
+  .clip .num{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:8px; background:var(--accent); color:#fff; font-size:14px; font-weight:600; margin-right:10px; vertical-align:middle}
+  .clip h3{font-size:19px; margin:0 0 6px; line-height:1.35; display:flex; align-items:flex-start; gap:0}
+  .clip h3 .t{flex:1}
+  .clip .src{font-size:12.5px; color:var(--sub); margin:0 0 14px}
+  .oneline{background:var(--hi); border-left:3px solid var(--hi-line); padding:10px 14px; border-radius:0 8px 8px 0; font-size:15.5px; margin:0 0 16px}
+  .oneline b{font-weight:600}
+  .sec{margin:16px 0}
+  .sec .lab{font-size:12.5px; font-weight:700; color:var(--accent); letter-spacing:.06em; margin-bottom:6px}
+  .sec p{margin:0; font-size:15px; color:#2a2a2a}
+  ul.pts{margin:4px 0 0; padding-left:0; list-style:none}
+  ul.pts li{position:relative; padding-left:18px; margin:7px 0; font-size:14.7px}
+  ul.pts li::before{content:""; position:absolute; left:2px; top:10px; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  ul.pts li b{font-weight:600; color:#1a1a1a}
+  .use li::before{background:#7a8c3f}
+
+  .warn{background:var(--warn); border-left:3px solid var(--warn-line); padding:12px 14px; border-radius:0 8px 8px 0; margin:16px 0 4px}
+  .warn .lab{font-size:12.5px; font-weight:700; color:#a05a32; letter-spacing:.06em; margin-bottom:6px}
+  .warn ul.pts li::before{background:var(--warn-line)}
+
+  .diagram{margin:8px 0 4px; padding:14px 10px; background:#fbfaf7; border:1px solid var(--line); border-radius:12px; overflow-x:auto}
+  .diagram .cap{font-size:12px; color:var(--sub); text-align:center; margin-top:6px}
+  pre.mermaid{margin:0; text-align:center}
+
+  .rel{margin-top:18px; padding-top:14px; border-top:1px dashed var(--line)}
+  .rel .lab{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:.06em; margin-bottom:8px}
+  .rel .badge{display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:6px; margin-right:8px; margin-bottom:6px}
+  .b-new{background:var(--accent-soft); color:var(--accent)}
+  .b-comp{background:#e6f0e6; color:#3a6b3a}
+  .rel p{font-size:14px; color:#3a3a3a; margin:8px 0 0}
+  .rel code{background:#f0eee8; padding:1px 6px; border-radius:4px; font-size:13px; font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  .closing{background:var(--accent); color:#eef3f7; border-radius:16px; padding:22px 20px; margin-top:30px}
+  .closing h2{margin:0 0 12px; font-size:17px; color:#fff}
+  .closing ul{margin:0; padding-left:18px}
+  .closing li{margin:7px 0; font-size:14.5px; color:#dfe8ef}
+  .closing b{color:#fff}
+  footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:30px; line-height:1.6}
+  a.toplink{color:var(--accent); text-decoration:none; font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top" id="top">
+    <div class="kicker">Clippings 消化報告</div>
+    <h1>Claude Tag 與 Claude Design 2.0</h1>
+    <p>2026-06-26 · 2 篇同主題剪輯（聚一群）· Claude 直讀對讀統整（未跑 NotebookLM）· 尚未寫入主題知識</p>
+    <div class="meta-row">
+      <span class="pill">來源：AI Daily Brief（英文新聞）</span>
+      <span class="pill">來源：商業本質（中文）</span>
+      <span class="pill">類型 A · 餵自己</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>本期內容</h2>
+    <ol>
+      <li><a href="#c1">Claude Tag：Slack 裡的常駐 AI 同事</a></li>
+      <li><a href="#c2">Claude Design 2.0：設計與寫碼合流</a></li>
+      <li><a href="#rel">跟你現有主題知識的關係 · 寫入建議</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 · Claude Tag -->
+  <article class="clip" id="c1">
+    <h3><span class="num">1</span><span class="t">Claude Tag：Slack 裡的常駐 AI 同事</span></h3>
+    <p class="src">把 Claude 從「對話框」變成有帳號、有權限、跟著頻道累積脈絡的團隊成員</p>
+    <div class="oneline"><b>一句話：</b>不是在 Slack 多開一個問答機器人，而是讓 Claude 當一個常駐、主動、能讀全頻道脈絡又能實際動手（寫 PR / 跑分析 / 處理 incident）的同事——Anthropic 內部 65% 產品代碼已來自它。</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <ul class="pts">
+        <li><b>定義（官方）</b>：Claude Tag 是「Claude Code 的進化，更主動、為整個團隊設計」。@ 一下 Claude，它把任務拆階段、用手上的工具做完、在 thread 回覆成果。</li>
+        <li><b>一頻道一個共享 Claude</b>：隊友能接著你的進度繼續；它跟著頻道累積脈絡，不用每次從頭交代。開 ambient 模式它會主動跟進冷掉的 thread、跨頻道標出相關的事。</li>
+        <li><b>它真的會動手</b>：寫/合 PR、跑資料分析、處理 incident、bug triage、盯 metrics。一個實測者說「丟一個 codebase 給它，它讀完列出 10 個最該修的問題、排序、改好、開 review，全在 Slack 裡」。</li>
+        <li><b>65% 數據</b>：Anthropic 產品團隊現在 65% 的代碼來自內部版的 Claude Tag（兩篇來源一致）。</li>
+        <li><b>權限按頻道隔離</b>：法務群的分身能看合約機密但碰不到研發代碼，反之亦然，越權直接拒絕（因為那個分身根本沒鑰匙）；所有操作記在它自己帳號日誌。不同頻道的 Claude＝不同工具/權限/脈絡。</li>
+        <li><b>Karpathy：LLM 介面第三次重設計</b>：①你去的網站 → ②你下載的 app → ③自帶、常駐、非同步、有組織級工具與脈絡、跟人類團隊並肩工作的實體。</li>
+        <li><b>設定撇步（Tariq）</b>：用 pin message + 指令當該頻道的「CLAUDE.md」（會進記憶）；另開個人頻道（如 <code>你的名字-Claude</code>）放自己的工作、把訊息轉進去交辦。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  A1["App 原生介面"] --> B1["既有工作場所<br/>(Slack)"]
+  A2["私人聊天機器人"] --> B2["共享隊友"]
+  A3["單一使用者脈絡"] --> B3["全團隊脈絡"]
+  A4["下提示 prompting"] --> B4["委派 delegation"]
+  A5["對個人不可或缺"] --> B5["組織級依賴"]
+  classDef from fill:#eef0f2,stroke:#c5c9cf,color:#555;
+  classDef to fill:#eaf0f5,stroke:#2f4f6f,color:#2f4f6f;
+  class A1,A2,A3,A4,A5 from;
+  class B1,B2,B3,B4,B5 to;
+      </pre>
+      <div class="cap">圖解一：Claude Tag 代表的五大轉變（AI Daily Brief 歸納）</div>
+    </div>
+
+    <div class="warn"><div class="lab">完整面：它的挑戰（別只看炒作）</div>
+      <ul class="pts">
+        <li><b>「many Claudes 很混亂」</b>：Slack 裡沒有單一「我的 Claude」，每頻道一個、admin 設定、都不屬於你。</li>
+        <li><b>人的層面摩擦</b>（Gail Weener）：你一 tag，它就讀所有人訊息，容易變成「你帶進大家工作區的監控裝置」；做得好被酸「外包思考」、做不好被酸「早說了」，兩面不討好。</li>
+        <li><b>設定比看起來複雜</b>：access / 工具設定一堆眉角，Anthropic 另出了 agent identity 與 permissions 最佳實踐文。</li>
+        <li><b>鎖定疑慮</b>（尤其 Fable 事件後）：有人寧可自建 Slack agent（如 Hugging Face）也不想綁單一封閉供應商。</li>
+      </ul>
+    </div>
+
+    <div class="sec"><div class="lab">你能學能用的</div>
+      <ul class="pts use">
+        <li><b>你早就手刻過個人版</b>：你的 Telegram bridge（<code>@YUclaudeagent_bot</code>）就是「把 Claude 放進日常通訊軟體、常駐、用大白話交辦」——Claude Tag 是這套的官方產品化＋多人版。可拿官方怎麼解 resume 記憶/閒置/身分，回頭對照你 bridge 的設計。</li>
+        <li><b>prompting → delegation</b> 正是你 <code>plan-pipeline</code> 和分視窗平行工作法的核心：給目標、不給逐步指令。這篇給了這個轉變的完整論述可引用。</li>
+        <li><b>「pin message 當頻道 CLAUDE.md」</b>＝你熟的 CLAUDE.md 機制搬到群聊，概念可直接遷移到任何你接的 agent。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2 · Claude Design 2.0 -->
+  <article class="clip" id="c2">
+    <h3><span class="num">2</span><span class="t">Claude Design 2.0：設計與寫碼合流</span></h3>
+    <p class="src">從「只能看不能改的半成品」變成可算 ROI 的生產工具，把設計→代碼→活資料串成閉環</p>
+    <div class="oneline"><b>一句話：</b>關鍵不是它更會生圖，而是把 Design 跟 Code 的帳單/算力打通、塞進頁內編輯器、用 Design Sync 鎖品牌規範，再一路接到 Supabase 變成活的數據面板——設計和開發的邊界被打掉。</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <ul class="pts">
+        <li><b>帳單打通</b>：Claude Design 與 Claude Code 額度全面整合，共用 5 小時會話 + 週額度池。對企業＝設計部與開發部不用各買一套 AI，一套帳單搞定，從玩具變成可算投報率的工具。</li>
+        <li><b>一鍵匯出 PowerPoint</b>：內建幻燈片工作流，產出帶講者備註、可全螢幕、多層級的檔，一鍵匯出原生 PPT 格式——直接對標微軟 Office。也能生 app 原型/線框圖/文件/影片動畫。</li>
+        <li><b>頁內全功能編輯器</b>：點畫布上任何元素，就能像傳統設計軟體改文字/字級/字體/粗斜；還有圖層視圖（像 Figma）。</li>
+        <li><b>新交互鐵律</b>：模型做 0→1 的框架構建，人類滑鼠做 1→100 的微調，不再為了一個像素的偏差反覆燒 token。</li>
+        <li><b>MCP 連接器</b>：把第三方工具掛進設計流程。例：生商業簡報時直接說一句「叫某圖像模型生一張封面配圖」，系統跨平台調資源貼進頁面。</li>
+        <li><b>Design Sync</b>：在寫碼端設好品牌規範（字體/主色/風格），一個指令把整套「視覺基因」打包傳到設計端，之後每個按鈕/儀表板都忠實遵循品牌手冊，消滅產出跟品牌調性脫節。</li>
+        <li><b>標記工具</b>：在圖上圈出不滿意處留評論 → 左側自動拉出修改清單逐項改。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  D["畫板：調好<br/>視覺布局"] --> P["前端資料包<br/>傳回代碼環境"]
+  P --> DB[("接 Supabase<br/>真實雲端資料庫")]
+  DB --> S["設每日自動<br/>抓資料定時任務"]
+  S --> L["活的即時<br/>數據面板"]
+  L -. 設計即開發·無交接 .-> D
+  classDef step fill:#eaf0f5,stroke:#2f4f6f,color:#2f4f6f;
+  classDef db fill:#e6f0e6,stroke:#3a6b3a,color:#3a6b3a;
+  class D,P,S,L step;
+  class DB db;
+      </pre>
+      <div class="cap">圖解二：Design 2.0 的「設計 → 代碼 → 活資料」閉環</div>
+    </div>
+
+    <div class="sec"><div class="lab">你能學能用的</div>
+      <ul class="pts use">
+        <li><b>帳單打通 + 一鍵 PPT</b>：對你的簡報系統（open-slide 工作區）和威琳對外提案是直接生產力，少掉「套殼網站生大綱 → 抓圖 → 回本地排版」整條。</li>
+        <li><b>Design Sync ≈ 你的 DESIGN.md 品牌庫機制</b>：你本來就在玩 awesome-design-md / ckm-design；威琳要做品牌一致的報價單/官網時，「規範→一致輸出」就是這個機制的官方版。</li>
+        <li><b>0→1 模型、1→100 人類</b>＝你「線框圖優先」工作流的官方背書，可拿來定義你接案/自用的標準分工。</li>
+        <li><b>設計→Supabase 閉環</b>：你的威琳庫存（Next+Supabase）、Routine、收入計算機都是這套疊；值得看它怎麼把畫面直接接活資料、省掉切圖標註交接。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 關係 -->
+  <article class="clip" id="rel">
+    <h3><span class="num">3</span><span class="t">跟你現有主題知識的關係 · 寫入建議</span></h3>
+    <div class="rel" style="border-top:none;padding-top:4px">
+      <div class="lab">判定</div>
+      <span class="badge b-new">新主題：開 AI/Claude Tag.md</span>
+      <span class="badge b-comp">與多檔互補（連結，不重複）</span>
+      <p>Claude Tag / Design 2.0 是全新產品，現有主題知識沒有，<b>開新檔</b>最乾淨；同時跟下列既有檔有概念連結，用 backlink 串、不複製內容：</p>
+      <ul class="pts" style="margin-top:10px">
+        <li><code>Obsidian+Claude AI OS架構</code> — Karpathy「第三範式」、AI 當組織級隊友，這篇是它的最新實證</li>
+        <li><code>Claude Code 進階技巧</code> — Claude Tag＝Claude Code 的進化版</li>
+        <li><code>MCP 機制與常用 server</code> — Design 2.0 用 MCP 連接器掛外部工具</li>
+        <li><code>Subagent建立與使用</code> — Claude Tag 靠 sub-agents 跑長任務</li>
+        <li><code>AI時代職涯心法</code> — 「prompting→delegation」「未來該學什麼」直接呼應</li>
+      </ul>
+    </div>
+  </article>
+
+  <section class="closing">
+    <h2>確認後我會這樣寫入</h2>
+    <ul>
+      <li>開 <b>主題知識/AI/Claude Tag.md</b>，分「Claude Tag 是什麼 / 五大轉變 / 挑戰 / Design 2.0 / 對我的用法」幾段，嵌入上面兩張 Mermaid 圖。</li>
+      <li>在 <b>Obsidian+Claude AI OS架構</b> 等五個相關檔補一行 backlink 指向新檔（不搬內容）。</li>
+      <li>兩篇原檔移到 <b>Clippings/已整理/</b>，frontmatter 補 <code>整理日期 / 歸入 / 報告</code>（本報告 URL）。未跑 NotebookLM 故不寫 outputs。</li>
+      <li>那篇中文炒作稿只取了它的 <b>Design 2.0 獨家事實</b>，情緒框架（失業/王炸/清洗）一律不收。</li>
+    </ul>
+  </section>
+
+  <footer>
+    Claude Opus 4.8 直讀對讀統整 · 2026-06-26 · 未寫入主題知識，等你點頭<br>
+    <a class="toplink" href="#top">回到頂端</a>
+  </footer>
+
+</div>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad:true, theme:'neutral', securityLevel:'loose', flowchart:{curve:'basis', useMaxWidth:true} });
+</script>
+</body>
+</html>
