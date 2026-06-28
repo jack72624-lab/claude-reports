@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Clippings 消化報告 · 情感化設計 / MLX 本機 AI · 2026-06-28</title>
+<style>
+  :root{
+    --bg:#f4f3ef; --card:#ffffff; --ink:#1a1a1a; --sub:#5c5c5c;
+    --line:#e3e1da; --accent:#2f4f6f; --accent-soft:#eaf0f5;
+    --tag-bg:#edeae3; --hi:#fff6e6; --hi-line:#e7c97a;
+    --warn:#fbf1ec; --warn-line:#d9a283;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+    line-height:1.7; font-size:16px; letter-spacing:.01em;
+  }
+  .wrap{max-width:780px; margin:0 auto; padding:28px 18px 64px}
+  header.top{padding:8px 2px 22px; border-bottom:1px solid var(--line); margin-bottom:24px}
+  header.top .kicker{font-size:13px; color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-weight:600}
+  header.top h1{font-size:25px; margin:8px 0 6px; line-height:1.3}
+  header.top p{margin:0; color:var(--sub); font-size:14px}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pill{background:var(--tag-bg); color:#4a4a4a; font-size:12.5px; padding:3px 10px; border-radius:999px}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:26px}
+  .toc h2{font-size:14px; margin:0 0 10px; color:var(--sub); letter-spacing:.06em; font-weight:600}
+  .toc ol{margin:0; padding-left:20px}
+  .toc li{margin:5px 0; font-size:15px}
+  .toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent}
+  .toc a:active,.toc a:hover{border-bottom-color:var(--accent)}
+
+  article.clip{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:16px}
+  .clip .num{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:8px; background:var(--accent); color:#fff; font-size:14px; font-weight:600; margin-right:10px; vertical-align:middle}
+  .clip h3{font-size:19px; margin:0 0 6px; line-height:1.35; display:flex; align-items:flex-start; gap:0}
+  .clip h3 .t{flex:1}
+  .clip .src{font-size:12.5px; color:var(--sub); margin:0 0 14px}
+  .oneline{background:var(--hi); border-left:3px solid var(--hi-line); padding:10px 14px; border-radius:0 8px 8px 0; font-size:15.5px; margin:0 0 16px}
+  .oneline b{font-weight:600}
+  .sec{margin:16px 0}
+  .sec .lab{font-size:12.5px; font-weight:700; color:var(--accent); letter-spacing:.06em; margin-bottom:6px}
+  .sec p{margin:0; font-size:15px; color:#2a2a2a}
+  ul.pts{margin:4px 0 0; padding-left:0; list-style:none}
+  ul.pts li{position:relative; padding-left:18px; margin:7px 0; font-size:14.7px}
+  ul.pts li::before{content:""; position:absolute; left:2px; top:10px; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  ul.pts li b{font-weight:600; color:#1a1a1a}
+  .use li::before{background:#7a8c3f}
+
+  table.map{width:100%; border-collapse:collapse; margin:6px 0 2px; font-size:14px}
+  table.map th,table.map td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  table.map th{font-size:12.5px; color:var(--sub); font-weight:600; letter-spacing:.04em}
+  table.map td b{color:#3a5a2f}
+
+  .warn{background:var(--warn); border-left:3px solid var(--warn-line); padding:12px 14px; border-radius:0 8px 8px 0; margin:16px 0 4px}
+  .warn .lab{font-size:12.5px; font-weight:700; color:#a05a32; letter-spacing:.06em; margin-bottom:6px}
+  .warn ul.pts li::before{background:var(--warn-line)}
+
+  pre.code{background:#1e2530; color:#d9e2ec; border-radius:10px; padding:14px 16px; overflow-x:auto; font-size:13px; font-family:"SF Mono",ui-monospace,Menlo,monospace; line-height:1.55; margin:8px 0 4px}
+
+  .diagram{margin:8px 0 4px; padding:14px 10px; background:#fbfaf7; border:1px solid var(--line); border-radius:12px; overflow-x:auto}
+  .diagram .cap{font-size:12px; color:var(--sub); text-align:center; margin-top:6px}
+  pre.mermaid{margin:0; text-align:center}
+
+  .rel{margin-top:18px; padding-top:14px; border-top:1px dashed var(--line)}
+  .rel .lab{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:.06em; margin-bottom:8px}
+  .rel .badge{display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:6px; margin-right:8px; margin-bottom:6px}
+  .b-new{background:var(--accent-soft); color:var(--accent)}
+  .b-comp{background:#e6f0e6; color:#3a6b3a}
+  .rel p{font-size:14px; color:#3a3a3a; margin:8px 0 0}
+  .rel code{background:#f0eee8; padding:1px 6px; border-radius:4px; font-size:13px; font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  .closing{background:var(--accent); color:#eef3f7; border-radius:16px; padding:22px 20px; margin-top:30px}
+  .closing h2{margin:0 0 12px; font-size:17px; color:#fff}
+  .closing ul{margin:0; padding-left:18px}
+  .closing li{margin:7px 0; font-size:14.5px; color:#dfe8ef}
+  .closing b{color:#fff}
+  footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:30px; line-height:1.6}
+  a.toplink{color:var(--accent); text-decoration:none; font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top" id="top">
+    <div class="kicker">Clippings 消化報告</div>
+    <h1>情感化設計 與 MLX 本機 agentic AI</h1>
+    <p>2026-06-28 · 2 篇不同主題 · Claude 直讀統整（未跑 NotebookLM）· 正本已寫入主題知識</p>
+    <div class="meta-row">
+      <span class="pill">來源：Tim Gabe（YouTube）</span>
+      <span class="pill">來源：Apple WWDC26 Session 232</span>
+      <span class="pill">類型 A · 餵自己</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>本期內容</h2>
+    <ol>
+      <li><a href="#c1">情感化設計：讓 app 有生命感</a></li>
+      <li><a href="#c2">MLX 本機模型服務：Mac 上跑 agentic AI</a></li>
+      <li><a href="#rel">寫入位置 · 跟現有主題知識的關係</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 · 情感化設計 -->
+  <article class="clip" id="c1">
+    <h3><span class="num">1</span><span class="t">情感化設計：讓 app 有生命感</span></h3>
+    <p class="src">Tim Gabe · The Secret Behind Weirdly Addictive Apps · Duolingo / Phantom / Revolut 案例</p>
+    <div class="oneline"><b>一句話：</b>人人都做得出功能的時代，「有用」已經不夠——長期護城河是「打開 app 時的感覺」。靠微互動、慶祝小勝、拋光把產品變得有生命感，三個案例都是設計直接帶動商業數字。</div>
+
+    <div class="sec"><div class="lab">重點知識（三個機制）</div>
+      <ul class="pts">
+        <li><b>微互動即時情感回饋</b>：重複行為（打卡/日誌/habit logging）每完成一次，別只給綠勾，給 bounce / glow / sparkle，讓人覺得被鼓勵、被回應。底盤是 Don Norman《Emotional Design》的情感回饋迴路。</li>
+        <li><b>慶祝小勝 + 進度感</b>：用動畫呈現 streak、等級、完成數，給「正在累積、正在建造」的感覺，強化回訪。</li>
+        <li><b>拋光建立信任（polish = trust）</b>：金融 / crypto / 健康這類高風險領域，把 motion、transition、視覺細節當核心功能不是裝飾，每個微互動都是 trust signal——而「信任直接影響使用者願意花多少」。</li>
+      </ul>
+    </div>
+
+    <div class="sec"><div class="lab">案例數字</div>
+      <ul class="pts">
+        <li><b>Duolingo</b>：2022 上全角色動畫，兩年 DAU 14.2M → 34M、付費訂閱翻倍。CEO 公開把 delightful experience 當差異化主因。</li>
+        <li><b>Phantom（crypto 錢包）</b>：2023 動畫化幽靈吉祥物、建錢包加俏皮動畫，把「crypto 很可怕」變親切 → 美國 App Store 工具類第二，贏 WhatsApp / IG。</li>
+        <li><b>Revolut</b>：tactile charts（拖手指、圖表發光）、卡片 3D 翻轉打光、細膩 onboarding 動畫，整體 premium，在 fintech 直接換成營收。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  A["使用者做動作<br/>打卡 / 送出 / 完成"] --> B["即時情感回饋<br/>bounce · glow · sparkle"]
+  B --> C["感覺被鼓勵<br/>慶祝小勝"]
+  C --> D["進度感<br/>streak · 等級 · 完成數"]
+  D --> E["想再回來"]
+  E --> A
+  classDef step fill:#fff6e6,stroke:#e7c97a,color:#7a5a1a;
+  class A,B,C,D,E step;
+      </pre>
+      <div class="cap">圖解一：情感回饋迴路——把「功能完成」變成「值得回來的一下」</div>
+    </div>
+
+    <div class="sec"><div class="lab">你能用在哪</div>
+      <table class="map">
+        <tr><th>機制</th><th>直接對應你的專案</th></tr>
+        <tr><td>微互動即時回饋（完成的那一下）</td><td><b>Routine 習慣打卡 · 三鐵 CT226 打卡</b>——打卡完成 moment 是關鍵</td></tr>
+        <tr><td>進度動畫（streak / 等級 / 完成數）</td><td>Routine 心理雷達 · 三鐵課表完成度</td></tr>
+        <tr><td>Polish = 信任 + tactile charts</td><td><b>Investment OS · 收入分配計算機</b>——onboarding 拋光、圖表拖曳回應</td></tr>
+        <tr><td>Nail the first impression</td><td>所有 app 的第一屏 / onboarding</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- 2 · MLX -->
+  <article class="clip" id="c2">
+    <h3><span class="num">2</span><span class="t">MLX 本機模型服務：Mac 上跑 agentic AI</span></h3>
+    <p class="src">Apple WWDC26 Session 232 · MLX team · 不上雲、無 API key、零用量成本</p>
+    <div class="oneline"><b>一句話：</b>在 Mac 上完全本機跑 agentic loop。核心是 MLX-LM Server 提供一個 OpenAI 相容的本機 endpoint，任何 agent（OpenCode / Xcode / 腳本）把 baseURL 指過去就能用——跟「GLM 路由」是同一招，差別是 local + 隱私 + 免費 vs 便宜雲端。</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <ul class="pts">
+        <li><b>四層 stack</b>：MLX（Apple Silicon 陣列框架 · Metal）→ MLX-LM（載入/量化/微調）→ MLX-LM Server（OpenAI 相容 HTTP，支援 tool calling）→ Agent 層。Ollama / LM Studio / vLLM 都已建在 MLX 上。</li>
+        <li><b>三步上線</b>：<code>pip install mlx-lm</code> → <code>mlx_lm.server --model ...</code> → 把 agent 的 baseURL 指到 <code>http://127.0.0.1:8080/v1</code>。agent 不知道也不在乎模型是在本機還是雲端。</li>
+        <li><b>M5 Neural Accelerators</b>：矩陣乘法比 M4 快 4 倍 → prompt processing 約 4 倍（agentic loop 大多 token 是讀進來的 context，這塊很有感）。不用改 code，MLX 自動選 kernel。</li>
+        <li><b>Continuous batching</b>：多 subagent 同時打 server 時動態併批、新請求中途可加入，不用排隊。</li>
+        <li><b>分散式推論</b>：模型太大塞不下單機（DeepSeek 1.6T，權重 >800GB）時，用 <code>mlx.launch</code> + hostfile 把模型 shard 到多台 Mac；macOS 26.2 起支援 Thunderbolt RDMA，4 節點最高 3 倍。</li>
+      </ul>
+    </div>
+
+    <pre class="code">pip install mlx-lm
+mlx_lm.server --model mlx-community/Qwen-3.5-4B-8bit
+# 然後把 agent baseURL 指到 http://127.0.0.1:8080/v1</pre>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart TB
+  AG["Agent 層<br/>OpenCode · Xcode · 自寫腳本"] --> SV["MLX-LM Server<br/>OpenAI 相容 HTTP · :8080"]
+  SV --> LM["MLX-LM<br/>載入 / 量化 / 微調"]
+  LM --> MX["MLX<br/>Apple Silicon · Metal · 記憶體管理"]
+  classDef a fill:#eaf0f5,stroke:#2f4f6f,color:#2f4f6f;
+  class AG,SV,LM,MX a;
+      </pre>
+      <div class="cap">圖解二：四層 stack——你只需要把 agent 指到第二層的本機 endpoint</div>
+    </div>
+
+    <div class="sec"><div class="lab">你能用在哪</div>
+      <ul class="pts use">
+        <li><b>MCP 直連 POC</b>：你想做「獨立腳本直連 + 模型可切 Claude/Ollama」，MLX 就是那個本機引擎選項（Ollama 本身建在 MLX 上）。要切本機就把 base_url 改成 localhost。</li>
+        <li><b>跟 GLM 路由同一招</b>：你已經會「把 agent 指到相容 endpoint」省成本（z.ai），這篇是它的「本機免費 + 隱私」版本，補上離線 / 敏感資料場景。</li>
+        <li><b>config 可直接抄</b>：OpenCode 的 provider 片段已存進正本，要接時複製改 baseURL 即可。</li>
+      </ul>
+    </div>
+
+    <div class="warn"><div class="lab">決定前要知道的限制</div>
+      <ul class="pts">
+        <li>本機小模型（Qwen 4B 級）能力<b>遠不如 Opus</b>，實用場景窄：隱私 / 離線 / 零成本 / 簡單 tool-calling，<b>不會取代現在的 Claude Code 工作流</b>。</li>
+        <li>M5 的 4 倍加速是 <b>M5 限定</b>；分散式要<b>多台 Mac</b> + Thunderbolt，個人單機用不到。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 關係 -->
+  <article class="clip" id="rel">
+    <h3><span class="num">3</span><span class="t">寫入位置 · 跟現有主題知識的關係</span></h3>
+    <div class="rel" style="border-top:none;padding-top:4px">
+      <div class="lab">已寫入</div>
+      <span class="badge b-new">新檔：網站製作/情感化設計.md</span>
+      <span class="badge b-new">新檔：AI/MLX 本機模型服務.md</span>
+      <span class="badge b-comp">與既有檔互補（backlink，不重複）</span>
+      <ul class="pts" style="margin-top:10px">
+        <li><code>情感化設計</code> ↔ <code>UI批評rubric</code>：rubric 6 維審「對不對」，情感化設計當第 7 維審「有沒有生命感」。已在 rubric 補一行 backlink。</li>
+        <li><code>MLX 本機模型服務</code> ↔ <code>GLM 5.2 與替代模型路由</code>：同一招（指 agent 到相容 endpoint），本機免費版 vs 便宜雲端版。已在 GLM 檔補 backlink。</li>
+        <li><code>MLX 本機模型服務</code> ↔ <code>MCP 機制與常用 server</code> / project mcp_standalone_poc：本機引擎選項，已在正本寫「我之後怎麼用」操作指引。</li>
+      </ul>
+    </div>
+  </article>
+
+  <section class="closing">
+    <h2>接下來討論：怎麼用在你現有的東西</h2>
+    <ul>
+      <li><b>情感化設計</b>最快見效的落點：Routine / 三鐵打卡的「完成 moment」微互動，跟 Investment OS / 收入計算機的 tactile chart。</li>
+      <li><b>MLX</b> 先確認你的 Mac 晶片，再決定值不值得當 MCP POC 的本機引擎；不急著動。</li>
+      <li>這份報告是呈現層；<b>正本已寫進主題知識</b>，原檔接著移進 <code>Clippings/已整理/</code>。</li>
+    </ul>
+  </section>
+
+  <footer>
+    Claude Opus 4.8 直讀統整 · 2026-06-28 · 正本已寫入主題知識<br>
+    <a class="toplink" href="#top">回到頂端</a>
+  </footer>
+
+</div>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad:true, theme:'neutral', securityLevel:'loose', flowchart:{curve:'basis', useMaxWidth:true} });
+</script>
+</body>
+</html>
