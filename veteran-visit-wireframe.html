@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>榮民探訪・手機線框圖</title>
+<style>
+  /* ── 設計變數（線框圖用中性色，非最終視覺）─────────── */
+  :root{
+    --bg:#eef0f3; --card:#ffffff; --line:#e5e7eb; --line2:#eef1f4;
+    --ink:#111827; --sub:#6b7280; --faint:#9ca3af;
+    --accent:#2563eb; --accent-soft:#eef3ff;
+    --red:#dc2626; --red-bg:#fde8e8;
+    --orange:#c2670a; --orange-bg:#fdf0e1;
+    --green:#0a7d56; --green-bg:#e6f5ef;
+    --gray:#6b7280; --gray-bg:#f1f2f4;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{margin:0; font-family:-apple-system,"PingFang TC","Noto Sans TC",Roboto,sans-serif;
+       background:var(--bg); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased}
+
+  /* ── 頁面外框與說明 ─────────────────────────────── */
+  .page{max-width:1680px; margin:0 auto; padding:32px 24px 64px}
+  .intro h1{font-size:22px; margin:0 0 6px; letter-spacing:.5px}
+  .intro p{margin:0; color:var(--sub); font-size:14px}
+  .intro .tag{display:inline-block; margin-top:12px; font-size:12px; color:var(--accent);
+       background:var(--accent-soft); border:1px solid #dbe6ff; padding:4px 10px; border-radius:999px}
+
+  .stage{display:flex; flex-wrap:wrap; gap:40px 36px; margin-top:32px; justify-content:center}
+  .frame{width:360px}
+  .cap{margin:0 4px 12px}
+  .cap .n{display:inline-flex; width:22px; height:22px; align-items:center; justify-content:center;
+       background:var(--ink); color:#fff; border-radius:50%; font-size:12px; font-weight:600; margin-right:8px}
+  .cap b{font-size:15px}
+  .cap span{display:block; color:var(--sub); font-size:12.5px; margin:6px 0 0 30px}
+
+  /* ── 手機外框 ──────────────────────────────────── */
+  .phone{height:740px; background:#fff; border:11px solid #11151c; border-radius:40px;
+       overflow:hidden; position:relative; box-shadow:0 18px 40px rgba(17,21,28,.16)}
+  .notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:24px;
+       background:#11151c; border-radius:0 0 16px 16px; z-index:30}
+  .scr{position:absolute; inset:0; display:flex; flex-direction:column; background:#f7f8fa}
+  .body{flex:1; overflow-y:auto; padding-bottom:8px}
+  .body::-webkit-scrollbar{width:0}
+
+  /* ── 共用元件 ──────────────────────────────────── */
+  .appbar{padding:34px 16px 12px; background:#fff; border-bottom:1px solid var(--line2)}
+  .appbar .row{display:flex; align-items:center; justify-content:space-between}
+  .appbar .title{font-size:19px; font-weight:700}
+  .appbar .date{color:var(--sub); font-size:12.5px; margin-top:2px}
+  .icbtn{width:36px; height:36px; border-radius:10px; background:#f1f2f4; display:flex;
+       align-items:center; justify-content:center; color:#374151}
+  .ic{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+
+  .search{margin:12px 16px 0; display:flex; align-items:center; gap:8px; background:#fff;
+       border:1px solid var(--line); border-radius:12px; padding:11px 12px; color:var(--faint); font-size:14px}
+
+  .sect{display:flex; align-items:center; justify-content:space-between; padding:20px 16px 8px}
+  .sect h3{margin:0; font-size:13px; letter-spacing:.5px; color:var(--sub); font-weight:600}
+  .sect .cnt{font-size:12px; color:var(--faint)}
+
+  .card{background:#fff; margin:0 16px 10px; border:1px solid var(--line); border-radius:14px; padding:13px 14px}
+  .card.row{display:flex; align-items:center; gap:12px}
+  .avatar{width:42px; height:42px; border-radius:50%; background:var(--accent-soft); color:var(--accent);
+       display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; flex:0 0 auto}
+  .grow{flex:1; min-width:0}
+  .name{font-size:15.5px; font-weight:600}
+  .meta{font-size:12.5px; color:var(--sub); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap}
+  .pill{font-size:11px; padding:2px 8px; border-radius:999px; font-weight:600; white-space:nowrap}
+  .p-red{color:var(--red); background:var(--red-bg)}
+  .p-org{color:var(--orange); background:var(--orange-bg)}
+  .p-grn{color:var(--green); background:var(--green-bg)}
+  .p-gray{color:var(--gray); background:var(--gray-bg)}
+  .p-line{color:var(--accent); background:var(--accent-soft)}
+  .chev{color:var(--faint)}
+
+  /* ── 底部導覽 ──────────────────────────────────── */
+  .tabbar{display:flex; background:#fff; border-top:1px solid var(--line); padding:8px 0 16px}
+  .tab{flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--faint); font-size:11px}
+  .tab.on{color:var(--accent)}
+  .tab .ic{width:22px; height:22px}
+
+  /* ── 檔案頁 ────────────────────────────────────── */
+  .topbar{display:flex; align-items:center; gap:10px; padding:32px 14px 12px; background:#fff; border-bottom:1px solid var(--line2)}
+  .topbar .t{font-size:17px; font-weight:700}
+  .topbar .s{font-size:12px; color:var(--sub)}
+  .blk{background:#fff; margin:12px 16px 0; border:1px solid var(--line); border-radius:14px; overflow:hidden}
+  .blk h4{margin:0; font-size:12px; color:var(--sub); font-weight:600; letter-spacing:.4px;
+       padding:11px 14px 0}
+  .kv{display:flex; padding:9px 14px; font-size:13.5px; border-top:1px solid var(--line2)}
+  .kv:first-of-type{border-top:0}
+  .kv .k{width:64px; color:var(--faint); flex:0 0 auto}
+  .kv .v{color:var(--ink)}
+  .note{padding:12px 14px; font-size:13.5px; color:#374151; background:#fffdf5; border-top:1px solid var(--line2)}
+  .note .lbl{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--orange); font-weight:600; margin-bottom:6px}
+
+  .tl{position:relative; padding:4px 14px 14px}
+  .tlitem{position:relative; padding:0 0 16px 22px; border-left:2px solid var(--line)}
+  .tlitem:last-child{border-left-color:transparent; padding-bottom:0}
+  .dot{position:absolute; left:-7px; top:2px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid #fff}
+  .tldate{font-size:12.5px; font-weight:600; color:var(--ink)}
+  .tltxt{font-size:13px; color:#4b5563; margin-top:3px}
+
+  .fab{position:absolute; right:18px; bottom:20px; height:48px; padding:0 18px; border-radius:999px;
+       background:var(--accent); color:#fff; display:flex; align-items:center; gap:8px; font-size:14.5px;
+       font-weight:600; box-shadow:0 8px 20px rgba(37,99,235,.4)}
+
+  /* ── 記錄頁 ────────────────────────────────────── */
+  .field{margin:14px 16px 0}
+  .field>label{font-size:12px; color:var(--sub); font-weight:600}
+  .seg{display:flex; background:#eceef1; border-radius:10px; padding:3px; margin-top:8px}
+  .seg div{flex:1; text-align:center; font-size:13.5px; padding:8px; border-radius:8px; color:var(--sub)}
+  .seg div.on{background:#fff; color:var(--ink); font-weight:600; box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .ta{margin-top:8px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px;
+       min-height:150px; font-size:14px; color:#374151; position:relative}
+  .ta .ph{color:var(--faint)}
+  .micbtn{position:absolute; right:12px; bottom:12px; width:46px; height:46px; border-radius:50%;
+       background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+       box-shadow:0 6px 16px rgba(37,99,235,.4)}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+  .chip{font-size:12.5px; padding:6px 12px; border-radius:999px; border:1px solid var(--line); color:var(--sub); background:#fff}
+  .save{margin:18px 16px 0; height:50px; border-radius:13px; background:var(--accent); color:#fff;
+       display:flex; align-items:center; justify-content:center; font-size:15.5px; font-weight:700}
+  .hint{margin:10px 16px 0; font-size:12.5px; color:var(--faint); text-align:center}
+
+  /* ── 月報頁 ────────────────────────────────────── */
+  .mselect{margin:14px 16px 0; display:flex; align-items:center; justify-content:space-between;
+       background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px; font-size:15px; font-weight:600}
+  .stat{display:flex; gap:10px; margin:14px 16px 0}
+  .stat div{flex:1; border-radius:12px; padding:12px; text-align:center}
+  .stat .big{font-size:22px; font-weight:700; line-height:1}
+  .stat .lab{font-size:11.5px; margin-top:5px}
+  .crow{display:flex; align-items:flex-start; gap:11px; background:#fff; margin:0 16px 8px;
+       border:1px solid var(--line); border-radius:12px; padding:12px 13px}
+  .cbox{width:20px; height:20px; border-radius:6px; flex:0 0 auto; margin-top:1px;
+       display:flex; align-items:center; justify-content:center}
+  .cbox.ck{background:var(--green); color:#fff}
+  .cbox.un{border:1.8px solid var(--line); background:#fff}
+  .crow .nm{font-size:14.5px; font-weight:600}
+  .crow .ds{font-size:12.5px; color:var(--sub); margin-top:2px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="intro">
+    <h1>榮民探訪・手機線框圖</h1>
+    <p>確認流程與版面方向用，非最終視覺。資料皆為示意。自架不上雲，手機透過私有通道連回家中系統。</p>
+    <span class="tag">四個畫面：首頁要訪清單 → 榮民檔案 → 現場記錄 → 月報匯出</span>
+  </div>
+
+  <div class="stage">
+
+    <!-- ══════════ 畫面 1：首頁 ══════════ -->
+    <div class="frame">
+      <div class="cap"><b><span class="n">1</span>首頁・本週要訪</b>
+        <span>一打開就看到這週該訪誰（依生日排）＋特殊頻率到期提醒。最上方搜尋框可隨時叫出任何人，解決「臨時遇到沒資料」。</span></div>
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="appbar">
+          <div class="row">
+            <div><div class="title">本週要訪</div><div class="date">6 / 29（一）・這週 5 位</div></div>
+            <div class="icbtn"><svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+          </div>
+          <div class="search">
+            <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            搜尋任何榮民（含臨時遇到的）
+          </div>
+        </div>
+        <div class="body">
+          <div class="sect"><h3>本週要訪・依生日排</h3><span class="cnt">5 位</span></div>
+
+          <div class="card row">
+            <div class="avatar">王</div>
+            <div class="grow"><div class="name">王大成</div>
+              <div class="meta"><span>北投區</span><span>生日 7/2</span><span>上次 去年 3/10</span></div></div>
+            <div style="text-align:right"><span class="pill p-org">未訪</span></div>
+          </div>
+
+          <div class="card row">
+            <div class="avatar">李</div>
+            <div class="grow"><div class="name">李國強</div>
+              <div class="meta"><span>士林區</span><span>生日 7/3</span><span>上次 去年 6/28</span></div></div>
+            <div style="text-align:right"><span class="pill p-grn">已訪</span></div>
+          </div>
+
+          <div class="card row">
+            <div class="avatar">張</div>
+            <div class="grow"><div class="name">張文彬</div>
+              <div class="meta"><span>北投區</span><span>生日 7/5</span><span>上次 去年 7/1</span></div></div>
+            <div style="text-align:right"><span class="pill p-org">未訪</span></div>
+          </div>
+
+          <div class="sect"><h3>特殊頻率・到期提醒</h3><span class="cnt">2 位</span></div>
+
+          <div class="card row" style="border-color:#f3d9d9">
+            <div class="avatar" style="background:var(--red-bg); color:var(--red)">陳</div>
+            <div class="grow"><div class="name">陳明德 <span class="pill p-red">每週訪</span></div>
+              <div class="meta"><span style="color:var(--red); font-weight:600">已 9 天未訪</span><span>獨居</span></div></div>
+            <svg class="ic chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+
+          <div class="card row" style="border-color:#f4e3cf">
+            <div class="avatar" style="background:var(--orange-bg); color:var(--orange)">劉</div>
+            <div class="grow"><div class="name">劉福生 <span class="pill p-org">每月訪</span></div>
+              <div class="meta"><span style="color:var(--orange); font-weight:600">距上次 28 天</span></div></div>
+            <svg class="ic chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </div>
+
+        <div class="tabbar">
+          <div class="tab on"><svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>首頁</div>
+          <div class="tab"><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>榮民</div>
+          <div class="tab"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>記錄</div>
+          <div class="tab"><svg class="ic" viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>月報</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ══════════ 畫面 2：榮民檔案 ══════════ -->
+    <div class="frame">
+      <div class="cap"><b><span class="n">2</span>榮民檔案頁</b>
+        <span>出發前快速進入狀況：基本資料＋家屬＋你爸自己的長期註解＋歷次探訪時間軸。右下角直接開始記錄這次。</span></div>
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="topbar">
+          <svg class="ic" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M15 6l-6 6 6 6"/></svg>
+          <div><div class="t">王大成 <span class="pill p-grn" style="font-weight:600">一般・年訪</span></div>
+            <div class="s">編號 A-0427・北投區</div></div>
+        </div>
+        <div class="body" style="padding-bottom:80px">
+
+          <div class="blk">
+            <h4>基本資料</h4>
+            <div class="kv"><div class="k">生日</div><div class="v">1938 / 07 / 02（87 歲）</div></div>
+            <div class="kv"><div class="k">電話</div><div class="v">0912-xxx-xxx</div></div>
+            <div class="kv"><div class="k">地址</div><div class="v">台北市北投區某某路 12 號</div></div>
+            <div class="kv"><div class="k">狀況</div><div class="v">獨居，行動可自理</div></div>
+          </div>
+
+          <div class="blk">
+            <h4>家屬</h4>
+            <div class="kv"><div class="k">王小明</div><div class="v">姪子・0922-xxx-xxx・常來探望</div></div>
+          </div>
+
+          <div class="blk">
+            <div class="note">
+              <div class="lbl"><svg class="ic" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>我的註解（只有你爸看得到）</div>
+              重聽，講話要大聲、靠右耳。喜歡聊當年金門的事，聊開了狀況講得比較多。膝蓋退化，問他有沒有按時回診。
+            </div>
+          </div>
+
+          <div class="sect"><h3>歷次探訪</h3><span class="cnt">共 6 次</span></div>
+          <div class="tl">
+            <div class="tlitem"><div class="dot"></div>
+              <div class="tldate">2025 / 03 / 10・生日訪視</div>
+              <div class="tltxt">精神尚可，膝蓋退化走路較慢。姪子上週剛來過。冰箱食物充足。</div></div>
+            <div class="tlitem"><div class="dot" style="background:var(--faint)"></div>
+              <div class="tldate">2024 / 03 / 08・生日訪視</div>
+              <div class="tltxt">情緒佳，主動聊很多。提到想申請助聽器補助，已協助提供資訊。</div></div>
+            <div class="tlitem"><div class="dot" style="background:var(--faint)"></div>
+              <div class="tldate">2023 / 03 / 05・生日訪視</div>
+              <div class="tltxt">血壓偏高，提醒按時服藥。獨居但鄰居會幫忙。</div></div>
+          </div>
+        </div>
+        <div class="fab"><svg class="ic" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M12 5v14M5 12h14"/></svg>記錄本次探訪</div>
+      </div></div>
+    </div>
+
+    <!-- ══════════ 畫面 3：現場記錄 ══════════ -->
+    <div class="frame">
+      <div class="cap"><b><span class="n">3</span>現場記錄頁</b>
+        <span>現場用打字或語音聽寫填，一鍵存。可標「臨時探訪」。存的當下就進系統，回家不用重打。</span></div>
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="topbar">
+          <svg class="ic" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M15 6l-6 6 6 6"/></svg>
+          <div><div class="t">記錄探訪</div><div class="s">王大成・編號 A-0427</div></div>
+        </div>
+        <div class="body">
+          <div class="field">
+            <label>日期</label>
+            <div style="margin-top:8px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:14.5px; display:flex; justify-content:space-between; align-items:center">
+              2026 / 06 / 29（一）<span class="pill p-line">自動帶今天</span></div>
+          </div>
+
+          <div class="field">
+            <label>探訪類型</label>
+            <div class="seg"><div class="on">排定探訪</div><div>臨時探訪</div></div>
+          </div>
+
+          <div class="field">
+            <label>探訪狀況</label>
+            <div class="ta">
+              <span class="ph">記下人、事、時、地、物與生活實況…<br><br>可直接打字，或按右下角麥克風用講的。</span>
+              <div class="micbtn"><svg class="ic" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div>
+            </div>
+            <div class="chips">
+              <span class="chip">健康</span><span class="chip">情緒</span><span class="chip">居住</span><span class="chip">經濟</span><span class="chip">需協助</span>
+            </div>
+          </div>
+
+          <div class="save">儲存這次探訪</div>
+          <div class="hint">存檔後直接寫進系統並標記「已訪」，回家在電腦看一遍確認即可。</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ══════════ 畫面 4：月報匯出 ══════════ -->
+    <div class="frame">
+      <div class="cap"><b><span class="n">4</span>月報匯出</b>
+        <span>選月份 → 看本月應訪/已訪/未訪 → 一鍵匯出主管要的 Excel 格式回報。在電腦上做，看過一遍就送出。</span></div>
+      <div class="phone"><div class="notch"></div><div class="scr">
+        <div class="appbar"><div class="row"><div class="title">月報匯出</div></div></div>
+        <div class="body">
+          <div class="mselect">2026 年 6 月
+            <svg class="ic" viewBox="0 0 24 24" style="width:18px;height:18px; color:var(--faint)"><path d="M6 9l6 6 6-6"/></svg></div>
+
+          <div class="stat">
+            <div style="background:var(--gray-bg)"><div class="big" style="color:var(--ink)">18</div><div class="lab" style="color:var(--sub)">應訪</div></div>
+            <div style="background:var(--green-bg)"><div class="big" style="color:var(--green)">15</div><div class="lab" style="color:var(--green)">已訪</div></div>
+            <div style="background:var(--red-bg)"><div class="big" style="color:var(--red)">3</div><div class="lab" style="color:var(--red)">未訪</div></div>
+          </div>
+
+          <div class="sect"><h3>本月探訪明細</h3><span class="cnt">勾選＝列入月報</span></div>
+
+          <div class="crow"><div class="cbox ck"><svg class="ic" viewBox="0 0 24 24" style="width:13px;height:13px; stroke-width:3"><path d="M5 12l4 4 10-10"/></svg></div>
+            <div class="grow"><div class="nm">李國強</div><div class="ds">6/28・精神佳，主動聊近況，冰箱食物足。</div></div></div>
+
+          <div class="crow"><div class="cbox ck"><svg class="ic" viewBox="0 0 24 24" style="width:13px;height:13px; stroke-width:3"><path d="M5 12l4 4 10-10"/></svg></div>
+            <div class="grow"><div class="nm">陳明德 <span class="pill p-red">臨時</span></div><div class="ds">6/25・路過順訪，血壓偏高已提醒回診。</div></div></div>
+
+          <div class="crow"><div class="cbox un"></div>
+            <div class="grow"><div class="nm" style="color:var(--sub)">王大成</div><div class="ds" style="color:var(--faint)">本月尚未探訪</div></div></div>
+
+          <div class="save" style="margin-top:14px">
+            <svg class="ic" viewBox="0 0 24 24" style="width:18px;height:18px; margin-right:8px; stroke:#fff"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+            匯出 Excel（主管格式）</div>
+          <div class="hint">依主管月報欄位格式輸出，下載後可直接回報，不用再整理。</div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
