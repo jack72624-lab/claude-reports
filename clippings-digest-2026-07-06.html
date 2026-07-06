@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Clippings 消化報告 · Ben Felix 證據投資 · 2026-07-06</title>
+<style>
+  :root{
+    --bg:#f4f3ef; --card:#ffffff; --ink:#1a1a1a; --sub:#5c5c5c;
+    --line:#e3e1da; --accent:#2f4f6f; --accent-soft:#eaf0f5;
+    --tag-bg:#edeae3; --hi:#fff6e6; --hi-line:#e7c97a;
+    --warn:#fbf1ec; --warn-line:#d9a283;
+    --mine:#eef2ec; --mine-line:#7a8c3f;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+    line-height:1.7; font-size:16px; letter-spacing:.01em;
+  }
+  .wrap{max-width:780px; margin:0 auto; padding:28px 18px 64px}
+  header.top{padding:8px 2px 22px; border-bottom:1px solid var(--line); margin-bottom:24px}
+  header.top .kicker{font-size:13px; color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-weight:600}
+  header.top h1{font-size:25px; margin:8px 0 6px; line-height:1.3}
+  header.top p{margin:0; color:var(--sub); font-size:14px}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pill{background:var(--tag-bg); color:#4a4a4a; font-size:12.5px; padding:3px 10px; border-radius:999px}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:26px}
+  .toc h2{font-size:14px; margin:0 0 10px; color:var(--sub); letter-spacing:.06em; font-weight:600}
+  .toc ol{margin:0; padding-left:20px}
+  .toc li{margin:5px 0; font-size:15px}
+  .toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent}
+  .toc a:active,.toc a:hover{border-bottom-color:var(--accent)}
+
+  article.clip{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:16px}
+  .clip .num{display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:8px; background:var(--accent); color:#fff; font-size:14px; font-weight:600; margin-right:10px; vertical-align:middle}
+  .clip h3{font-size:19px; margin:0 0 6px; line-height:1.35; display:flex; align-items:flex-start; gap:0}
+  .clip h3 .t{flex:1}
+  .clip .src{font-size:12.5px; color:var(--sub); margin:0 0 14px}
+  .oneline{background:var(--hi); border-left:3px solid var(--hi-line); padding:10px 14px; border-radius:0 8px 8px 0; font-size:15.5px; margin:0 0 16px}
+  .oneline b{font-weight:600}
+  .sec{margin:16px 0}
+  .sec .lab{font-size:12.5px; font-weight:700; color:var(--accent); letter-spacing:.06em; margin-bottom:6px}
+  .sec p{margin:0; font-size:15px; color:#2a2a2a}
+  ul.pts{margin:4px 0 0; padding-left:0; list-style:none}
+  ul.pts li{position:relative; padding-left:18px; margin:7px 0; font-size:14.7px}
+  ul.pts li::before{content:""; position:absolute; left:2px; top:10px; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  ul.pts li b{font-weight:600; color:#1a1a1a}
+  .use li::before{background:#7a8c3f}
+
+  table.map{width:100%; border-collapse:collapse; margin:6px 0 2px; font-size:14px}
+  table.map th,table.map td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  table.map th{font-size:12.5px; color:var(--sub); font-weight:600; letter-spacing:.04em}
+  table.map td b{color:#3a5a2f}
+
+  table.grid{width:100%; border-collapse:collapse; margin:8px 0 2px; font-size:14px}
+  table.grid th,table.grid td{text-align:left; padding:8px 10px; border:1px solid var(--line); vertical-align:top}
+  table.grid th{font-size:12.5px; color:#fff; background:var(--accent); font-weight:600}
+  table.grid td.n{font-weight:700; color:var(--accent); text-align:center; width:34px}
+  table.grid td b{color:#1a1a1a}
+
+  .ab{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:8px 0 2px}
+  @media(max-width:560px){ .ab{grid-template-columns:1fr} }
+  .ab .box{border:1px solid var(--line); border-radius:12px; padding:13px 14px}
+  .ab .box.a{background:#eef4ef; border-color:#c4d6c4}
+  .ab .box.b{background:var(--warn); border-color:var(--warn-line)}
+  .ab .box .h{font-size:13px; font-weight:700; letter-spacing:.04em; margin-bottom:5px}
+  .ab .box.a .h{color:#3a6b3a}
+  .ab .box.b .h{color:#a05a32}
+  .ab .box p{margin:0; font-size:14px; color:#333}
+  .ab .box ul{margin:6px 0 0; padding-left:16px}
+  .ab .box li{font-size:13.5px; margin:4px 0; color:#333}
+
+  .warn{background:var(--warn); border-left:3px solid var(--warn-line); padding:12px 14px; border-radius:0 8px 8px 0; margin:16px 0 4px}
+  .warn .lab{font-size:12.5px; font-weight:700; color:#a05a32; letter-spacing:.06em; margin-bottom:6px}
+  .warn ul.pts li::before{background:var(--warn-line)}
+  .warn p{margin:0;font-size:14.5px}
+
+  .mine{background:var(--mine); border-left:3px solid var(--mine-line); padding:13px 15px; border-radius:0 8px 8px 0; margin:16px 0 4px}
+  .mine .lab{font-size:12.5px; font-weight:700; color:#556b1f; letter-spacing:.06em; margin-bottom:6px}
+  .mine ul.pts li::before{background:var(--mine-line)}
+  .mine p{margin:0 0 4px; font-size:14.7px; color:#2a2a2a}
+
+  .diagram{margin:8px 0 4px; padding:14px 10px; background:#fbfaf7; border:1px solid var(--line); border-radius:12px; overflow-x:auto}
+  .diagram .cap{font-size:12px; color:var(--sub); text-align:center; margin-top:6px}
+  pre.mermaid{margin:0; text-align:center}
+
+  .rel{margin-top:18px; padding-top:14px; border-top:1px dashed var(--line)}
+  .rel .lab{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:.06em; margin-bottom:8px}
+  .rel .badge{display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:6px; margin-right:8px; margin-bottom:6px}
+  .b-new{background:var(--accent-soft); color:var(--accent)}
+  .b-comp{background:#e6f0e6; color:#3a6b3a}
+  .b-conf{background:#f7e6e6; color:#a83a3a}
+  .rel p{font-size:14px; color:#3a3a3a; margin:8px 0 0}
+  .rel code{background:#f0eee8; padding:1px 6px; border-radius:4px; font-size:13px; font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  .closing{background:var(--accent); color:#eef3f7; border-radius:16px; padding:22px 20px; margin-top:30px}
+  .closing h2{margin:0 0 12px; font-size:17px; color:#fff}
+  .closing ul{margin:0; padding-left:18px}
+  .closing li{margin:7px 0; font-size:14.5px; color:#dfe8ef}
+  .closing b{color:#fff}
+  footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:30px; line-height:1.6}
+  a.toplink{color:var(--accent); text-decoration:none; font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top" id="top">
+    <div class="kicker">Clippings 消化報告</div>
+    <h1>投資「已被解決」，卡住你的是大腦 — Ben Felix 的證據投資</h1>
+    <p>2026-07-06 · 單篇深度訪談 · 直讀逐字稿 + NotebookLM grounded 報告佐證 · 反思／寫入待你拍板</p>
+    <div class="meta-row">
+      <span class="pill">來源：The Diary Of A CEO × Ben Felix（YouTube）</span>
+      <span class="pill">PWL Capital 投資長 · evidence-based investing</span>
+      <span class="pill">類型 A · 餵自己</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>本期內容（一篇 = 六個主題）</h2>
+    <ol>
+      <li><a href="#c1">核心論點：投資已被解決，難的是心理</a></li>
+      <li><a href="#c2">10 個讓你安靜變窮的錯誤</a></li>
+      <li><a href="#c3">租 vs 買：5% 法則與「拿不回的成本」</a></li>
+      <li><a href="#c4">資產配置：那篇「最具爭議的論文」</a></li>
+      <li><a href="#c5">該避開的金融產品 + 通膨這隻慢刀</a></li>
+      <li><a href="#c6">AI 與市場：Jevons、效率市場、泡沫</a></li>
+      <li><a href="#use">你能學能用的（對應你的領域）</a></li>
+      <li><a href="#rel">跟現有投資筆記的關係（與 Grantham 正面對撞）</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <article class="clip" id="c1">
+    <h3><span class="num">1</span><span class="t">核心論點：投資已被解決，難的是心理</span></h3>
+    <p class="src">Ben Felix：機械工程背景轉投資，只信學術研究、不信「像賣車一樣賣產品」的金融業</p>
+    <div class="oneline"><b>一句話：</b>「投資已經被解決了——用低成本指數型基金捕捉市場報酬，就這樣。難的是<b>真的做到</b>，因為大腦是為生存設計的，不是為了『今天投錢、忍住中間所有波動、幾十年後才拿回來』這種長期抽象的事。」</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <ul class="pts">
+        <li><b>「知道一點點剛好夠」的人贏過「知道太多」的人</b>：只要知道指數基金合理、有信念能長抱，就會是更好的長期投資人；知道得多到會挑個股、擇時的，反而害自己。</li>
+        <li><b>少看盤是反直覺但有據的策略</b>：有學術論文顯示——看投資看越勤 → 承擔越少風險 → 報酬越低。每天看漲跌讓股市「看起來」很危險，於是你投更少、太保守。對能長抱的人，股票其實比體感安全。</li>
+        <li><b>效率市場</b>：你付的價格已經反映了「全世界對這家公司知道的一切」，包含「你覺得它會漲」這件事本身。你喜歡 Tesla 的車就去買 Tesla 股 → 那資訊早就 priced in。買股買的是「未來現金流的折現」，不是你對產品的好感。</li>
+        <li><b>專業經理人多數打不贏大盤</b>，而且打贏的那些人「之後也不會繼續打贏」——扣費後更差。所以主動挑股、擇時，長期是負貢獻。</li>
+        <li><b>只做你能控制的</b>：財務計畫、目標設定、能撐過下跌的資產配置、緊急預備金、稅務規劃。市場、你相對市場的表現——都控制不了，越想贏過市場越容易更糟。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article class="clip" id="c2">
+    <h3><span class="num">2</span><span class="t">10 個讓你安靜變窮的錯誤</span></h3>
+    <p class="src">Felix 攤在桌上的一張卡：the top 10 financial mistakes</p>
+    <div class="oneline"><b>一句話：</b>這 10 條大多不是「做錯投資」，而是<b>沒把人力資本、風險、稅務、人生設計當財務決策在管</b>。前 6 條講賺與投，後 4 條講稅務、遺產、伴侶、保險——都在「錢之外」但決定你最後有多少。</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <table class="grid">
+        <tr><th>#</th><th>錯誤</th><th>核心</th></tr>
+        <tr><td class="n">1</td><td><b>賺不夠</b></td><td>投資你的 human capital（教育／技能／創業）。目標是「稀有 <b>且</b> 互補」的技能堆疊、還要賣對市場（biotech 寫手 $50k→$250k，只因換了產業）。</td></tr>
+        <tr><td class="n">2</td><td><b>存不夠</b></td><td>財富靠複利，起步晚很難追。原則：收入高時多存、低時少存；年輕人不必被逼過度存，但別養成「永遠不存」的壞習慣。</td></tr>
+        <tr><td class="n">3</td><td><b>沒設財務目標</b></td><td>多數人沒退一步想過「好生活長怎樣」。用 PERMA 模型當 categorical prompt 引導出更有意義的目標（見圖解）。</td></tr>
+        <tr><td class="n">4</td><td><b>花在錯的東西</b></td><td>花錢在沒 contribute 到你想要生活的東西上（例：每天 $12 咖啡邊趕路邊灌，根本沒享受到）。</td></tr>
+        <tr><td class="n">5</td><td><b>不承擔投資風險</b></td><td>坐在現金上 = 放棄相對股市約 5% 的機會成本（7% 股票 vs 2% 現金）。$10k @7% × 40 年 = $150k。</td></tr>
+        <tr><td class="n">6</td><td><b>承擔錯的風險</b></td><td>挑個股、玩選擇權、賭 crypto——很多是負期望值或高交易成本，侵蝕長期成長。</td></tr>
+        <tr><td class="n">7</td><td><b>錯過稅務規劃</b></td><td>先把退休帳戶用好（美 401k/IRA、加 RRSP/TFSA）。富人玩「借股票貸款免稅」（有 margin call 風險）。優化一次、之後就設定好。</td></tr>
+        <tr><td class="n">8</td><td><b>沒做遺產規劃</b></td><td>有 dependents 就該立遺囑——沒立 = 用「政府預設的遺囑」，你未必同意；還會多繳稅、資產給錯人。</td></tr>
+        <tr><td class="n">9</td><td><b>娶／嫁錯財務型</b></td><td>tightwad（吝嗇）× spendthrift（揮霍）最容易互相吸引結婚，但婚後對錢更多衝突、更不滿。prenup＝先講好「50% 機率分手怎麼分」。</td></tr>
+        <tr><td class="n">10</td><td><b>沒對災難投保</b></td><td>家庭若靠你的收入，要有足夠壽險（term life 便宜）+ 失能險，替代你「未來賺錢的能力」這個人力資本。</td></tr>
+      </table>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  G["財務目標<br/>該長怎樣？"] --> P["P 正向情緒<br/>真的享受"]
+  G --> E["E 投入<br/>心流／練技能"]
+  G --> R["R 關係<br/>用錢加深連結"]
+  G --> M["M 意義<br/>比自己大的事"]
+  G --> A["A 成就<br/>完成難的事"]
+  P -.->|檢驗| T["買 Ferrari 這目標<br/>對得上哪一項？<br/>對不上＝可能不值得"]
+      </pre>
+      <div class="cap">錯誤 3 的解法：PERMA 模型當「目標篩子」，逼你檢查每個花費/目標對得上哪一格</div>
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article class="clip" id="c3">
+    <h3><span class="num">3</span><span class="t">租 vs 買：5% 法則與「拿不回的成本」</span></h3>
+    <p class="src">Felix 稱這是「多數人一生最大的財務決策」，也是他最出名的一段（那支 5% 法則影片數百萬觀看）</p>
+    <div class="oneline"><b>一句話：</b>自住房<b>不是投資</b>——它是「付你租金的資產」，funds 你的居住消費。真正該比的不是「房貸月付 vs 月租」，而是把<b>所有拿不回的成本（unrecoverable costs）</b>加起來，跟「租 + 把頭期款拿去投股市」對比。</div>
+
+    <div class="sec"><div class="lab">重點知識 · 拿不回的成本</div>
+      <ul class="pts">
+        <li><b>房貸利息</b>：付給銀行、拿不回。</li>
+        <li><b>股權的機會成本</b>（最大一項）：頭期＋本金卡在房子裡，房價長期大約只跟通膨走，股票遠超通膨。這個差就是你放棄的報酬。</li>
+        <li><b>房產稅</b>：約 0.5–1%／年，拿不回。</li>
+        <li><b>維修費</b>：學術文獻說 >2%，Felix 當 6 年屋主後覺得更高（泳池泵、暖氣、露台裂縫……「永遠在壞」）＋你花在協調工班的<b>時間成本</b>。</li>
+        <li><b>緊急支出 + 裝修</b>：要留流動性（又是機會成本）；且修東西會順手升級，租屋你不會這樣花。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart TD
+  H["房價 $300,000"] --> M1["× 5%<br/>（≈1% 房產稅 + 1% 維修 + 3% 機會成本）"]
+  M1 --> M2["= $15,000／年"]
+  M2 --> M3["÷ 12"]
+  M3 --> R["= $1,250／月<br/>損益兩平租金"]
+  R --> D{"實際租金<br/>&lt; $1,250？"}
+  D -->|是| RENT["租比較划算"]
+  D -->|否| BUY["買才可能划算"]
+      </pre>
+      <div class="cap">5% 法則：房價 × 5% ÷ 12 = 與「擁有的拿不回成本」等值的月租。低於它就租。（粗略 rule of thumb，PWL 官網有精算版）</div>
+    </div>
+
+    <div class="warn">
+      <div class="lab">最常見的錯 + 誰才該買</div>
+      <p><b>最常見的錯</b>：拿「房貸月付」直接比「月租」，月付低就以為買比較好——錯，擁有的真實成本遠高於房貸月付。<br><br>
+      <b>誰才該買</b>：非常風險趨避、想長期待同一地方（有家庭）、怕被市場漲價擠出、高稅率的 taxable investor（自住房增值常 tax-preferred）。年輕人買房 tricky：房價高、綁死 mobility（好工作可能在別城）、交易成本高、需求會變。<br><br>
+      <b>倖存者偏誤</b>：「我朋友買房賺 3 倍」不是通則——加拿大正經歷 1975 以來最大（通膨調整後）房價回檔，2021 高點買的現在慘。<b>快樂研究</b>：控制房型/社區後，屋主並沒有比租客快樂。</p>
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article class="clip" id="c4">
+    <h3><span class="num">4</span><span class="t">資產配置：那篇「最具爭議的論文」</span></h3>
+    <p class="src">生命週期資產配置（life-cycle asset allocation）；Felix 做過一支影片叫「finance 界最具爭議的論文」</p>
+    <div class="oneline"><b>一句話：</b>39 國、回溯到 1890、bootstrap 模擬一百萬種可能人生——結論顛覆傳統：<b>100% 股票（1/3 本國、2/3 國際）</b>對長期投資人，退休消費與遺贈的結果最好，且破產機率更低。傳統「年紀越大越往債券移」被打臉。</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <ul class="pts">
+        <li><b>100% 股票</b>擊敗 target-date 基金與 60/40：股票對長期投資人比想像安全。</li>
+        <li><b>1/3 本國 + 2/3 國際</b>：國際股是對「你本國出狀況（尤其高通膨）」的分散保險。本國比例曲線在 10–50% 間很平——美國人用市值權重（~60–65% 美股）也 OK；非美國人放 1/3 本國會是很大的 home bias。</li>
+        <li><b>債券是隱藏風險</b>：一般當它安全，但高通膨期債券「被血洗」，對長期購買力比想像危險。（債券＝借錢給政府/公司收固定利息 + 到期還本。）</li>
+        <li>為何爭議大：「越老越買債」的傳統太根深蒂固，一篇說它基本錯了的研究當然被圍剿。但至少它告訴我們：股票對長期人更安全一點、債券更危險一點。</li>
+      </ul>
+    </div>
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  subgraph 傳統["傳統智慧（被挑戰）"]
+    Y1["年輕：多股"] --> O1["年長：多債<br/>target-date"]
+  end
+  subgraph 論文["論文最優解"]
+    ALL["100% 股票<br/>一生不變"] --> DOM["1/3 本國"]
+    ALL --> INT["2/3 國際<br/>＝抗本國通膨的保險"]
+  end
+      </pre>
+      <div class="cap">爭議點：不是「隨年齡往債券移」，而是「一路 100% 股票、靠國際分散抗風險」</div>
+    </div>
+  </article>
+
+  <!-- 5 -->
+  <article class="clip" id="c5">
+    <h3><span class="num">5</span><span class="t">該避開的金融產品 + 通膨這隻慢刀</span></h3>
+    <p class="src">Felix：「我談的很多東西，是你<b>不該</b>投資的產品」</p>
+    <div class="oneline"><b>一句話：</b>金融公司很會「看到投資人想要什麼（即使對他不好）就做一個產品餵他」。避開玩弄你偏誤的高費產品，並認清持現金在通膨下是「實質期望報酬為負」的慢性失血。</div>
+
+    <div class="ab">
+      <div class="box b">
+        <div class="h">避開這些（餵你偏誤的）</div>
+        <ul>
+          <li><b>Covered call ETF</b>：賣 call 拿權利金，但放棄大量上檔；玩弄「偏好 income」的 mental accounting bias，隱含成本巨大、收更高費。</li>
+          <li><b>主題型 ETF</b>（AI／大麻／電動車／綠能）：主題變熱 → 價格漲高 → 才發指數、才發 ETF → 之後回落，報酬很差（結構性追高）。</li>
+          <li><b>高費用</b>：0.5%、1% 看起來小，但費用會複利，長期以金額計很傷。</li>
+          <li><b>crypto</b>：技術有趣（無需可信第三方的數位現金），但已變 ideological + speculative asset；Felix 和 PWL 都不碰、不配置給客戶。</li>
+        </ul>
+      </div>
+      <div class="box a">
+        <div class="h">通膨：現金的慢性失血</div>
+        <ul>
+          <li>3% 通膨下，床底的 $10,000 購買力 <b>20 年砍半</b>（→ $5,336）。</li>
+          <li>持現金「沒有期望報酬」，<b>實質期望報酬為負</b>——這本身就是一種風險。</li>
+          <li>抗通膨：短期公債能大致跟上；長期最好的方法還是低成本指數基金（避費用問題）+ 參與股市，歷史上遠超通膨。</li>
+          <li>對照錯誤 5、6：持現金 = 不承擔對的風險。</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 6 -->
+  <article class="clip" id="c6">
+    <h3><span class="num">6</span><span class="t">AI 與市場：Jevons、效率市場、泡沫</span></h3>
+    <p class="src">主持人追問 AI 會不會搶工作、會不會崩盤；Felix 用歷史與效率市場回應</p>
+    <div class="oneline"><b>一句話：</b>「壁上的字（writing on the wall）從來不會出現」——如果崩盤可預見，價格今天就會反映；崩盤總在沒人預期時發生。對分散投資人，泡沫是週期的一部分、不是災難。</div>
+
+    <div class="sec"><div class="lab">重點知識</div>
+      <ul class="pts">
+        <li><b>AI 搶工作？看歷史</b>：ATM 沒消滅櫃員——分行營運成本降 → 開更多分行 → 櫃員反而變多。<b>Jevons 悖論</b>：煤引擎更有效率 → 火車更便宜 → 旅行需求爆發 → 煤業反而興盛。技術革命一再重演此循環（但 Felix 承認 AI 採用速度可能不同）。</li>
+        <li><b>個人怎麼辦</b>：培養「稀有且互補、combined 起來全世界沒幾人能做」的技能組合。<b>投資人怎麼辦</b>：全球分散、能撐過下跌的配置。</li>
+        <li><b>AI 泡沫會崩嗎</b>：Carlota Perez《Technological Revolutions and Financial Capital》記錄了這循環（資產價格衝高再回落）。泡沫公司的資本成本被壓超低 → 資產價格衝高 → 但不可持續、終會回落。<b>但對分散投資人不是總崩、不是災難。</b></li>
+        <li><b>效率市場的收尾</b>：你買 Tesla 股是因為你有 Tesla、覺得它會好——但「它是家好公司」全世界都知道、早已 priced in。你得「知道別人不知道的事」才有超額報酬。所以：買指數、接受市場報酬（已經很好）、然後什麼都別做，別開 App、把密碼弄丟。</li>
+        <li><b>女性可能是更好的投資人</b>：較不 overconfident、較少 overtrade（Fidelity 520 萬帳戶、Warwick +1.8%/年、UC Berkeley 男性多交易 45% → 報酬低 1.4%、Revolut +4%）。</li>
+      </ul>
+    </div>
+    <div class="warn">
+      <div class="lab">世界永遠感覺很亂（但股市長期正報酬）</div>
+      <p>Felix 引一段 <b>1847 年</b>的雜誌文字：「這是歷史上陰暗的一刻……法國政治鍋在沸騰，英帝國被拖垮，美國陷入種族與商業混亂，俄國像地平線上的暴風雲……」——聽起來跟今天一模一樣。世界經歷過無數戰爭動盪，股市長期仍是正報酬。分散、能長抱的人，遇到世界很亂時<b>不需要動他的組合</b>。</p>
+    </div>
+  </article>
+
+  <!-- 你能用 -->
+  <article class="clip" id="use">
+    <h3><span class="num">★</span><span class="t">你能學能用的（對應你的領域）</span></h3>
+    <div class="sec"><div class="lab">直接對得上你</div>
+      <table class="map">
+        <tr><th>Felix 的點</th><th>對應到你</th></tr>
+        <tr><td><b>稀有＋互補的技能堆疊，賣對市場</b></td><td>你正是這個案例本身：<b>混音師 × 智慧家庭工程師 × AI/coding</b> 的稀有堆疊。Felix 說「多學一點 finance 不會讓他升級，是加了『會做內容』這條稀有互補技能才讓他變全球稀有」——同理，你的槓桿在把三條線 combine（例：用 AI/coding 做音樂或智慧家庭的工具），不是任一條再深。</td></tr>
+        <tr><td><b>100% 股票 + 國際分散、少看盤、避主題/covered-call ETF、避高費、別持現金</b></td><td>一組可直接採用的<b>個人資產配置原則</b>。跟你關注金融市場、但工作忙沒空盯盤的處境對得上——「別開 App、把密碼弄丟」對你其實是特徵不是 bug。</td></tr>
+        <tr><td><b>5% 法則、租 vs 買</b></td><td>若你之後評估買房，這是現成的決策工具（把「拿不回的成本」算清楚，別只比房貸月付 vs 月租）。</td></tr>
+        <tr><td><b>PERMA 目標框架（categorical prompt）</b></td><td>可搬去做<b>生活／三鐵／事業目標設定</b>——把每個目標/花費對回 P/E/R/M/A 哪一格，對不上的就砍。你的三鐵 226 目標本身就很 PERMA（Engagement + Accomplishment）。</td></tr>
+        <tr><td><b>效率市場 +「多數經理人打不贏、別選股」</b></td><td>這條跟你在做的 <b>Investment OS（BOS/DGM 選股、財報 Call 分析、AI 交易系統）正面衝突</b>——是這篇對你最有價值的張力點，見下方關係區與反思。</td></tr>
+        <tr><td><b>通膨（現金 20 年砍半、債券高通膨被血洗、國際股抗本國通膨）</b></td><td>呼應你長期關注金融市場的宏觀視角；也是「配置該怎麼抗通膨」的具體答案。</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- 關係 -->
+  <article class="clip" id="rel">
+    <h3><span class="num">＝</span><span class="t">跟現有投資筆記的關係</span></h3>
+    <div class="oneline"><b>最大發現：</b>這篇跟你已整理的 <b>Grantham（同一個 podcast 主持人）正面對撞</b>。兩位都是投資重量級，在效率市場、擇時、AI 泡沫上立場<b>相反</b>——這組張力比任一篇單獨更值錢。</div>
+
+    <div class="ab">
+      <div class="box a">
+        <div class="h">Ben Felix（本篇）· 被動 / 效率市場</div>
+        <ul>
+          <li>效率市場（理論理想）：你的想法早已 priced in</li>
+          <li><b>別擇時</b>：writing on the wall 從不出現、崩盤總在沒人預期時</li>
+          <li>AI 泡沫對分散投資人「不是災難」，別動組合</li>
+          <li>全球分散 100% 股票、1/3 本國 2/3 國際</li>
+          <li>別選股：多數經理人打不贏、贏的也不持續</li>
+        </ul>
+      </div>
+      <div class="box b">
+        <div class="h">Grantham（已整理）· 主動 / 擇時避險</div>
+        <ul>
+          <li><b>「效率市場是胡說」</b>：股價＝心理、下一個人願付多少</li>
+          <li><b>主動擇時</b>：現在是史上最大泡沫、賣美股、等崩</li>
+          <li>AI／高飛股可能跌 70%，財富效應反轉拖累經濟</li>
+          <li>別持美股/S&amp;P500，買非美（EM/歐/日）+ 貴金屬 + 債</li>
+          <li>自己看數據，機構不會警告你（利益不一致）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sec" style="margin-top:14px"><div class="lab">哪裡一致、哪裡衝突</div>
+      <ul class="pts">
+        <li><b>一致</b>：兩人都不碰 crypto；都不看好「房產當投資」（Felix 用 5% 法則，Grantham 說貴、需跌 30%）；都主張國際分散、別集中美股單一市場。</li>
+        <li><b>衝突（核心）</b>：<b>效率市場 vs 心理定價</b>、<b>別擇時 vs 主動擇時避險</b>、<b>泡沫淡定持有 vs 賣出等崩</b>。一個是 evergreen 配置哲學，一個是 2026-06 當下的時效性 call。</li>
+      </ul>
+    </div>
+
+    <div class="rel">
+      <div class="lab">建議寫入位置（待你確認後才動）</div>
+      <span class="badge b-new">新檔：投資/證據投資與行為金融（Ben Felix）.md</span>
+      <span class="badge b-comp">與 Grantham 互看（雙向 backlink）</span>
+      <span class="badge b-conf">與財報框架 / AI 交易系統：張力，不刪、標清楚</span>
+      <p><code>投資/</code> 目前有 Grantham、財報 Call 分析框架、AI 交易系統建構三檔。這篇獨立成新檔，並在 <code>Grantham</code> 那篇補一段「反方：Ben Felix 的效率市場觀」互連。跟你 <code>財報 Call 分析框架</code>、<code>AI 交易系統建構</code> 的關係是<b>方法論張力</b>（主動選股 vs 別選股）——不是誰對誰錯，是你要清楚自己站哪、Investment OS 該偏哪邊。這正是下方反思的題目。</p>
+    </div>
+  </article>
+
+  <section class="closing">
+    <h2>收尾 · 這篇對你的一句話 + 下一步</h2>
+    <ul>
+      <li><b>對你最痛的一條</b>：Felix 說「別選股、多數人打不贏市場」——而你正在做 BOS/DGM 選股 + AI 交易系統。這不是要你停，而是逼你講清楚：<b>你的系統憑什麼相信自己屬於「打得贏」那一小群、而且能持續？</b></li>
+      <li><b>evergreen 拿走的</b>：少看盤、全球分散、避高費/主題/covered-call、別持現金、5% 法則、PERMA 目標篩子、人力資本要稀有互補。</li>
+      <li><b>下一步（等你）</b>：① 你選了「先看報告再決定反思」——這篇最值得反思的就是上面那條「選股 vs 別選股」的立場題，要跑我就丟幾題立場問題給你。② 反思完/或直接寫，我把正本寫進 <code>主題知識/投資/</code>、原檔移 <code>已整理/</code>、NotebookLM 報告存 <code>outputs/</code>。</li>
+    </ul>
+  </section>
+
+  <footer>
+    Claude Opus 4.8 · 直讀逐字稿 + NotebookLM grounded 報告佐證 · 2026-07-06 · 反思／寫入待拍板<br>
+    <a class="toplink" href="#top">回到頂端</a>
+  </footer>
+
+</div>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad:true, theme:'neutral', securityLevel:'loose', flowchart:{curve:'basis', useMaxWidth:true} });
+</script>
+</body>
+</html>
