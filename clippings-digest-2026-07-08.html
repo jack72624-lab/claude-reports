@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Clippings 消化報告 · 護城河是流程 · O'Leary 紀律 · Pabrai Dhandho · 2026-07-08</title>
+<style>
+  :root{
+    --bg:#f4f3ef; --card:#ffffff; --ink:#1a1a1a; --sub:#5c5c5c;
+    --line:#e3e1da; --accent:#2f4f6f; --accent-soft:#eaf0f5;
+    --tag-bg:#edeae3; --hi:#fff6e6; --hi-line:#e7c97a;
+    --warn:#fbf1ec; --warn-line:#d9a283;
+    --mine:#eef2ec; --mine-line:#7a8c3f;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+    line-height:1.7; font-size:16px; letter-spacing:.01em;
+  }
+  .wrap{max-width:800px; margin:0 auto; padding:28px 18px 64px}
+  header.top{padding:8px 2px 22px; border-bottom:1px solid var(--line); margin-bottom:24px}
+  header.top .kicker{font-size:13px; color:var(--accent); letter-spacing:.14em; text-transform:uppercase; font-weight:600}
+  header.top h1{font-size:25px; margin:8px 0 6px; line-height:1.32}
+  header.top p{margin:0; color:var(--sub); font-size:14px}
+  .meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .pill{background:var(--tag-bg); color:#4a4a4a; font-size:12.5px; padding:3px 10px; border-radius:999px}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:26px}
+  .toc h2{font-size:14px; margin:0 0 10px; color:var(--sub); letter-spacing:.06em; font-weight:600}
+  .toc ol{margin:0; padding-left:20px}
+  .toc li{margin:5px 0; font-size:15px}
+  .toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent}
+  .toc a:active,.toc a:hover{border-bottom-color:var(--accent)}
+  .toc .grp{font-size:12px; color:var(--accent); font-weight:600; letter-spacing:.05em; margin:12px 0 4px}
+
+  article.clip{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 20px; margin-bottom:20px; scroll-margin-top:16px}
+  .clip .num{display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:30px; padding:0 7px; border-radius:8px; background:var(--accent); color:#fff; font-size:14px; font-weight:600; margin-right:10px; vertical-align:middle}
+  .clip .num.b{background:#6b5b3f}
+  .clip h3{font-size:19px; margin:0 0 6px; line-height:1.35; display:flex; align-items:flex-start; gap:0}
+  .clip h3 .t{flex:1}
+  .clip .src{font-size:12.5px; color:var(--sub); margin:0 0 14px}
+  .oneline{background:var(--hi); border-left:3px solid var(--hi-line); padding:10px 14px; border-radius:0 8px 8px 0; font-size:15.5px; margin:0 0 16px}
+  .oneline b{font-weight:600}
+  .sec{margin:18px 0}
+  .sec .lab{font-size:12.5px; font-weight:700; color:var(--accent); letter-spacing:.06em; margin-bottom:6px}
+  .sec p{margin:0; font-size:15px; color:#2a2a2a}
+  ul.pts{margin:4px 0 0; padding-left:0; list-style:none}
+  ul.pts li{position:relative; padding-left:18px; margin:8px 0; font-size:14.7px}
+  ul.pts li::before{content:""; position:absolute; left:2px; top:10px; width:6px; height:6px; border-radius:50%; background:var(--accent)}
+  ul.pts li b{font-weight:600; color:#1a1a1a}
+  .use li::before{background:#7a8c3f}
+
+  table.map{width:100%; border-collapse:collapse; margin:6px 0 2px; font-size:14px}
+  table.map th,table.map td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+  table.map th{font-size:12.5px; color:var(--sub); font-weight:600; letter-spacing:.04em}
+  table.map td b{color:#3a5a2f}
+
+  table.grid{width:100%; border-collapse:collapse; margin:8px 0 2px; font-size:14px}
+  table.grid th,table.grid td{text-align:left; padding:8px 10px; border:1px solid var(--line); vertical-align:top}
+  table.grid th{font-size:12.5px; color:#fff; background:var(--accent); font-weight:600}
+  table.grid td.n{font-weight:700; color:var(--accent); text-align:center; width:34px}
+  table.grid td.c{text-align:center; font-weight:600}
+  table.grid td b{color:#1a1a1a}
+
+  .ab{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:8px 0 2px}
+  @media(max-width:560px){ .ab{grid-template-columns:1fr} }
+  .ab .box{border:1px solid var(--line); border-radius:12px; padding:13px 14px}
+  .ab .box.a{background:#eef4ef; border-color:#c4d6c4}
+  .ab .box.b{background:var(--warn); border-color:var(--warn-line)}
+  .ab .box .h{font-size:13px; font-weight:700; letter-spacing:.04em; margin-bottom:5px}
+  .ab .box.a .h{color:#3a6b3a}
+  .ab .box.b .h{color:#a05a32}
+  .ab .box p{margin:0; font-size:14px; color:#333}
+  .ab .box ul{margin:6px 0 0; padding-left:16px}
+  .ab .box li{font-size:13.5px; margin:5px 0; color:#333}
+
+  .warn{background:var(--warn); border-left:3px solid var(--warn-line); padding:12px 14px; border-radius:0 8px 8px 0; margin:16px 0 4px}
+  .warn .lab{font-size:12.5px; font-weight:700; color:#a05a32; letter-spacing:.06em; margin-bottom:6px}
+  .warn ul.pts li::before{background:var(--warn-line)}
+  .warn p{margin:0;font-size:14.5px}
+
+  .diagram{margin:8px 0 4px; padding:14px 10px; background:#fbfaf7; border:1px solid var(--line); border-radius:12px; overflow-x:auto}
+  .diagram .cap{font-size:12px; color:var(--sub); text-align:center; margin-top:6px}
+  pre.mermaid{margin:0; text-align:center}
+
+  .rel{margin-top:18px; padding-top:14px; border-top:1px dashed var(--line)}
+  .rel .lab{font-size:12.5px; font-weight:700; color:var(--sub); letter-spacing:.06em; margin-bottom:8px}
+  .rel .badge{display:inline-block; font-size:12px; font-weight:600; padding:2px 9px; border-radius:6px; margin-right:8px; margin-bottom:6px}
+  .b-new{background:var(--accent-soft); color:var(--accent)}
+  .b-comp{background:#e6f0e6; color:#3a6b3a}
+  .b-conf{background:#f7e6e6; color:#a83a3a}
+  .rel p{font-size:14px; color:#3a3a3a; margin:8px 0 0}
+  .rel code{background:#f0eee8; padding:1px 6px; border-radius:4px; font-size:13px; font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  .closing{background:var(--accent); color:#eef3f7; border-radius:16px; padding:22px 20px; margin-top:30px}
+  .closing h2{margin:0 0 12px; font-size:17px; color:#fff}
+  .closing ul{margin:0; padding-left:18px}
+  .closing li{margin:8px 0; font-size:14.5px; color:#dfe8ef}
+  .closing b{color:#fff}
+  footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:30px; line-height:1.6}
+  a.toplink{color:var(--accent); text-decoration:none; font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top" id="top">
+    <div class="kicker">Clippings 消化報告</div>
+    <h1>護城河是流程不是模型 · O'Leary 的理財紀律 · Pabrai 的 Dhandho</h1>
+    <p>2026-07-08 · 一批三篇（1 篇 AI 工具流 + 2 篇財富/投資）· 全部直讀逐字稿、皆跳過 NotebookLM · 反思／寫入待你拍板</p>
+    <div class="meta-row">
+      <span class="pill">#1 Type B · 餵 Claude 的執行力</span>
+      <span class="pill">#2 #3 Type A · 餵自己（財富·投資）</span>
+      <span class="pill">來源：Nate Herk · The Diary Of A CEO ×2</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>本期內容</h2>
+    <div class="grp">Type B · AI 工具流</div>
+    <ol>
+      <li><a href="#c1">「模型不是護城河」——把 Opus 變得像 Fable（流程 &gt; 智能、effort、五道門、routing table）</a></li>
+    </ol>
+    <div class="grp">Type A · 財富與投資</div>
+    <ol start="2">
+      <li><a href="#c2">「每次領薪先做這件事」——O'Leary 的 Georgette 理財紀律</a></li>
+      <li><a href="#c3">Dhandho——「正面我贏，反面我輸不多」的價值投資（Pabrai）</a></li>
+    </ol>
+    <div class="grp">綜合</div>
+    <ol start="4">
+      <li><a href="#use">你能學能用的（對應你的 AI OS / 投資 / 威琳 / 生活）</a></li>
+      <li><a href="#rel">跟現有筆記的關係 + 建議寫入位置</a></li>
+      <li><a href="#closing">收尾：對你最有用的三條 + 反思候選 + 下一步</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1 · Fable ============ -->
+  <article class="clip" id="c1">
+    <h3><span class="num b">1</span><span class="t">「模型不是護城河」——把 Opus 變得像 Fable</span></h3>
+    <p class="src">Nate Herk（AI Automation）· YouTube ·「How I Make Opus Think Like Fable (5 easy steps)」· Type B 工具</p>
+    <div class="oneline"><b>一句話：</b>你留不住模型的<b>智能</b>，但你能留住它的<b>流程</b>。同一個 dynamic workflow，讓 Fable 只負責統籌、把執行丟給一群便宜的 Sonnet／Haiku 回報 → 結果跟「全部用 Fable」<b>幾乎一樣，成本卻低好幾倍</b>。差別不在模型多聰明，在你怎麼指揮它、在它周圍搭了什麼系統與 loop。</div>
+
+    <div class="sec"><div class="lab">重點知識 · 為什麼「流程」才是護城河</div>
+      <ul class="pts">
+        <li><b>新手拿 Fable 5，打不過老手拿舊模型</b>：作者的比喻——把 Fable 5 給一個 AI 新手、把舊的 Sonnet 3.7 給 Karpathy，Karpathy 做出來的東西還是更好。決定成敗的是「你怎麼下指令、你在模型周圍搭的系統與 loop」，不是模型本身的智能。（Karpathy＝Andrej Karpathy，前 Tesla AI 總監、OpenAI 創始成員，公認的 AI 工程標竿。）</li>
+        <li><b>「留流程，不留智能」</b>：他測過——Fable 指揮一堆 Fable 分身，跟 Fable 指揮一堆 Sonnet／Opus 分身，<b>結果差不多，但全 Fable 貴上好幾倍</b>。因為只要把 Fable 的「規劃＋想清楚所有可能出錯的地方」這個流程抽出來，讓便宜模型照著執行、回報，就補上了智能差距。</li>
+        <li><b>把強模型當「即將退休的資深工程師」，不是苦力</b>：讓它把自己懂的判斷、規劃、驗證習慣「打包」交給即將接手的一批 junior 模型。作者說他後來是把 Fable 當共同創辦人／公司幹部在用，不是當員工。</li>
+        <li><b>Leaked Fable system prompt 裡值得照抄的幾條</b>：(a) <b>「記憶裡有 ≠ 現在是對的」</b>——訓練資料裡認得某東西，不代表它現在正確，要驗證；(b) <b>「prompt 說某檔案存在 ≠ 真的存在」</b>——每一步都要確認東西真的在、真的做對了；(c) <b>「先回答再問」</b>——就算問題模糊，也先給答案，然後最多問一個澄清問題（別一遇模糊就先反問）；(d) 承認哪裡錯了、留在問題上、別自我否定。</li>
+      </ul>
+    </div>
+
+    <div class="warn">
+      <div class="lab">Effort levels：高不一定好（可直接調你的用法）</div>
+      <p><b>Fable 5 的 low ≈ Opus 4.8 的 high</b>（release blog 的分數 vs 成本曲線，兩者接近）。但<b>更高 effort 不等於更好</b>——作者說用 xhigh／max 常常變成「想太多、自我懷疑、繞更久、更貴，最後產出反而比 high 差」。<b>預設用 high，別無腦拉到 max。</b><br><br>
+      effort 分級的口訣（來自那份 prompt）：<b>1＝抓單一事實</b>、<b>3–5＝中型任務</b>、<b>5–10＝深度研究／比較</b>。</p>
+    </div>
+
+    <div class="sec"><div class="lab">「Fable Mode」skill：把它的工作紀律做成一個檔</div>
+      <p style="margin-bottom:8px">怎麼做：拿一個你<b>超愛、但說不清楚為什麼愛</b>的交付物 → 讓 Fable／Opus 分析「它為什麼好、你當時怎麼想到這裡、你怎麼證明它 work」→ 把這套抽成一個 skill。之後對難題掛上這個 skill，Opus 會「像被墊高了一截」。作者用的建檔 prompt：</p>
+      <div class="diagram" style="background:#f3f1ec">
+        <p style="margin:0; font-size:13.5px; font-family:'SF Mono',ui-monospace,Menlo,monospace; color:#333; text-align:left; line-height:1.6">Write a complete installable skill file that makes Opus 4.8 operate with your judgment, your planning, verification and reasoning habits, activated on "fable mode".</p>
+      </div>
+      <p style="margin-top:10px; font-size:14.5px">skill 跑五道門（gate）。注意 <b>scoping ≠ 只列步驟</b>——是當 devil's advocate 把「所有可能出錯的地方、所有未知」先想過一遍（這是 Fable 最強的地方）。</p>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  S["① Scoping<br/>不只列步驟<br/>當 devil's advocate<br/>想所有會出錯/未知"] --> E["② Evidence<br/>先證據<br/>再推理"]
+  E --> A["③ Attacking<br/>對抗式<br/>推理"]
+  A --> V["④ Verifying<br/>宣告完成前<br/>先驗證"]
+  V --> R["⑤ Reporting<br/>＋校準<br/>calibrate"]
+      </pre>
+      <div class="cap">Fable Mode 的五道門——你其實已經有這套的分身版：plan-pipeline（scoping/planning）、output-review「嚴審」(attacking/verifying)、project-checkup</div>
+    </div>
+
+    <div class="sec"><div class="lab">Model routing table：給 Claude 一張「模型工具箱」表</div>
+      <p style="margin-bottom:8px">給你的 Claude 一張表，列出工具箱裡每個模型與「何時用」，讓聰明模型在需要時路由到便宜的。欄位建議（可自訂加欄）：</p>
+      <table class="grid">
+        <tr><th>欄位</th><th>意思</th><th>說明</th></tr>
+        <tr><td><b>cost score</b></td><td>成本分數</td><td>數字越高＝越便宜（方便讓模型「挑高分」＝挑省的）</td></tr>
+        <tr><td><b>intelligence</b></td><td>智能</td><td>你覺得它多聰明、多懂你、review code 的能力</td></tr>
+        <tr><td><b>taste</b></td><td>品味</td><td>創意、跳脫框架、UI/UX 設計這類</td></tr>
+      </table>
+      <p style="margin-top:10px; font-size:14.5px"><b>實測</b>：Opus 當 orchestrator，分別委派給 Sonnet／Opus／<b>Haiku</b> scouts 三組。委派給 Haiku 那組<b>便宜約 3 倍、結果一模一樣</b>。也可以委派給 codex 或開源模型。作者說當團隊開始算 unit economics、你自己有每月 AI 預算時，這會是「同樣的錢做多好幾倍」的分水嶺。</p>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart TD
+  F["強模型 orchestrator<br/>（Fable / Opus）<br/>只做：規劃 + 想清楚所有風險"] -->|派工| W1["便宜 worker<br/>Sonnet"]
+  F -->|派工| W2["便宜 worker<br/>Haiku scout"]
+  F -->|派工| W3["便宜 worker<br/>Sonnet"]
+  W1 -->|回報| F
+  W2 -->|回報| F
+  W3 -->|回報| F
+  F --> OUT["結果 ≈ 全用強模型<br/>成本低 3～數倍"]
+      </pre>
+      <div class="cap">留流程不留智能：把「規劃＋風險盤點」留給強模型，執行外包給便宜模型回報——正是你的 subagent 平行工作法在做的事</div>
+    </div>
+
+    <div class="rel">
+      <div class="lab">建議寫入位置（待你確認）</div>
+      <span class="badge b-comp">延伸既有：AI/GLM 5.2 與替代模型路由.md（同作者 Nate Herk、同命題）</span>
+      <span class="badge b-new">effort 段 → 併入 Claude Token 效率策略 / Claude Code 進階技巧</span>
+      <p>那篇 <code>GLM 5.2 與替代模型路由</code> 已經講「怎麼換引擎（改 settings 路由到便宜模型）」，也已經引用「作者拿 Fable 被下架當避險警訊」。這篇是<b>同一世界觀的加深</b>：補上 (1)「流程＞智能」的核心論證、(2) routing <b>table</b>（cost／intelligence／taste 評分）、(3) effort 別預設 max、(4) 把最滿意的產出抽成 <code>fable-mode</code> skill。建議<b>擴充那份既有檔</b>而非開新檔，effort 那段跨連到你的 token 效率筆記。</p>
+    </div>
+  </article>
+
+  <!-- ============ 2 · O'Leary ============ -->
+  <article class="clip" id="c2">
+    <h3><span class="num">2</span><span class="t">「每次領薪先做這件事」——O'Leary 的 Georgette 理財紀律</span></h3>
+    <p class="src">The Diary Of A CEO × Kevin O'Leary（Shark Tank「Mr. Wonderful」）· Type A · 你的取用意圖：實用財務原則 + 心態精華都要</p>
+    <div class="oneline"><b>一句話：</b>O'Leary 整套投資法來自母親 Georgette：<b>每次拿到錢，先抽固定比例（她 20%）投進去、剩下才花</b>；只買<b>配息大型股＋債券</b>；單一股不超過投組 <b>5%</b>、單一產業不超過 <b>20%</b>；<b>只花股息與利息、永遠不動本金</b>。她這樣持有 55 年，績效贏過任何避險基金經理。他的評語：「這不是天才，這只是分散。」</div>
+
+    <div class="sec"><div class="lab">重點知識 · Georgette 法（可直接照做的核心）</div>
+      <ul class="pts">
+        <li><b>先付自己（pay yourself first）</b>：每次收入先抽一個固定百分比（她 20%、他建議年輕人 15%）投資，剩下的才是生活費——不是「花剩才存」，是「存完才花」。</li>
+        <li><b>兩個桶子</b>：<b>配息的大型股（large-cap dividend stocks）＋債券</b>。她當年用的是 7 年期電信債，殖利率 6.5–8%。（配息＝公司把獲利分一部分現金給股東；她收現金但不花本金。）</li>
+        <li><b>兩條上限，鐵律不破</b>：任何一支股／債<b>不超過投組的 5%</b>、任何一個產業<b>不超過 20%</b>。某支漲過 5% 就賣掉一部分壓回去。就這麼簡單。</li>
+        <li><b>只花股息與利息、本金 55 年不動</b>：靠這個portfolio供兩個兒子念大學、在家人落難時接濟。O'Leary 看到遺產帳戶時才發現績效「勝過任何避險基金」。</li>
+        <li><b>他自己照抄</b>：唯一破例是房地產約占淨值 1/3（超過 20% 上限）——但他很清楚自己在破例、也講得出理由。<b>紀律的重點不是永不破例，是破例時你知道自己在幹嘛。</b></li>
+        <li><b>你打不贏 S&amp;P，就買 ETF</b>：「說自己能選股打敗大盤的人，長期都在唬爛。」買追蹤 S&amp;P 500 的 ETF、付低費用；年輕時少一點債、年長時多一點債。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart TD
+  P["每次領薪 / 收入"] --> C["先抽固定 15–20%<br/>（先付自己）"]
+  C --> S["配息大型股 ETF"]
+  C --> B["債券 / 公債"]
+  S --> R["規則：<br/>單一股 &le; 5%<br/>單一產業 &le; 20%<br/>漲過就賣回"]
+  B --> R
+  R --> L["只花股息 + 利息<br/>本金永遠不動"]
+  L --> W["55 年 → 勝過避險基金<br/>『這不是天才，是分散』"]
+      </pre>
+      <div class="cap">Georgette 法：先付自己 → 兩桶分散 → 5%/20% 上限 → 只花孳息不動本金</div>
+    </div>
+
+    <div class="warn">
+      <div class="lab">消費與買房紀律</div>
+      <ul class="pts">
+        <li><b>房貸＋維護 ≤ 收入 1/3</b>：超過就是「買太多房」。前幾年利率 3% 時買超大房的人，現在得用 7% 重貸、變成收入的 60–80%，被卡死。</li>
+        <li><b>25 歲起、把薪水的 15% 投 S&amp;P 500</b>，到 65 歲會有超過 <b>150 萬美元</b>（單靠歷史報酬、不做任何英雄式操作）。</li>
+        <li><b>任何 30／60 天週期都別超支、零負債</b>：他自己每月做「你有沒有花超過孳息」的 gut check（連身家幾十億的人他也逼她這樣算）。</li>
+        <li><b>小額慢性漏財</b>：年薪 7 萬卻花 $28 吃午餐、衣櫃 80% 沒穿——不是小事，是幾十年下來被複利吃掉的機會成本。</li>
+      </ul>
+    </div>
+
+    <div class="sec"><div class="lab">婚姻是你「最大的財務決定」</div>
+      <ul class="pts">
+        <li><b>多數婚姻撐得過外遇，撐不過財務壓力</b>：他訪談北美頂尖離婚律師，一致說「離婚跟外遇無關，是財務壓力」——約 90% 婚姻破裂是這個。</li>
+        <li><b>錢是婚姻的「第一個孩子」</b>，每天坐在你們桌邊。談戀愛時被 l'amore 沖昏頭、沒對對方的消費習慣／財務史做 due diligence，婚後就爆。</li>
+        <li><b>第三次約會就談錢</b>：不是逼婚，是問對方的長期目標與野心。prenup（婚前協議）的價值＝逼雙方在還理性的甜蜜期先攤開財務背景。</li>
+        <li><b>五種金錢人格</b>：mooch（不肯出錢）、spendaholic（搶著付錢裝闊）、loafer（無野心）、thief（會偷）、<b>meanie（量入為出）</b>——<b>娶／嫁 meanie</b>，那才是能走一輩子的婚姻。</li>
+      </ul>
+    </div>
+
+    <div class="sec"><div class="lab">心態切片（你說「兩者都要」，這幾條是可內化的）</div>
+      <ul class="pts">
+        <li><b>Signal ／ Noise（跟 Jobs 學的）</b>：signal＝你醒著的<b>未來 18 小時內非完成不可的 3–5 件事</b>，其他一切干擾都是 noise。Jobs 維持 80/20（80% 時間在 signal）、Elon 近乎 100% signal、Bezos 下午一點後不做決定（noise 太高）。掉到 50/50 就會失敗。他到今天還用鏡子上的便利貼記那三件事。<b>偉大領導者的本事，就是即時判斷「這是 signal 還是 noise」。</b></li>
+        <li><b>聽 2/3、說 1/3</b>：一位女性 CEO 點醒他「你講太多」。談判時他就坐著不說話，對方受不了沉默、90 秒後脫口說出底價。「沉默裡有東西在發生。」</li>
+        <li><b>用人先試再收</b>：讓對方先當 4–6 個月 contractor（高薪、但沒股票沒福利），看他能不能在真實團隊裡做「有後果的決定」而不打電話問你。做得到才給正式包裹（很像瑞士學徒制）。別靠履歷、別靠感覺；<b>裙帶關係是一種病</b>。</li>
+        <li><b>沒有任何單一結果能定義你</b>（no one outcome defines you）：同一天他可能上午賠 1000 萬、半小時後某公司 IPO 賺 450 倍。關鍵是情緒上撐得住起伏、且<b>永遠別讓一個壞結果定義你是誰</b>。</li>
+        <li><b>真誠＝你的品牌</b>：他只代言自己會用、且自己有投資的東西；曾為此回絕約 700–800 萬的續約（產品跟他的人生方向已經不合）。「你的追隨者才是你真正的品牌，一旦他們覺得你不真誠，你就完了。」</li>
+        <li><b>快樂是「持續達成你設的目標」</b>，不是終點。他也主張別為了錢做直覺說「不」的案子——「不管給多少錢，gut 說不就是不」。</li>
+      </ul>
+    </div>
+
+    <div class="rel">
+      <div class="lab">建議寫入位置（待你確認）</div>
+      <span class="badge b-new">新檔：投資/理財紀律（Kevin O'Leary·Georgette 法）.md</span>
+      <span class="badge b-comp">與 Ben Felix 大量收斂（index／紀律／配偶財務相容）</span>
+      <span class="badge b-conf">小衝突：債券配置</span>
+      <p>他的財務半段跟你已整理的 <code>Ben Felix</code> <b>大量收斂</b>：都主張買 index/ETF、你選股打不贏、消費紀律、以及「配偶財務相容是重大財務決定」（Felix 的 tightwad×spendthrift ＝ O'Leary 的 meanie/spendaholic，連 prenup 的論點都一樣）。<b>一個有意思的小衝突</b>：O'Leary 保留債券、還說「年輕少債、年長多債」（就是傳統 glide path）；而 Ben Felix 那篇「最具爭議論文」正是說「一路 100% 股票、債券在高通膨被血洗」——這正好是兩篇對撞的點，值得在檔裡標一句。心態切片（signal/noise、用人先試）可留在同檔的「心法」段，或跨連到你既有的工作流筆記。</p>
+    </div>
+  </article>
+
+  <!-- ============ 3 · Pabrai ============ -->
+  <article class="clip" id="c3">
+    <h3><span class="num">3</span><span class="t">Dhandho——「正面我贏，反面我輸不多」的價值投資</span></h3>
+    <p class="src">The Diary Of A CEO × Mohnish Pabrai（Pabrai Funds、《The Dhandho Investor》作者、公認最會複製 Buffett 的價值投資人）· Type A · 概念型、正中你的投資領域</p>
+    <div class="oneline"><b>一句話：</b>Dhandho 是古吉拉特語的「做生意」，但精髓是「<b>下檔幾乎不存在</b>」的做法——<b>Heads I win, tails I don't lose much（正面我贏，反面我輸不多）</b>。Gates、Walton、Branson 都靠這招建立巨富卻幾乎沒冒險。同一套心法從創業一路延伸到投資：<b>把下檔壓到近零，把上檔留著。</b></div>
+
+    <div class="sec"><div class="lab">重點知識 A · 創業與商業心法</div>
+      <ul class="pts">
+        <li><b>Cloning（複製，不是發明）</b>：別執著原創，複製既有的再微調。Gates（Word←WordPerfect、Excel←Lotus、Bing←Google）、Walton（Walmart 抄 Sears／Kmart）、Schultz（Starbucks 抄義大利咖啡館）。「<b>好的 cloner 領先其他 90–95% 的人類。</b>」人類心理上瞧不起複製，是個非理性偏見。</li>
+        <li><b>創業者其實不冒險</b>：他們拚命把風險壓到近零。真正高風險的是 9-5——「人只有一生，你可能永遠沒把你的 music 拿出來」。</li>
+        <li><b>9 個月辭職法（LEGO 時間法）</b>：① 別辭正職（別人在幫你付房租）；② 把績效降到「剛好不會被開除」，把力氣留給副業；③ 砍掉的是<b>自由時間＋通勤</b>（搬到公司附近），<b>不砍睡眠</b>；④ 副業要比滑手機／Netflix 更興奮（yellow &gt; orange 的litmus test）；⑤ 現金流轉正（他花 9 個月）才辭職。他的營收曲線：第 1 年 40 萬、第 2 年 140 萬、第 3 年 300 萬、6–7 年 1500–1700 萬美元。</li>
+        <li><b>你的點子一定是錯的（象牙塔）</b>：好點子不在你兩耳之間，要 rapid prototyping、拿去給真人看。客戶會告訴你哪個才是 100% 對的（他的「只講第 10 張投影片」故事）。<b>我們說話時不學東西，聽的時候才學</b>——少講、多套話、分離 signal 與 noise。</li>
+        <li><b>多揮棒（law of averages）</b>：他每週寄 200 封信＋打 200 通電話，建 sales funnel、永不放走一個名單。女兒用同一招寄 1200 封信找到對沖基金工作。「你沒揮的每一棒，都必定落空。」重點只是「命中率不是零」。</li>
+        <li><b>Givers / Takers / Matchers（Adam Grant）</b>：當 giver、別在腦中算計對方會不會回報、讓對方拿到比較好的一端，goodwill 會複利；生命裡的 takers 一律清掉。</li>
+        <li><b>招募是第一要務</b>：Elon 親自面試 SpaceX 前 3000 人。Jobs：<b>A players 只想跟 A players 共事；一旦進了 B player，B 只會找 B 和 C</b>，下坡從第一個 B 開始。三個不可談判的特質：intelligence、integrity、肯拚。<b>Hire slow, fire fast——而 fire fast 比 hire slow 更重要</b>（拖著不開除，是害了對方也害了團隊）。</li>
+        <li><b>Offering gaps（供給缺口）＋ Moat（護城河）</b>：找「該存在卻還沒有」的東西（town C 沒理髮師的故事）。99.99% 的新創是洗衣店／餐廳這類非創投案，別被媒體的 VC 故事洗腦。護城河可以是習慣（不換理髮師）、或會員綁定（Amazon Prime 抄自 Costco）。IKEA 創辦人<b>從不舉債</b>（企業倒閉最大原因＝槓桿）、每家店必有一項別家沒有的創新、用 500 年的眼光做決策。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart LR
+  D["Dhandho 核心<br/>Heads I win,<br/>tails I don't lose much"] --> Z["先把下檔壓到近零"]
+  Z --> C1["Cloning<br/>複製已驗證的模式"]
+  Z --> C2["零資本起步<br/>Branson 租 747、<br/>先賣票後付租"]
+  Z --> C3["Offering gap<br/>找該存在卻沒有的"]
+  C1 --> UP["上檔全留著"]
+  C2 --> UP
+  C3 --> UP
+      </pre>
+      <div class="cap">Dhandho：不是「敢賭」，是「把反面的損失砍到近零，正面照樣拿滿」——Branson 用零資本零風險起飛 Virgin Atlantic 是經典案例</div>
+    </div>
+
+    <div class="sec"><div class="lab">重點知識 B · 投資（正中你的 Investment OS）</div>
+      <ul class="pts">
+        <li><b>投資只有三個變數</b>：起始資本、跑道長度（投多久）、報酬率。<b>跑道夠長時，起始資本、甚至報酬率都變得不那麼重要。</b></li>
+        <li><b>Rule of 72</b>：72 ÷ 報酬% ≈ 資產翻倍所需年數。7%→10 年、10%→7 年、15%→5 年、20%→3.5 年。曼哈頓 $23 的故事：以 7% 複利滾 400 年，會比整座島還值錢——「印地安人沒被騙，只是沒有好的信託經理」。</li>
+        <li><b>複利是 hockey stick（非線性）</b>：越早開始越誇張。18 歲投 $5,000、以 10% 滾到 68 歲＝約 100 倍＝ 50 萬美元。所以「<b>花得比賺的少、存第一塊而不是最後一塊</b>」（賺 $50k 先存 $5k、剩下才花）。</li>
+        <li><b>只要買 index</b>：S&amp;P 500，或直接買 <b>Berkshire（BRK.B）</b>——「它就像一個 index，set and forget（買了就忘）」。定期定額（DCA）進場，別去追下一個 Nvidia。</li>
+        <li><b>4% 的上市公司貢獻 90% 的報酬</b>：你隨便挑一支，有 96% 機率挑到不會賺的；買 index＝直接把那 4% 的贏家一起買下。選股＝1/25 的中獎率。</li>
+        <li><b>少數、大額、不頻繁的下注</b>：Buffett 的「一生 20 洞打卡」比喻——如果規定你一輩子只能買 20 支股，你會非常慎重，決策品質自然變高。</li>
+        <li><b>Circle the wagons（把馬車圍成圈護住珍寶）</b>：Buffett 50 年做過幾百個決定，只有 <b>12 個</b>真正推動了 Berkshire。而關鍵不是「買」那個決定，是<b>「從來沒賣」</b>。你只有在<b>擁有之後</b>才真正看懂一家公司；一旦看懂它是好公司，就把它圍起來、別賣。</li>
+        <li><b>最糟的錯是「該做沒做」＞「做錯」（omission ＞ commission）</b>：他 2012 買 Fiat Chrysler（裡面藏著 80% 的 Ferrari），2018 Ferrari 分拆上市時他覺得價值兌現了就<b>賣掉</b>——Ferrari 後來市值近 1000 億，他因此少賺約 <b>10 億美元</b>。「我只要不賣就好。」這就是沒做到 circle the wagons 的代價。</li>
+        <li><b>Circle of competence（能力圈）</b>：crypto？「超出我的能力圈，我不懂，就不碰。」Day trading？賺錢的是券商（Robinhood），不是你——Forbes 400 裡沒有 day trader。</li>
+      </ul>
+    </div>
+
+    <div class="diagram">
+      <pre class="mermaid">
+flowchart TD
+  A["一生的投資"] --> B["絕大多數決定<br/>不痛不癢"]
+  A --> C["極少數 multibagger<br/>10x / 50x / 100x"]
+  C --> D{"擁有後才看懂<br/>是好公司？"}
+  D -->|是| E["Circle the wagons<br/>圍起來、絕不賣"]
+  D -->|否| F["正常處理"]
+  E --> G["Buffett 50 年<br/>只有 12 筆推動 Berkshire<br/>重點是『從不賣』"]
+  E -.->|反例| H["Pabrai 賣掉 Ferrari<br/>→ 少賺 ~10 億<br/>omission 之痛"]
+      </pre>
+      <div class="cap">Circle the wagons＝你 Investment OS 的「釘選」機制：找到會複利的贏家後，最大的錯是手癢賣掉</div>
+    </div>
+
+    <div class="rel">
+      <div class="lab">建議寫入位置（待你確認）</div>
+      <span class="badge b-new">新檔：投資/價值投資與 Dhandho（Mohnish Pabrai）.md</span>
+      <span class="badge b-comp">補上投資三角的第三角</span>
+      <span class="badge b-comp">商業心法跨連 商業創業/</span>
+      <p>你的 <code>投資/</code> 目前有兩極：<code>Ben Felix</code>（被動指數、別選股）vs <code>Grantham</code>（主動、宏觀擇時避險）。<b>Pabrai 正好補上第三角：主動、bottom-up 的價值投資</b>——他選股，但方法是 Dhandho／cloning／circle of competence，且<b>對散戶的建議跟 Ben Felix 一致（買 index/BRK.B、存更多、拉長跑道）</b>。這條「主動價值 vs 純被動」的張力，直接是你 <code>財報 Call 分析框架</code>、<code>AI 交易系統建構</code>、BOS/DGM 選股的方法論素材（cloning、moat、能力圈、4%→90%）。商業那半段（cloning、零風險起步、hire A-players、offering gap）跨連 <code>商業創業/</code>，也對得上威琳面對低價對手的處境。<b>檔要放 投資/ 還是拆一部分進 商業創業/，等你定。</b></p>
+    </div>
+  </article>
+
+  <!-- ============ 你能用 ============ -->
+  <article class="clip" id="use">
+    <h3><span class="num">★</span><span class="t">你能學能用的（對應你的領域）</span></h3>
+    <div class="sec"><div class="lab">直接對得上你</div>
+      <table class="map">
+        <tr><th>來自哪篇</th><th>對應到你</th></tr>
+        <tr><td><b>#1 流程＞智能 · routing table · effort</b></td><td>正中你的 <b>AI OS</b>：你已經有 <code>GLM 5.2 路由</code>檔、<code>plan-pipeline</code>／<code>output-review「嚴審」</code>／<code>project-checkup</code>（＝你自己版本的「五道門」）、subagent 平行工作法、「最後統整固定用 Opus 4.8」。這篇補三個立即可做的動作：① 把工具箱做成一張 <b>cost/intelligence/taste 表</b>餵給 Claude；② effort <b>別預設 max、用 high</b>（省錢又常常更好）；③ 把你<b>最滿意的一次產出</b>抽成 <code>fable-mode</code> skill。</td></tr>
+        <tr><td><b>#2 5%／20% 上限 · 先付自己 · 房≤1/3</b></td><td>對得上你的<b>股票配置</b>（美股 66／台股 33、US:TW=2:1、BRK.B 當錨點）：O'Leary 的「單一股 ≤5%、單一產業 ≤20%」是一組可直接套用的<b>風控上限</b>（拿去檢查你現在的持股集中度）；「先付自己」你其實已在做（台券定期定額、複委託 VOO）。</td></tr>
+        <tr><td><b>#3 circle the wagons · BRK.B set-and-forget</b></td><td>Pabrai 明講 <b>BRK.B 就是 set-and-forget 的 index 替代</b>——這正是你「BRK.B 放 Schwab 不動」的決定，等於他說的 circle the wagons。而 circle the wagons ＝你 Investment OS 的<b>「釘選」機制</b>：找到會複利的贏家後，最大的錯是手癢賣掉（對照他賣 Ferrari 少賺 10 億的痛）。</td></tr>
+        <tr><td><b>#3 cloning · moat · 能力圈 · 4%→90%</b></td><td><b>Investment OS / BOS·DGM 選股方法論</b>的直接素材：找有 moat 的公司、待在能力圈內、承認「多數股不會賺、贏家極少」——這也跟 Ben Felix 的效率市場觀形成你要親自站隊的張力。</td></tr>
+        <tr><td><b>#2 signal/noise · 用人先試 · #3 hire A-players / fire fast / offering gap / Dhandho</b></td><td><b>威琳事業</b>：你同時跑多個系統（Investment OS／威琳報價·庫存／三鐵 app／telegram bridge），signal/noise 的「未來 18 小時 3–5 件事」是現成的優先級工具；用人先試、hire A-players、fire fast 對威琳找人直接可用；Dhandho「下檔近零」＋ offering gap 對得上你面對低價對手、靠真實需求而非聲量的處境。</td></tr>
+        <tr><td><b>#2 快樂＝持續達成目標 · #3 yellow&gt;orange 的興奮度 litmus</b></td><td><b>三鐵／生活</b>：你的 Challenge Taiwan 226 目標本身就很「達成型快樂」；Pabrai 的「這件事要比滑手機更讓你興奮」也是一個誠實的自我檢查。</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- ============ 關係總表 ============ -->
+  <article class="clip" id="rel">
+    <h3><span class="num">＝</span><span class="t">跟現有筆記的關係 · 一次看懂</span></h3>
+    <div class="oneline"><b>最大發現：</b>#2 #3 這兩篇跟同一個 podcast 主持人訪談的 <b>Ben Felix</b> ／ <b>Grantham</b> 湊成一組完整的投資光譜。你的 <code>投資/</code> 資料夾正在長出一張「被動 vs 主動」的張力網，這比任何單篇都值錢。</div>
+
+    <div class="sec"><div class="lab">投資四角：把散戶都導向 index，但方法論分兩派</div>
+      <table class="grid">
+        <tr><th>人物</th><th>路線</th><th>核心主張</th><th>對散戶的建議</th></tr>
+        <tr><td><b>Ben Felix</b><br>（已整理）</td><td>被動 · 效率市場</td><td>投資已被 index 解決，難的是心理；別選股、別擇時</td><td>低成本全球 index、100% 股票</td></tr>
+        <tr><td><b>Grantham</b><br>（已整理）</td><td>主動 · 宏觀擇時</td><td>「效率市場是胡說」；現在是史上最大泡沫、賣美股等崩</td><td>避美股、買非美＋貴金屬</td></tr>
+        <tr><td><b>Pabrai</b><br>（本期 #3）</td><td>主動 · bottom-up 價值</td><td>Dhandho／cloning／能力圈／circle the wagons；選股但壓低下檔</td><td><b>買 index／BRK.B、存更多、拉長跑道</b>（與 Felix 一致）</td></tr>
+        <tr><td><b>O'Leary</b><br>（本期 #2）</td><td>紀律 · 分散配息</td><td>先付自己、5%/20% 上限、只花孳息、配息股＋債券</td><td>買 ETF、你選股打不贏、消費紀律</td></tr>
+      </table>
+      <p style="margin-top:10px; font-size:14px; color:#3a3a3a">關鍵洞察：<b>連 Pabrai 這種主動價值投資人，對「一般人」的建議也是買 index。</b>散戶端四人幾乎一致（買 index、別亂交易、消費紀律）；分歧在「專業／進階端」——Felix 說連專業也打不贏、Pabrai 用 Dhandho 證明有邊、Grantham 靠宏觀擇時。這正是你 Investment OS 要親自站隊的地方。</p>
+    </div>
+
+    <div class="rel">
+      <div class="lab">三份寫入提案（全部待你確認後才動）</div>
+      <span class="badge b-comp">#1 → 擴充 AI/GLM 5.2 與替代模型路由.md</span>
+      <span class="badge b-new">#2 → 新檔 投資/理財紀律（O'Leary·Georgette）.md</span>
+      <span class="badge b-new">#3 → 新檔 投資/價值投資與 Dhandho（Pabrai）.md</span>
+      <p>寫入時一律<b>只放客觀重點</b>（不寫「我的觀點」那類反思產出），圖解用 Mermaid <b>一併嵌進正本 .md</b>（正本離線永久、不靠報告站的 CDN）。#2 #3 都補「跟其他筆記的關係」段、與 <code>Ben Felix</code>／<code>Grantham</code> 雙向 backlink；#2 標一句「債券配置與 Ben Felix 對撞」、#3 標「circle the wagons ＝我的釘選」。</p>
+    </div>
+  </article>
+
+  <section class="closing" id="closing">
+    <h2>收尾 · 對你最有用的三條 + 反思 + 下一步</h2>
+    <ul>
+      <li><b>#1 一條</b>：把你最滿意的一次 Claude 產出抽成 <b>fable-mode skill</b>、再給 Claude 一張 <b>cost/intelligence/taste 路由表</b>；effort 預設 high 別無腦 max。這是「同樣的錢做多好幾倍」的槓桿。</li>
+      <li><b>#2 一條</b>：把 <b>5%／20% 上限</b>拿去體檢你現在的持股集中度（尤其 BRK.B 錨點與台股那一籃），順手做一次「先付自己」的比例確認。</li>
+      <li><b>#3 一條</b>：<b>circle the wagons ＝你的釘選機制</b>——找到會複利的贏家後別手癢賣掉（Pabrai 賣 Ferrari 少賺 10 億是活教材）；cloning／moat／能力圈是 BOS/DGM 的方法論素材。</li>
+      <li><b>反思候選（開放式、不給選項、你想停隨時停）</b>：<b>#3 Pabrai 最值得跑</b>——它是概念型、正中你的投資領域，尤其「主動價值 vs 純被動（Ben Felix）你站哪」「circle the wagons vs 你 Investment OS 的賣出邏輯」。<b>#2 的概念切片</b>（signal/noise 的 3–5 件事優先級、marry a meanie 的財務相容）你要的話也能跑。#1 是純技法、預設跳過反思。</li>
+      <li><b>下一步（等你）</b>：① 你讀完這份報告後說「跑 #3 反思」或「直接寫」；② 反思完／或直接，我把三份正本寫進 <code>主題知識/</code>（#1 擴充、#2 #3 新檔）、原檔移 <code>Clippings/已整理/</code> 補 frontmatter。全部你點頭才動。</li>
+    </ul>
+  </section>
+
+  <footer>
+    Claude Opus 4.8 · 三篇直讀逐字稿、皆跳過 NotebookLM · 2026-07-08 · 反思／寫入待拍板<br>
+    <a class="toplink" href="#top">回到頂端</a>
+  </footer>
+
+</div>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad:true, theme:'neutral', securityLevel:'loose', flowchart:{curve:'basis', useMaxWidth:true} });
+</script>
+</body>
+</html>
