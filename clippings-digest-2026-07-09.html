@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clippings 消化報告 · 2026-07-09 · 低頻寬度（mono vs 立體聲低音）</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1a1d21; --sub:#5f6773; --line:#e6e8ec;
+    --accent:#2563eb; --accent2:#0a7d4d; --chipbg:#eef1f5;
+    --k1:#2563eb; --k2:#7c3aed; --k3:#0a7d4d;
+    --codebg:#f0f2f5;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0e1013; --card:#171a1f; --ink:#e8eaed; --sub:#9aa1ab; --line:#262a30;
+      --accent:#6ea8ff; --accent2:#4ecb8a; --chipbg:#22262c;
+      --k1:#6ea8ff; --k2:#b388ff; --k3:#4ecb8a; --codebg:#20242a;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.68;
+    font-family:-apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:32px 16px 64px}
+  .wrap{max-width:860px;margin:0 auto}
+  header.top{margin-bottom:26px}
+  h1{font-size:23px;margin:0 0 6px;letter-spacing:.2px}
+  .date{color:var(--sub);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .chip{background:var(--chipbg);font-size:12px;padding:4px 10px;border-radius:99px;color:var(--sub)}
+  article{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px 26px;margin-bottom:22px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .clip-h{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase}
+  h2{font-size:19px;margin:4px 0 4px}
+  .src{font-size:12.5px;margin:0 0 16px}
+  .src a{color:var(--sub);text-decoration:none;border-bottom:1px dotted var(--sub)}
+  .block{margin:18px 0}
+  .block > .lbl{display:inline-block;font-size:12.5px;font-weight:700;padding:3px 10px;
+    border-radius:7px;margin-bottom:8px;color:#fff}
+  .lbl.b1{background:var(--k1)} .lbl.b2{background:var(--k3)} .lbl.b3{background:var(--k2)}
+  h3{font-size:15px;margin:16px 0 4px}
+  p{margin:6px 0}
+  ul{margin:6px 0;padding-left:20px}
+  li{margin:5px 0}
+  .term{border-bottom:1px dotted var(--sub);cursor:help}
+  code{background:var(--codebg);padding:1px 5px;border-radius:4px;font-size:.9em;
+    font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .num{color:var(--accent);font-weight:600}
+  .diagram{background:var(--card);border:1px dashed var(--line);border-radius:12px;
+    padding:14px;margin:10px 0;overflow-x:auto}
+  .cap{font-size:12px;color:var(--sub);margin-top:6px;text-align:center}
+  .link-note{font-size:12.5px;color:var(--sub);background:var(--chipbg);
+    border-radius:8px;padding:9px 12px;margin-top:12px}
+  .link-note b{color:var(--ink)}
+  .mermaid{display:flex;justify-content:center}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--chipbg);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Clippings 消化報告</h1>
+    <div class="date">2026-07-09 · 主題：低頻的立體聲寬度（mono vs 立體聲低音） · 2 篇（皆 Type A，直讀萃取，未跑 NotebookLM）</div>
+    <div class="chips">
+      <span class="chip">mono vs stereo bass</span>
+      <span class="chip">basiousness</span>
+      <span class="chip">side-channel</span>
+      <span class="chip">歸入 主題知識/混音/</span>
+    </div>
+  </header>
+
+  <article style="border-color:var(--accent)">
+    <div class="clip-h">這批怎麼看</div>
+    <p style="margin-top:8px">兩篇講同一件事的兩面。<b>iZotope</b> 那篇是<b>觀念與研究</b>：老規矩「低頻一律 mono」是哪來的、為什麼現代頂尖工程師已經不這樣做、以及該怎麼改。<b>BassLane Pro</b> 那篇是<b>一顆專門實作這個現代做法的 plugin</b>——把低頻做寬做立體、但不破壞 mono 相容。先讀第一篇建立心智模型，第二篇就是「拿什麼工具落地」。</p>
+    <div class="link-note">先講兩個一直出現的詞：<b>side channel（側聲道）</b>＝把左右聲道拆成「中間共通的（mid）」和「左右差異的（side）」時，<b>side 就是立體聲寬度的來源</b>；side 越多、聲音越寬。<b>mono 低頻</b>＝把低頻的 side 拿掉、只剩正中央，低頻就完全不寬。整篇的攻防都在「低頻的 side 要留多少」。</p>
+  </article>
+
+  <!-- ============ CLIP 1 ============ -->
+  <article>
+    <div class="clip-h">Clip 1 · 觀念＋研究</div>
+    <h2>低頻到底該 mono 還是保留立體聲？</h2>
+    <p class="src">iZotope · <a href="https://www.youtube.com/watch?v=L5_59o7Kl7Q" target="_blank" rel="noopener">YouTube 原片（約 16 分）</a></p>
+
+    <div class="block">
+      <span class="lbl b1">重點知識</span>
+
+      <h3>「低頻要 mono」這規矩哪來的</h3>
+      <p>源頭是<b>黑膠母帶</b>：黑膠靠唱針在溝槽裡左右擺動來記錄立體聲，低頻的 side 能量太大會讓唱針<b>跳針、刻不進去</b>，所以要把低頻壓成 mono。第二個推力是<b>PA 音響（現場大喇叭）的超低音喇叭（sub）通常接成 mono</b>，於是「低頻 mono 聽起來更緊、更有力、更一致」變成通則。做法是在 side 聲道掛一個 <span class="term" title="high-pass filter：高通濾波，把某頻率以下切掉、只讓高頻通過">high-pass filter</span>（有時叫 <span class="term" title="elliptical filter：橢圓濾波器，黑膠刻片機常見的側聲道低頻切除">elliptical filter</span>），把低頻的 side 內容整個切掉——影片把這種一刀切叫做 <b>hard mono（硬 mono）</b>。</p>
+
+      <h3>硬 mono 的 5 個代價</h3>
+      <table>
+        <tr><th>代價</th><th>發生什麼事</th></tr>
+        <tr><td><b>1. 峰值反而變高</b></td><td>很反直覺：把 side 內容濾掉，波形峰值（peak）反而升高。影片 demo 一首餘裕只留 <span class="num">0.2 dB</span> 的母帶，一掛 side 高通就爆出 <span class="num">1.2 / 1 dB</span> 的 over（超過 0 dBFS 破表）。</td></tr>
+        <tr><td><b>2. 相位抹糊</b></td><td>用<span class="term" title="非線性相位濾波器：不同頻率被延遲的時間不一致，會扭曲波形疊加關係">非線性相位</span>的 side 濾波器，會在「相位一致最重要」的低頻區把 mid 和 side 的相位關係<span class="term" title="phase smearing：相位抹糊，聲音變糊、定位變差">抹糊</span>。</td></tr>
+        <tr><td><b>3. 音量流失</b></td><td>side 也帶著能量，砍掉 side＝整體低頻音量會掉一截。</td></tr>
+        <tr><td><b>4. 音色改變</b></td><td>只存在於 side 的內容叫<span class="term" title="antiphase content：反相內容，左右相反、只在 side 存在的細節">反相內容</span>；砍掉它不只是砍音量，是<b>砍掉細節</b>——音色會變。</td></tr>
+        <tr><td><b>5. 失去包覆感</b></td><td>低頻其實有一種可感知的空間感／包覆感，Harman 聲學家 Todd Welti 給它取名 <b><span class="term" title="basiousness：低頻的包覆、沉浸、空間、維度感——不是方向，而是「被低頻環抱」的感覺">basiousness</span></b>。硬 mono 會把它整個抽掉，聽起來變得乾扁無趣。</td></tr>
+      </table>
+
+      <h3>研究怎麼說：低頻其實有寬度、而且聽眾偏好它</h3>
+      <ul>
+        <li>過去以為「低頻沒有方向感、沒有寬度」，這已被證明<b>是錯的</b>。人耳其實能定位、也能感知低頻的寬度。</li>
+        <li>David Griesinger 的論文描述了低頻空間感的生理機制；重點是——<b>立體聲低頻不只是「能聽出方向」，更是一種「空間、維度、沉浸」的感覺</b>（就是 basiousness）。</li>
+        <li>一篇 AES（音訊工程學會）論文做了聽感偏好測試：<b>聽眾明顯偏好有寬度、有空間感的低頻</b>，勝過完全沒處理、也勝過其他不含低頻空間效果的版本。</li>
+      </ul>
+
+      <h3>真實世界驗證：頂尖歌根本沒在硬 mono</h3>
+      <p>影片用 iZotope <b>RX 音訊編輯器</b>的 <span class="term" title="Mid/Side 頻譜：把歌拆成 mid(中間) 與 side(兩側) 兩軌，看各頻率的能量分布">Mid/Side 頻譜</span>去分析幾首大歌（做法附在下面），結論是這些歌的<b>低頻 side 內容都很豐富、一路延伸到 30 Hz</b>，完全不是硬 mono：</p>
+      <ul>
+        <li><b>Skrillex &amp; Fred again.. 〈Rumble〉</b>（2024 葛萊美最佳電子舞曲、Luca Pretolesi 母帶）</li>
+        <li><b>Chase &amp; Status 〈Baddadan〉</b>（近年最具代表性的 drum &amp; bass 神曲之一）</li>
+        <li><b>Mefjus / Camo &amp; Krooked 〈You〉</b></li>
+      </ul>
+      <p>連 David Guetta 的工程師 Tim Rescinski 都說：「目標不是把立體聲場<b>壓平</b>，而是<b>控制</b>它。寬度該來自好的編曲與音色設計，不是只靠後製；除非有技術問題，我會避免在母帶上做硬立體聲切除。」</p>
+
+      <h3>現代做法：right-sizing（把寬度調到剛好），不是砍掉</h3>
+      <ul>
+        <li><b>做法 A（簡單）</b>：別用 high-pass 一刀切，改成 <span class="term" title="low shelf：低頻擱架 EQ，把某頻率以下整段緩緩壓低">low shelf</span>——把 side 的低頻整段<b>緩緩壓低</b>，控制它的量而不是消滅它。</li>
+        <li><b>做法 B（進階，用 Ozone Imager）</b>：分 3 個頻段（<span class="num">80 / 150 / 2k Hz</span>），逐段調寬度。搭配 Ozone 的 <b>Recover Sides</b> 功能，把被縮窄時損失的反相細節<b>找回來、加回中央</b>——這樣既控制了寬度、又不流失細節。</li>
+      </ul>
+
+      <div class="link-note"><b>自己分析的做法（RX）</b>：開 RX 音訊編輯器 → Mixing 模組 → 選 <code>MS encoder/decoder</code> preset → Render → View 選單把 channel mode 改成 <b>Mid/Side</b> → 打開 spectrum：mid 是淺灰、side 是藍色，是整首平均。就能一眼看到自己各頻段的 side 有多少。</p>
+    </div>
+
+    <div class="block">
+      <span class="lbl b2">你能學能用的（混音）</span>
+      <ul>
+        <li><b>停掉反射動作</b>：別再無腦把 120 Hz 以下一律硬 mono。除非要壓黑膠，硬 mono 對現代作品太重手——尤其現在多數人用耳機、全立體聲系統聽。</li>
+        <li><b>先量再改</b>：用 RX 的 Mid/Side 頻譜看自己歌裡低頻 side 有多少，再決定要不要動、動多少。</li>
+        <li><b>改用 shelf 或多頻段 imager「調到剛好」</b>，保留一點 basiousness；動完<b>回頭看 true peak</b>（記得那個反直覺的峰值上升）。</li>
+        <li><b>監聽陷阱</b>：如果你只有一顆 sub，你的低頻在監聽端<b>早就被強制 mono</b> 了——你根本聽不到自己失去了什麼。要判斷低頻寬度，需要全頻段立體聲監聽或耳機。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ============ CLIP 2 ============ -->
+  <article>
+    <div class="clip-h">Clip 2 · 落地工具</div>
+    <h2>BassLane Pro：把低頻做成 3D、又不破壞 mono</h2>
+    <p class="src">Dom Sigalas（Tone Projects 出品）· <a href="https://www.youtube.com/watch?v=-D7PLh3THZ4" target="_blank" rel="noopener">YouTube 原片（約 18 分）</a></p>
+
+    <div class="block">
+      <span class="lbl b1">重點知識</span>
+      <p>它解的正是第一篇的痛點：<b>怎麼把低頻做得又寬又厚（3D）、卻不損失 mono 相容</b>（在夜店、壓黑膠時 mono 相容很關鍵）。跟 iZotope 的差別是——iZotope 是「馴服你原本就有的 side」，BassLane Pro 是<b>主動生出新的寬度</b>。</p>
+
+      <h3>核心原理（跟直覺相反的一招）</h3>
+      <p>拿一個訊號（可選 mid / stereo / side），<b>產生諧波（harmonics）</b>，然後把這些諧波<b>丟到 side 聲道</b>。所以就算你的低頻本來是純 mono，它也能：<b>(1)</b> 加諧波讓 bass 更厚更豐富、<b>(2)</b> 把這些諧波鋪在立體聲場裡讓 bass 變寬——而且因為<b>原始的 sub 低頻仍是 mono</b>，mono 相容不破。Dom 的形容是「低頻像在環抱你的耳朵」。</p>
+
+      <h3>主要控制項</h3>
+      <table>
+        <tr><th>控制</th><th>作用</th></tr>
+        <tr><td><b>Mono-below 頻率</b></td><td>設一個界線（如 <span class="num">90 Hz</span>），以下全部保持 mono——地基先鎖死。</td></tr>
+        <tr><td><b>諧波來源＋種類</b></td><td>諧波可從 mid / stereo / side 生成；種類有<b>二次、三次諧波</b>、<b>even / odd / crunchy</b>（偶次較柔、奇次較亮、crunchy 較粗），音色各不同。</td></tr>
+        <tr><td><b>Mid–Side 旋鈕</b></td><td>把諧波從 mid 往 side 鋪。<b>全轉到 side 時，這些諧波在「summed to mono」會消失</b>（plugin 會用紅色警告你），因為它們是純反相的。</td></tr>
+        <tr><td><b>內建相關性表</b></td><td>自帶分析表看寬度與相位；影片還用 Cubase 的 multi-correlation meter 交叉驗證：bass 很寬、但低頻仍然<b>同相、沒問題</b>。</td></tr>
+        <tr><td><b>Sub filter / Boost</b></td><td>可對 side 做過濾去掉低頻髒東西；Boost 是<b>共振濾波器，可以調到跟你的大鼓（kick）同頻</b>，讓低頻更貼。</td></tr>
+        <tr><td><b>Dynamics 段</b></td><td>對選定頻段做壓縮或擴張——諧波太動態就壓平、或反過來擴張出更多活力。</td></tr>
+        <tr><td><b>Mono recovery 段</b></td><td>把處理過程中「因反相被抵銷」而流失的訊號救回來（如只在左聲道的 tom）。最進階、多數時候用不到。（＝Ozone 的 Recover Sides 對應功能）</td></tr>
+        <tr><td><b>Band-pass 濾波</b></td><td>不只低頻——切成帶通就能對<b>中頻</b>做寬、讓鼓組更立體。</td></tr>
+      </table>
+
+      <h3>母帶情境的用法（Dom 建議）</h3>
+      <p>母帶很嚴謹、不能出錯，他會：先掛一個 <span class="num">12 或 18 dB</span> 斜率的 low-pass，把「要完全 mono 的低頻界線」設好（如 <span class="num">170 Hz</span>）→ 寬度轉到底 → 這條線以下就完全 mono → 再開始從想要的來源（mid/stereo/side）注入諧波做寬。他反覆強調：<b>這 plugin 很深，一定要讀說明書</b>。也會有功能較少的免費版。</p>
+    </div>
+
+    <div class="block">
+      <span class="lbl b2">你能學能用的（混音）</span>
+      <ul>
+        <li><b>它就是第一篇「現代做法」的專用武器</b>：iZotope 教你別砍 side、要 right-size 並 recover sides；BassLane Pro 直接幫你<b>生出</b>可控、可回收的低頻寬度，還鎖住 mono 相容。</li>
+        <li><b>跟你已建檔的 Uni-L 同廠牌（Tone Projects）</b>——這家 plugin 的共通調性是「把黑箱拆到你能理解、每個動作都有表可看」。</li>
+        <li><b>可複用流程</b>：設 mono-below 界線 → 從 mid 生諧波 → 盯相關性表確認同相 → 用 Dynamics 壓平過動態的諧波 →（可選）Boost 調到 kick 同頻。</li>
+        <li><b>先量再加</b>：跟第一篇一致——先看你缺不缺寬度，別為了 3D 而 3D；overuse 會讓低頻糊掉。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ============ 圖解 ============ -->
+  <article>
+    <div class="clip-h">圖解</div>
+    <h2>兩張圖把整套串起來</h2>
+
+    <div class="block">
+      <span class="lbl b3">圖 1 · 為什麼別再硬 mono</span>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  A["老規矩：低頻一律 mono<br/>（來源：黑膠刻片 + PA sub 是 mono）"] --> B{做法：hard mono<br/>side 掛 high-pass 一刀切}
+  B --> C1["峰值反而變高（會破表）"]
+  B --> C2["相位抹糊"]
+  B --> C3["低頻音量流失"]
+  B --> C4["砍掉反相細節→音色變"]
+  B --> C5["失去 basiousness 包覆感"]
+  C5 --> D["研究＋頂尖大歌都證明：<br/>低頻有寬度、聽眾也偏好它"]
+  D --> E["現代做法：right-sizing<br/>把寬度調到剛好、不是砍掉"]
+  E --> F1["A. side 改用 low shelf 緩壓"]
+  E --> F2["B. Ozone Imager 分頻段調寬<br/>+ Recover Sides 找回細節"]
+        </pre>
+      </div>
+      <div class="cap">硬 mono 的五個代價 → 為何轉向 right-sizing</div>
+    </div>
+
+    <div class="block">
+      <span class="lbl b3">圖 2 · 實戰低頻寬度流程</span>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  S["低頻混音／母帶"] --> M["1. 設 mono-below 界線<br/>（如 90–170Hz 以下鎖 mono）"]
+  M --> W["2. 決定寬度來源<br/>量測 side（RX MS 頻譜）"]
+  W --> T{要哪種處理?}
+  T -->|馴服現有 side| T1["low shelf 緩壓<br/>／Imager 縮寬 + Recover Sides"]
+  T -->|主動生寬度| T2["BassLane Pro<br/>從 mid 生諧波→鋪到 side"]
+  T1 --> V["3. 盯相關性/相位表<br/>確認 mono 相容、true peak 沒爆"]
+  T2 --> V
+  V --> O["低頻：緊實 mono 地基<br/>+ 上層有可控的空間感"]
+        </pre>
+      </div>
+      <div class="cap">從鎖地基 → 量測 → 兩條路（馴服 or 生成）→ 驗證相容</div>
+    </div>
+  </article>
+
+  <footer style="color:var(--sub);font-size:12px;text-align:center;margin-top:26px">
+    確認後寫入正本：主題知識/混音/低頻寬度：mono vs 立體聲低音.md（含上兩張 Mermaid）· 互連 混音 translation／Uni-L（Tone Projects）
+  </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  mermaid.initialize({ startOnLoad:true, theme: dark ? 'dark' : 'neutral', flowchart:{ htmlLabels:true, curve:'basis' } });
+</script>
+</body>
+</html>
