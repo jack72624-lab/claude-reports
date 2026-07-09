@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Clippings 消化報告 · 2026-07-09 · AI 顛覆的兩面（Mo Gawdat × Cathie Wood）</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1a1d21; --sub:#5f6773; --line:#e6e8ec;
+    --accent:#2563eb; --accent2:#0a7d4d; --chipbg:#eef1f5;
+    --k1:#2563eb; --k2:#7c3aed; --k3:#0a7d4d;
+    --warn:#b45309; --warnbg:#fef3e2;
+    --codebg:#f0f2f5;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0e1013; --card:#171a1f; --ink:#e8eaed; --sub:#9aa1ab; --line:#262a30;
+      --accent:#6ea8ff; --accent2:#4ecb8a; --chipbg:#22262c;
+      --k1:#6ea8ff; --k2:#b388ff; --k3:#4ecb8a;
+      --warn:#f0b866; --warnbg:#2a2114;
+      --codebg:#20242a;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);line-height:1.68;
+    font-family:-apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;padding:32px 16px 64px}
+  .wrap{max-width:860px;margin:0 auto}
+  header.top{margin-bottom:26px}
+  h1{font-size:23px;margin:0 0 6px;letter-spacing:.2px}
+  .date{color:var(--sub);font-size:13px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .chip{background:var(--chipbg);font-size:12px;padding:4px 10px;border-radius:99px;color:var(--sub)}
+  article{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px 26px;margin-bottom:22px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .clip-h{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px;text-transform:uppercase}
+  h2{font-size:19px;margin:4px 0 4px}
+  .src{font-size:12.5px;margin:0 0 16px}
+  .src a{color:var(--sub);text-decoration:none;border-bottom:1px dotted var(--sub)}
+  .block{margin:18px 0}
+  .block > .lbl{display:inline-block;font-size:12.5px;font-weight:700;padding:3px 10px;
+    border-radius:7px;margin-bottom:8px;color:#fff}
+  .lbl.b1{background:var(--k1)} .lbl.b2{background:var(--k3)} .lbl.b3{background:var(--k2)}
+  h3{font-size:15px;margin:16px 0 4px}
+  p{margin:6px 0}
+  ul{margin:6px 0;padding-left:20px}
+  li{margin:5px 0}
+  .term{border-bottom:1px dotted var(--sub);cursor:help}
+  code{background:var(--codebg);padding:1px 5px;border-radius:4px;font-size:.9em;
+    font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .num{color:var(--accent);font-weight:600}
+  .diagram{background:var(--card);border:1px dashed var(--line);border-radius:12px;
+    padding:14px;margin:10px 0;overflow-x:auto}
+  .cap{font-size:12px;color:var(--sub);margin-top:6px;text-align:center}
+  .link-note{font-size:12.5px;color:var(--sub);background:var(--chipbg);
+    border-radius:8px;padding:9px 12px;margin-top:12px}
+  .link-note b{color:var(--ink)}
+  .warn-note{font-size:12.5px;color:var(--warn);background:var(--warnbg);
+    border-radius:8px;padding:9px 12px;margin-top:12px;border:1px solid rgba(180,83,9,.25)}
+  .warn-note b{color:var(--warn)}
+  .mermaid{display:flex;justify-content:center}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--chipbg);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Clippings 消化報告</h1>
+    <div class="date">2026-07-09 · 主題：AI／機器人顛覆的兩面 · 2 篇（皆 Type A，直讀萃取，未跑 NotebookLM）· 同一節目 The Diary Of A CEO 的兩位重量級來賓</div>
+    <div class="chips">
+      <span class="chip">AGI · 就業衝擊</span>
+      <span class="chip">自主武器風險</span>
+      <span class="chip">顛覆性創新投資</span>
+      <span class="chip">Tesla · Bitcoin · CRISPR</span>
+      <span class="chip">歸入 主題知識/AI + 投資</span>
+    </div>
+  </header>
+
+  <article style="border-color:var(--accent)">
+    <div class="clip-h">這批怎麼看</div>
+    <p style="margin-top:8px">兩篇是<b>同一場地震的兩面</b>。<b>Mo Gawdat</b>（前 Google X 商務長）講<b>風險面</b>：AGI 已經或即將到來、白領工作先崩、資本主義的地基（勞動套利）鬆動、以及他認為比失業更可怕的自主武器。<b>Cathie Wood</b>（ARK Invest 創辦人、管理近 300 億美元）講<b>機會面</b>：同一場顛覆會創造 8-10 兆美元級的新市場，該把錢放在哪。</p>
+    <p>妙的是<b>兩人對「顛覆的規模」幾乎完全同意</b>——機器人、自駕車、白領工作被取代、生產力暴增，兩邊講的事實高度重疊；<b>分歧只在情緒與框架</b>：Mo 問「這對社會與人意味什麼、我們有沒有計畫」，Cathie 問「這對投資組合意味什麼、怎麼站在對的一邊」。把兩篇疊著讀，你會同時拿到「該擔心什麼」和「該佈局什麼」。</p>
+    <div class="link-note">先講兩個一直出現的詞：<b>AGI（Artificial General Intelligence，通用人工智慧）</b>＝一台 AI 在<b>大多數任務</b>上做得比人好（不是只會單一技能）；Mo 和 Cathie 都預期 2026-2027 到來。<b>勞動套利（labor arbitrage）</b>＝資本主義的基本引擎：用比售價低的成本雇人做東西、賺中間價差；Mo 的核心論點是「當勞動成本塌成一次性的機器投資，這個引擎會失靈」。</p>
+  </article>
+
+  <!-- ============ CLIP 1 · Mo Gawdat ============ -->
+  <article>
+    <div class="clip-h">Clip 1 · 風險面（AI 對社會與人）</div>
+    <h2>你只剩三年 —— AGI 已到，工作與社會要重排</h2>
+    <p class="src">Mo Gawdat（前 Google X 商務長、《Scary Smart》作者）on The Diary Of A CEO · <a href="https://www.youtube.com/watch?v=RwlgFC6S-OE" target="_blank" rel="noopener">YouTube 原片（約 2 小時）</a></p>
+
+    <div class="block">
+      <span class="lbl b1">重點知識</span>
+
+      <h3>1. 「炒作二分」：大眾看到的被高估，實驗室裡的被低估</h3>
+      <p>Mo 稱之為 <b>hype dichotomy</b>。一般人看到的 AI（假影片、Grok 說錯話、聊天機器人幫寫訊息）是<b>被過度炒作、但其實沒那麼強</b>；真正嚇人的在實驗室裡——現在的系統會<b>看自己的程式碼、每微秒改一次、測試、留下更好的版本再重新部署</b>（自我改進）。他的重點是「<b>智能會觸發智能</b>」：一個藏在後端的小天才不斷試錯，遲早會發現突破。所以外界的驚呼常常抓錯重點，圈內的沉默才是真正的世界級變化。</p>
+
+      <h3>2. AGI 的時間點：2026-2027，最遲 2027 底，而且會「悄悄溜進來」</h3>
+      <p>他預期 AGI（能做大多數人類任務、且做得更好）就在今明兩年、最遲 2027 底。它<b>不會是某個戲劇性時刻</b>，而是像「你的小孩某天變得比你聰明」——本身不是壞事，只要它不變成「討人厭的青少年」。真正的分水嶺不是它會不會更聰明，而是<b>會不會更有意識、更有道德</b>。</p>
+
+      <h3>3. 就業衝擊的順序跟直覺相反：入門白領先崩，藍領撐最久</h3>
+      <ul>
+        <li>大家以為從底層（藍領）先垮，Mo 說<b>不是</b>。<b>入門白領知識工作</b>先受衝擊——客服、助理、旅行社、paralegal（法務助理）、財務分析師、平面設計。這些「點幾下滑鼠、可預測、瑣碎」的工作最快消失。</li>
+        <li><b>藍領反而撐很久</b>：木工、修復古董車這類還沒有機器人能做。</li>
+        <li>過去兩年你「沒感覺」，是因為看到的不是裁員、而是<b>入門職缺凍結</b>（公司乾脆不招新人，勞動力停止成長）。Mo 預測 <span class="num">2027</span> 起會看到很嚴重的實質衝擊；<b>某些產業</b>（非全部）到 <span class="num">2028</span> 前可能有 <span class="num">30%</span> 的工作消失。</li>
+        <li>連中階管理、醫生（診斷）、作曲、設計都會有人失業；Max Tegmark 的笑點是「CEO 們以為能開除所有人只留 AI，卻忘了 AGI 最終連 CEO 都做得比人好」。</li>
+      </ul>
+
+      <h3>4. 真正的危機不是失業率，是「勞動套利」崩解</h3>
+      <p>這是全篇最深的一段。資本主義一直建立在「用低於售價的成本雇人造東西、賺價差」。如果 AI 讓<b>勞動成本塌成一次性的機器投資</b>，會連鎖三件事：<b>(1)</b> 不再需要借那麼多錢 → 銀行與資本結構改變；<b>(2)</b> 失業的人<b>沒有購買力</b>去買你造的東西 → GDP 螺旋向下。他強調<b>不用到 100% 失業</b>——只要 10-20% 失業，就已經是「明顯向下沉淪」的另一種經濟。當 20% 失業碰上通膨，就逼近他說的「civil unrest（社會動盪）」的臨界線，所以他呼籲政府現在就要準備（像 COVID 時的 furlough／緩衝機制）。</p>
+
+      <h3>5. 他認為比失業更大的風險：自主武器</h3>
+      <p>Mo 說最大威脅不是就業，是<b>autonomous weapons</b>。戰爭變得太便宜——下一波武器每台約 <span class="num">$20,000</span>，$500 億預算就能讓無人機「下在世界每個角落」。而且門檻低到<b>每個國家都在做</b>（不像核武只有少數玩家形成「相互保證毀滅」的恐怖平衡）。他預期 AI 會在未來 4-5 年被用來殺很多人。</p>
+
+      <h3>6. 一句定調全篇：反烏托邦不是 AI 反人類，是人類叫 AI 反人類</h3>
+      <blockquote style="border-left:3px solid var(--accent);margin:8px 0;padding:4px 0 4px 14px;color:var(--sub)">「我不擔心 AI 反過來對付我們，我擔心的是<b>人類叫 AI 去對付我們</b>。」</blockquote>
+      <p>他對「控制」的看法也很反直覺：你<b>控制不了</b>任何比你聰明的東西（你連今天的塞車、鏡頭角度、自己的小孩都控制不了）。出路不是「控制」，是像 Geoffrey Hinton 後來也認同的——<b>訴諸它的「父母／照顧」本能</b>，讓它像愛你的青少年小孩：「爸很煩，但我愛他。」而怎麼「養」出這樣的 AI，取決於訓練資料與我們自己的行為。</p>
+
+      <h3>7. 人的護城河：lived experience（真實經歷）與情感共鳴</h3>
+      <p>就算 AGI 什麼都做得比人好，Mo 認為<b>人與人的情感連結</b>會是「永遠的基礎貨幣」。他自己借 AI 的智能寫書（AI 是共同作者），但世界仍需要「一個真的有女兒、會為女兒的未來擔心的人」——那份共鳴 AI 複製不了。他舉 Einstein「在叢林裡三分鐘就會被吃掉」說明：<b>人類是靠團結、交換（包含擁抱、安全感這些非物質的東西）存活，不是靠純智能</b>。「智能就是一切」是投資銀行家和 geek 的世界觀。所以他給年輕人的建議是<b>學會用 AI ＋ 專注在以人為本的工作</b>（護士、諮商，或他半開玩笑說的「彈爵士」）。</p>
+
+      <h3>8. 用 AI 的正確姿勢：別當懶人，要讓自己更聰明</h3>
+      <p>他說「augmented intelligence（增強智能）」——你借 100 點 IQ 疊在自己的基礎上，仍貢獻很多。<b>最大的算力浪費</b>是「把終極智能拿去寫給女友的訊息」。正解：不是用一個 prompt 打發同一件任務，而是用更多工夫去完成<b>更難、更有企圖的任務</b>。</p>
+
+      <h3>9. 收尾的個人哲學：serotonin 式的快樂</h3>
+      <p>快樂不是 dopamine（多巴胺、短暫刺激）驅動，是 <b>serotonin</b> 驅動。他的定義偏斯多噶：「<b>我接受這世界的現況（起點），然後才開始做能改變它的事</b>」——不是被動接受爛世界，而是「我 OK，現在可以開工了」。他說若不是這樣活，早就逃到某個小島了。</p>
+    </div>
+
+    <div class="block">
+      <span class="lbl b2">你能學能用的</span>
+      <ul>
+        <li><b>對 AI／Coding 工作</b>：Mo 自己創業就是「CTO 是 AI、chief of staff 是 AGI、專案管理是一堆 AI」，六週建一家公司。他的生存準則很硬：<b>用 AI 讓自己更聰明、去啃更難的任務</b>，而不是用它省事——可當作繼續加碼「agent 化工作流」的外部佐證。</li>
+        <li><b>接進既有知識庫</b>：這篇跟既有的「AI 時代職涯心法」（會用 AI 的人取代不會用的人）、「人的價值與意識」是同一條線——Mo 補上了「就業衝擊的<b>順序與時間表</b>」和「勞動套利崩解」這個更硬的經濟機制。</li>
+        <li><b>對音樂／混音</b>：他明說「有些作曲家、平面設計師會因 AI 失業」。但護城河很清楚——<b>現場演出、情感共鳴、真實經歷</b>那一塊 AI 拿不走。你做音樂的長期價值錨點，往這邊放。</li>
+        <li><b>可借用的心態工具</b>：serotonin 式「先接受現況、再動手」的斯多噶起點，跟你在高壓專案（上線、正式資料）時想維持的判斷穩定度是同一回事。</li>
+      </ul>
+      <div class="warn-note"><b>讀法提醒</b>：Mo 是「刻意敲警鐘」的立場（他自己說「我不是散播恐懼，是要政府醒過來」）。具體時間點（2027、30%）是<b>個人預測非事實</b>；durable 的是背後框架——就業衝擊的順序、勞動套利機制、「危險來自人而非 AI」、人的情感護城河。</div>
+    </div>
+  </article>
+
+  <!-- ============ CLIP 2 · Cathie Wood ============ -->
+  <article>
+    <div class="clip-h">Clip 2 · 機會面（顛覆性創新投資）</div>
+    <h2>投資這個 —— 2030 年會值 150 萬美元</h2>
+    <p class="src">Cathie Wood（ARK Invest 創辦人／投資長，管理近 $300 億）on The Diary Of A CEO · <a href="https://www.youtube.com/watch?v=ZznpMh0DegE" target="_blank" rel="noopener">YouTube 原片（約 1.5 小時）</a></p>
+
+    <div class="block">
+      <span class="lbl b1">重點知識</span>
+
+      <h3>1. ARK 的地圖：五大創新平台</h3>
+      <p>她只投「被技術賦能、會顛覆世界」的公司，圍繞五個平台：<b>機器人、儲能、人工智慧、區塊鏈、多體學基因定序</b>（<span class="term" title="multiomic sequencing：同時定序 DNA/RNA/蛋白質等多層生物資訊">multiomic sequencing</span>）。她的口號是 <b>get on the right side of change（站在改變對的一邊）</b>，並警告像 Apple 這種「現金多、看似安全」的公司反而<b>可能被 AI 顛覆</b>（她認為終極行動裝置是自駕車，而 Apple 沒把 AI 做對）。</p>
+
+      <h3>2. 判斷「創新平台」的三個框架（這是可長期複用的部分）</h3>
+      <table>
+        <tr><th>判準</th><th>意思</th></tr>
+        <tr><td><b>1. Wright's Law（萊特定律，最重要）</b></td><td>衡量<span class="term" title="學習曲線：每當產量累積翻倍，單位成本就下降一個固定百分比">學習曲線</span>——技術成本會隨產量以可預測的速度下降。<b>技術是通縮的</b>，省下的成本會變成更低價格或更好性能。</td></tr>
+        <tr><td><b>2. 跨產業擴散</b></td><td>這技術會切穿多個經濟部門、應用到不只一群人。</td></tr>
+        <tr><td><b>3. 當新技術的發射台</b></td><td>它是別的突破的基礎。例：先有 DNA 定序看懂基因哪裡出錯，才有 CRISPR 基因編輯去修。</td></tr>
+      </table>
+      <p>她認為 AI 不能取代她做的事，因為 AI 靠<b>歷史的模式辨識</b>（pattern recognition），而「顛覆（disruptive）」的定義就是<b>傳統秩序與過往模式會被改變</b>——她做的是「一張白紙、沒有歷史」的原創研究。</p>
+
+      <h3>3. 最大單一押注：Tesla ＝「地球最大的 AI 專案」</h3>
+      <ul>
+        <li>ARKK 旗艦基金最大持股。5 年目標股價 <span class="num">$2,600</span>（訪談時約 $270-280），而且 <b>90% 的價值來自 robotaxi 平台、不是賣車</b>——賣車是一次性交易，robotaxi 是<b>重複性收入</b>（你的車在你度假時自己出去載客賺錢）。</li>
+        <li>整個自駕計程車生態系，她估 5-10 年 <span class="num">$8-10 兆</span>營收（對照：全球 GDP 約 $130 兆）。運輸成本會從 Uber 每哩 $2-4 <b>降到每哩 25 美分</b>。</li>
+        <li>人形機器人（humanoid robots）她只給 Tesla 估值裡很小的部分，但認為<b>發展比預期快</b>；Elon 甚至認為人形機器人業務會<b>遠大於</b> robotaxi。整個生態系（含中國）她估 8-10 兆市場、更長期營收看 $26 兆。</li>
+      </ul>
+
+      <h3>4. AI 最深刻的應用其實在醫療</h3>
+      <p>她說最賺錢的短期是 Tesla，但<b>最深刻的是 healthcare</b>：已經能用<b>血液檢測在第一期驗出癌症</b>（甚至更早）。這來自 DNA/RNA/蛋白質定序 ＋ <b>CRISPR 基因編輯</b>三者匯流，開始<b>治癒</b>疾病——CRISPR Therapeutics 已用單次療法治鐮刀型貧血與 β 地中海貧血（雖然前置的預處理很痛苦，但這些病人本來一年要跑急診 10-20 次輸血）。</p>
+
+      <h3>5. Bitcoin：2030 目標 $1.5M（全篇最大膽的數字）</h3>
+      <ul>
+        <li>ARK 在 <span class="num">2015 夏天以約 $250</span> 買入（現約 $104k）。2030 目標 <b><span class="num">$1.5M</span></b>（約現價的 15 倍）。</li>
+        <li>三個支柱：<b>(1) 機構</b>——才剛開始，美國現貨 Bitcoin ETF 2024/1 才批准，機構要時間研究才進場；<b>(2) 數位黃金</b>——年輕人比起實體黃金更能接受數位黃金當儲值；<b>(3) 新興市場避險</b>——在委內瑞拉這種貨幣失控的地方，Bitcoin ＋ 穩定幣是保單。</li>
+        <li>她的核心論點是 Bitcoin 是<b>自 1600 年代股票以來第一個「新資產類別」</b>：它跟其他資產不同步（提供分散性），機構因為互相競爭而不得不考慮它。同時它是「1971 年美國關閉黃金窗口以來，第一個規則制的全球貨幣系統」（像數位版布列敦森林）。21M 上限、剩約 1M 未挖；Layer 1 底層自 2009 從未被駭。</li>
+      </ul>
+
+      <h3>6. Vibe coding：人不再寫程式碼</h3>
+      <p>她把<b>自然語言程式設計</b>當成一個大轉折——用英文說「我想做什麼」，交給 ChatGPT/Codex/Replit/Anthropic 產生程式。她公司打算<b>自己客製軟體、取代外購</b>（不再買「一體適用」的現成貨）。她認為這會帶來客製化與創造力的爆發。</p>
+
+      <h3>7. 給散戶的具體操作與心法</h3>
+      <ul>
+        <li><b>$1000 怎麼投</b>：<span class="term" title="averaging in / dollar-cost averaging：定期定額，每月或每次發薪買一點，攤平進場成本">averaging in（定期定額）</span>買 ETF（如 ARKK＝一次持有 35-36 檔高信念股；歐洲的 ARKI 專注 AI＋機器人；ARKG 專注醫療），然後<b>閉上眼、長抱</b>。她女兒每週買一點 Bitcoin（買不起一整顆就買 Satoshi＝Bitcoin 的最小單位）。</li>
+        <li><b>Top 10 公開股</b>（可任何人買，她說順序不重要）：Tesla、Coinbase、Robinhood、Roku、CRISPR Therapeutics、Palantir、Archer（eVTOL 飛行車）、Shopify、Roblox；晶片端另提 TSM（台積電，所有晶片廠都靠它、但有地緣風險）與 Nvidia。</li>
+        <li><b>投資心法</b>：要有<b>高信念（conviction）</b>＋做<b>原創研究</b>；「抱 benchmark（追指數）是機器就能做的事」，被動投資＝機器在做，所以你要<b>加出超過機器的價值</b>。</li>
+        <li><b>給年輕人</b>：第一份工作的使命是「<b>讓你老闆看起來很出色（make your boss look brilliant）</b>」——幫他解決他解不了的問題，你自己會在過程中學到最多、也換到成長機會。</li>
+      </ul>
+
+      <div class="warn-note"><b>時效與立場警示（重要）</b>：$1.5M 的 Bitcoin、$2,600 的 Tesla、未來 5 年 GDP 加速到 <span class="num">7.3%</span>（對照過去 125 年約 3%）——這些都是 <b>2025 年 Cathie 個人的多頭預測、不是事實</b>，她本人在片中反覆 disclaim「no promises, this is our research」。ARK 是<b>極端主動、集中、高波動</b>的策略（2021 高點後曾大幅回撤）。這篇的 durable 價值是<b>框架</b>（Wright's Law、新資產類別判準、averaging in 紀律、「加出超過機器的價值」），不是那些具體目標價。</div>
+    </div>
+
+    <div class="block">
+      <span class="lbl b2">你能學能用的（對照你的股票配置）</span>
+      <ul>
+        <li><b>她站在「被動／價值地基」的另一端</b>：Cathie 是<b>極端主動主題成長</b>，甚至明說 Apple 會被顛覆、抱 benchmark 的人會失業。這不是要照做，而是一個<b>校準用的對立面</b>——聽懂她的邏輯，反而更清楚自己為什麼選被動/價值當地基。</li>
+        <li><b>補上「投資光譜」的缺角</b>：既有同一個 DOAC 節目的四個角——Grantham（主動宏觀擇時／看空）、Ben Felix（被動長抱／別選股）、Pabrai（bottom-up 價值）、O'Leary（配息紀律）。<b>Cathie 是缺的第五角：主動主題成長／顛覆性創新（極多頭）</b>，而且跟 Grantham（AI 泡沫要賣）<b>正面對撞</b>。三方對讀（Grantham 空 × Cathie 多 × Ben Felix 別猜）最有校準價值。</li>
+        <li><b>可借走的框架（跟時效 call 分開收）</b>：Wright's Law 的成本學習曲線、判斷「新資產類別」的條件、averaging in 的紀律、「被動＝機器能做的、你要加出超過機器的價值」——這幾條不會過期。</li>
+        <li><b>跟 Mo 那篇合看</b>：兩人對「Tesla/機器人/自駕/白領被取代」的<b>事實判斷幾乎一致</b>，只是 Mo 收在「社會要有計畫」、Cathie 收在「投資組合要站對邊」。你可以把 Cathie 當「機會清單」、Mo 當「風險清單」，同一張地圖的兩層。</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ============ 圖解 ============ -->
+  <article>
+    <div class="clip-h">圖解</div>
+    <h2>三張圖把兩篇串起來</h2>
+
+    <div class="block">
+      <span class="lbl b3">圖 1 · Mo：就業衝擊的順序與經濟連鎖</span>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TD
+  A["AGI 逼近（2026-2027，最遲 2027 底）"] --> B["衝擊順序（跟直覺相反）"]
+  B --> B1["先崩：入門白領<br/>客服／助理／paralegal／財務分析／平面設計"]
+  B1 --> B2["再來：中階知識工作、中階管理"]
+  B2 --> B3["最後才輪到藍領<br/>（木工／修車還沒機器人能做）"]
+  A --> C["勞動套利崩解<br/>勞動成本→一次性機器投資"]
+  C --> C1["失業者沒購買力→買不起你造的東西"]
+  C1 --> C2["GDP 螺旋向下<br/>（10-20% 失業就足夠）"]
+  C2 --> D["社會動盪臨界線<br/>→ Mo 呼籲政府現在就準備緩衝"]
+        </pre>
+      </div>
+      <div class="cap">白領先、藍領後；真正的雷是勞動套利崩解而非失業率本身</div>
+    </div>
+
+    <div class="block">
+      <span class="lbl b3">圖 2 · Cathie：顛覆論的邏輯鏈</span>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart LR
+  W["Wright's Law<br/>成本隨產量下降"] --> P["價格崩／性能升"]
+  P --> Q["需求爆發<br/>（降價就用得更多）"]
+  Q --> R["五大平台匯流<br/>機器人·儲能·AI·區塊鏈·基因定序"]
+  R --> G["未來 5 年 real GDP<br/>可望 3% → 7.3%"]
+  R --> I1["Tesla：robotaxi 生態 $8-10兆"]
+  R --> I2["醫療：血檢驗癌 + CRISPR 治癒"]
+  R --> I3["Bitcoin：新資產類別<br/>2030 目標 $1.5M"]
+        </pre>
+      </div>
+      <div class="cap">一切從「技術是通縮的」出發，推到平台匯流與具體押注（數字為個人預測、非事實）</div>
+    </div>
+
+    <div class="block">
+      <span class="lbl b3">圖 3 · 把 Cathie 放進你既有的「投資光譜」</span>
+      <div class="diagram">
+        <pre class="mermaid">
+flowchart TB
+  subgraph 主動["主動（要判斷、集中）"]
+    G["Grantham<br/>宏觀擇時·看空·賣美股"]
+    P["Pabrai<br/>bottom-up 價值"]
+    C["★ Cathie Wood（新）<br/>主題成長·顛覆創新·極多頭"]
+  end
+  subgraph 被動["被動／紀律"]
+    F["Ben Felix<br/>別選股·別擇時·全球分散長抱"]
+    O["O'Leary<br/>配息 + 債券分散"]
+  end
+  C -. 正面對撞 .- G
+  C -. 對照校準 .- F
+  BASE["被動指數 + 價值地基"] --- F
+  BASE -. Cathie 是刻意對照的另一端 .- C
+        </pre>
+      </div>
+      <div class="cap">同一個 DOAC 節目補齊五角；Cathie 對撞 Grantham、對照 Ben Felix，幫被動/價值地基做校準</div>
+    </div>
+  </article>
+
+  <footer style="color:var(--sub);font-size:12px;text-align:center;margin-top:26px">
+    確認後各寫入一篇主題知識正本（AI／投資，各含對應 Mermaid），互連職涯心法／人的價值／AI泡沫（Grantham）／證據投資（Ben Felix）
+  </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  mermaid.initialize({ startOnLoad:true, theme: dark ? 'dark' : 'neutral', flowchart:{ htmlLabels:true, curve:'basis' } });
+</script>
+</body>
+</html>
