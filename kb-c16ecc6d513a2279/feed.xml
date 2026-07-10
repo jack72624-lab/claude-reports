@@ -3,7 +3,7 @@
      xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
      xmlns:content="http://purl.org/rss/1.0/modules/content/">
 <channel>
-  <title>Jack 的知識庫複習電台</title>
+  <title>知識庫複習電台</title>
   <link>https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/</link>
   <language>zh-Hant</language>
   <description>把 Obsidian 主題知識庫的累積，每週做成一集雙主持對談，訓練時聽、定期複習。</description>
@@ -16,7 +16,7 @@
   <itunes:image href="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/cover.png"/>
   <image>
     <url>https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/cover.png</url>
-    <title>Jack 的知識庫複習電台</title>
+    <title>知識庫複習電台</title>
     <link>https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/</link>
   </image>
   <itunes:category text="Education"/>
