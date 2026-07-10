@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<channel>
+  <title>Jack 的知識庫複習電台</title>
+  <link>https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/</link>
+  <language>zh-Hant</language>
+  <description>把 Obsidian 主題知識庫的累積，每週做成一集雙主持對談，訓練時聽、定期複習。</description>
+  <itunes:author>Jack</itunes:author>
+  <itunes:summary>把 Obsidian 主題知識庫的累積，每週做成一集雙主持對談，訓練時聽、定期複習。</itunes:summary>
+  <itunes:owner>
+    <itunes:name>Jack</itunes:name>
+    <itunes:email>jack72624@gmail.com</itunes:email>
+  </itunes:owner>
+  <itunes:image href="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/cover.png"/>
+  <image>
+    <url>https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/cover.png</url>
+    <title>Jack 的知識庫複習電台</title>
+    <link>https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/</link>
+  </image>
+  <itunes:category text="Education"/>
+  <itunes:explicit>false</itunes:explicit>
+  <itunes:type>episodic</itunes:type>
+  <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>投資大師吵架後的指數共識</title>
+    <description>五位投資大師（Grantham / Pabrai / Cathie Wood / O'Leary / Ben Felix）在「主動⟷被動」光譜上吵得兇，散戶端卻收斂到同一句：買 index、守消費紀律、別過度交易。這集用聊天對談帶你重新吸收五組關鍵對撞：擇時之爭、AI 的兩極判斷、債券配置、Bitcoin 的三種答案、估值的深層矛盾。</description>
+    <itunes:summary>五位投資大師（Grantham / Pabrai / Cathie Wood / O'Leary / Ben Felix）在「主動⟷被動」光譜上吵得兇，散戶端卻收斂到同一句：買 index、守消費紀律、別過度交易。這集用聊天對談帶你重新吸收五組關鍵對撞：擇時之爭、AI 的兩極判斷、債券配置、Bitcoin 的三種答案、估值的深層矛盾。</itunes:summary>
+    <enclosure url="https://github.com/jack72624-lab/claude-reports/releases/download/kb-podcast-episodes/ep-2026-07-11-investment.mp3" length="46123200" type="audio/mpeg"/>
+    <guid isPermaLink="false">ep-2026-07-11-investment</guid>
+    <pubDate>Sat, 11 Jul 2026 09:00:00 +0800</pubDate>
+    <itunes:author>Jack</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+  </item>
+</channel>
+</rss>

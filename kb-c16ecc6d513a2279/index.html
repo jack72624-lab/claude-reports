@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Jack 的知識庫複習電台</title>
+<style>
+  :root { --bg:#10132a; --bg2:#1d2547; --card:#1a2143; --line:#2b3566; --txt:#e8ebf7; --dim:#9aa3c7; --acc:#6ee7d6; --acc2:#8b9cff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'PingFang TC','Heiti TC',system-ui,sans-serif; color:var(--txt);
+         background:linear-gradient(160deg,var(--bg),var(--bg2)); min-height:100vh; }
+  .wrap { max-width:720px; margin:0 auto; padding:32px 20px 80px; }
+  header { text-align:center; padding:24px 0 12px; }
+  header img { width:180px; height:180px; border-radius:22px; box-shadow:0 12px 40px rgba(0,0,0,.4); }
+  h1 { font-size:30px; margin:20px 0 6px; }
+  .sub { color:var(--dim); font-size:15px; line-height:1.6; margin:0 auto; max-width:560px; }
+  .subscribe { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; margin:26px 0; }
+  .subscribe h3 { margin:0 0 10px; font-size:15px; color:var(--acc); letter-spacing:1px; }
+  .feedrow { display:flex; gap:8px; }
+  .feedrow input { flex:1; background:#0d1027; border:1px solid var(--line); color:var(--txt);
+                    border-radius:10px; padding:11px 12px; font-size:13px; font-family:Menlo,monospace; }
+  .feedrow button { background:var(--acc); color:#0d1027; border:0; border-radius:10px; padding:0 18px;
+                     font-weight:700; cursor:pointer; font-size:14px; }
+  .hint { color:var(--dim); font-size:12.5px; margin:10px 0 0; line-height:1.6; }
+  .ep { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; margin:16px 0; }
+  .ep-head { display:flex; justify-content:space-between; font-size:12.5px; color:var(--dim); margin-bottom:6px; }
+  .topic { color:var(--acc2); }
+  .ep h2 { font-size:19px; margin:4px 0 10px; line-height:1.4; }
+  .ep p { color:var(--dim); font-size:14px; line-height:1.75; margin:0 0 14px; }
+  audio { width:100%; }
+  footer { text-align:center; color:var(--dim); font-size:12px; margin-top:40px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="cover.png" alt="cover">
+      <h1>Jack 的知識庫複習電台</h1>
+      <p class="sub">把 Obsidian 主題知識庫的累積，每週做成一集雙主持對談，訓練時聽、定期複習。</p>
+    </header>
+    <section class="subscribe">
+      <h3>訂閱進 PODCAST APP</h3>
+      <div class="feedrow">
+        <input id="feed" readonly value="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/feed.xml">
+        <button onclick="navigator.clipboard.writeText(document.getElementById('feed').value).then(()=>{this.textContent='已複製'})">複製</button>
+      </div>
+      <p class="hint">Apple Podcasts：資料庫 → 左上「⋯」→「加入節目（透過網址）」貼上；Overcast / Pocket Casts：新增 → 貼上網址。此網址不公開索引、只有你有。</p>
+    </section>
+    <article class="ep">
+      <div class="ep-head"><span class="date">2026-07-11</span><span class="topic">投資</span></div>
+      <h2>投資大師吵架後的指數共識</h2>
+      <p>五位投資大師（Grantham / Pabrai / Cathie Wood / O&#x27;Leary / Ben Felix）在「主動⟷被動」光譜上吵得兇，散戶端卻收斂到同一句：買 index、守消費紀律、別過度交易。這集用聊天對談帶你重新吸收五組關鍵對撞：擇時之爭、AI 的兩極判斷、債券配置、Bitcoin 的三種答案、估值的深層矛盾。</p>
+      <audio controls preload="none" src="https://github.com/jack72624-lab/claude-reports/releases/download/kb-podcast-episodes/ep-2026-07-11-investment.mp3"></audio>
+    </article>
+    <footer>Jack 的知識庫複習電台 · 由 Obsidian 主題知識自動生成</footer>
+  </div>
+</body>
+</html>
