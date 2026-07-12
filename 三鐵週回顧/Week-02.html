@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三鐵週回顧 — Week 2（Jul 6–12）</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --radius:16px; --radius-sm:11px;
+  --bg:#f5f7f8; --surface:#fff; --surface-2:#f3f6f6; --border:#e4e9ea;
+  --text:#16211f; --text-dim:#5c6b68; --text-faint:#8c9997;
+  --accent:#0f9488; --accent-soft:rgba(15,148,136,.10); --accent-line:rgba(15,148,136,.28);
+  --ok:#12996f; --ok-soft:rgba(18,153,111,.10);
+  --warn:#c98a1e; --warn-soft:rgba(201,138,30,.12);
+  --bad:#d8564d; --bad-soft:rgba(216,86,77,.09);
+  --shadow:0 8px 24px rgba(24,40,38,.08);
+  font-variant-numeric:tabular-nums;
+}
+body{background:var(--bg);background-image:linear-gradient(180deg,#eef2f3 0%,#f5f7f8 40%);
+  background-attachment:fixed;color:var(--text);min-height:100dvh;
+  font-family:"PingFang TC","Noto Sans TC","Hiragino Sans GB","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:24px 18px 60px}
+
+.hero{padding:20px 22px;border-radius:var(--radius);background:var(--surface);
+  border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:18px}
+.eyebrow{font-size:12.5px;font-weight:800;letter-spacing:.14em;color:var(--accent)}
+.hero h1{font-size:27px;font-weight:850;letter-spacing:-.01em;line-height:1.15;margin:4px 0 9px}
+.hero h1 .wk{color:var(--accent)}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pill{font-size:12.5px;font-weight:700;padding:3px 11px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)}
+.pill.muted{background:var(--surface-2);color:var(--text-dim);border-color:var(--border)}
+.bar-top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px}
+.bar-top b{font-size:24px;font-weight:850}
+.bar-top b span{color:var(--text-faint);font-size:15px}
+.bar-top small{font-size:12px;font-weight:700;color:var(--text-faint)}
+.bar-track{height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 70%,#fff))}
+
+section{margin-bottom:16px}
+.sec-head{display:flex;align-items:center;gap:9px;margin:2px 4px 10px}
+.sec-head .n{font-size:13px;font-weight:850;color:#fff;background:var(--accent);
+  width:22px;height:22px;border-radius:7px;display:grid;place-items:center;flex:0 0 auto}
+.sec-head h2{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 17px;box-shadow:var(--shadow)}
+
+.summary{border-left:4px solid var(--accent);background:var(--accent-soft);
+  border-radius:var(--radius-sm);padding:14px 16px;font-size:15.5px;line-height:1.7}
+.summary strong{color:var(--accent);font-weight:800}
+
+.grp+.grp{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.grp-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.grp-head .tag{font-size:12px;font-weight:850;letter-spacing:.08em;padding:2px 9px;border-radius:7px}
+.grp-head .tag.core{color:var(--accent);background:var(--accent-soft)}
+.grp-head .tag.keep,.grp-head .tag.flex{color:var(--text-dim);background:var(--surface-2)}
+.grp-head .score{font-size:14px;font-weight:800}
+.grp-head .score .g{color:var(--ok)} .grp-head .score .s{color:var(--text-faint)}
+.items{display:flex;flex-direction:column;gap:8px}
+.item{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:var(--radius-sm);background:var(--surface-2)}
+.item.miss{background:transparent;border:1px dashed var(--border)}
+.mark{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:grid;place-items:center}
+.mark.ok{background:var(--ok-soft);color:var(--ok)} .mark.no{background:var(--bad-soft);color:var(--bad)}
+.mark svg{width:13px;height:13px}
+.item .name{font-size:14.5px;font-weight:600}
+.item.miss .name{color:var(--text-dim)}
+.item .meta{margin-left:auto;font-size:13px;font-weight:700;color:var(--text-dim);text-align:right}
+.item .meta.hl{color:var(--ok)}
+.disc{font-size:11px;font-weight:800;color:var(--text-faint);border:1px solid var(--border);border-radius:6px;padding:1px 6px;margin-left:6px}
+
+.md-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.md-list li{position:relative;padding-left:16px;font-size:14px;line-height:1.6}
+.md-list li:before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.md-list li.sub{padding-left:30px;font-size:13.5px;color:var(--text-dim)}
+.md-list li.sub:before{left:16px;background:var(--text-faint)}
+.card p{font-size:14px;line-height:1.65} .card p+p{margin-top:8px}
+.card strong{font-weight:800;color:var(--text)}
+blockquote{border-left:3px solid var(--accent-line);background:var(--accent-soft);
+  padding:10px 13px;border-radius:8px;font-size:13.5px;color:var(--text-dim);margin:4px 0}
+
+.weather-card{display:flex;gap:13px;align-items:flex-start}
+.weather-card .wx{flex:0 0 auto;width:40px;height:40px;border-radius:11px;background:var(--warn-soft);
+  color:var(--warn);display:grid;place-items:center}
+.weather-card .wx svg{width:22px;height:22px}
+.weather-card .body{flex:1;min-width:0}
+.weather-card strong{color:var(--warn)}
+
+.foot{text-align:center;font-size:12px;color:var(--text-faint);margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">三鐵週回顧</div>
+    <h1><span class="wk">Week 2</span> 訓練回顧</h1>
+    <div class="badges">
+      <span class="pill">導入期</span>
+      <span class="pill muted">Jul 6–12</span>
+    </div>
+    <div class="bar-top"><b>6<span>/10</span> 完成</b><small>60%</small></div>
+    <div class="bar-track"><div class="bar-fill" style="width:60%"></div></div>
+  </div>
+
+  <section><div class="sec-head"><span class="n">1</span><h2>一句話總結</h2></div>
+    <div class="summary">這週把最關鍵的三堂長課（長騎＋下車 brick＋長跑）全數收下，導入期最重要的「規律有做」你守住了——只差把 FTP 測試和輕鬆日的強度控制補上。</div></section>
+
+  <section><div class="sec-head"><span class="n">2</span><h2>完成度</h2></div>
+    <div class="card"><div class="grp">
+      <div class="grp-head">
+        <span class="tag core">CORE</span>
+        <span class="score"><span class="g">4</span><span class="s">/5</span></span>
+      </div>
+      <div class="items"><div class="item">
+        <span class="mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="name">週二 Run 5k easy · strides<span class="disc">跑</span></span>
+        <span class="meta hl">5.0k</span></div>
+<div class="item miss">
+        <span class="mark no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="name">週四 Run 5k easy<span class="disc">跑</span></span>
+        <span class="meta">沒做</span></div>
+<div class="item">
+        <span class="mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="name">週六 Long bike 1:45<span class="disc">騎</span></span>
+        <span class="meta hl">34.9k · 85min · 換到週三</span></div>
+<div class="item">
+        <span class="mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="name">週六 Brick run 10m<span class="disc">跑</span></span>
+        <span class="meta hl">2.1k · 換到週三</span></div>
+<div class="item">
+        <span class="mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="name">週日 Long run 9k<span class="disc">跑</span></span>
+        <span class="meta hl">8.0k</span></div></div>
+    </div>
+<div class="grp">
+      <div class="grp-head">
+        <span class="tag keep">KEEP</span>
+        <span class="score"><span class="g">2</span><span class="s">/4</span></span>
+      </div>
+      <div class="items"><div class="item miss">
+        <span class="mark no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="name">週一 Swim 0:45<span class="disc">游</span></span>
+        <span class="meta">沒做</span></div>
+<div class="item">
+        <span class="mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="name">週一 Strength 30–45m<span class="disc">肌力</span></span>
+        <span class="meta hl">31min · 換到週二</span></div>
+<div class="item miss">
+        <span class="mark no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="name">週三 FTP/ramp test<span class="disc">騎</span></span>
+        <span class="meta">換到週六</span></div>
+<div class="item">
+        <span class="mark ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>
+        <span class="name">週四 Strength 30–45m<span class="disc">肌力</span></span>
+        <span class="meta hl">21min</span></div></div>
+    </div>
+<div class="grp">
+      <div class="grp-head">
+        <span class="tag flex">FLEX</span>
+        <span class="score"><span class="s">0</span><span class="s">/1</span></span>
+      </div>
+      <div class="items"><div class="item miss">
+        <span class="mark no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="name">週五 Calf release</span>
+        <span class="meta">沒做</span></div></div>
+    </div></div></section>
+
+  <section><div class="sec-head"><span class="n">3</span><h2>實際 vs 計畫（關鍵課）</h2></div>
+      <div class="card "><ul class="md-list"><li><strong>長騎（07-08，34.9k／85min／101W／HR134）</strong>：功率壓得很輕（101W 甚至低於 Z2 下緣 109W），導入期這樣沒問題，甚至是好紀律——你騎車是強項，管得住功率正是我們要的。</li><li><strong>下車 brick（07-08，Ride 後接 Run 2.1k／HR158）</strong>：<strong>這是本週最有價值的一堂</strong>——你把跑接在騎後面做了，正好打「限制段＝run-off-bike」。導入期能做到這點很好。</li><li><strong>長跑（07-12，8.0k／69min／↑101m／HR156）</strong>：颱風後泥地＋爬升 101m，配速慢是地形造成的，不用在意；但 HR156 已在 easy 區間上緣（easy 目標 142–150）。</li><li><strong>易跑強度偏高</strong>：週二易跑 HR160、長跑 HR156——導入期「輕鬆日要真的輕鬆」，這兩堂都熱了一點（strides 會拉高瞬間心率屬正常，但整體均值想壓低）。</li></ul></div></section>
+  <section><div class="sec-head"><span class="n">4</span><h2>亮點 &amp; 警訊</h2></div>
+      <div class="card "><ul class="md-list"><li><span style="color:#2e7d32"><strong>亮點</strong></span>：三堂 core 長課全收＋主動做了下車 brick，正中限制段；兩次肌力到位。</li><li><span style="color:#c62828"><strong>警訊</strong></span>：<strong>FTP/ramp 測試連兩次沒做</strong>（週三挪週六仍未執行）。它是 §9 最優先的前置條件——沒有它，後面所有 IF 0.68–0.72 的配速基準都是紙上數字。</li></ul></div></section>
+  <section><div class="sec-head"><span class="n">5</span><h2>下週建議</h2></div>
+      <div class="card "><ul class="md-list"><li>Week 3 是 <strong>2:1 的恢復週</strong>，量本來就該降——<strong>上週漏的週四易跑、游泳不要追補</strong>，順順走就好。</li><li><strong>易跑心率壓回 HR&lt;150</strong>：恢復週正好練「慢得下來」，別讓輕鬆日變中強度。</li><li><strong>FTP 測試別排恢復週</strong>（是高強度、和減量衝突）→ 挪到 <strong>Week 4 精神好時</strong>做，訓練台上進行、不怕雨。</li></ul></div></section>
+  <section><div class="sec-head"><span class="n">6</span><h2>天氣提醒</h2></div>
+    <div class="card weather-card"><div class="wx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16h9a4 4 0 0 0 .3-8A5.5 5.5 0 0 0 5.5 9 3.5 3.5 0 0 0 6.5 16"/><path d="M8 20l1-2M12 20.5l1-2.5M16 20l1-2"/></svg></div><div class="body"><p>下週新北<strong>七天全雷雨、週一還夾雹</strong>，沒有乾窗口：</p>
+<ul class="md-list"><li><strong>週六長騎直接改室內訓練台</strong>（你有，功率更準又不淋雨）——這週不用糾結戶外。</li><li><strong>跑步</strong>沒跑步機，週日雨勢一樣大但風最小（5km/h），若要跑就挑那天、穿排水好的鞋、路線避開河濱泥地（就是這週你差點滑倒那種）；恢復週跑量短，真不行改當週減量也 OK。</li><li>游泳不受天氣影響，反而是本週最穩的一項——想補動能可以游。</li></ul></div></div></section>
+
+  <div class="foot">三鐵週回顧 · Week 2 · 由 intervals.icu 自動配對打卡</div>
+</div>
+</body>
+</html>
