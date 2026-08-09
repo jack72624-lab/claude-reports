@@ -24,6 +24,16 @@
   <itunes:type>episodic</itunes:type>
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>精算 AI 與身體預算對帳單</title>
+    <description>〔深入探討〕本週新增／更新：AI、自我成長、運動健康。涵蓋 AI產出自我驗證、MCP 執行層與導入判準、MCP 機制與常用 server、多巴胺與動機的神經科學（Andrew Huberman）、預測腦與意義建構（Lisa Feldman Barrett）、_運動健康地圖、身體預算與代謝觀點的憂鬱（Lisa Feldman Barrett）。</description>
+    <itunes:summary>〔深入探討〕本週新增／更新：AI、自我成長、運動健康。涵蓋 AI產出自我驗證、MCP 執行層與導入判準、MCP 機制與常用 server、多巴胺與動機的神經科學（Andrew Huberman）、預測腦與意義建構（Lisa Feldman Barrett）、_運動健康地圖、身體預算與代謝觀點的憂鬱（Lisa Feldman Barrett）。</itunes:summary>
+    <enclosure url="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/audio/ep-2026-08-10-mixed.mp3" length="22539003" type="audio/mpeg"/>
+    <guid isPermaLink="false">ep-2026-08-10-mixed</guid>
+    <pubDate>Mon, 10 Aug 2026 09:00:00 +0800</pubDate>
+    <itunes:author>Jack</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+  </item>
+  <item>
     <title>破解AI與財富健康五大誤區</title>
     <description>〔深入探討〕本週新增／更新：AI、哲學思辨、投資、網站製作、運動健康。涵蓋 HTML 工作介面 pattern（Thariq）、STA 筆記系統（Source-Topic-Argument）、_AI地圖、廣義相對論與科學發現的極限（Adam Brown）、_投資地圖、大週期與國家債務（Ray Dalio）、網站設計參考庫、_運動健康地圖、維生素D・睡眠・B群（Stasha Gominak）。</description>
     <itunes:summary>〔深入探討〕本週新增／更新：AI、哲學思辨、投資、網站製作、運動健康。涵蓋 HTML 工作介面 pattern（Thariq）、STA 筆記系統（Source-Topic-Argument）、_AI地圖、廣義相對論與科學發現的極限（Adam Brown）、_投資地圖、大週期與國家債務（Ray Dalio）、網站設計參考庫、_運動健康地圖、維生素D・睡眠・B群（Stasha Gominak）。</itunes:summary>
