@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三鐵週回顧 · Week 9（Aug 24~30）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#161813;--fg:#e7eae3;--muted:#8b9184;--faint:#565d52;
+  --accent:#a9b6a0;--line:rgba(231,234,227,.11);--surface:rgba(231,234,227,.03);
+  --ok:#83bf9c;--ok-soft:rgba(131,191,156,.12);
+  --warn:#d3ab63;--warn-soft:rgba(211,171,99,.12);
+  --bad:#cf897f;--bad-soft:rgba(207,137,127,.12);
+  --mono:"SF Mono",ui-monospace,"Menlo","Consolas","Noto Serif TC","Songti TC",serif;
+  --maxw:760px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-variant-numeric:tabular-nums;
+  font-family:-apple-system,"Noto Serif TC","Songti TC","Segoe UI",system-ui,serif;
+  -webkit-font-smoothing:antialiased;line-height:1.75;overflow-x:hidden}
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:60}
+.progress .bar{height:100%;width:0;background:var(--accent)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.caps{font-family:var(--mono);text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--accent)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* HERO */
+#hero{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:8vh 24px}
+#hero .inner{max-width:var(--maxw);margin:0 auto;width:100%}
+#hero .eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.28em;font-size:12px;color:var(--accent);margin-bottom:26px}
+#hero h1{font-size:clamp(46px,13vw,120px);font-weight:200;line-height:.98;letter-spacing:.01em}
+#hero h1 small{display:block;font-size:clamp(20px,4.4vw,30px);font-weight:300;color:var(--muted);margin-top:14px;letter-spacing:.02em}
+#hero .badges{display:flex;gap:10px;margin-top:30px;flex-wrap:wrap}
+#hero .pill{font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:6px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}
+#hero .pill.acc{color:var(--accent);border-color:rgba(169,182,160,.4)}
+.gauge{display:flex;align-items:center;gap:26px;margin-top:12vh}
+.gauge svg{transform:rotate(-90deg);flex:0 0 auto}
+.gauge .rg-bg{stroke:var(--line)}
+.gauge .rg-fg{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.5,0,.15,1)}
+.gauge .num{font-size:clamp(52px,13vw,96px);font-weight:200;line-height:1;letter-spacing:-.02em}
+.gauge .num i{font-style:normal;font-size:.4em;color:var(--muted)}
+.gauge .lab{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;margin-top:8px}
+
+/* section 共用 */
+section.sec{padding:14vh 0}
+.sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:34px}
+.sechead .no{font-family:var(--mono);font-size:13px;color:var(--faint)}
+.sechead h2{font-size:clamp(22px,4.4vw,32px);font-weight:300;letter-spacing:.01em}
+
+/* 一句話總結 */
+#summary .big{font-size:clamp(22px,4.8vw,34px);font-weight:200;line-height:1.5}
+#summary .big strong{color:var(--accent);font-weight:400}
+
+/* 完成度 */
+.grp{margin-bottom:30px}
+.grp .gh{display:flex;align-items:baseline;gap:14px;margin-bottom:14px}
+.grp .gh .tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;padding:3px 10px;border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+.grp .gh .tag.core{color:var(--accent);border-color:rgba(169,182,160,.4)}
+.grp .gh .sc{font-family:var(--mono);font-size:15px}
+.grp .gh .sc b{font-weight:600}.grp .gh .sc s{text-decoration:none;color:var(--faint)}
+.grp .gh .hint{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.06em}
+.item{display:flex;align-items:center;gap:14px;padding:12px 2px;border-top:1px solid var(--line)}
+.grp .item:last-child{border-bottom:1px solid var(--line)}
+.mk{flex:0 0 auto;width:18px;height:18px}
+.mk.ok{color:var(--ok)}.mk.no{color:var(--bad)}
+.mk svg{width:100%;height:100%}
+.item .nm{font-size:15.5px}
+.item.miss .nm{color:var(--muted)}
+.item .d{font-family:var(--mono);font-size:11px;color:var(--faint);border:1px solid var(--line);border-radius:3px;padding:0 6px;margin-left:2px}
+.item .m{margin-left:auto;font-family:var(--mono);font-size:13.5px;color:var(--muted)}
+.item .m.hl{color:var(--ok)}
+
+/* 實際 vs 計畫（關鍵課大數字卡） */
+.sess{display:grid;gap:18px}
+.scard{border-top:1px solid var(--line);padding:22px 0}
+.scard .st{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.scard .st b{font-size:19px;font-weight:400}
+.scard .st .dt{font-family:var(--mono);font-size:12px;color:var(--faint)}
+.stats{display:flex;gap:12px 32px;flex-wrap:wrap;margin-bottom:16px}
+.stat b{font-size:clamp(30px,7vw,44px);font-weight:200;letter-spacing:-.01em}
+.stat.w b{color:var(--warn)}
+.stat i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--faint);margin-left:6px}
+.scard p{color:var(--muted);font-size:15px;max-width:60ch}
+
+/* 亮點 / 警訊 */
+.notes{display:grid;gap:16px}
+@media(min-width:600px){.notes{grid-template-columns:1fr 1fr}}
+.note{border:1px solid var(--line);border-radius:10px;padding:20px}
+.note.good{background:var(--ok-soft);border-color:rgba(131,191,156,.28)}
+.note.risk{background:var(--bad-soft);border-color:rgba(207,137,127,.28)}
+.note .lb{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.note.good .lb{color:var(--ok)}.note.risk .lb{color:var(--bad)}
+.note p{font-size:14.5px;line-height:1.7}
+.note strong{color:var(--fg);font-weight:600}
+
+/* 建議 */
+.advice{list-style:none}
+.advice li{display:flex;gap:16px;padding:16px 2px;border-top:1px solid var(--line)}
+.advice li:last-child{border-bottom:1px solid var(--line)}
+.advice .i{flex:0 0 auto;font-family:var(--mono);font-size:13px;color:var(--accent)}
+.advice p{font-size:15.5px;line-height:1.65}
+.advice strong{color:var(--accent);font-weight:400}
+
+/* 天氣 */
+.weather{border:1px solid var(--warn-soft);background:var(--warn-soft);border-radius:10px;padding:22px;display:flex;gap:18px}
+.weather .wx{flex:0 0 auto;color:var(--warn)}
+.weather .body{font-size:15px;line-height:1.7;min-width:0}
+.weather strong{color:var(--warn);font-weight:500}
+.weather .md-list{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.weather .md-list li{padding-left:14px;position:relative}
+.weather .md-list li:before{content:"";position:absolute;left:0;top:11px;width:4px;height:4px;border-radius:50%;background:var(--warn)}
+
+/* 敘述 fallback（無結構化資料時） */
+.md-block .md-list,.md-block>ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.md-block li{padding-left:16px;position:relative;font-size:15px;line-height:1.65}
+.md-block li:before{content:"";position:absolute;left:2px;top:12px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.md-block li.sub{padding-left:30px;color:var(--muted);font-size:14px}
+.md-block p{font-size:15px;line-height:1.7}.md-block p+p{margin-top:10px}
+.md-block strong,blockquote strong{color:var(--accent);font-weight:400}
+blockquote{border-left:2px solid var(--line);padding:8px 14px;color:var(--muted);font-size:14px;margin:6px 0}
+
+/* 營養 · 減脂（section 07） */
+.nz-guards{display:grid;gap:10px;margin-bottom:26px}
+.nz-guard{border:1px solid rgba(211,171,99,.28);background:var(--warn-soft);border-radius:10px;padding:16px 18px}
+.nz-guard .lb{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--warn);display:block;margin-bottom:6px}
+.nz-guard p{font-size:14.5px;line-height:1.7}
+.nz-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.nz-stat{background:var(--bg);padding:16px 18px;display:flex;flex-direction:column;gap:4px}
+.nz-stat .lb{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--faint)}
+.nz-stat .v{font-size:clamp(24px,5.4vw,32px);font-weight:200;letter-spacing:-.01em;line-height:1.15}
+.nz-stat .v i{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--faint);margin-left:5px}
+.nz-stat .v.ok{color:var(--ok)}.nz-stat .v.warn{color:var(--warn)}.nz-stat .v.bad{color:var(--bad)}
+.nz-stat .v.wide{font-size:clamp(19px,4.2vw,24px);white-space:nowrap}
+.nz-stat .nt{font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.5}
+#nutrition .md-block{margin-top:30px}
+.nz-fig{margin:30px 0 0}
+.nz-fig figcaption{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:12px}
+.nz-fig figcaption span{color:var(--faint);letter-spacing:0}
+.nz-fig svg{display:block;width:100%;height:auto;overflow:visible}
+.nz-fig .gl{stroke:var(--line);stroke-width:1}
+.nz-fig .gl.dash{stroke-dasharray:3 4}
+.nz-fig .ax{font-family:var(--mono);font-size:11px;fill:var(--faint)}
+.nz-fig .ax.hl{fill:var(--fg);font-size:13px}
+.nz-fig .ln{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.nz-fig .ln.soft{stroke:rgba(169,182,160,.45)}
+.nz-fig .tgt{fill:none;stroke:var(--faint);stroke-width:2;stroke-dasharray:6 5;stroke-linecap:round}
+.nz-fig .pt{fill:var(--accent);stroke:var(--bg);stroke-width:2}
+.nz-notes{margin-top:36px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.nz-notes summary{cursor:pointer;padding:16px 20px;font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.04em;list-style:none;display:flex;align-items:center;gap:10px}
+.nz-notes summary::-webkit-details-marker{display:none}
+.nz-notes summary:before{content:"";width:0;height:0;border-left:5px solid var(--faint);border-top:4px solid transparent;border-bottom:4px solid transparent;flex:0 0 auto;transition:transform .15s ease}
+.nz-notes[open] summary:before{transform:rotate(90deg)}
+.nz-notes summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.nz-notes-body{padding:0 20px 18px;display:grid;gap:18px}
+.nz-note .nh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.nz-note .nh b{font-size:15.5px;font-weight:400}
+.nz-note .nh .dt{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.nz-note p{font-size:14px;line-height:1.75;color:var(--muted);max-width:62ch}
+.nz-note.done{opacity:.5}
+
+footer{text-align:center;color:var(--faint);font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:12vh 24px 12vh;border-top:1px solid var(--line);margin-top:6vh}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}
+  .gauge .rg-fg{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<section id="hero">
+  <div class="inner">
+    <div class="eyebrow">三鐵週回顧 · Weekly Review</div>
+    <h1>Week 9<small>訓練回顧</small></h1>
+    <div class="badges">
+      <span class="pill acc">減量週</span>
+      <span class="pill">Aug 24~30</span>
+    </div>
+    <div class="gauge">
+      <svg width="128" height="128" viewBox="0 0 128 128">
+        <circle class="rg-bg" cx="64" cy="64" r="56" fill="none" stroke-width="4"/>
+        <circle class="rg-fg" id="ring" cx="64" cy="64" r="56" fill="none" stroke-width="4" stroke-dasharray="351.9" stroke-dashoffset="351.9"/>
+      </svg>
+      <div>
+        <div class="num"><span id="pct">0</span><i>%</i></div>
+        <div class="lab">0 / 5 完成 · 減量週</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="summary"><div class="wrap">
+  <div class="sechead reveal"><span class="no">01</span><h2>一句話總結</h2></div>
+  <p class="big reveal">這週 0/5 不是失守，是計畫內的旅行減量週被如實反映出來——真正要盯的不是這七天，是回國後那兩天怎麼銜接 9/7 的武嶺長騎。</p></div></section>
+
+<section class="sec" id="completion"><div class="wrap">
+  <div class="sechead reveal"><span class="no">02</span><h2>完成度</h2></div>
+  <div class="grp reveal">
+      <div class="gh"><span class="tag">KEEP</span><span class="sc"><s>0/1</s></span></div>
+      <div class="item miss">
+        <span class="mk no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="nm">週一 Strength 30m<span class="d">肌力</span></span>
+        <span class="m">沒做</span></div></div>
+<div class="grp reveal">
+      <div class="gh"><span class="tag">FLEX</span><span class="sc"><s>0/4</s></span></div>
+      <div class="item miss">
+        <span class="mk no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="nm">週二 Run 4k easy<span class="d">跑</span></span>
+        <span class="m">沒做</span></div>
+<div class="item miss">
+        <span class="mk no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="nm">週四 Run 4k easy<span class="d">跑</span></span>
+        <span class="m">沒做</span></div>
+<div class="item miss">
+        <span class="mk no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="nm">週五 Calf release</span>
+        <span class="m">沒做</span></div>
+<div class="item miss">
+        <span class="mk no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg></span>
+        <span class="nm">週六 Run 6k easy<span class="d">跑</span></span>
+        <span class="m">沒做</span></div></div></div></section>
+
+<section class="sec"><div class="wrap"><div class="sechead reveal"><span class="no">03</span><h2>實際 vs 計畫（關鍵課）</h2></div><div class="md-block reveal"><p><strong>本週零筆活動紀錄</strong>，所以 HR／配速／瓦數這層我完全沒有東西可以判——不是強度對不對的問題，是根本沒有資料。提醒一件事：日本這幾天的步行，如果手錶沒把它記成活動，就不會出現在這份報告裡，也不會進 intervals.icu。想讓走的量被看見，剩下幾天可以手動開一個「Walk」記著。</p>
+<p>長騎、長跑、brick 本週表上就沒有，無從比對。<strong>限制段（跑步）本週零里程</strong>——這是導入期第一次整週沒跑，連續性斷了一格，Week 10 前五天還會再斷一週，所以下面的建議全部圍著「9/5–9/6 怎麼把腿叫醒」轉。</p></div></div></section>
+<section class="sec"><div class="wrap"><div class="sechead reveal"><span class="no">04</span><h2>亮點 &amp; 警訊</h2></div><div class="md-block reveal"><p><strong>亮點</strong>：減量週剛好對齊旅行，這是 8/25 那個決定裡最划算的一步——沒有硬把課表塞進行程，也沒有累積「我又沒練」的罪惡感。導入期最怕的失敗模式是斷掉不回來，不是某一週練得少。</p>
+<p><strong>警訊</strong>：<strong>9/7 武嶺長騎前，你會有很長一段沒有騎車紀錄。</strong> 本週 7 天零活動是確定的（再往前的紀錄不在這份資料裡，我沒查），加上 8/31–9/6 這週，若不補一次踩踏，9/7 上武嶺等於連續兩週沒騎就直接吃一個長爬坡。停騎本身不可怕（PLAN §2 機制 D 寫過，主要是掉血漿量、回騎幾次就補回），可怕的是<strong>用「休息很久很有力」的感覺去騎前段</strong>，那正是你歷年崩盤的同一個模式，只是換到爬坡上。</p></div></div></section>
+<section class="sec"><div class="wrap"><div class="sechead reveal"><span class="no">05</span><h2>下週建議</h2></div><ul class="advice"><li class="reveal"><span class="i">01</span><p><strong>週一到週五（8/31–9/4，還在日本）</strong>：照既定走，步行取代訓練，不補課、不追進度。唯一建議加的是<strong>每天走完後小腿放鬆 5–10 分</strong>——就是週五那堂 flex，不需要器材，旅行日走量大，對阿基里斯／腳踝（你的觀察項）是這週投報率最高的一件事。</p></li><li class="reveal"><span class="i">02</span><p><strong>週六 9/5（回國第一天）</strong>：<strong>別排跑步，改台上開腿 30–45 分 Z2</strong>。目的只有一個——讓腿在武嶺前先想起踩踏，不是練體能。當天新北降雨 80%，本來也該室內。</p></li><li class="reveal"><span class="i">03</span><p><strong>週日 9/6</strong>：輕鬆跑 20–30 分（早上跑），加上武嶺的裝備與補給檢查。<strong>不要排長課</strong>，前一天累到腿，9/7 會加倍難受。</p></li><li class="reveal"><span class="i">04</span><p><strong>9/7 武嶺當天的原則</strong>：前 1/3 段刻意壓低、把力氣留到後段。長爬坡沒辦法照 IF 0.68–0.72 那個平路區間套，但「別在前段透支」這條規則完全適用，而且久沒騎會讓你高估自己。</p></li></ul></div></section>
+<section class="sec" id="weather"><div class="wrap">
+  <div class="sechead reveal"><span class="no">06</span><h2>天氣提醒</h2></div>
+  <div class="weather reveal"><span class="wx"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16h9a4 4 0 0 0 .3-8A5.5 5.5 0 0 0 5.5 9 3.5 3.5 0 0 0 6.5 16"/><path d="M8 20l1-2M12 20.5l1-2.5M16 20l1-2"/></svg></span><div class="body"><p>Week 10 新北<strong>七天全雨</strong>（一 82%、二 91%、三 71% 雷雨夾雹、四 96% 雷雨夾雹、五 90%、六 80%、日 69%）。不過<strong>前五天你人在日本，這份新北預報對你沒有參考價值</strong>——真正會影響你的只有：</p>
+<ul class="md-list"><li><strong>週六 9/5（毛毛雨 80%）</strong>：本來就建議室內台上，天氣剛好幫你決定。</li><li><strong>週日 9/6（多雲 69%）</strong>：全週最好的一天，輕鬆跑抓早上；真的下起來就改成第二次台上開腿，別硬淋。</li></ul></div></div></div></section>
+
+<section class="sec" id="nutrition"><div class="wrap">
+      <div class="sechead reveal"><span class="no">07</span><h2>營養 · 減脂進度</h2></div><div class="nz-guards reveal"><div class="nz-guard"><span class="lb">資料缺漏</span><p>本週（2026-08-24 → 2026-08-30）沒有體重量測，以下體重相關數字全部來自 2026-08-23 那筆，已經是 7 天前的資料，不能當本週現況讀。</p></div><div class="nz-guard"><span class="lb">資料缺漏</span><p>6 天沒有飲食紀錄（2026-08-25、2026-08-26、2026-08-27、2026-08-28、2026-08-29、2026-08-30）。下面的平均只用有紀錄的 1 天算，<strong>沒有把缺的那幾天當成 0 大卡</strong>——如果那幾天其實有吃只是沒記，實際攝取會比這裡高。</p></div></div><div class="nz-stats reveal"><div class="nz-stat"><span class="lb">本週攝取</span>
+      <span class="v">2316<i>kcal</i></span>
+      <span class="nt">目標 1994 · +322/天</span></div></div><div class="md-block reveal"><p><strong>先講資料狀況，這週兩項都有缺</strong>：</p>
+<ul class="md-list"><li><strong>本週沒有量體重</strong>，唯一的體重數字來自 <strong>2026-08-23</strong>，已經是 7 天前，不能當現況讀。</li><li><strong>6 天沒有飲食紀錄</strong>（8/25–8/30）。下面的平均只代表 <strong>8/24 那一天</strong>，缺的那幾天沒有被當成 0 大卡算——如果那幾天有吃只是沒記，實際攝取會比這裡高。</li></ul>
+<p><strong>有紀錄的那一天（8/24，休息日）</strong>：目標 1994 → 實際 2316，<strong>+322 kcal</strong>。碳水 195/223、蛋白 155/165、脂肪 66/85。</p>
+<p>判讀：</p></div><figure class="nz-fig reveal"><figcaption>體重趨勢　<span>實線＝實際量測，虛線＝設定掉速的目標軌跡</span></figcaption>
+    <svg viewBox="0 0 720 210" role="img" aria-label="體重趨勢圖"><line x1="46" y1="180.0" x2="674" y2="180.0" class="gl"/><text x="38" y="184.0" text-anchor="end" class="ax">71.5</text><line x1="46" y1="130.0" x2="674" y2="130.0" class="gl"/><text x="38" y="134.0" text-anchor="end" class="ax">72.7</text><line x1="46" y1="80.0" x2="674" y2="80.0" class="gl"/><text x="38" y="84.0" text-anchor="end" class="ax">73.9</text><line x1="46" y1="30.0" x2="674" y2="30.0" class="gl"/><text x="38" y="34.0" text-anchor="end" class="ax">75.1</text><polyline points="46.0,160.1 87.2,160.1 169.5,75.3 241.6,49.9 313.7,83.8 385.7,100.8 457.8,122.0 529.9,96.5 601.9,66.8 674.0,83.8" class="ln"/><circle cx="46.0" cy="160.1" r="4.5" class="pt"/><text x="46.0" y="200" text-anchor="middle" class="ax">06-23</text><circle cx="87.2" cy="160.1" r="4.5" class="pt"/><circle cx="169.5" cy="75.3" r="4.5" class="pt"/><circle cx="241.6" cy="49.9" r="4.5" class="pt"/><circle cx="313.7" cy="83.8" r="4.5" class="pt"/><circle cx="385.7" cy="100.8" r="4.5" class="pt"/><circle cx="457.8" cy="122.0" r="4.5" class="pt"/><circle cx="529.9" cy="96.5" r="4.5" class="pt"/><circle cx="601.9" cy="66.8" r="4.5" class="pt"/><circle cx="674.0" cy="83.8" r="4.5" class="pt"/><text x="674.0" y="200" text-anchor="middle" class="ax">08-23</text><text x="682.0" y="73.8" class="ax hl">73.8</text></svg></figure><details class="nz-notes reveal">
+    <summary>背景與一次性發現（7 則待處理，講一次就夠的東西收在這裡）</summary>
+    <div class="nz-notes-body"><div class="nz-note">
+      <div class="nh"><b>8/26–9/4 日本旅行＝維持期，資料空白是預期</b><span class="dt">2026-08-25</span></div>
+      <p>旅行期間切到 maintain（phase.csv 已寫），不記 food-log、不量體重，訓練以步行取代。所以 8/30 與 9/6 兩份週報的飲食與訓練空白屬預期，不是管線壞掉。回國銜接：9/7 武嶺長騎、9/9 恢復 cut（目標 70 kg、rate 下修為 0.2 kg/週，依 8/24 減脂期體檢結論）、9/13 週日晨起量體重當新基準（之前的讀數被旅行的肝醣與水污染）。此後掉速判讀一律對 0.2 不是 0.35。另約定一個對帳點：9/9–10/4 跑四週乾淨資料，若赤字日執行有改善、掉速仍低於 0.16 kg/週（0.2 的 80%），把赤字從 −100g 碳水加深到 −150g——屆時改 SKILL.md＋fuel-targets.mjs＋測試三處一起改，不現場調。10/5 的週回顧看這件事。9/13 之後這則可改 resolved（對帳點那句留到 10/5）。</p></div><div class="nz-note">
+      <div class="nh"><b>weight-log.csv 的 skeletal_muscle_kg 欄名是錯的</b><span class="dt">2026-08-10</span></div>
+      <p>OMRON 家用機輸出的是骨骼肌「率」（%），不是公斤。數值本身沒錯，欄名誤導。本報告一律當百分比處理，需要公斤時用體重換算。欄名建議改成 skeletal_muscle_pct，但要同步檢查 Telegram bridge 的寫入與體組成面板，所以還沒動。</p></div><div class="nz-note">
+      <div class="nh"><b>最該加的不是更好的體脂機，是一條皮尺</b><span class="dt">2026-08-09</span></div>
+      <p>家用市場清一色是 BIA，換更貴的機器一樣被碳水影響。腰圍幾乎不受肝醣帶水影響、重複性好，而且量的正好是兩點式機器最弱的軀幹。固定早上、肚臍高度、吐氣末量。真的要可信的絕對值就一年做一到兩次 DEXA 當校準點。</p></div><div class="nz-note">
+      <div class="nh"><b>照 skill 目標吃，也達不到 0.35 kg/週</b><span class="dt">2026-08-09</span></div>
+      <p>反推 TDEE 約 2,430 kcal（能量平衡與體脂機 BMR×1.44 兩條獨立路徑吻合）。要掉 0.35 kg/週需要吃 2,045，但 triathlon-fuel 的目標套進實際訓練分佈平均是 2,248——完美照做只會掉 0.17 kg/週。原因是赤字只在 T ≤ 60 分的日子扣 100g 碳水，而長課日的目標高達 3,000–3,300 把平均拉起來。要嘛把 rate_kgwk 調成 0.25，要嘛加深休息日赤字。</p></div><div class="nz-note">
+      <div class="nh"><b>量測前一天的碳水會直接左右體脂讀數</b><span class="dt">2026-08-09</span></div>
+      <p>肌肉每存 1 克肝醣會一起帶進約 3 克水，水導電、脂肪不導電。所以前一天碳水吃得多的早上，機器會讀到「比較不胖、肌肉比較多」。減脂期四次量測完全照這個順序排（前一天碳水 174/205/243/317 g → 體脂 22.3/22.0/21.4/20.4%）。對策是週六碳水穩在 220–250 g，週日的數字才可比。</p></div><div class="nz-note">
+      <div class="nh"><b>體脂率和骨骼肌是同一個量測，不是兩個證據</b><span class="dt">2026-08-09</span></div>
+      <p>體脂機用生物電阻抗（BIA）＝通一道微弱電流量身體阻抗，再回推組成。所有欄位都來自同一個電阻值，所以體脂率和骨骼肌率必定反向連動（六次量測相關係數 −0.998，骨骼肌重佔淨體重的比例固定在 0.463、前後只差 1.7%）。把「體脂上升」和「肌肉下降」當成兩件壞事，等於同一件事被算了兩次。</p></div><div class="nz-note">
+      <div class="nh"><b>碳水表「120–180 分」那格的 7 g/kg 還沒結案</b><span class="dt">2026-08-02</span></div>
+      <p>SKILL.md 標為暫定值，判準是體脂率上升＋骨骼肌下降就調成 6。但同一段也寫了「要兩次同方向」，而實際序列是 7/26 升 → 8/02 降 → 8/09 升，一路交替，照它自己的規則還不能結案。要改就改表本身、不要現場調數字。</p></div></div></details></div></section>
+
+<footer>三鐵週回顧 · Week 9 · 由 intervals.icu 自動配對打卡</footer>
+
+<script>
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const bar=document.getElementById('bar');
+addEventListener('scroll',()=>{const m=document.documentElement.scrollHeight-innerHeight;bar.style.width=(clamp(scrollY/(m||1),0,1)*100)+'%'},{passive:true});
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.18,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const pctEl=document.getElementById('pct'),ring=document.getElementById('ring');
+const TARGET=0,C=351.9;
+if(reduce){pctEl.textContent=TARGET;ring.style.transition='none';ring.setAttribute('stroke-dashoffset',(C*(1-TARGET/100)).toFixed(1));}
+else{
+  requestAnimationFrame(()=>requestAnimationFrame(()=>ring.setAttribute('stroke-dashoffset',(C*(1-TARGET/100)).toFixed(1))));
+  const dur=1400;let s=null;const ease=t=>1-Math.pow(1-t,3);
+  (function step(ts){if(!s)s=ts;const p=clamp((ts-s)/dur,0,1);pctEl.textContent=Math.round(TARGET*ease(p));if(p<1)requestAnimationFrame(step);})(0);
+}
+</script>
+</body>
+</html>
