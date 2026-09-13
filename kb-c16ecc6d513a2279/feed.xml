@@ -24,6 +24,16 @@
   <itunes:type>episodic</itunes:type>
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>15美金打造始祖鳥級AI廣告</title>
+    <description>〔深入探討〕本週複習：AI影像生成。涵蓋 Nano-Banana提示詞庫、生圖工具與資源、生成式 AI 影片 pipeline 庫。</description>
+    <itunes:summary>〔深入探討〕本週複習：AI影像生成。涵蓋 Nano-Banana提示詞庫、生圖工具與資源、生成式 AI 影片 pipeline 庫。</itunes:summary>
+    <enclosure url="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/audio/ep-2026-09-14-ai-image.mp3" length="18384488" type="audio/mpeg"/>
+    <guid isPermaLink="false">ep-2026-09-14-ai-image</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 +0800</pubDate>
+    <itunes:author>Jack</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+  </item>
+  <item>
     <title>讓 AI 寫出你的文字品味</title>
     <description>〔批判檢視〕本週複習：品味。涵蓋 文字品味。</description>
     <itunes:summary>〔批判檢視〕本週複習：品味。涵蓋 文字品味。</itunes:summary>
