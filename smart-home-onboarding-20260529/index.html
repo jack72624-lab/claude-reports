@@ -34,7 +34,7 @@
   --gutter:clamp(20px,4vw,72px);
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:auto}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto;scroll-snap-type:y mandatory}   /* 滑動一律停在整頁（2026-09-16 Jack：上下滑＝換頁） */
 html.smooth{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 h1,h2,h3,h4{margin:0;font-weight:500;line-height:1.2}
@@ -66,9 +66,9 @@ body.inslide .corner{opacity:1}
 .c-bl{left:var(--gutter);bottom:18px}.c-br{right:var(--gutter);bottom:18px}
 @media (max-width:720px){.c-bl,.c-br{display:none}}
 
-/* ── 幻燈：section 拉高、內層舞台 sticky 一屏 ── */
-.slide{position:relative}
-.x2{height:200dvh}.x3{height:300dvh}.x4{height:400dvh}.x1{height:100dvh}
+/* ── 幻燈：每頁剛好一屏、整頁吸附；頁內階段改用點的（2026-09-16 前是 section 拉高 2–4 屏、靠捲動換階段） ── */
+.slide{position:relative;scroll-snap-align:start}
+.x1,.x2,.x3,.x4{height:100dvh}   /* x2/x3/x4 只剩語意（原本幾個階段），高度已統一 */
 .stage{position:sticky;top:0;height:100dvh;display:grid;grid-template-columns:7fr 5fr;gap:clamp(20px,4vw,64px);align-items:center;
   padding:80px var(--gutter) 48px;overflow:hidden auto}
 .slide.flip .stage{grid-template-columns:5fr 7fr}
@@ -85,8 +85,10 @@ body.inslide .corner{opacity:1}
 .txt p.note b{color:var(--ink)}
 /* 階段清單：● 霧藍＝現在這一項、小 ● 鼠尾草＝做完的 */
 .marks{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
-.marks li{position:relative;padding-left:22px;font-size:15px;color:var(--grey);transition:color .35s}
-.marks li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:0;transform:scale(.4);transition:opacity .35s,transform .35s var(--ease),background .35s}
+.marks li{position:relative;padding:3px 0 3px 22px;font-size:15px;color:var(--grey);transition:color .35s;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){.marks li:not(.cur):hover{color:var(--ink-2)}}
+.marks li:focus-visible{outline:1px solid var(--acc);outline-offset:2px;border-radius:2px}
+.marks li::before{content:"";position:absolute;left:0;top:calc(.62em + 3px);width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:0;transform:scale(.4);transition:opacity .35s,transform .35s var(--ease),background .35s}
 .marks li.cur{color:var(--ink)}
 .marks li.cur::before{opacity:1;transform:scale(1)}
 .marks li.done{color:var(--ink-2)}
@@ -185,7 +187,7 @@ body.inslide .corner{opacity:1}
 .cap li.off{color:var(--grey)}
 
 /* ── 內文區（表格、清單、術語） ── */
-.flow{padding:clamp(56px,9vh,120px) var(--gutter);max-width:1180px;margin:0 auto}
+.flow{scroll-snap-align:start;padding:clamp(56px,9vh,120px) var(--gutter);max-width:1180px;margin:0 auto}   /* 也是吸附點，比一屏高的段落裡面可自由捲 */
 .flow .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:24px clamp(24px,5vw,80px)}
 .flow .grid>div{min-width:0}
 .flow .lbl{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding-top:6px}
@@ -231,7 +233,7 @@ body.inslide .corner{opacity:1}
 .end .stage{grid-template-columns:1fr;place-items:center;text-align:center}
 .end h2{font-size:clamp(30px,5vw,64px);font-weight:500;letter-spacing:-.01em}
 .end .credit{margin-top:26px;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);line-height:2}
-footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);font-family:var(--latin)}
+footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);font-family:var(--latin)}
 
 /* ── 手機：上圖下字 ── */
 @media (max-width:860px){
@@ -252,9 +254,9 @@ footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;
   .step .k{margin-bottom:3px}
   .steps{min-height:4.5em}
   /* 階段清單改成橫排，省下垂直空間 */
-  .marks{flex-direction:row;flex-wrap:wrap;gap:2px 14px;margin-bottom:8px}
-  .marks li{font-size:14px;padding-left:14px}
-  .marks li::before{width:6px;height:6px;top:.55em}
+  .marks{flex-direction:row;flex-wrap:wrap;gap:0 14px;margin-bottom:6px}
+  .marks li{font-size:14px;padding:6px 0 6px 14px}   /* 上下 6px：拇指點得到 */
+  .marks li::before{width:6px;height:6px;top:calc(.55em + 6px)}
   .hero .typed{font-size:24px}
   .stats b{font-size:40px}
   .flow .grid{grid-template-columns:minmax(0,1fr);gap:10px}
@@ -2692,17 +2694,26 @@ footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;
   }
   window.__applyStage = applyStage;   // 給驗證腳本逐階段截圖用
 
+  // --p 只管進場淡入（.rise）與 hero 打字；階段已改成點的，不再從 p 算
   function paint(s, p) {
     s.style.setProperty('--p', p.toFixed(3));
-    if (s.dataset.stages) {
-      var N = +s.dataset.stages;
-      // 最後一個階段多留一點捲動距離（×0.6），免得剛出現就被下一頁蓋掉
-      applyStage(s, Math.min(N - 1, Math.floor(p * (N + 0.6))));
-    }
     if (s.classList.contains('hero') && typed) {
       var q = clamp01((p - 0.08) / 0.32), n = Math.round(q * heroText.length);
       if (typed.textContent.length !== n) typed.textContent = heroText.slice(0, n);
     }
+  }
+
+  // 第一次進到某頁：--p 在 1 秒內從 0 跑到 1（hero 2.4 秒，打字要看得到）；回頭再看不重播，免得內容閃一下
+  function enter(s) {
+    if (s._entered) return;
+    s._entered = true;
+    if (reduce) { paint(s, 1); return; }
+    var dur = s.classList.contains('hero') ? 2400 : 1000, t0 = performance.now();
+    (function frame(now) {
+      var p = clamp01((now - t0) / dur);
+      paint(s, p);
+      if (p < 1) requestAnimationFrame(frame);
+    })(t0);
   }
 
   var active = -1, activeCh = -1;
@@ -2710,9 +2721,6 @@ footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;
     var y = window.scrollY, vh = window.innerHeight, mid = y + vh * 0.5, cur = -1;
     slides.forEach(function (s, i) {
       var top = rects[i].top, h = rects[i].h;
-      if (top > y + vh * 2 || top + h < y - vh) { return; }   // 離視窗太遠的不算
-      var p = reduce ? 1 : clamp01((y - top) / Math.max(1, h - vh));
-      paint(s, p);
       if (top <= mid && top + h > mid) cur = i;
     });
     if (cur !== active) {
@@ -2720,6 +2728,7 @@ footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;
       document.body.classList.toggle('inslide', cur >= 0);
       if (cur >= 0) {
         var s = slides[cur];
+        enter(s);
         cTL.textContent = s.dataset.ch || '';
         cTR.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
         cBL.textContent = s.dataset.sub || '';
@@ -2736,6 +2745,34 @@ footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;
   window.addEventListener('resize', function () { measure(); onScroll(); });
   // 所有分階段頁先套第 0 階段，捲到時第一格已經在
   slides.forEach(function (s) { if (s.dataset.stages) applyStage(s, reduce ? +s.dataset.stages - 1 : 0); });
+
+  // 換階段：夾在 0..N-1；超出範圍回 false（讓 ← → 知道該翻頁了）
+  function setStage(s, k) {
+    var N = +s.dataset.stages || 0;
+    if (!N || k < 0 || k > N - 1) return false;
+    applyStage(s, k); return true;
+  }
+  // 小主題清單（.marks li）：點哪個就跳到那個階段；鍵盤 Enter／空白鍵也算點
+  slides.forEach(function (s) {
+    if (!s.dataset.stages) return;
+    s.querySelectorAll('.marks li').forEach(function (li, i) {
+      li.setAttribute('role', 'button'); li.tabIndex = 0;
+      li.addEventListener('click', function () { setStage(s, i); });
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStage(s, i); } });
+    });
+  });
+  // ← →：先切這頁的階段，到頭了就翻頁（沒階段的頁直接翻）；↑ ↓ 與空白鍵是瀏覽器原生捲動，配吸附自然一頁一頁走
+  window.addEventListener('keydown', function (e) {
+    if (active < 0 || e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    var s = slides[active];
+    if (setStage(s, (s._stage || 0) + d)) return;
+    var next = slides[active + d];
+    if (next) next.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
   if (reduce && typed) typed.textContent = heroText;
   tick();
   // 平滑捲動等載入完成才開：帶 #hash 開頁時，錨點要直接落定、不要動畫捲幾千 px
