@@ -1,816 +1,2759 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>智能家庭入職培訓手冊</title>
-  <style>
-    :root {
-      --navy:    #161D26;
-      --blue:    #0073BB;
-      --blue-dk: #005A94;
-      --accent:  #F3F3F7;
-      --white:   #FFFFFF;
-      --text:    #16191F;
-      --mid:     #545B64;
-      --light:   #879596;
-      --border:  #DDE1E6;
-      --green:   #1D8348;
-      --red:     #C0392B;
-      --orange:  #D35400;
-      --r:       2px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: var(--text); background: var(--white); font-size: 15px; line-height: 1.7; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>智能家庭入門介紹 · vG</title>
+<!--
+  vG（2026-09-16）：vF 的圖全部換掉。底圖是 Gemini 3.1 Pro 生的 Apple 官網風產品渲染圖（assets/img/，
+  29 張、狀態成對的四組同構圖可淡入淡出），SVG 只在圖與圖之間畫線、端子、標題，圖／字／線互不重疊；
+  亮藍改成霧藍（#6e8199）＋鼠尾草（#8a9e8c），電線顏色照台灣慣例保留；官方 logo 原檔在 assets/logos/。
+  版型、捲動引擎、文字內容照 vF（幻燈捲動、章節照「訊號從手機到燈走的路」、四角索引）。
+  這一版要跟 assets/ 一起搬；產生器在 assets/_gen/build_vg.py，改圖改那支、別直接改這個檔。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   設計讀法：內部教育訓練頁，幻燈捲動版。
+   白底、一種墨色、灰角標、一個霧藍當重點色（不再用亮藍）；照片式底圖（Apple 官網產品頁那種渲染圖）
+   浮在白底上，SVG 只在圖與圖之間的走道畫線、端子、標題；一頁只講一件事，左圖右字交替。
+   例外：電路圖的線色是台灣配線慣例（紅 L、白/灰 N、黃燈線、綠地線），這是語意、不是裝飾；官方 logo 保留原色。
+   中文思源宋體，拉丁與數字走系統無襯線；不用斜體、不用 emoji。
+   ───────────────────────────────────────────────────────────── */
+:root{
+  color-scheme:light;
+  --bg:#fff; --ink:#1f1f1f; --ink-2:#55534f; --grey:#8a8a86; --grey-2:#c9c7c2; --line:rgba(31,31,31,.12); --line-2:rgba(31,31,31,.28);
+  --acc:#6e8199; --acc-soft:rgba(110,129,153,.10); --sage:#8a9e8c; --warm:#a39b90; --paper:#f4f3f1;
+  --wl:#c8402c; --wn:#8c8c88; --wy:#c9a227; --we:#2e7d4f; --wk:#1a1a1a;
+  --font:-apple-system,"Noto Serif TC","Songti TC",serif;
+  --latin:-apple-system,"Helvetica Neue","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --gutter:clamp(20px,4vw,72px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto}
+html.smooth{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{margin:0;font-weight:500;line-height:1.2}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+strong,b{font-weight:600}
+.latin{font-family:var(--latin)}
+.caps{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.mono{font-family:var(--mono);font-size:.9em}
+::selection{background:var(--acc);color:#fff}
 
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--navy); color: var(--white);
-      padding: 0 24px; display: flex; align-items: center; gap: 0;
-      border-bottom: 2px solid var(--blue); min-height: 52px;
-    }
-    .nav-brand { font-weight: 700; font-size: 15px; color: var(--white); margin-right: 32px; white-space: nowrap; }
-    .nav-links { display: flex; gap: 4px; overflow-x: auto; }
-    .nav-links a {
-      color: #C8D0D9; text-decoration: none; font-size: 13px;
-      padding: 6px 12px; border-radius: var(--r); white-space: nowrap;
-      transition: background .15s, color .15s;
-    }
-    .nav-links a:hover { background: rgba(255,255,255,.1); color: #fff; }
+/* ── 頂列 nav：細線、只有字 ── */
+.top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;align-items:center;gap:18px;padding:12px var(--gutter);
+  background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .brand{font-family:var(--latin);font-size:12px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.top nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.top nav::-webkit-scrollbar{display:none}
+.top nav a{display:inline-flex;align-items:center;font-size:13px;color:var(--ink-2);padding:6px 10px;white-space:nowrap;border-bottom:1px solid transparent;transition:color .25s,border-color .25s}
+.top nav a em{font-style:normal;font-family:var(--latin);font-size:11px;letter-spacing:.1em;margin-right:6px;color:var(--grey)}
+.top nav a.on{color:var(--ink);border-color:var(--acc)}
+@media (max-width:720px){.top nav{gap:8px}.top nav a{padding:8px 7px}.top nav a span{display:none}.top nav a em{margin:0;font-size:12px}.top{padding:10px 16px}}
 
-    /* HERO */
-    .hero {
-      background: linear-gradient(135deg, var(--navy) 0%, #1E2D40 100%);
-      color: var(--white); padding: 56px 32px 48px;
-    }
-    .hero-inner { max-width: 900px; margin: 0 auto; }
-    .eyebrow {
-      display: inline-block; background: var(--blue);
-      color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .8px;
-      text-transform: uppercase; padding: 3px 10px; border-radius: var(--r);
-      margin-bottom: 16px;
-    }
-    .hero h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 700; line-height: 1.3; margin-bottom: 12px; }
-    .hero p { color: #9FB3C8; font-size: 16px; max-width: 620px; }
-    .hero-meta { margin-top: 24px; display: flex; gap: 24px; flex-wrap: wrap; }
-    .hero-meta span { font-size: 13px; color: #7B8D9E; }
-    .hero-meta strong { color: #C8D0D9; }
+/* ── 四角固定索引 ── */
+.corner{position:fixed;z-index:20;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);pointer-events:none;
+  opacity:0;transition:opacity .4s}
+body.inslide .corner{opacity:1}
+.c-tl{left:var(--gutter);top:58px}.c-tr{right:var(--gutter);top:58px}
+.c-bl{left:var(--gutter);bottom:18px}.c-br{right:var(--gutter);bottom:18px}
+@media (max-width:720px){.c-bl,.c-br{display:none}}
 
-    /* LAYOUT */
-    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+/* ── 幻燈：section 拉高、內層舞台 sticky 一屏 ── */
+.slide{position:relative}
+.x2{height:200dvh}.x3{height:300dvh}.x4{height:400dvh}.x1{height:100dvh}
+.stage{position:sticky;top:0;height:100dvh;display:grid;grid-template-columns:7fr 5fr;gap:clamp(20px,4vw,64px);align-items:center;
+  padding:80px var(--gutter) 48px;overflow:hidden auto}
+.slide.flip .stage{grid-template-columns:5fr 7fr}
+.slide.flip .vis{order:2}.slide.flip .txt{order:1}
+.vis{position:relative;height:100%;max-height:calc(100dvh - 128px);display:grid;place-items:center;min-width:0}
+.vis svg.dg{width:100%;height:100%;max-height:78dvh;overflow:visible}
+.vis .bigimg{height:auto;max-height:70dvh;object-fit:contain}
+.txt{min-width:0;max-width:34em}
+.txt .tag{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:14px}
+.txt h2{font-size:clamp(26px,3.1vw,40px);font-weight:500;letter-spacing:-.005em;margin-bottom:18px}
+.txt h2 small{display:block;font-size:.5em;color:var(--ink-2);font-weight:400;margin-top:8px;letter-spacing:0}
+.txt p.lead{font-size:17px;line-height:1.8;color:var(--ink-2);margin-bottom:20px}
+.txt p.note{font-size:14px;line-height:1.75;color:var(--ink-2);margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.txt p.note b{color:var(--ink)}
+/* 階段清單：● 霧藍＝現在這一項、小 ● 鼠尾草＝做完的 */
+.marks{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+.marks li{position:relative;padding-left:22px;font-size:15px;color:var(--grey);transition:color .35s}
+.marks li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:0;transform:scale(.4);transition:opacity .35s,transform .35s var(--ease),background .35s}
+.marks li.cur{color:var(--ink)}
+.marks li.cur::before{opacity:1;transform:scale(1)}
+.marks li.done{color:var(--ink-2)}
+.marks li.done::before{opacity:1;transform:scale(.7);background:var(--sage)}
+/* 階段說明：疊在同一格、目前那段淡入 */
+.steps{display:grid;min-height:6.5em}
+.step{grid-area:1/1;opacity:0;transform:translateY(8px);transition:opacity .45s,transform .45s var(--ease);font-size:16px;line-height:1.8;pointer-events:none}
+.step.cur{opacity:1;transform:none;pointer-events:auto}
+.step b{font-weight:600}
+.step .k{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+/* 連續型：--p 切段淡入上移 */
+.rise{--u:clamp(0,calc((var(--p,0) - var(--t,0)) * 4),1);opacity:var(--u);transform:translateY(calc((1 - var(--u)) * 20px))}
+.kp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.kp li{position:relative;padding-left:26px;font-size:16px;line-height:1.7}
+.kp li::before{content:"";position:absolute;left:0;top:.7em;width:14px;height:1px;background:var(--acc)}
+.kp li b{display:block;font-weight:600}
 
-    /* SECTION */
-    .section { padding: 48px 0 32px; border-bottom: 1px solid var(--border); }
-    .section:last-child { border-bottom: none; }
-    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
-    .section-num {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--blue); color: #fff;
-      font-size: 14px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .section h2 { font-size: 22px; font-weight: 700; color: var(--navy); }
-    .section h3 { font-size: 16px; font-weight: 700; color: var(--navy); margin: 24px 0 10px; }
+/* ── 圖解 SVG 通用 ── */
+.dg{font-family:var(--font);font-size:12px}
+.dg text{fill:var(--ink);stroke:none}
+.dg text.lb{font-size:12.5px}
+.dg text.sub{font-size:11px;fill:var(--ink-2)}
+.dg text.tiny{font-size:10px;fill:var(--ink-2)}
+.dg text.cap{font-family:var(--latin);font-size:10px;letter-spacing:.14em;fill:var(--grey)}
+.dg text.num{font-family:var(--latin);font-size:10px;font-weight:600}
+.dg .ln{stroke:var(--ink);stroke-width:1.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .thin{stroke:var(--line-2);stroke-width:1;fill:none}
+.dg .box{fill:#fff;stroke:var(--ink);stroke-width:1.2}
+.dg .soft{fill:var(--paper);stroke:none}
+.dg .dash{stroke-dasharray:4 4}
+.dg image{transition:opacity .5s}
+/* 階段顯示：data-s＝從第幾階段起出現、data-until＝到第幾階段消失；data-hi＝哪幾個階段強調 */
+.dg [data-s]{opacity:0;transition:opacity .5s,transform .6s var(--ease)}
+.dg [data-s].on{opacity:1}
+.dg .tile{transition:opacity .5s}
+.dg .tile.hi text.lb{fill:var(--acc)}
+.dg .hi .ln{stroke:var(--acc)}
+.dg .hi text.lb{fill:var(--acc)}
+.dg .hi rect.box{stroke:var(--acc);stroke-width:1.6}
+.dg .dim{transition:opacity .5s}
+.dg .fade .dim:not(.hi){opacity:.3}
+/* 描邊：JS 量長度填 --len；別加 vector-effect:non-scaling-stroke（Chrome 的 dash 單位會對不上） */
+.dg .draw{stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);transition:stroke-dashoffset .9s var(--ease) .15s,opacity .4s}
+.dg .on .draw,.dg .draw.on{stroke-dashoffset:0}
+/* 電線 */
+.dg .wl{stroke:var(--wl);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .wn{stroke:var(--wn);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 4}
+.dg .wy{stroke:var(--wy);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .we{stroke:var(--we);stroke-width:2.2;fill:none;stroke-linecap:round}
+.dg .wk{stroke:var(--wk);stroke-width:2.2;fill:none;stroke-linecap:round}
+.dg .wg{stroke:#cfcfcb;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .tl{fill:var(--wl)}.dg .tn{fill:var(--wn)}.dg .ty{fill:var(--wy)}.dg .te{fill:var(--we)}.dg .tk{fill:var(--wk)}.dg .tg{fill:#7a7a76}
+.dg .term{stroke:#fff;stroke-width:1}
+.dg .flow{stroke:var(--acc);stroke-width:1.6;fill:none;stroke-dasharray:3 6;stroke-linecap:round;stroke-linejoin:round;animation:flow 1.1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-18}}
+.dg .acc{stroke:var(--acc)}
+.dg text.acc{fill:var(--acc);stroke:none}
+.dg .accfill{fill:var(--acc);stroke:none}
+.dg .bad{stroke:var(--wl)}
+.dg text.bad{fill:var(--wl)}
+.dg .trav.hi{stroke:var(--acc)!important}
+/* LED 鬼火：亮的那張在階段裡偶爾閃一下 */
+.dg .flick.on{animation:flick 2.2s steps(1) infinite}
+@keyframes flick{0%,100%{opacity:0}12%{opacity:.45}15%{opacity:0}48%{opacity:.3}50%{opacity:0}53%{opacity:.5}56%{opacity:0}}
 
-    /* CARDS GRID */
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
-    .card {
-      border: 1px solid var(--border); border-radius: var(--r);
-      border-top: 3px solid var(--blue); padding: 18px;
-      background: var(--white);
-    }
-    .card.green { border-top-color: var(--green); }
-    .card.orange { border-top-color: var(--orange); }
-    .card.red { border-top-color: var(--red); }
-    .card-title { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 8px; }
-    .card p { font-size: 13px; color: var(--mid); line-height: 1.6; }
+/* ── 章首 ── */
+.opener .txt h2{font-size:clamp(34px,4.4vw,58px);margin-bottom:22px}
+.opener .txt .chno{font-family:var(--latin);font-size:clamp(60px,9vw,120px);font-weight:200;line-height:1;letter-spacing:-.03em;color:var(--ink);display:block;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:18px clamp(16px,3vw,44px);width:100%;max-width:520px}
+.stats div{border-top:1px solid var(--ink);padding-top:12px}
+.stats b{display:block;font-family:var(--latin);font-weight:300;font-size:clamp(40px,5.2vw,72px);line-height:1;letter-spacing:-.02em}
+.stats span{display:block;font-size:13.5px;color:var(--ink-2);margin-top:8px}
 
-    /* CALLOUT */
-    .callout {
-      border-left: 4px solid var(--blue);
-      background: var(--accent); padding: 14px 18px;
-      border-radius: 0 var(--r) var(--r) 0;
-      margin: 20px 0; font-size: 14px;
-    }
-    .callout.warn { border-left-color: var(--orange); }
-    .callout.danger { border-left-color: var(--red); }
-    .callout.success { border-left-color: var(--green); }
-    .callout-label { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; color: var(--blue); }
-    .callout.warn .callout-label { color: var(--orange); }
-    .callout.danger .callout-label { color: var(--red); }
-    .callout.success .callout-label { color: var(--green); }
+/* ── Hero ── */
+.hero .typed{font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.3;min-height:2.6em;display:flex;align-items:center;flex-wrap:wrap;gap:.2em}
+.hero .typed .dot{width:.5em;height:.5em;border-radius:50%;background:var(--ink);flex:none;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero h1{font-size:clamp(30px,4vw,54px);font-weight:500;line-height:1.15;margin:0 0 18px}
+.hero .sub{color:var(--ink-2);font-size:17px;line-height:1.8;max-width:30em}
+.hero .hint{position:absolute;left:var(--gutter);bottom:18px;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.hero .hint::after{content:"";display:inline-block;width:1px;height:26px;background:var(--grey);margin-left:12px;vertical-align:middle;animation:nudge 1.6s var(--ease) infinite}
+@keyframes nudge{50%{transform:translateY(6px)}}
 
-    /* TABLE */
-    .table-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--border); border-radius: var(--r); }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th {
-      background: var(--navy); color: var(--white);
-      font-weight: 600; text-align: left;
-      padding: 10px 14px; font-size: 12px; letter-spacing: .3px;
-    }
-    td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
-    tr:last-child td { border-bottom: none; }
-    tr:nth-child(even) td { background: #FAFBFC; }
-    .badge {
-      display: inline-block; font-size: 11px; font-weight: 700;
-      padding: 2px 8px; border-radius: 10px; white-space: nowrap;
-    }
-    .badge-blue  { background: #E8F4FD; color: var(--blue-dk); }
-    .badge-green { background: #E8F6EF; color: #145A32; }
-    .badge-gray  { background: #EAECEE; color: var(--mid); }
-    .badge-orange{ background: #FEF5E7; color: #784212; }
+/* ── HomePod / Apple TV 切換（沿用 vE 的語意） ── */
+.switch{display:inline-flex;align-items:center;gap:12px;cursor:pointer;user-select:none;font-size:15px;margin:6px 0 18px}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.switch .knob{width:44px;height:26px;border-radius:99px;border:1px solid var(--ink);position:relative;flex:none;transition:background .3s,border-color .3s}
+.switch .knob::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--ink);transition:transform .3s var(--ease),background .3s}
+.switch input:checked+.knob{background:var(--acc);border-color:var(--acc)}
+.switch input:checked+.knob::after{transform:translateX(18px);background:#fff}
+.switch input:focus-visible+.knob{outline:2px solid var(--acc);outline-offset:3px}
+.cap{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cap li{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+.pill{font-family:var(--latin);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:99px;border:1px solid var(--ink);white-space:nowrap;transition:all .3s}
+.pill.no{border-color:var(--line-2);color:var(--ink-2);text-decoration:line-through}
+.cap li.off{color:var(--grey)}
 
-    /* FLOW */
-    .flow { display: flex; align-items: stretch; flex-wrap: wrap; gap: 0; margin: 20px 0; }
-    .flow-item {
-      flex: 1; min-width: 120px; background: var(--accent);
-      border: 1px solid var(--border); padding: 14px 16px;
-      position: relative; text-align: center;
-    }
-    .flow-item:not(:last-child)::after {
-      content: "";
-      position: absolute; right: -1px; top: 50%;
-      transform: translateY(-50%);
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      border-left: 10px solid var(--blue);
-      z-index: 1;
-    }
-    .flow-title { font-weight: 700; font-size: 13px; color: var(--navy); margin-bottom: 4px; }
-    .flow-sub { font-size: 11px; color: var(--mid); }
+/* ── 內文區（表格、清單、術語） ── */
+.flow{padding:clamp(56px,9vh,120px) var(--gutter);max-width:1180px;margin:0 auto}
+.flow .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:24px clamp(24px,5vw,80px)}
+.flow .grid>div{min-width:0}
+.flow .lbl{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding-top:6px}
+.flow h3{font-size:clamp(20px,2.2vw,26px);font-weight:500;margin-bottom:16px}
+.flow p{color:var(--ink-2);line-height:1.8;max-width:60ch}
+.flow p+p{margin-top:10px}
+.flow p b{color:var(--ink)}
+.flow .band{border-left:2px solid var(--acc);padding:4px 0 4px 18px;margin-top:20px;max-width:60ch}
+.flow .band .k{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.flow .band.warn{border-color:var(--wl)}.flow .band.warn .k{color:var(--wl)}
+.flow .band p{color:var(--ink)}
+.rule{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.rule li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1.6fr);gap:10px 24px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.65}
+.rule.c2 li{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+.rule li .h{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink)}
+.rule li span{color:var(--ink-2)}
+.rule li span.then::before{content:"→ ";color:var(--acc)}
+.rule li span.no::before{content:"×  ";color:var(--wl);font-family:var(--latin)}
+@media (max-width:720px){.rule li,.rule.c2 li{grid-template-columns:1fr;gap:4px}}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.55;border-top:1px solid var(--ink)}
+.tbl th{text-align:left;font-weight:500;font-family:var(--latin);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding:10px 12px 10px 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+.tbl .mono{font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl-wrap .tbl{min-width:640px}
+.recap{border-top:1px solid var(--ink);padding-top:18px;margin-top:8px}
+.recap ol{margin:0;padding:0 0 0 1.4em;display:flex;flex-direction:column;gap:8px;font-size:15.5px;line-height:1.7}
+.recap ol li::marker{font-family:var(--latin);color:var(--grey)}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 clamp(24px,4vw,56px);margin:0}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--line)}
+.gloss dt{font-weight:600;font-size:15px}
+.gloss dd{margin:2px 0 0;font-size:14px;line-height:1.7;color:var(--ink-2)}
+.gloss .gh{grid-column:1/-1;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding:28px 0 8px;border:0}
+.gloss .gh:first-child{padding-top:0}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.cards3 div{border-top:1px solid var(--ink);padding-top:14px}
+.cards3 .h{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:6px}
+.cards3 p{font-size:14.5px}
+@media (max-width:720px){.cards3{grid-template-columns:1fr}}
 
-    /* STATS */
-    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin: 20px 0; }
-    .stat { background: var(--accent); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
-    .stat-num { font-size: 28px; font-weight: 800; color: var(--blue); line-height: 1; margin-bottom: 6px; }
-    .stat-label { font-size: 12px; color: var(--mid); }
+/* ── 結尾 ── */
+.end .stage{grid-template-columns:1fr;place-items:center;text-align:center}
+.end h2{font-size:clamp(30px,5vw,64px);font-weight:500;letter-spacing:-.01em}
+.end .credit{margin-top:26px;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);line-height:2}
+footer{padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);font-family:var(--latin)}
 
-    /* WIRE DIAGRAM */
-    .wire-diagram {
-      background: var(--navy); color: #E0E0E0;
-      font-family: "SF Mono", "Courier New", monospace;
-      font-size: 12px; line-height: 1.8;
-      padding: 20px 24px; border-radius: var(--r);
-      margin: 16px 0; overflow-x: auto;
-    }
-    .wire-l { color: #FF6B6B; font-weight: 700; }
-    .wire-n { color: #74B9FF; font-weight: 700; }
-    .wire-e { color: #55EFC4; font-weight: 700; }
-    .wire-com { color: #FFC107; }
+/* ── 手機：上圖下字 ── */
+@media (max-width:860px){
+  .stage,.slide.flip .stage{grid-template-columns:1fr;grid-template-rows:minmax(0,34dvh) minmax(0,1fr);gap:10px;padding:60px 18px 22px;align-items:start}
+  .slide.flip .vis{order:1}.slide.flip .txt{order:2}
+  .vis{max-height:34dvh;align-self:stretch}
+  .vis svg.dg{max-height:33dvh}
+  .vis .bigimg{max-height:32dvh;width:auto!important;max-width:100%}
+  .txt{max-width:none}
+  .txt .tag{margin-bottom:8px}
+  .txt h2{font-size:22px;margin-bottom:8px}
+  .txt p.lead{font-size:14px;line-height:1.6;margin-bottom:10px}
+  .txt p.note{font-size:14px;line-height:1.55;margin-top:10px;padding-top:8px}
+  .opener .txt h2{font-size:28px;margin-bottom:12px}
+  .opener .txt .chno{font-size:48px;margin-bottom:4px}
+  .kp{gap:8px}.kp li{font-size:14px;line-height:1.55;padding-left:20px}
+  .step{font-size:14.5px;line-height:1.65}
+  .step .k{margin-bottom:3px}
+  .steps{min-height:4.5em}
+  /* 階段清單改成橫排，省下垂直空間 */
+  .marks{flex-direction:row;flex-wrap:wrap;gap:2px 14px;margin-bottom:8px}
+  .marks li{font-size:14px;padding-left:14px}
+  .marks li::before{width:6px;height:6px;top:.55em}
+  .hero .typed{font-size:24px}
+  .stats b{font-size:40px}
+  .flow .grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  /* 七欄表在手機改成一個協定一張：每格前面印欄名 */
+  .tbl-wrap .tbl.stack{min-width:0}
+  .tbl.stack thead{display:none}
+  .tbl.stack tr{display:block;padding:12px 0;border-bottom:1px solid var(--line)}
+  .tbl.stack td{display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:0 10px;padding:2px 0;border:0;white-space:normal}
+  .tbl.stack td::before{content:attr(data-th);font-family:var(--latin);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding-top:3px}
+  .tbl.stack td:first-child{display:block;font-size:16px;padding-bottom:6px}
+  .tbl.stack td:first-child::before{display:none}
+}
+/* 列印：舞台退回文件流，所有階段與說明攤開 */
+@media print{
+  .top,.corner,.hero .hint{display:none}
+  .slide,.x1,.x2,.x3,.x4{height:auto!important}
+  .stage{position:static!important;height:auto!important;overflow:visible!important;padding:24px 0;break-inside:avoid}
+  .vis{max-height:none;height:auto}
+  .vis svg.dg{max-height:55vh}
+  .step{position:static;opacity:1!important;transform:none!important;margin-bottom:8px}
+  .steps{display:block}
+  .rise,.dg [data-s]{opacity:1!important;transform:none!important}
+  .dg .draw{stroke-dashoffset:0!important}
+  .marks li{color:var(--ink)}
+}
+@media (prefers-reduced-motion:reduce){
+  html.smooth{scroll-behavior:auto}
+  .rise,.step,.marks li,.dg [data-s],.dg .draw,.dg .tile,.dg image{transition:none}
+  .dg .draw{stroke-dashoffset:0}
+  .hero .typed .dot,.hero .hint::after,.dg .flow,.dg .flick.on{animation:none}
+}
 
-    /* LIST */
-    ul.check-list { list-style: none; padding: 0; }
-    ul.check-list li { padding: 5px 0 5px 24px; position: relative; font-size: 14px; color: var(--mid); }
-    ul.check-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 12px; height: 7px; border-left: 2px solid var(--green); border-bottom: 2px solid var(--green); transform: rotate(-45deg); }
-
-    /* BEFORE/AFTER */
-    .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
-    .ba-box { border: 1px solid var(--border); border-radius: var(--r); padding: 16px; }
-    .ba-box.before { border-top: 3px solid var(--red); }
-    .ba-box.after  { border-top: 3px solid var(--green); }
-    .ba-label { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 8px; }
-    .ba-box.before .ba-label { color: var(--red); }
-    .ba-box.after  .ba-label { color: var(--green); }
-    .ba-box p { font-size: 13px; color: var(--mid); }
-
-    /* FOOTER */
-    footer {
-      background: var(--navy); color: #7B8D9E;
-      text-align: center; padding: 28px 24px;
-      font-size: 13px; margin-top: 40px;
-    }
-    footer strong { color: #C8D0D9; }
-
-    @media (max-width: 600px) {
-      .ba { grid-template-columns: 1fr; }
-      .flow { flex-direction: column; }
-      .flow-item:not(:last-child)::after { display: none; }
-      nav { padding: 0 12px; }
-    }
-  </style>
+/* hero 燈泡：字打完（--p ≥ .6）亮的那張才淡入 */
+.herob{--u:clamp(0,calc((var(--p,0) - .6) * 4),1)}
+.herob .lit{opacity:var(--u)}
+/* Home Hub 切換：沒有 Hub 時遠端那條路淡掉、Hub 那張淡掉、標題轉紅 */
+.hubslide .nohubmark{opacity:0;transition:opacity .4s}
+.hubslide.nohub .nohubmark{opacity:1}
+.hubslide .hubpath,.hubslide .hubnode{transition:opacity .4s}
+.hubslide.nohub .hubpath{opacity:.15}
+.hubslide.nohub .hubnode image{opacity:.3}
+.hubslide.nohub .hubnode text.lb{fill:var(--wl)}
+</style>
+<noscript><style>
+  /* 沒有 JS：所有階段、說明、描邊一律攤開，舞台退回文件流 */
+  .step{opacity:1!important;transform:none!important;position:static!important}
+  .steps{display:block}
+  .rise,.dg [data-s]{opacity:1!important;transform:none!important}
+  .dg .draw{stroke-dashoffset:0!important}
+  .marks li{color:var(--ink)}
+  .slide,.x1,.x2,.x3,.x4{height:auto!important}
+  .stage{position:static!important;height:auto!important;overflow:visible!important;padding-top:72px;padding-bottom:40px}
+  .vis{max-height:none;height:auto}.vis svg.dg{max-height:70vh}
+  #typed:empty::before{content:"嘿 Siri，打開客廳燈"}
+  .corner{display:none}
+</style></noscript>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <span class="nav-brand">智能家庭入職手冊</span>
-  <div class="nav-links">
-    <a href="#s1">認識智能家庭</a>
-    <a href="#s2">通訊協定</a>
-    <a href="#s3">HomeKit</a>
-    <a href="#s4">電氣知識</a>
-    <a href="#s5">網路架構</a>
-  </div>
+<header class="top">
+<a class="brand" href="#top">智能家庭入門介紹</a>
+<nav id="nav" aria-label="章節">
+<a href="#s1">
+<em>01</em>
+<span>認識</span>
+</a>
+<a href="#s2">
+<em>02</em>
+<span>HomeKit</span>
+</a>
+<a href="#s3">
+<em>03</em>
+<span>網路</span>
+</a>
+<a href="#s4">
+<em>04</em>
+<span>協定</span>
+</a>
+<a href="#s5">
+<em>05</em>
+<span>電氣</span>
+</a>
+<a href="#fix">
+<em>附</em>
+<span>排查 · 術語</span>
+</a>
 </nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-inner">
-    <span class="eyebrow">新人入職培訓</span>
-    <h1>智能家庭技術入門手冊</h1>
-    <p>從零開始，了解智能家庭的核心概念、主流協定、Apple HomeKit 生態、基礎電氣配線，以及網路架構規劃。</p>
-    <div class="hero-meta">
-      <span><strong>版本</strong> v1.0</span>
-      <span><strong>更新</strong> 2026-05-29</span>
-      <span><strong>適合對象</strong> 智能家庭領域新進人員</span>
-    </div>
-  </div>
+</header>
+<div class="corner c-tl" id="c-tl">
 </div>
+<div class="corner c-tr" id="c-tr">
+</div>
+<div class="corner c-bl" id="c-bl">
+</div>
+<div class="corner c-br">智能家庭入門介紹 · 威琳工程</div>
 
-<div class="container">
-
-  <!-- ───────────────────────────── SECTION 1 ───────────────────────────── -->
-  <div class="section" id="s1">
-    <div class="section-header">
-      <div class="section-num">1</div>
-      <h2>認識智能家庭</h2>
-    </div>
-
-    <p style="color:var(--mid); margin-bottom:20px;">智能家庭（Smart Home）透過網路連接各種家用設備，讓使用者能用手機、語音或自動化情境來控制照明、空調、安全、娛樂等系統。</p>
-
-    <div class="stats">
-      <div class="stat"><div class="stat-num">6+</div><div class="stat-label">主流通訊協定</div></div>
-      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">常見設備類型</div></div>
-      <div class="stat"><div class="stat-num">3</div><div class="stat-label">主要生態系統</div></div>
-      <div class="stat"><div class="stat-num">110V</div><div class="stat-label">台灣標準電壓</div></div>
-    </div>
-
-    <h3>常見智能家庭設備分類</h3>
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">照明系統</div>
-        <p>智能燈泡、智能開關、調光器、燈帶。最常見的入門設備，效益最直接。</p>
-      </div>
-      <div class="card green">
-        <div class="card-title">安全監控</div>
-        <p>智能門鎖、門磁感應器、動作感應器、攝影機、煙霧偵測器。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">環境控制</div>
-        <p>智能溫控器、空調控制、窗簾/捲簾馬達、空氣品質感應器。</p>
-      </div>
-      <div class="card red">
-        <div class="card-title">能源管理</div>
-        <p>智能插座（含電量監控）、電費計算、太陽能系統整合。</p>
-      </div>
-    </div>
-
-    <h3>三大生態系統比較</h3>
-    <div class="ba">
-      <div class="ba-box before" style="border-top-color: #0073BB;">
-        <div class="ba-label" style="color:#0073BB;">Apple HomeKit</div>
-        <p>嚴格認證、隱私保護強、操作最流暢，但相容配件較少且售價偏高。</p>
-      </div>
-      <div class="ba-box after" style="border-top-color: #34A853;">
-        <div class="ba-label" style="color:#34A853;">Google Home</div>
-        <p>Android 整合佳、AI 語音能力強，跨品牌支援廣泛，隱私爭議較多。</p>
-      </div>
-    </div>
-    <div class="ba">
-      <div class="ba-box" style="border-top: 3px solid #FF9900;">
-        <div class="ba-label" style="color:#FF9900;">Amazon Alexa</div>
-        <p>相容設備最多、技能生態豐富，但在台灣支援度有限。</p>
-      </div>
-      <div class="ba-box" style="border-top: 3px solid var(--blue);">
-        <div class="ba-label" style="color:var(--blue);">Matter（跨平台）</div>
-        <p>2022 年推出的統一標準，同一設備可同時接受 HomeKit / Google / Alexa 控制。</p>
-      </div>
-    </div>
-
-    <div class="callout success">
-      <div class="callout-label">重點觀念</div>
-      智能家庭的核心是「互聯」與「自動化」。單一設備不是智能家庭，設備彼此能感知、聯動才是真正的智能。
-    </div>
-  </div>
-
-  <!-- ───────────────────────────── SECTION 2 ───────────────────────────── -->
-  <div class="section" id="s2">
-    <div class="section-header">
-      <div class="section-num">2</div>
-      <h2>相關通訊協定總覽</h2>
-    </div>
-
-    <p style="color:var(--mid); margin-bottom:20px;">不同設備使用不同的無線/有線協定溝通。了解各協定的特性，才能在安裝時做出正確的設備選擇。</p>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>協定</th>
-            <th>頻段</th>
-            <th>拓撲</th>
-            <th>耗電</th>
-            <th>需要 Hub</th>
-            <th>適合設備</th>
-            <th>備註</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Wi-Fi</strong></td>
-            <td>2.4 / 5 GHz</td>
-            <td>Star</td>
-            <td><span class="badge badge-orange">高</span></td>
-            <td><span class="badge badge-green">不需要</span></td>
-            <td>攝影機、冰箱、洗衣機</td>
-            <td>直接連路由器，設定最簡單</td>
-          </tr>
-          <tr>
-            <td><strong>Zigbee</strong></td>
-            <td>2.4 GHz</td>
-            <td>Mesh</td>
-            <td><span class="badge badge-green">低</span></td>
-            <td><span class="badge badge-orange">需要</span></td>
-            <td>燈泡、開關、感應器</td>
-            <td>最多 65000 個節點，市佔率高</td>
-          </tr>
-          <tr>
-            <td><strong>Z-Wave</strong></td>
-            <td>868/908 MHz</td>
-            <td>Mesh</td>
-            <td><span class="badge badge-green">低</span></td>
-            <td><span class="badge badge-orange">需要</span></td>
-            <td>門鎖、開關、感應器</td>
-            <td>不受 2.4GHz 干擾，穿牆效果佳</td>
-          </tr>
-          <tr>
-            <td><strong>Thread</strong></td>
-            <td>2.4 GHz</td>
-            <td>Mesh</td>
-            <td><span class="badge badge-green">極低</span></td>
-            <td><span class="badge badge-blue">Border Router</span></td>
-            <td>感應器、開關、Matter 設備</td>
-            <td>基於 IPv6，Matter 的底層傳輸協定之一</td>
-          </tr>
-          <tr>
-            <td><strong>Matter</strong></td>
-            <td>Wi-Fi / Thread</td>
-            <td>Star/Mesh</td>
-            <td>依底層</td>
-            <td><span class="badge badge-green">不需要</span></td>
-            <td>新世代跨平台設備</td>
-            <td>應用層標準，跑在 Wi-Fi 或 Thread 上</td>
-          </tr>
-          <tr>
-            <td><strong>Bluetooth LE</strong></td>
-            <td>2.4 GHz</td>
-            <td>Star</td>
-            <td><span class="badge badge-green">低</span></td>
-            <td><span class="badge badge-green">不需要</span></td>
-            <td>門鎖、體重計、感應器</td>
-            <td>距離短（約 10m），適合近距離設備</td>
-          </tr>
-          <tr>
-            <td><strong>KNX</strong></td>
-            <td>有線（雙絞線）</td>
-            <td>Bus</td>
-            <td><span class="badge badge-gray">N/A</span></td>
-            <td><span class="badge badge-orange">需要</span></td>
-            <td>商業建築、豪宅</td>
-            <td>工業級可靠性，工程複雜，造價高</td>
-          </tr>
-          <tr>
-            <td><strong>RS-485</strong></td>
-            <td>有線</td>
-            <td>Bus</td>
-            <td><span class="badge badge-gray">N/A</span></td>
-            <td><span class="badge badge-orange">需要</span></td>
-            <td>大樓門禁、中央空調</td>
-            <td>工業通訊標準，Modbus 協定常用此物理層</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>協定選擇建議</h3>
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">一般住宅新裝</div>
-        <p>優先選 <strong>Matter + Thread</strong> 生態設備。未來相容性最好，不鎖單一平台。</p>
-      </div>
-      <div class="card green">
-        <div class="card-title">預算有限 / 改裝</div>
-        <p>選 <strong>Zigbee</strong> 生態（飛利浦 Hue、IKEA Tradfri）。設備選擇多、價格親民。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">商業 / 豪宅</div>
-        <p>考慮 <strong>KNX</strong> 有線系統。穩定度最高，但需要專業工程師配線。</p>
-      </div>
-    </div>
-
-    <div class="callout">
-      <div class="callout-label">注意</div>
-      Zigbee 與 Z-Wave 都需要 Hub（橋接器）才能接入 HomeKit 或 Google Home。常見 Hub：Philips Hue Bridge、Samsung SmartThings、Home Assistant。
-    </div>
-
-    <h3>協定關係圖</h3>
-    <div class="flow">
-      <div class="flow-item">
-        <div class="flow-title">實體設備</div>
-        <div class="flow-sub">燈 / 開關 / 感應器</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">無線協定</div>
-        <div class="flow-sub">Zigbee / Thread / Wi-Fi</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">Hub / 橋接</div>
-        <div class="flow-sub">Border Router / Bridge</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">應用平台</div>
-        <div class="flow-sub">HomeKit / Google / Alexa</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">用戶介面</div>
-        <div class="flow-sub">App / 語音 / 自動化</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ───────────────────────────── SECTION 3 ───────────────────────────── -->
-  <div class="section" id="s3">
-    <div class="section-header">
-      <div class="section-num">3</div>
-      <h2>Apple HomeKit 深入了解</h2>
-    </div>
-
-    <p style="color:var(--mid); margin-bottom:20px;">HomeKit 是 Apple 於 2014 年推出的智能家庭框架，透過「家庭」App 統一管理所有認證設備，並以隱私保護著稱。</p>
-
-    <h3>HomeKit 架構組成</h3>
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">Home Hub（家庭中樞）</div>
-        <p>Apple TV 4K、HomePod、HomePod mini。讓你在外也能遠端存取設備，並執行自動化。<br><br><strong>至少需要一台</strong>才能啟用遠端控制與自動化。</p>
-      </div>
-      <div class="card green">
-        <div class="card-title">HomeKit 配件</div>
-        <p>通過 MFi（Made for iPhone）認證的設備。認證確保加密通訊與資料安全，所有資料不經 Apple 伺服器，直接點對點傳輸。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">家庭 App</div>
-        <p>iOS / iPadOS / macOS 內建。管理設備、建立自動化、共享家庭成員存取權限。</p>
-      </div>
-      <div class="card red">
-        <div class="card-title">Siri 語音控制</div>
-        <p>「嘿 Siri，關掉客廳的燈」、「把溫度設定到 25 度」。透過 HomePod 可做到全屋語音控制。</p>
-      </div>
-    </div>
-
-    <h3>HomeKit 支援的服務類型</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>類別</th>
-            <th>包含設備</th>
-            <th>常用指令範例</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>照明</td>
-            <td>燈泡、燈帶、調光器、開關</td>
-            <td>「打開臥室燈」、「把亮度調到 50%」、「切換成暖白色」</td>
-          </tr>
-          <tr>
-            <td>氣候</td>
-            <td>溫控器、冷氣、暖氣、空氣清淨機</td>
-            <td>「把客廳溫度設為 24 度」</td>
-          </tr>
-          <tr>
-            <td>安全</td>
-            <td>門鎖、攝影機、門磁、動作感應</td>
-            <td>「鎖上前門」、「查看門口攝影機」</td>
-          </tr>
-          <tr>
-            <td>窗簾/遮陽</td>
-            <td>電動窗簾、百葉窗、捲簾</td>
-            <td>「把臥室窗簾打開一半」</td>
-          </tr>
-          <tr>
-            <td>插座/開關</td>
-            <td>智能插座、智能排插</td>
-            <td>「關掉咖啡機」</td>
-          </tr>
-          <tr>
-            <td>感應器</td>
-            <td>溫濕度、空氣品質、漏水偵測</td>
-            <td>自動化觸發條件</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>情境（Scene）與自動化（Automation）</h3>
-    <div class="ba">
-      <div class="ba-box before" style="border-top-color:var(--blue)">
-        <div class="ba-label" style="color:var(--blue);">情境（Scene）</div>
-        <p>手動觸發一組設備狀態。<br><br>例如「電影模式」= 燈光調暗至 20%、窗簾關閉、電視開啟。</p>
-      </div>
-      <div class="ba-box after">
-        <div class="ba-label">自動化（Automation）</div>
-        <p>依條件自動執行。<br><br>例如「早上 7:00 打開臥室燈」、「我回家時開冷氣」、「最後一個人離家後關閉所有燈」。</p>
-      </div>
-    </div>
-
-    <h3>Matter 與 HomeKit 的關係</h3>
-    <div class="callout">
-      <div class="callout-label">重要</div>
-      Matter 設備可直接加入 HomeKit，無需任何 Hub 或橋接器。從 iOS 16 起，Home Hub 同時可作為 Matter Border Router，讓 Thread 設備透過它連接 HomeKit。這是未來智能家庭的主流方向。
-    </div>
-
-    <h3>HomeKit 安裝注意事項</h3>
-    <ul class="check-list">
-      <li>確認設備包裝上有 HomeKit 標誌（或 Works with Apple Home）</li>
-      <li>家庭 App 掃描設備背面或說明書的 8 位數配對碼（HAP code）</li>
-      <li>設備需在同一 Wi-Fi 或透過 Hub 連線</li>
-      <li>每個家庭最多可加 150 個配件，16 個房間，100 個情境</li>
-      <li>家庭成員共享需邀請（需有 Apple ID），可設定不同權限等級</li>
-    </ul>
-  </div>
-
-  <!-- ───────────────────────────── SECTION 4 ───────────────────────────── -->
-  <div class="section" id="s4">
-    <div class="section-header">
-      <div class="section-num">4</div>
-      <h2>接燈與開關的電氣知識</h2>
-    </div>
-
-    <div class="callout danger">
-      <div class="callout-label">安全警告</div>
-      進行任何電氣作業前，<strong>必須先至配電盤關閉對應迴路的無熔絲開關（NFB）</strong>，並用驗電筆確認無電後再施工。切勿帶電作業。
-    </div>
-
-    <h3>台灣家用電基礎</h3>
-    <div class="stats">
-      <div class="stat"><div class="stat-num">110V</div><div class="stat-label">一般用電（照明/插座）</div></div>
-      <div class="stat"><div class="stat-num">220V</div><div class="stat-num" style="font-size:14px;color:var(--mid);">冷氣/烘衣機</div></div>
-      <div class="stat"><div class="stat-num">60Hz</div><div class="stat-label">電源頻率</div></div>
-      <div class="stat"><div class="stat-num">15A</div><div class="stat-label">一般迴路額定電流</div></div>
-    </div>
-
-    <h3>三條電線認識</h3>
-    <div class="wire-diagram">
-<span class="wire-l">火線 L（Live）</span>   ─── 黑色（舊式）或紅色  ──→  帶電，電壓 110V
-<span class="wire-n">中性線 N（Neutral）</span> ─── 白色              ──→  回路，近似 0V
-<span class="wire-e">接地線 E（Earth）</span>  ─── 綠色或裸銅線      ──→  安全保護，不通電流
-
-<span class="wire-com">配電盤 NFB</span>
-    │
-    ├─── <span class="wire-l">L（黑）</span> ──→ 開關 ──→ 燈具
-    │
-    └─── <span class="wire-n">N（白）</span> ──────────→ 燈具（直通）
-    </div>
-
-    <div class="callout warn">
-      <div class="callout-label">重要差異</div>
-      <strong>傳統開關只切斷火線，沒有引中性線到開關盒。</strong>智能開關需要中性線（N）維持待機電源，因此安裝前必須先確認開關盒內是否有 N 線。如果沒有，需要選擇「無需中性線」型號，或請水電師傅重新配線。
-    </div>
-
-    <h3>開關接線類型</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>類型</th>
-            <th>線數</th>
-            <th>用途</th>
-            <th>智能開關相容性</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>單切開關</strong><br>Single Pole</td>
-            <td>2 條（L、N）或 2 條（L-in、L-out）</td>
-            <td>一個位置控制一盞燈</td>
-            <td><span class="badge badge-green">需確認是否有 N 線</span></td>
-          </tr>
-          <tr>
-            <td><strong>雙切開關</strong><br>3-Way</td>
-            <td>3 條（L、兩條 Traveler）</td>
-            <td>兩個位置都能控制同一盞燈（如樓梯）</td>
-            <td><span class="badge badge-orange">需成對更換，較複雜</span></td>
-          </tr>
-          <tr>
-            <td><strong>調光開關</strong><br>Dimmer</td>
-            <td>2～3 條</td>
-            <td>控制亮度</td>
-            <td><span class="badge badge-orange">必須確認燈具支援調光</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>LED 燈與調光器相容性</h3>
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">LED 不一定可調光</div>
-        <p>LED 燈泡包裝上若有「可調光」（Dimmable）標示才能搭配調光器。一般 LED 硬接調光器可能閃爍或損壞。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">前沿 vs 後沿調光</div>
-        <p>LED 建議使用<strong>後沿（Trailing Edge）</strong>調光器，效果較平順。前沿（Leading Edge）適合鎢絲燈，用於 LED 易有閃爍問題。</p>
-      </div>
-      <div class="card green">
-        <div class="card-title">最低負載限制</div>
-        <p>調光器有最低負載要求（如 40W）。若 LED 燈瓦數太低，可能無法正常運作，需選購支援低負載的調光器。</p>
-      </div>
-    </div>
-
-    <h3>常用工具</h3>
-    <ul class="check-list">
-      <li>驗電筆（非接觸式）：在不拆線的情況下確認是否帶電</li>
-      <li>三用電表：量測電壓、電流、電阻</li>
-      <li>絕緣膠帶：包覆裸露線頭</li>
-      <li>壓線帽 / Wire Connector：連接多條電線</li>
-      <li>一字 / 十字螺絲起子（含絕緣手柄）</li>
-    </ul>
-
-    <div class="callout success">
-      <div class="callout-label">新人建議</div>
-      第一次安裝智能開關時，先從「有確認 N 線、單切開關控制一般 LED 燈」的情況開始練習，是最安全、最容易成功的組合。
-    </div>
-  </div>
-
-  <!-- ───────────────────────────── SECTION 5 ───────────────────────────── -->
-  <div class="section" id="s5">
-    <div class="section-header">
-      <div class="section-num">5</div>
-      <h2>網路架構基礎認識</h2>
-    </div>
-
-    <p style="color:var(--mid); margin-bottom:20px;">穩定的家庭網路是智能家庭的基礎。了解基本的網路架構，才能有效排除設備掉線等問題。</p>
-
-    <h3>基本網路設備</h3>
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">數據機（Modem）</div>
-        <p>將 ISP（電信商）提供的訊號（光纖/ADSL）轉換為乙太網路訊號。通常由 ISP 提供，不需自行設定。</p>
-      </div>
-      <div class="card green">
-        <div class="card-title">路由器（Router）</div>
-        <p>負責分配 IP 位址（DHCP）、管理所有設備的網路流量。是家庭網路的核心，也提供 Wi-Fi 功能。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">交換器（Switch）</div>
-        <p>擴充有線網路埠。當路由器的有線埠不夠用時，透過交換器增加接口。智能交換器支援 VLAN 設定。</p>
-      </div>
-      <div class="card red">
-        <div class="card-title">無線基地台（AP）</div>
-        <p>單純提供 Wi-Fi，本身沒有路由功能。大坪數住宅可部署多台 AP 延伸訊號覆蓋範圍。</p>
-      </div>
-    </div>
-
-    <h3>IP 位址基礎</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>名詞</th>
-            <th>說明</th>
-            <th>範例</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>IP 位址</strong></td>
-            <td>網路上每台設備的地址，就像門牌號碼</td>
-            <td>192.168.1.100</td>
-          </tr>
-          <tr>
-            <td><strong>子網路遮罩</strong></td>
-            <td>定義哪些設備在同一個網段內</td>
-            <td>255.255.255.0 (/24)</td>
-          </tr>
-          <tr>
-            <td><strong>閘道（Gateway）</strong></td>
-            <td>通往外部網路的出口，通常是路由器的 IP</td>
-            <td>192.168.1.1</td>
-          </tr>
-          <tr>
-            <td><strong>DHCP</strong></td>
-            <td>路由器自動分配 IP 給新連線設備</td>
-            <td>設備插上就能用，無需手動設定</td>
-          </tr>
-          <tr>
-            <td><strong>靜態 IP</strong></td>
-            <td>手動指定固定 IP，設備重啟後不會改變</td>
-            <td>智能 Hub、NAS、攝影機建議使用</td>
-          </tr>
-          <tr>
-            <td><strong>DNS</strong></td>
-            <td>將網址轉換為 IP（域名解析服務）</td>
-            <td>8.8.8.8（Google DNS）</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>Wi-Fi 頻段選擇</h3>
-    <div class="ba">
-      <div class="ba-box before" style="border-top-color:#0073BB">
-        <div class="ba-label" style="color:#0073BB;">2.4 GHz</div>
-        <p><strong>穿透力強、距離遠</strong>，但速度較慢（理論最高 600Mbps），干擾多。<br><br>智能家庭大多數設備（Zigbee 橋、智能插座、低功耗感應器）只支援 2.4GHz。</p>
-      </div>
-      <div class="ba-box after">
-        <div class="ba-label">5 GHz</div>
-        <p><strong>速度快、干擾少</strong>，但距離短、穿牆差。<br><br>適合手機、電腦、Apple TV、NAS 等高頻寬設備。</p>
-      </div>
-    </div>
-
-    <h3>IoT VLAN 隔離（重要安全概念）</h3>
-    <div class="callout warn">
-      <div class="callout-label">安全建議</div>
-      智能家庭設備（尤其是便宜的中國廠牌）安全性參差不齊，建議將 IoT 設備放在獨立的 VLAN，與主要設備（電腦、手機）網段隔離，防止 IoT 設備被入侵後波及主網路。
-    </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="card-title">VLAN 主網路（VLAN 1）</div>
-        <p>電腦、手機、NAS、Apple TV（Home Hub）。最高安全等級，可訪問所有其他 VLAN。</p>
-      </div>
-      <div class="card orange">
-        <div class="card-title">VLAN IoT（VLAN 20）</div>
-        <p>智能燈、插座、感應器、空調控制器。可訪問 Internet，但隔離於主網路。</p>
-      </div>
-      <div class="card red">
-        <div class="card-title">VLAN 攝影機（VLAN 30）</div>
-        <p>監控攝影機、門鈴。最高隔離，禁止訪問 Internet，只允許錄影到本地 NVR。</p>
-      </div>
-    </div>
-
-    <h3>Mesh Wi-Fi 系統</h3>
-    <p style="color:var(--mid); margin-bottom:12px;">傳統的 Wi-Fi 延伸器（Repeater）會降低一半頻寬，現代 Mesh 系統透過多個節點（Node）智慧切換，提供無縫漫遊體驗。</p>
-
-    <div class="flow">
-      <div class="flow-item">
-        <div class="flow-title">ISP 數據機</div>
-        <div class="flow-sub">光纖入戶</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">Mesh 主節點</div>
-        <div class="flow-sub">Router + AP（如 UniFi Dream Machine）</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">Mesh 子節點</div>
-        <div class="flow-sub">純 AP（有線回傳最佳）</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-title">IoT 設備</div>
-        <div class="flow-sub">自動連最近節點</div>
-      </div>
-    </div>
-
-    <div class="callout success">
-      <div class="callout-label">新人建議</div>
-      <strong>有線回傳（Wired Backhaul）= 最佳效能。</strong>若條件允許，Mesh 子節點應透過網路線連回主節點，而非無線回傳。這能讓每個節點都有完整的頻寬給客戶端設備。
-    </div>
-
-    <h3>常見網路問題排查</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>問題</th>
-            <th>可能原因</th>
-            <th>排查步驟</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>設備無法加入 HomeKit</td>
-            <td>設備只支援 2.4GHz，但路由器 SSID 混頻</td>
-            <td>分開 2.4/5GHz SSID，確保設備連到 2.4GHz</td>
-          </tr>
-          <tr>
-            <td>設備頻繁掉線</td>
-            <td>Wi-Fi 干擾、IP 衝突、DHCP 租約問題</td>
-            <td>改用靜態 IP，或在 DHCP 中固定設備 IP</td>
-          </tr>
-          <tr>
-            <td>遠端無法控制</td>
-            <td>Home Hub 離線或網路問題</td>
-            <td>確認 Apple TV / HomePod 是否在線，重啟 Home Hub</td>
-          </tr>
-          <tr>
-            <td>Zigbee 設備信號差</td>
-            <td>Zigbee（2.4GHz）與 Wi-Fi 頻道衝突</td>
-            <td>將 Wi-Fi 設定在 1、6 或 11 頻道，避免與 Zigbee 重疊</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div><!-- /container -->
-
+<section class="slide x3 hero" id="top" data-ch="智能家庭入門介紹" data-sub="">
+<div class="stage">
+<div class="vis">
+<svg class="dg herob" viewBox="0 0 300 420" aria-hidden="true" style="width:min(46vh,70%);height:auto;overflow:visible">
+<g class="tile ">
+<image href="assets/img/led-bulb-off.jpg" x="32.8" y="10.0" width="234.5" height="400.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/led-bulb-on.jpg" x="32.8" y="10.0" width="234.5" height="400.0" preserveAspectRatio="xMidYMid meet" class="lit"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">威琳工程 · 內部教育訓練 · 新進工程師／技術支援 · 約 30 到 40 分鐘</span>
+<h1>智能家庭入門介紹</h1>
+<div class="typed">
+<span id="typed">
+</span>
+<span class="dot" id="tdot">
+</span>
+</div>
+<p class="sub rise" style="--t:.66">從你說出這句話，到牆裡那顆燈亮起來，訊號走了五段路。這份教材照著那條路走一遍：平台、網路、協定、牆裡的線。</p>
+</div>
+<div class="hint">Scroll</div>
+</div>
+</section>
+<section class="slide x4 flip" id="path" data-ch="訊號走的路" data-sub="全景" data-stages="6">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0">
+<image href="assets/img/iphone.jpg" x="68.3" y="45.0" width="63.4" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="100.0" y="161.0" text-anchor="middle" class="lb ">手機</text>
+<text x="100.0" y="178.0" text-anchor="middle" class="cap">第二章</text>
+</g>
+<g class="tile " data-s="1" data-hi="1">
+<image href="assets/img/homepod-mini.jpg" x="254.2" y="45.0" width="91.6" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="161.0" text-anchor="middle" class="lb ">家庭 App</text>
+<text x="300.0" y="177.0" text-anchor="middle" class="sub">Home Hub</text>
+<text x="300.0" y="193.0" text-anchor="middle" class="cap">第二章</text>
+</g>
+<g class="tile " data-s="2" data-hi="2">
+<image href="assets/img/router.jpg" x="446.9" y="53.0" width="106.2" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="500.0" y="153.0" text-anchor="middle" class="lb ">路由器</text>
+<text x="500.0" y="170.0" text-anchor="middle" class="cap">第三章</text>
+</g>
+<g class="tile" data-s="3" data-hi="3">
+<g class="tile ">
+<image href="assets/logos/wifi.svg" x="71.3" y="251.0" width="57.4" height="34.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/thread.svg" x="52.0" y="295.1" width="96.0" height="17.8" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/zigbee.svg" x="56.0" y="319.5" width="88.0" height="21.1" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="100.0" y="358.0" text-anchor="middle" class="lb">協定</text>
+<text x="100.0" y="374.0" text-anchor="middle" class="cap">第四章</text>
+</g>
+<g class="tile " data-s="4" data-hi="4">
+<image href="assets/img/controller-module.jpg" x="238.0" y="254.5" width="124.0" height="75.1" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="345.5" text-anchor="middle" class="lb ">開關控制器</text>
+<text x="300.0" y="362.5" text-anchor="middle" class="cap">第五章</text>
+</g>
+<g class="tile " data-s="5" data-hi="5">
+<image href="assets/img/lamp-off.jpg" x="469.5" y="242.0" width="61.0" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/lamp-on.jpg" x="469.5" y="242.0" width="61.0" height="100.0" preserveAspectRatio="xMidYMid meet" class="" data-s="5"/>
+<text x="500.0" y="358.0" text-anchor="middle" class="lb ">燈</text>
+</g>
+<line x1="121.9" y1="95.0" x2="252.2" y2="95.0" class="ln draw" data-s="1"/>
+<line x1="347.8" y1="95.0" x2="454.9" y2="95.0" class="ln draw" data-s="2"/>
+<polyline points="500.0,180.0 500.0,218.0 100.0,218.0 100.0,244.0" class="ln draw" data-s="3"/>
+<line x1="156.0" y1="292.0" x2="239.1" y2="292.0" class="ln draw" data-s="4"/>
+<line x1="360.7" y1="292.0" x2="481.1" y2="292.0" class="ln draw" data-s="5"/>
+<text x="300.0" y="22.0" text-anchor="middle" class="cap">Signal path · 訊號走的路</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Overview · 六個站</span>
+<h2>一盞燈的訊號，走了這條路</h2>
+<p class="lead">這條路也是每一章的順序。</p>
+<ol class="marks">
+<li>手機</li>
+<li>家庭 App／Home Hub</li>
+<li>路由器</li>
+<li>協定</li>
+<li>開關控制器</li>
+<li>燈</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">站 1 · 手機</span>你在家庭 App 按下「客廳燈」。指令從這裡出發。</div>
+<div class="step" data-k="1">
+<span class="k">站 2 · 家庭 App／Home Hub</span>在家時直接走家裡的 Wi-Fi。出門時，指令先到家裡的 Home Hub（Apple TV 或 HomePod），由它代收。<b>第二章。</b>
+</div>
+<div class="step" data-k="2">
+<span class="k">站 3 · 路由器</span>指令進入家庭網路。路由器認得每一台設備的 IP 位址，知道要送去哪。<b>第三章。</b>
+</div>
+<div class="step" data-k="3">
+<span class="k">站 4 · 協定</span>最後一小段要用設備聽得懂的語言：Wi-Fi 直達、Thread 經 Border Router、Zigbee 經 Hub。<b>第四章。</b>
+</div>
+<div class="step" data-k="4">
+<span class="k">站 5 · 開關控制器</span>牆裡的控制器收到指令，把火線接通。<b>第五章。</b>
+</div>
+<div class="step" data-k="5">
+<span class="k">站 6 · 燈</span>燈亮了。出問題的時候，就沿著這條路一站一站查，附錄有對照表。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x2" id="s1" data-ch="第一章 認識智能家庭" data-sub="三個核心" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0">
+<image href="assets/img/iphone.jpg" x="46.1" y="85.0" width="107.8" height="170.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="100.0" y="271.0" text-anchor="middle" class="lb ">控制</text>
+<text x="100.0" y="287.0" text-anchor="middle" class="sub">手機 · 語音 · 面板</text>
+</g>
+<g class="tile " data-s="1" data-hi="1">
+<image href="assets/img/motion-sensor.jpg" x="237.0" y="95.0" width="126.0" height="150.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="261.0" text-anchor="middle" class="lb ">自動化</text>
+<text x="300.0" y="277.0" text-anchor="middle" class="sub">條件到了，設備自己動</text>
+</g>
+<g class="tile " data-s="2" data-hi="2">
+<image href="assets/img/hub-bridge.jpg" x="433.7" y="95.0" width="132.5" height="150.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="500.0" y="261.0" text-anchor="middle" class="lb ">整合</text>
+<text x="500.0" y="277.0" text-anchor="middle" class="sub">不同品牌互相聯動</text>
+</g>
+<line x1="133.0" y1="170.0" x2="238.9" y2="170.0" class="ln draw" data-s="1"/>
+<g data-s="1">
+<path d="M230.9 164.0l8 6-8 6" class="ln"/>
+</g>
+<line x1="361.1" y1="170.0" x2="435.1" y2="170.0" class="ln draw" data-s="2"/>
+<g data-s="2">
+<path d="M427.1 164.0l8 6-8 6" class="ln"/>
+</g>
+<text x="300.0" y="386.0" text-anchor="middle" class="cap" data-s="2">Control · Automation · Integration</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Chapter 01</span>
+<h2>認識智能家庭</h2>
+<p class="lead">智能家庭（Smart Home）是把家中設備透過網路串在一起，讓你能用手機、語音，甚至自動排程去控制它們。</p>
+<ol class="marks">
+<li>控制</li>
+<li>自動化</li>
+<li>整合</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">核心 1 · 控制</span>隨時隨地操作設備。用手機 App、語音指令、牆上的面板都可以。以前回家要一個一個手動開燈，現在一句話。</div>
+<div class="step" data-k="1">
+<span class="k">核心 2 · 自動化</span>設定條件，設備自己動作。走進門燈自動亮；出門一個按鈕，全屋關燈、鎖門、空調關閉，同時完成。</div>
+<div class="step" data-k="2">
+<span class="k">核心 3 · 整合</span>不同品牌的設備能互相溝通、聯動。<b>單一設備不是智能家庭</b>，設備彼此能感知、聯動才是。</div>
+</div>
+<p class="note">
+<b>重點觀念：</b>智能家庭的核心是「互聯」與「自動化」。三個核心缺一不可。</p>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">設備分類</div>
+<div>
+<h3>常見智能家庭設備分類</h3>
+<div class="cards3">
+<div>
+<div class="h">照明系統</div>
+<p>智能燈泡、智能開關、調光器、燈帶。最常見的入門設備，改裝簡單、效益立竿見影。</p>
+</div>
+<div>
+<div class="h">環境控制</div>
+<p>空調控制、電動窗簾與捲簾馬達。</p>
+</div>
+<div>
+<div class="h">安全監控</div>
+<p>智能門鎖、門磁感應器、動作感應器、攝影機、煙霧偵測器。</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">本章重點</div>
+<div class="recap">
+<h3>第一章 認識智能家庭</h3>
+<ol>
+<li>智能家庭 = 控制 + 自動化 + 整合，三者缺一不可</li>
+<li>入門設備從照明開始：改裝簡單、效益立竿見影；環境控制與安全監控是常見的下一步</li>
+<li>接下來四章對應六站裡的後五站：平台（站 2）、網路（站 3）、協定（站 4）、牆裡的線（站 5、6）</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="slide x2 opener flip" id="s2" data-ch="第二章 Apple HomeKit" data-sub="章首">
+<div class="stage">
+<div class="vis">
+<img class="bigimg" src="assets/logos/home-app-icon.png" alt="家庭 App 圖示" style="width:min(30vh,44%);border-radius:22%">
+</div>
+<div class="txt">
+<span class="chno">02</span>
+<span class="tag">Chapter 02</span>
+<h2>Apple HomeKit</h2>
+<p class="lead">訊號的第二站：手機按下去之後，指令先到這裡。</p>
+<ul class="kp">
+<li class="rise" style="--t:0.06">
+<b>是架構，不是 App</b>家庭 App 是介面；HomeKit 是背後讓不同品牌配件協作的技術基礎。</li>
+<li class="rise" style="--t:0.18">
+<b>Home Hub 是門檻</b>遠端控制、自動化、安全錄影都要有 Apple TV 或 HomePod 在家。</li>
+<li class="rise" style="--t:0.30">
+<b>自動化才是智能</b>情境要手動按；自動化是條件到了設備自己動。</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="slide x2" id="s2-what" data-ch="第二章 Apple HomeKit" data-sub="架構與介面" data-stages="2">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0">
+<image href="assets/img/iphone.jpg" x="249.3" y="20.0" width="101.4" height="160.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="196.0" text-anchor="middle" class="lb ">家庭 App</text>
+<text x="300.0" y="212.0" text-anchor="middle" class="sub">介面：你看到、你按的</text>
+</g>
+<g class="tile " data-s="0">
+<image href="assets/logos/home-app-icon.png" x="370.0" y="38.0" width="44.0" height="44.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<line x1="300.0" y1="222.0" x2="300.0" y2="258.0" class="ln draw" data-s="1"/>
+<rect x="90.0" y="262.0" width="420.0" height="56.0" rx="0" class="box" data-s="1" data-hi="1"/>
+<text x="300.0" y="285.0" text-anchor="middle" class="lb" style="font-weight:600" data-s="1" data-hi="1">HomeKit 架構（Framework）</text>
+<text x="300.0" y="305.0" text-anchor="middle" class="tiny" data-s="1">背後支撐一切運作的技術基礎 · 端對端加密 · 配件經 MFi 審核</text>
+<line x1="150.0" y1="318.0" x2="150.0" y2="338.0" class="ln draw" data-s="1"/>
+<line x1="300.0" y1="318.0" x2="300.0" y2="338.0" class="ln draw" data-s="1"/>
+<line x1="450.0" y1="318.0" x2="450.0" y2="338.0" class="ln draw" data-s="1"/>
+<g class="tile " data-s="1">
+<image href="assets/img/smart-plug.jpg" x="125.3" y="341.0" width="49.4" height="50.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="150.0" y="407.0" text-anchor="middle" class="lb ">品牌 A</text>
+</g>
+<g class="tile " data-s="1">
+<image href="assets/img/door-lock.jpg" x="287.8" y="340.0" width="24.4" height="52.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="408.0" text-anchor="middle" class="lb ">品牌 B</text>
+</g>
+<g class="tile " data-s="1">
+<image href="assets/img/camera.jpg" x="430.8" y="340.0" width="38.4" height="52.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="450.0" y="408.0" text-anchor="middle" class="lb ">品牌 C</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">02 · What it is</span>
+<h2>家庭 App 是介面，HomeKit 是架構</h2>
+<ol class="marks">
+<li>家庭 App（介面）</li>
+<li>HomeKit（架構）</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Layer 1 · 家庭 App</span>iPhone 上的「家庭」App 是操作介面。新增配件、分配房間、建立情境、從控制中心一滑就到，都在這裡。很多人把它跟 HomeKit 搞混。</div>
+<div class="step" data-k="1">
+<span class="k">Layer 2 · HomeKit</span>HomeKit 是 Apple 打造的智能家庭<b>架構（Framework）</b>，不是單一 App。它讓不同品牌的相容配件，在同一個安全、私密、易用的平台上和諧協作。</div>
+</div>
+<p class="note">
+<b>隱私核心：</b>裝置間通訊全程端對端加密（E2E），除了你沒有人能讀，包括 Apple。不依賴雲端、不強制註冊帳號、不追蹤行為。所有認證配件都通過 MFi 審核。</p>
+</div>
+</div>
+</section>
+<section class="slide x2 flip" id="s2-stones" data-ch="第二章 Apple HomeKit" data-sub="三大基石" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0">
+<image href="assets/img/iphone.jpg" x="260.7" y="20.0" width="78.6" height="124.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="160.0" text-anchor="middle" class="lb ">iPhone / iPad</text>
+<text x="300.0" y="176.0" text-anchor="middle" class="sub">家庭 App · 控制中心</text>
+</g>
+<g class="tile " data-s="1" data-hi="1">
+<image href="assets/img/homepod-mini.jpg" x="95.1" y="240.0" width="109.9" height="120.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="150.0" y="376.0" text-anchor="middle" class="lb ">Home Hub</text>
+<text x="150.0" y="392.0" text-anchor="middle" class="sub">HomePod / Apple TV</text>
+</g>
+<g class="tile " data-s="2" data-hi="2">
+<image href="assets/img/smart-plug.jpg" x="394.7" y="244.0" width="110.7" height="112.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="450.0" y="372.0" text-anchor="middle" class="lb ">配件</text>
+<text x="450.0" y="388.0" text-anchor="middle" class="sub">Works with Apple Home</text>
+</g>
+<line x1="268.0" y1="184.0" x2="170.0" y2="234.0" class="ln draw" data-s="1"/>
+<line x1="332.0" y1="184.0" x2="430.0" y2="238.0" class="ln draw" data-s="2"/>
+<line x1="206.2" y1="300.0" x2="394.0" y2="300.0" class="ln draw" data-s="2"/>
+<text x="300.0" y="410.0" text-anchor="middle" class="cap" data-s="2">Three foundations</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">02 · Foundations</span>
+<h2>打造 HomeKit 智能家庭的三大基石</h2>
+<ol class="marks">
+<li>iPhone / iPad</li>
+<li>Home Hub</li>
+<li>HomeKit 配件</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">基石 1 · iPhone / iPad</span>內建的「家庭 App」就是你的控制中心。新增配件、分配房間、建立情境，並透過「控制中心」一滑即達常用設備。</div>
+<div class="step" data-k="1">
+<span class="k">基石 2 · Home Hub</span>由 <b>HomePod、HomePod mini 或 Apple TV</b> 擔任。它是啟用遠端控制與自動化的大腦，同時也是 Thread Border Router（第四章會講），大幅提升設備穩定性。</div>
+<div class="step" data-k="2">
+<span class="k">基石 3 · HomeKit 配件</span>認明包裝上的「<b>Works with Apple Home</b>」標章。代表通過 Apple 認證，相容性與安全性都有保證。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x2 hubslide" id="s2-hub" data-ch="第二章 Apple HomeKit" data-sub="Home Hub">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<rect x="180.0" y="30.0" width="400.0" height="370.0" rx="6" class="thin dash"/>
+<text x="380.0" y="52.0" text-anchor="middle" class="cap">Home · 家裡的 Wi-Fi</text>
+<g class="tile ">
+<image href="assets/img/iphone.jpg" x="39.6" y="52.0" width="60.9" height="96.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="70.0" y="164.0" text-anchor="middle" class="lb ">出門的手機</text>
+</g>
+<g>
+<rect x="22.0" y="246.0" width="96.0" height="32" rx="16" class="box"/>
+<text x="70.0" y="266.5" text-anchor="middle" class="lb">網際網路</text>
+</g>
+<line x1="70.0" y1="174.0" x2="70.0" y2="246.0" class="ln hubpath"/>
+<g class="tile ">
+<image href="assets/img/iphone.jpg" x="219.6" y="102.0" width="60.9" height="96.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="250.0" y="214.0" text-anchor="middle" class="lb ">在家的手機</text>
+</g>
+<g class="tile hubnode">
+<image href="assets/img/homepod-mini.jpg" x="456.0" y="102.0" width="87.9" height="96.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="500.0" y="214.0" text-anchor="middle" class="lb ">Home Hub</text>
+<text x="500.0" y="230.0" text-anchor="middle" class="sub">Apple TV / HomePod</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-off.jpg" x="345.7" y="272.0" width="58.5" height="96.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/lamp-on.jpg" x="345.7" y="272.0" width="58.5" height="96.0" preserveAspectRatio="xMidYMid meet" class="on"/>
+<text x="375.0" y="384.0" text-anchor="middle" class="lb ">設備</text>
+</g>
+<polyline points="118.0,262.0 430.0,262.0 430.0,150.0 450.0,150.0" class="ln hubpath"/>
+<text x="340.0" y="252.0" text-anchor="middle" class="tiny hubpath">遠端 · 自動化 · 安全錄影</text>
+<polyline points="250.0,224.0 250.0,320.0 356.6,320.0" class="ln"/>
+<polyline points="500.0,240.0 500.0,320.0 393.3,320.0" class="ln hubpath"/>
+<text x="500.0" y="260.0" text-anchor="middle" class="tiny bad nohubmark" style="font-weight:600">沒有 Hub</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">02 · Home Hub</span>
+<h2>家裡有沒有 Home Hub，差在哪</h2>
+<p class="lead">
+<b>不需要 Home Hub 也能控制設備</b>，在同一個 Wi-Fi 下就行。但要遠端控制、自動化、HomeKit 安全錄影（HKSV），就必須至少有一台 Home Hub。切換看看：</p>
+<label class="switch">
+<input type="checkbox" id="hubToggle" checked>
+<span class="knob" aria-hidden="true">
+</span>
+<span>家裡有 HomePod mini / Apple TV</span>
+</label>
+<ul class="cap" id="capList">
+<li data-hub="0">
+<span>同一 Wi-Fi 下，用家庭 App 控制設備</span>
+<span class="pill">可以</span>
+</li>
+<li data-hub="1">
+<span>遠端控制</span>
+<span class="pill">可以</span>
+</li>
+<li data-hub="1">
+<span>自動化</span>
+<span class="pill">可以</span>
+</li>
+<li data-hub="1">
+<span>HomeKit 安全錄影（HKSV）</span>
+<span class="pill">可以</span>
+</li>
+<li data-hub="1">
+<span>Thread Border Router</span>
+<span class="pill">可以</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="slide x3 flip" id="s2-steps" data-ch="第二章 Apple HomeKit" data-sub="四步驟配對" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/iphone.jpg" x="26.2" y="70.0" width="177.5" height="280.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g data-s="0" data-until="1">
+<g class="tile ">
+<image href="assets/logos/wifi.svg" x="294.4" y="63.0" width="91.2" height="54.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="340.0" y="132.0" text-anchor="middle" class="lb">Wi-Fi 已連線</text>
+<g class="tile ">
+<image href="assets/logos/bluetooth.svg" x="410.0" y="75.1" width="120.0" height="29.7" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="470.0" y="132.0" text-anchor="middle" class="lb">藍牙開啟</text>
+<g class="tile ">
+<image href="assets/img/smart-plug.jpg" x="350.6" y="200.0" width="98.8" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="400.0" y="318.0" text-anchor="middle" class="lb">設備通電，指示燈亮</text>
+</g>
+<g data-s="1" data-until="2">
+<g class="tile ">
+<image href="assets/logos/home-app-icon.png" x="278.0" y="58.0" width="44.0" height="44.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="300.0" y="118.0" text-anchor="middle" class="lb">家庭 App</text>
+<text x="440.0" y="84.0" text-anchor="start" class="lb">按「＋」新增配件</text>
+<text x="440.0" y="102.0" text-anchor="start" class="tiny">選「加入配件」</text>
+<rect x="330.0" y="150.0" width="140.0" height="110.0" rx="8" class="ln dash"/>
+<rect x="348.0" y="186.0" width="104.0" height="40.0" rx="6" class="box"/>
+<text x="400.0" y="212.0" text-anchor="middle" class="num" style="font-size:15px;letter-spacing:.08em">123-45-678</text>
+<text x="400.0" y="296.0" text-anchor="middle" class="lb">掃描 8 位數設定碼</text>
+<text x="400.0" y="314.0" text-anchor="middle" class="tiny">在設備背面或說明書上</text>
+</g>
+<g data-s="2" data-until="3">
+<text x="310.0" y="70.0" text-anchor="start" class="cap">配件資訊</text>
+<rect x="310.0" y="86.0" width="180.0" height="36.0" rx="6" class="box"/>
+<text x="322.0" y="109.0" text-anchor="start" class="lb">客廳立燈</text>
+<text x="310.0" y="138.0" text-anchor="start" class="tiny">名稱</text>
+<rect x="310.0" y="154.0" width="180.0" height="36.0" rx="6" class="box"/>
+<text x="322.0" y="177.0" text-anchor="start" class="lb">客廳</text>
+<text x="310.0" y="206.0" text-anchor="start" class="tiny">房間</text>
+<rect x="310.0" y="222.0" width="180.0" height="36.0" rx="6" class="box"/>
+<text x="322.0" y="245.0" text-anchor="start" class="lb">加入喜好項目</text>
+<path d="M458 240l5 5 9-10" class="ln acc"/>
+<text x="400.0" y="300.0" text-anchor="middle" class="tiny">名字取得好，Siri 才叫得動</text>
+</g>
+<g data-s="3">
+<g class="tile ">
+<image href="assets/img/lamp-off.jpg" x="354.3" y="55.0" width="91.5" height="150.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/lamp-on.jpg" x="354.3" y="55.0" width="91.5" height="150.0" preserveAspectRatio="xMidYMid meet" class="on"/>
+</g>
+<text x="400.0" y="226.0" text-anchor="middle" class="lb">客廳立燈 · 開啟</text>
+<path d="M340 280c8-24 12-24 20 0s12 24 20 0 12-24 20 0 12 24 20 0 12-24 20 0 12 24 20 0" class="ln acc" fill="none"/>
+<text x="400.0" y="318.0" text-anchor="middle" class="lb">「嘿 Siri，打開客廳立燈」</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">02 · Pairing</span>
+<h2>四步驟完成第一個 HomeKit 設備</h2>
+<ol class="marks">
+<li>準備</li>
+<li>掃描設定碼</li>
+<li>設定資訊</li>
+<li>測試</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Step 1 · 準備</span>iPhone 連上 Wi-Fi、開啟藍牙。設備通電，確認指示燈亮起。</div>
+<div class="step" data-k="1">
+<span class="k">Step 2 · 掃描設定碼</span>打開家庭 App，按「+」，掃描設備背面的 8 位數 HomeKit 設定碼。</div>
+<div class="step" data-k="2">
+<span class="k">Step 3 · 設定資訊</span>為配件命名（例如「客廳立燈」）、分配房間、加入喜好項目。名字取得好，之後 Siri 才叫得動。</div>
+<div class="step" data-k="3">
+<span class="k">Step 4 · 測試</span>點圖示測試開關，再說「嘿 Siri，打開客廳立燈」，確認語音控制也通。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x3" id="s2-auto" data-ch="第二章 Apple HomeKit" data-sub="自動化" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<text x="140.0" y="60.0" text-anchor="middle" class="cap">If · 條件</text>
+<text x="430.0" y="60.0" text-anchor="middle" class="cap">Then · 動作</text>
+<line x1="245.0" y1="150.0" x2="300.0" y2="150.0" class="ln"/>
+<path d="M292.0 144.0l8 6-8 6" class="ln"/>
+<g data-s="0" data-until="1">
+<g>
+<rect x="45.0" y="128.0" width="190.0" height="44" rx="16" class="box"/>
+<text x="140.0" y="154.5" text-anchor="middle" class="lb">每天日落</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-on.jpg" x="404.4" y="98.0" width="51.2" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="430.0" y="200.0" text-anchor="middle" class="lb">戶外燈亮</text>
+</g>
+<g data-s="1" data-until="2">
+<g>
+<rect x="45.0" y="128.0" width="190.0" height="44" rx="16" class="box"/>
+<text x="140.0" y="154.5" text-anchor="middle" class="lb">回到家附近</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-on.jpg" x="356.4" y="98.0" width="51.2" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="382.0" y="200.0" text-anchor="middle" class="lb">玄關燈亮</text>
+<g>
+<rect x="438.0" y="120.0" width="80.0" height="40" rx="16" class="box"/>
+<text x="478.0" y="144.5" text-anchor="middle" class="lb">空調</text>
+</g>
+<text x="478.0" y="200.0" text-anchor="middle" class="lb">空調啟動</text>
+</g>
+<g data-s="2" data-until="3">
+<g>
+<rect x="45.0" y="128.0" width="190.0" height="44" rx="16" class="box"/>
+<text x="140.0" y="154.5" text-anchor="middle" class="lb">門窗被打開</text>
+</g>
+<g class="tile ">
+<image href="assets/img/iphone.jpg" x="307.4" y="98.0" width="53.3" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="334.0" y="200.0" text-anchor="middle" class="lb">推播</text>
+<g class="tile ">
+<image href="assets/img/camera.jpg" x="399.0" y="98.0" width="62.1" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="430.0" y="200.0" text-anchor="middle" class="lb">錄影</text>
+<g class="tile ">
+<image href="assets/img/lamp-on.jpg" x="500.4" y="98.0" width="51.2" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="526.0" y="200.0" text-anchor="middle" class="lb">全屋燈</text>
+</g>
+<g data-s="3" data-until="4">
+<g>
+<rect x="45.0" y="128.0" width="190.0" height="44" rx="16" class="box"/>
+<text x="140.0" y="154.5" text-anchor="middle" class="lb">最後一人離家</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-off.jpg" x="308.4" y="98.0" width="51.2" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="334.0" y="200.0" text-anchor="middle" class="lb">關燈</text>
+<g class="tile ">
+<image href="assets/img/door-lock.jpg" x="410.3" y="98.0" width="39.4" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="430.0" y="200.0" text-anchor="middle" class="lb">鎖門</text>
+<g>
+<rect x="486.0" y="120.0" width="80.0" height="40" rx="16" class="box"/>
+<text x="526.0" y="144.5" text-anchor="middle" class="lb">空調</text>
+</g>
+<text x="526.0" y="200.0" text-anchor="middle" class="lb">空調降低</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">02 · Automation</span>
+<h2>情境是手動按一下，自動化是條件到了自己動</h2>
+<p class="lead">情境（Scene）是一組設備狀態的快照，輕觸或一句 Siri 啟動。自動化（Automation）依條件自動執行，完全不需要介入，它才是 HomeKit 真正的大腦。</p>
+<ol class="marks">
+<li>時間驅動</li>
+<li>地點驅動</li>
+<li>感測器驅動</li>
+<li>離家自動化</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Type 1 · 時間</span>每天日落時，自動開啟戶外燈光。不用記、不用按。</div>
+<div class="step" data-k="1">
+<span class="k">Type 2 · 地點</span>手機回到家附近（GPS），玄關燈亮起、空調啟動。你進門時家已經準備好。</div>
+<div class="step" data-k="2">
+<span class="k">Type 3 · 感測器</span>門窗被意外開啟：推播警報、攝影機錄影、全屋燈光開啟，三件事同時發生。</div>
+<div class="step" data-k="3">
+<span class="k">Type 4 · 離家</span>最後一個人離開家：關閉所有燈光、鎖門、降低空調設定。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">情境範例</div>
+<div>
+<h3>三個常用情境</h3>
+<ul class="rule">
+<li>
+<div class="h">早安情境</div>
+<span>燈條緩緩亮起模擬日出</span>
+<span>智能插座同時啟動咖啡機，溫和開啟一天</span>
+</li>
+<li>
+<div class="h">我出門了</div>
+<span>一鍵關閉所有燈光、鎖上門鎖</span>
+<span>啟動保全攝影機，確保家中安全</span>
+</li>
+<li>
+<div class="h">電影之夜</div>
+<span>燈光調暗至 20%、窗簾關閉</span>
+<span>電視開啟，瞬間進入影音模式</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">服務類型</div>
+<div>
+<h3>HomeKit 支援的服務類型</h3>
+<ul class="rule">
+<li>
+<div class="h">照明</div>
+<span>燈泡、燈帶、調光器、開關</span>
+<span>「打開臥室燈」「把亮度調到 50%」「切換成暖白色」</span>
+</li>
+<li>
+<div class="h">氣候</div>
+<span>溫控器、冷氣、暖氣、空氣清淨機</span>
+<span>「把客廳溫度設為 24 度」</span>
+</li>
+<li>
+<div class="h">安全</div>
+<span>門鎖、攝影機、門磁感應、動作感應</span>
+<span>「鎖上前門」「查看門口攝影機」</span>
+</li>
+<li>
+<div class="h">窗簾／遮陽</div>
+<span>電動窗簾、百葉窗、捲簾</span>
+<span>「把臥室窗簾打開一半」</span>
+</li>
+<li>
+<div class="h">插座／開關</div>
+<span>智能插座、智能排插</span>
+<span>「關掉咖啡機」</span>
+</li>
+<li>
+<div class="h">感應器</div>
+<span>溫濕度、空氣品質、漏水偵測、門窗感應</span>
+<span>自動化的觸發條件</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">本章重點</div>
+<div class="recap">
+<h3>第二章 Apple HomeKit</h3>
+<ol>
+<li>Home Hub（Apple TV / HomePod）是遠端控制與自動化的必要條件，沒有它出門就失去控制</li>
+<li>HomeKit 設備要通過 MFi 認證；選購時認準包裝上的「Works with Apple Home」標章</li>
+<li>自動化比情境更強大：條件觸發（時間、位置、感應器）不需手動操作，才是真正的智能</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="slide x2 opener flip" id="s3" data-ch="第三章 網路架構" data-sub="章首">
+<div class="stage">
+<div class="vis">
+<img class="bigimg" src="assets/img/router.jpg" alt="" style="width:min(40vh,60%)">
+</div>
+<div class="txt">
+<span class="chno">03</span>
+<span class="tag">Chapter 03</span>
+<h2>網路架構基礎認識</h2>
+<p class="lead">訊號的第三站。穩定的家庭網路是智能家庭的地基，設備掉線多半從這裡查起。</p>
+<ul class="kp">
+<li class="rise" style="--t:0.06">
+<b>一條線進來，四台設備分工</b>數據機、路由器、交換器、AP。各做一件事。</li>
+<li class="rise" style="--t:0.18">
+<b>IP 是門牌</b>智能設備建議固定 IP，DHCP 重新分配後設備會「消失」。</li>
+<li class="rise" style="--t:0.30">
+<b>2.4 GHz 是智能設備的頻段</b>穿牆遠、速度慢；頻道只選 1、6、11。</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="slide x3" id="s3-topo" data-ch="第三章 網路架構" data-sub="基本設備" data-stages="5">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0">
+<image href="assets/img/modem.jpg" x="67.1" y="50.0" width="45.7" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="90.0" y="150.0" text-anchor="middle" class="lb ">數據機</text>
+<text x="90.0" y="166.0" text-anchor="middle" class="sub">Modem</text>
+</g>
+<g data-s="0">
+<line x1="0.0" y1="92.0" x2="61.1" y2="92.0" class="ln draw"/>
+<text x="6.0" y="80.0" text-anchor="start" class="tiny">ISP 光纖</text>
+</g>
+<g class="tile " data-s="1" data-hi="1">
+<image href="assets/img/router.jpg" x="181.9" y="54.0" width="96.1" height="76.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="230.0" y="146.0" text-anchor="middle" class="lb ">路由器</text>
+<text x="230.0" y="162.0" text-anchor="middle" class="sub">Router · DHCP</text>
+</g>
+<g class="tile " data-s="2" data-hi="2">
+<image href="assets/img/switch-poe.jpg" x="307.0" y="66.1" width="126.0" height="51.8" preserveAspectRatio="xMidYMid meet"/>
+<text x="370.0" y="133.9" text-anchor="middle" class="lb ">交換器</text>
+<text x="370.0" y="149.9" text-anchor="middle" class="sub">Switch · 擴埠</text>
+</g>
+<g class="tile " data-s="3" data-hi="3">
+<image href="assets/img/ap.jpg" x="477.4" y="54.0" width="65.3" height="76.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="510.0" y="146.0" text-anchor="middle" class="lb ">無線基地台</text>
+<text x="510.0" y="162.0" text-anchor="middle" class="sub">AP</text>
+</g>
+<line x1="115.4" y1="92.0" x2="188.7" y2="92.0" class="ln draw" data-s="1"/>
+<line x1="279.9" y1="92.0" x2="306.9" y2="92.0" class="ln draw" data-s="2"/>
+<line x1="435.2" y1="92.0" x2="474.7" y2="92.0" class="ln draw" data-s="3"/>
+<g data-s="1">
+<path d="M214 200 a16 16 0 0 1 32 0" class="thin"/>
+<path d="M221.2 200 a8.8 8.8 0 0 1 17.6 0" class="thin"/>
+</g>
+<g class="tile " data-s="1">
+<image href="assets/img/iphone.jpg" x="209.7" y="230.0" width="40.6" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="230.0" y="310.0" text-anchor="middle" class="lb ">手機</text>
+</g>
+<g data-s="2">
+<line x1="370.0" y1="159.9" x2="370.0" y2="190.0" class="ln draw"/>
+<line x1="330.0" y1="190.0" x2="410.0" y2="190.0" class="ln draw"/>
+<line x1="330.0" y1="190.0" x2="330.0" y2="193.9" class="ln draw"/>
+<line x1="410.0" y1="190.0" x2="410.0" y2="193.9" class="ln draw"/>
+</g>
+<g class="tile " data-s="2">
+<image href="assets/img/apple-tv.jpg" x="295.9" y="245.0" width="68.2" height="34.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="330.0" y="295.0" text-anchor="middle" class="lb ">Apple TV</text>
+<text x="330.0" y="311.0" text-anchor="middle" class="sub">有線</text>
+</g>
+<g class="tile " data-s="2">
+<image href="assets/img/homepod-mini.jpg" x="380.7" y="230.0" width="58.6" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="410.0" y="310.0" text-anchor="middle" class="lb ">HomePod</text>
+<text x="410.0" y="326.0" text-anchor="middle" class="sub">有線</text>
+</g>
+<g data-s="3">
+<path d="M466 200 a16 16 0 0 1 32 0" class="thin"/>
+<path d="M473.2 200 a8.8 8.8 0 0 1 17.6 0" class="thin"/>
+<path d="M540 200 a16 16 0 0 1 32 0" class="thin"/>
+<path d="M547.2 200 a8.8 8.8 0 0 1 17.6 0" class="thin"/>
+</g>
+<g class="tile " data-s="3">
+<image href="assets/img/led-bulb-on.jpg" x="463.2" y="230.0" width="37.5" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="482.0" y="310.0" text-anchor="middle" class="lb ">燈</text>
+<text x="482.0" y="326.0" text-anchor="middle" class="sub">2.4 GHz</text>
+</g>
+<g class="tile " data-s="3">
+<image href="assets/img/motion-sensor.jpg" x="531.6" y="233.0" width="48.7" height="58.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="556.0" y="307.0" text-anchor="middle" class="lb ">感應器</text>
+<text x="556.0" y="323.0" text-anchor="middle" class="sub">2.4 GHz</text>
+</g>
+<g data-s="4">
+<rect x="40.0" y="336.0" width="520.0" height="56.0" rx="4" class="thin"/>
+<text x="300.0" y="359.0" text-anchor="middle" class="lb">一條線進來 → 路由器分配 IP → 交換器擴埠 → AP 撒 Wi-Fi → 智能設備掛在最末端</text>
+<text x="300.0" y="379.0" text-anchor="middle" class="tiny">Home Hub 建議走有線接交換器，最穩</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">03 · Devices</span>
+<h2>四台設備，各做一件事</h2>
+<ol class="marks">
+<li>數據機 Modem</li>
+<li>路由器 Router</li>
+<li>交換器 Switch</li>
+<li>無線基地台 AP</li>
+<li>整體</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">1 · 數據機</span>把 ISP（電信商）的光纖或 ADSL 訊號，轉換成乙太網路訊號。通常由 ISP 提供，不用自己設定。</div>
+<div class="step" data-k="1">
+<span class="k">2 · 路由器</span>家庭網路的核心。負責分配 IP 位址（DHCP）、管理所有設備的流量，通常也提供 Wi-Fi。</div>
+<div class="step" data-k="2">
+<span class="k">3 · 交換器</span>擴充有線網路埠。路由器的埠不夠用時，接交換器增加接口。智能交換器支援 VLAN。Apple TV、HomePod 這類 Home Hub 走有線最穩。</div>
+<div class="step" data-k="3">
+<span class="k">4 · 無線基地台</span>單純提供 Wi-Fi，本身沒有路由功能。大坪數住宅部署多台 AP 延伸訊號覆蓋。智能設備大多掛在這一層的 2.4 GHz。</div>
+<div class="step" data-k="4">
+<span class="k">整體</span>一條線進來，路由器分配、交換器擴埠、AP 撒 Wi-Fi。智能設備在最末端；它掉線，往前一站一站查。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x2 flip" id="s3-poe" data-ch="第三章 網路架構" data-sub="PoE 供電" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0,1">
+<image href="assets/img/switch-poe.jpg" x="25.0" y="115.1" width="170.0" height="69.8" preserveAspectRatio="xMidYMid meet"/>
+<text x="110.0" y="200.9" text-anchor="middle" class="lb ">交換器</text>
+<text x="110.0" y="216.9" text-anchor="middle" class="sub">Switch</text>
+</g>
+<g class="tile " data-s="0" data-hi="0,1,2">
+<image href="assets/img/ap.jpg" x="457.4" y="112.0" width="65.3" height="76.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="490.0" y="204.0" text-anchor="middle" class="lb ">AP / 攝影機</text>
+</g>
+<g data-s="0" data-until="2">
+<line x1="195.9" y1="150.0" x2="454.7" y2="150.0" class="ln draw"/>
+</g>
+<text x="328.0" y="138.0" text-anchor="middle" class="tiny" data-s="0" data-until="1">網路線：只有資料</text>
+<g data-s="0" data-until="1">
+<line x1="490.0" y1="214.0" x2="490.0" y2="244.0" class="ln draw"/>
+<g>
+<rect x="415.0" y="251.0" width="150.0" height="30" rx="16" class="box"/>
+<text x="490.0" y="270.5" text-anchor="middle" class="tiny">另外找插座接變壓器</text>
+</g>
+</g>
+<g data-s="1" data-until="2">
+<line x1="194.2" y1="158.0" x2="455.5" y2="158.0" class="ln draw acc"/>
+<text x="328.0" y="180.0" text-anchor="middle" class="tiny acc">同一條線：資料 ＋ 電（PoE）</text>
+<text x="110.0" y="238.9" text-anchor="middle" class="tiny">PoE 交換器</text>
+<text x="110.0" y="254.9" text-anchor="middle" class="num">802.3af 15 W · 802.3at 30 W</text>
+</g>
+<g class="tile " data-s="2">
+<image href="assets/img/poe-injector.jpg" x="268.1" y="128.0" width="63.8" height="44.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="188.0" text-anchor="middle" class="lb ">PoE 注入器</text>
+<text x="300.0" y="204.0" text-anchor="middle" class="sub">Injector</text>
+</g>
+<g data-s="2">
+<line x1="201.0" y1="150.0" x2="262.1" y2="150.0" class="ln"/>
+<line x1="337.9" y1="150.0" x2="451.4" y2="150.0" class="ln"/>
+<line x1="201.0" y1="158.0" x2="262.1" y2="158.0" class="wg"/>
+<line x1="337.9" y1="158.0" x2="451.4" y2="158.0" class="ln draw acc"/>
+<line x1="300.0" y1="214.0" x2="300.0" y2="244.0" class="ln draw"/>
+<g>
+<rect x="255.0" y="251.0" width="90.0" height="30" rx="16" class="box"/>
+<text x="300.0" y="270.5" text-anchor="middle" class="tiny">接變壓器</text>
+</g>
+<text x="110.0" y="238.9" text-anchor="middle" class="tiny">一般交換器 / 路由器</text>
+<text x="400.0" y="180.0" text-anchor="middle" class="tiny acc">資料 ＋ 電</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">03 · PoE</span>
+<h2>PoE：網路線同時送資料和電</h2>
+<ol class="marks">
+<li>沒有 PoE</li>
+<li>PoE 交換器</li>
+<li>PoE 注入器</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Before · 沒有 PoE</span>AP、攝影機除了網路線，還要另外找插座接變壓器。天花板上沒插座，走線就麻煩。</div>
+<div class="step" data-k="1">
+<span class="k">PoE 交換器</span>Power over Ethernet：具備供電能力的交換器，每個埠可輸出 <b>15 W（802.3af）</b>或 <b>30 W（802.3at / PoE+）</b>。大量部署 AP 或攝影機的標準配置。</div>
+<div class="step" data-k="2">
+<span class="k">PoE 注入器</span>單埠供電轉接器，插在現有路由器／交換器與設備之間。只有一兩台 PoE 設備時的低成本方案。</div>
+</div>
+<p class="note">
+<b>規格要匹配：</b>af（15 W）給輕量設備，at / PoE+（30 W）給高功耗 AP 或帶加熱器的攝影機。線材 Cat5e 以上。常見 PoE 設備：AP、IP 攝影機、智能門鈴、門禁讀卡機、部分 IoT Hub。</p>
+</div>
+</div>
+</section>
+<section class="slide x3" id="s3-ip" data-ch="第三章 網路架構" data-sub="IP 位址" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="1" data-hi="1">
+<image href="assets/img/router.jpg" x="262.1" y="20.0" width="75.9" height="60.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="96.0" text-anchor="middle" class="lb ">路由器 · 閘道</text>
+<text x="300.0" y="112.0" text-anchor="middle" class="sub">192.168.1.1</text>
+</g>
+<g data-s="1">
+<line x1="300.0" y1="0.0" x2="300.0" y2="14.0" class="ln draw"/>
+<text x="312.0" y="14.0" text-anchor="start" class="tiny">→ 網際網路</text>
+<rect x="50.0" y="148.0" width="500.0" height="232.0" rx="6" class="thin dash"/>
+<text x="540.0" y="372.0" text-anchor="end" class="cap">Subnet 255.255.255.0 (/24) · 同一條街</text>
+</g>
+<g class="tile " data-s="0">
+<image href="assets/img/iphone.jpg" x="102.1" y="202.0" width="55.8" height="88.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="130.0" y="306.0" text-anchor="middle" class="lb ">手機</text>
+</g>
+<g data-s="0" class="plate">
+<rect x="86.0" y="314.0" width="88.0" height="18.0" rx="2" class="box"/>
+<text x="130.0" y="327.0" text-anchor="middle" class="num">192.168.1.10</text>
+</g>
+<g class="tile " data-s="0">
+<image href="assets/img/led-bulb-on.jpg" x="219.2" y="202.0" width="51.6" height="88.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="245.0" y="306.0" text-anchor="middle" class="lb ">燈</text>
+</g>
+<g data-s="0" class="plate">
+<rect x="201.0" y="314.0" width="88.0" height="18.0" rx="2" class="box"/>
+<text x="245.0" y="327.0" text-anchor="middle" class="num">192.168.1.11</text>
+</g>
+<g class="tile " data-s="0">
+<image href="assets/img/camera.jpg" x="327.5" y="202.0" width="65.0" height="88.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="360.0" y="306.0" text-anchor="middle" class="lb ">攝影機</text>
+</g>
+<g data-s="0" data-hi="3" class="plate">
+<rect x="316.0" y="314.0" width="88.0" height="18.0" rx="2" class="box"/>
+<text x="360.0" y="327.0" text-anchor="middle" class="num">192.168.1.12</text>
+</g>
+<g class="tile " data-s="0">
+<image href="assets/img/hub-bridge.jpg" x="436.1" y="202.0" width="77.8" height="88.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="475.0" y="306.0" text-anchor="middle" class="lb ">Hub</text>
+</g>
+<g data-s="0" data-hi="3" class="plate">
+<rect x="431.0" y="314.0" width="88.0" height="18.0" rx="2" class="box"/>
+<text x="475.0" y="327.0" text-anchor="middle" class="num">192.168.1.13</text>
+</g>
+<g data-s="2" data-until="3">
+<path d="M300 122.0 Q 130 170 130 196.0" class="ln draw dash" fill="none"/>
+<path d="M300 122.0 Q 245 170 245 196.0" class="ln draw dash" fill="none"/>
+<path d="M300 122.0 Q 360 170 360 196.0" class="ln draw dash" fill="none"/>
+<path d="M300 122.0 Q 475 170 475 196.0" class="ln draw dash" fill="none"/>
+<text x="300.0" y="356.0" text-anchor="middle" class="tiny acc">DHCP：路由器自動派門牌，插上就能用</text>
+</g>
+<g data-s="3">
+<text x="300.0" y="356.0" text-anchor="middle" class="tiny acc">釘住：攝影機、Hub 用靜態 IP，重開機也不變</text>
+<text x="300.0" y="404.0" text-anchor="middle" class="tiny">DNS 8.8.8.8：把「apple.com」翻成 IP，才找得到路</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">03 · IP</span>
+<h2>IP 位址：每台設備的門牌</h2>
+<ol class="marks">
+<li>IP 位址</li>
+<li>子網路與閘道</li>
+<li>DHCP</li>
+<li>靜態 IP 與 DNS</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">1 · IP 位址</span>網路上每台設備的地址，就像門牌號碼。例如 <span class="mono">192.168.1.100</span>。</div>
+<div class="step" data-k="1">
+<span class="k">2 · 子網路與閘道</span>子網路遮罩 <span class="mono">255.255.255.0（/24）</span>定義哪些設備在同一條街。閘道（Gateway）是通往外面的出口，通常就是路由器 <span class="mono">192.168.1.1</span>。</div>
+<div class="step" data-k="2">
+<span class="k">3 · DHCP</span>路由器自動分配 IP 給新連線的設備。插上就能用，不用手動設定。但租約到期或重開機後，號碼可能換。</div>
+<div class="step" data-k="3">
+<span class="k">4 · 靜態 IP 與 DNS</span>手動指定固定 IP，設備重啟後不會變。<b>智能 Hub、NAS、攝影機建議固定</b>（或在 DHCP 綁定 MAC）。DNS 把網址翻成 IP，例如 Google 的 <span class="mono">8.8.8.8</span>。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x2 flip" id="s3-wifi" data-ch="第三章 網路架構" data-sub="Wi-Fi 頻段" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0">
+<image href="assets/img/ap.jpg" x="30.8" y="62.0" width="58.4" height="68.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="60.0" y="146.0" text-anchor="middle" class="lb ">AP</text>
+</g>
+<rect x="250.0" y="40.0" width="10.0" height="150.0" rx="0" class="soft"/>
+<rect x="430.0" y="40.0" width="10.0" height="150.0" rx="0" class="soft"/>
+<text x="255.0" y="30.0" text-anchor="middle" class="tiny">牆</text>
+<text x="435.0" y="30.0" text-anchor="middle" class="tiny">牆</text>
+<g data-s="0" data-hi="0">
+<polyline points="104.0,90.0 107.0,94.3 110.0,98.2 113.0,101.3 116.0,103.3 119.0,104.0 122.0,103.3 125.0,101.3 128.0,98.2 131.0,94.3 134.0,90.0 137.0,85.7 140.0,81.8 143.0,78.7 146.0,76.7 149.0,76.0 152.0,76.7 155.0,78.7 158.0,81.8 161.0,85.7 164.0,90.0 167.0,94.3 170.0,98.2 173.0,101.3 176.0,103.3 179.0,104.0 182.0,103.3 185.0,101.3 188.0,98.2 191.0,94.3 194.0,90.0 197.0,85.7 200.0,81.8 203.0,78.7 206.0,76.7 209.0,76.0 212.0,76.7 215.0,78.7 218.0,81.8 221.0,85.7 224.0,90.0 227.0,94.3 230.0,98.2 233.0,101.3 236.0,103.3 239.0,104.0 242.0,103.3 245.0,101.3 248.0,98.2 251.0,94.3 254.0,90.0 257.0,85.7 260.0,81.8 263.0,78.7 266.0,76.7 269.0,76.0 272.0,76.7 275.0,78.7 278.0,81.8 281.0,85.7 284.0,90.0 287.0,94.3 290.0,98.2 293.0,101.3 296.0,103.3 299.0,104.0 302.0,103.3 305.0,101.3 308.0,98.2 311.0,94.3 314.0,90.0 317.0,85.7 320.0,81.8 323.0,78.7 326.0,76.7 329.0,76.0 332.0,76.7 335.0,78.7 338.0,81.8 341.0,85.7 344.0,90.0 347.0,94.3 350.0,98.2 353.0,101.3 356.0,103.3 359.0,104.0 362.0,103.3 365.0,101.3 368.0,98.2 371.0,94.3 374.0,90.0 377.0,85.7 380.0,81.8 383.0,78.7 386.0,76.7 389.0,76.0 392.0,76.7 395.0,78.7 398.0,81.8 401.0,85.7 404.0,90.0 407.0,94.3 410.0,98.2 413.0,101.3 416.0,103.3 419.0,104.0 422.0,103.3 425.0,101.3 428.0,98.2 431.0,94.3 434.0,90.0 437.0,85.7 440.0,81.8 443.0,78.7 446.0,76.7 449.0,76.0 452.0,76.7 455.0,78.7 458.0,81.8 461.0,85.7 464.0,90.0 467.0,94.3 470.0,98.2 473.0,101.3 476.0,103.3 479.0,104.0 482.0,103.3 485.0,101.3 488.0,98.2 491.0,94.3 494.0,90.0 497.0,85.7 500.0,81.8 503.0,78.7 506.0,76.7 509.0,76.0 512.0,76.7 515.0,78.7 518.0,81.8 521.0,85.7 524.0,90.0 527.0,94.3 530.0,98.2 533.0,101.3 536.0,103.3 539.0,104.0 542.0,103.3 545.0,101.3 548.0,98.2 551.0,94.3 554.0,90.0 557.0,85.7 560.0,81.8 563.0,78.7 566.0,76.7 569.0,76.0 572.0,76.7 575.0,78.7 578.0,81.8" class="ln draw" fill="none"/>
+<text x="114.0" y="46.0" text-anchor="start" class="lb">2.4 GHz</text>
+<text x="114.0" y="62.0" text-anchor="start" class="tiny">波長長，穿牆遠，速度慢</text>
+</g>
+<g data-s="1" data-hi="1">
+<polyline points="104.0,160.0 107.0,166.0 110.0,167.9 113.0,164.3 116.0,157.7 119.0,152.7 122.0,152.7 125.0,157.7 128.0,164.3 131.0,167.9 134.0,166.0 137.0,160.0 140.0,154.0 143.0,152.1 146.0,155.7 149.0,162.3 152.0,167.3 155.0,167.3 158.0,162.3 161.0,155.7 164.0,152.1 167.0,154.0 170.0,160.0 173.0,166.0 176.0,167.9 179.0,164.3 182.0,157.7 185.0,152.7 188.0,152.7 191.0,157.7 194.0,164.3 197.0,167.9 200.0,166.0 203.0,160.0 206.0,154.0 209.0,152.1 212.0,155.7 215.0,162.3 218.0,167.3 221.0,167.3 224.0,162.3 227.0,155.7 230.0,152.1 233.0,154.0 236.0,160.0 239.0,166.0 242.0,167.9 245.0,164.3 248.0,157.7 251.0,152.7 254.0,152.7 257.0,157.7 260.0,164.3 263.0,167.9 266.0,166.0 269.0,160.0 272.0,154.0 275.0,152.1 278.0,155.7 281.0,162.3 284.0,167.3 287.0,167.3 290.0,162.3 293.0,155.7 296.0,152.1 299.0,154.0" class="ln draw" fill="none"/>
+<polyline points="300.0,160.0 303.0,163.0 306.0,164.0 309.0,162.2 312.0,158.9 315.0,156.4 318.0,156.4 321.0,158.9 324.0,162.2 327.0,164.0 330.0,163.0 333.0,160.0 336.0,157.0 339.0,156.0 342.0,157.8 345.0,161.1 348.0,163.6 351.0,163.6 354.0,161.1 357.0,157.8 360.0,156.0" class="thin" fill="none"/>
+<text x="114.0" y="126.0" text-anchor="start" class="lb">5 GHz</text>
+<text x="114.0" y="142.0" text-anchor="start" class="tiny">波長短，速度快，過一面牆就弱</text>
+</g>
+<g data-s="2">
+<text x="40.0" y="240.0" text-anchor="start" class="cap">2.4 GHz channels · 13 個頻道，每個寬 20 MHz、間距只有 5 MHz</text>
+<path d="M-32 380 Q 40 260 112 380" fill="none" class="ln acc" style="stroke-width:1.6"/>
+<text x="40" y="400" text-anchor="middle" class="num acc">1</text>
+<path d="M4 380 Q 76 260 148 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="76" y="400" text-anchor="middle" class="tiny">2</text>
+<path d="M40 380 Q 112 260 184 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="112" y="400" text-anchor="middle" class="tiny">3</text>
+<path d="M76 380 Q 148 260 220 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="148" y="400" text-anchor="middle" class="tiny">4</text>
+<path d="M112 380 Q 184 260 256 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="184" y="400" text-anchor="middle" class="tiny">5</text>
+<path d="M148 380 Q 220 260 292 380" fill="none" class="ln acc" style="stroke-width:1.6"/>
+<text x="220" y="400" text-anchor="middle" class="num acc">6</text>
+<path d="M184 380 Q 256 260 328 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="256" y="400" text-anchor="middle" class="tiny">7</text>
+<path d="M220 380 Q 292 260 364 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="292" y="400" text-anchor="middle" class="tiny">8</text>
+<path d="M256 380 Q 328 260 400 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="328" y="400" text-anchor="middle" class="tiny">9</text>
+<path d="M292 380 Q 364 260 436 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="364" y="400" text-anchor="middle" class="tiny">10</text>
+<path d="M328 380 Q 400 260 472 380" fill="none" class="ln acc" style="stroke-width:1.6"/>
+<text x="400" y="400" text-anchor="middle" class="num acc">11</text>
+<path d="M364 380 Q 436 260 508 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="436" y="400" text-anchor="middle" class="tiny">12</text>
+<path d="M400 380 Q 472 260 544 380" fill="none" class="thin" style="stroke-width:0.8"/>
+<text x="472" y="400" text-anchor="middle" class="tiny">13</text>
+<text x="300.0" y="418.0" text-anchor="middle" class="tiny">只有 1、6、11 彼此間距 25 MHz，完全不重疊</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">03 · Wi-Fi</span>
+<h2>2.4 GHz 走得遠，5 GHz 跑得快</h2>
+<ol class="marks">
+<li>2.4 GHz</li>
+<li>5 GHz</li>
+<li>頻道 1、6、11</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">2.4 GHz</span>
+<b>穿透力強、距離遠</b>，但速度較慢（理論最高 600 Mbps）、干擾多。智能家庭大多數設備（智能插座、低功耗感應器、Thread Border Router）<b>只支援 2.4 GHz</b>。</div>
+<div class="step" data-k="1">
+<span class="k">5 GHz</span>
+<b>速度快、干擾少</b>，但距離短、穿牆差。適合手機、電腦、Apple TV、NAS 這些高頻寬設備。</div>
+<div class="step" data-k="2">
+<span class="k">頻道 1、6、11</span>2.4 GHz 有 13 個頻道（台灣），每個佔 20 MHz，但間距只有 5 MHz，相鄰頻道會重疊。只有 <b>1、6、11</b> 彼此間距 25 MHz、完全不重疊。你選頻道 2，會同時被 1 和 3 的網路干擾，等於雙倍。多台 AP 就交錯用這三個。</div>
+</div>
+<p class="note">
+<b>常見坑：</b>路由器把 2.4 / 5 GHz 合成同一個 SSID（混頻），設備會加不進 HomeKit。分開 SSID，確保設備連到 2.4 GHz。</p>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">本章重點</div>
+<div class="recap">
+<h3>第三章 網路架構基礎認識</h3>
+<ol>
+<li>智能設備強烈建議使用靜態 IP（或 DHCP 綁定 MAC），DHCP 重新分配後設備會「消失」</li>
+<li>2.4 GHz 選頻道 1、6、11（非重疊頻道）；多台 AP 交錯使用這三個頻道</li>
+<li>PoE 讓網路線同時供電，是部署 AP 和攝影機的標準方案，用 Cat5e 以上線材即可</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="slide x2 opener" id="s4" data-ch="第四章 通訊協定" data-sub="章首">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/logos/wifi.svg" x="34.0" y="45.0" width="152.0" height="90.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/thread.svg" x="215.0" y="74.3" width="170.0" height="31.4" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/zigbee.svg" x="405.0" y="69.7" width="170.0" height="40.7" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/zwave.svg" x="35.0" y="236.6" width="150.0" height="66.8" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/bluetooth.svg" x="205.0" y="246.5" width="190.0" height="47.1" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/matter.svg" x="400.0" y="250.7" width="180.0" height="38.6" preserveAspectRatio="xMidYMid meet"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="chno">04</span>
+<span class="tag">Chapter 04</span>
+<h2>相關通訊協定總覽</h2>
+<p class="lead">訊號的第四站。不同設備用不同的協定溝通，了解特性才能在安裝時做對選擇。</p>
+<ul class="kp">
+<li class="rise" style="--t:0.06">
+<b>六種語言，兩個問題</b>省不省電？要不要中介設備？答完就知道該選哪種。</li>
+<li class="rise" style="--t:0.18">
+<b>Hub 是翻譯官，Border Router 是橋樑</b>Zigbee 設備不懂 IP 要人翻譯；Thread 設備本身就是 IPv6。</li>
+<li class="rise" style="--t:0.30">
+<b>Matter 跑在上面</b>它是應用層標準，底下用 Wi-Fi 或 Thread 傳。</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="slide x4 flip" id="s4-six" data-ch="第四章 通訊協定" data-sub="六種協定" data-stages="6">
+<div class="stage">
+<div class="vis">
+<svg class="dg fade" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="node dim" data-hi="0">
+<g class="tile ">
+<image href="assets/logos/wifi.svg" x="69.5" y="32.0" width="81.1" height="48.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="110.0" y="104.0" text-anchor="middle" class="lb" style="font-weight:600">Wi-Fi</text>
+<text x="110.0" y="124.0" text-anchor="middle" class="tiny">2.4 / 5 GHz</text>
+<text x="110.0" y="140.0" text-anchor="middle" class="tiny">Star · 耗電高</text>
+<text x="110.0" y="160.0" text-anchor="middle" class="num">不需 Hub</text>
+</g>
+<g class="node dim" data-hi="1">
+<g class="tile ">
+<image href="assets/logos/thread.svg" x="237.0" y="44.3" width="126.0" height="23.3" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="300.0" y="104.0" text-anchor="middle" class="lb" style="font-weight:600">Thread</text>
+<text x="300.0" y="124.0" text-anchor="middle" class="tiny">2.4 GHz</text>
+<text x="300.0" y="140.0" text-anchor="middle" class="tiny">Mesh · 極低耗電</text>
+<text x="300.0" y="160.0" text-anchor="middle" class="num">Border Router</text>
+</g>
+<g class="node dim" data-hi="2">
+<g class="tile ">
+<image href="assets/logos/zigbee.svg" x="427.0" y="40.9" width="126.0" height="30.2" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="490.0" y="104.0" text-anchor="middle" class="lb" style="font-weight:600">Zigbee</text>
+<text x="490.0" y="124.0" text-anchor="middle" class="tiny">2.4 GHz</text>
+<text x="490.0" y="140.0" text-anchor="middle" class="tiny">Mesh · 低耗電</text>
+<text x="490.0" y="160.0" text-anchor="middle" class="num">需要 Hub</text>
+</g>
+<g class="node dim" data-hi="3">
+<g class="tile ">
+<image href="assets/logos/zwave.svg" x="47.0" y="227.9" width="126.0" height="56.1" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="110.0" y="304.0" text-anchor="middle" class="lb" style="font-weight:600">Z-Wave</text>
+<text x="110.0" y="324.0" text-anchor="middle" class="tiny">868 / 908 MHz</text>
+<text x="110.0" y="340.0" text-anchor="middle" class="tiny">Mesh · 低耗電</text>
+<text x="110.0" y="360.0" text-anchor="middle" class="num">需要 Hub</text>
+</g>
+<g class="node dim" data-hi="4">
+<g class="tile ">
+<image href="assets/logos/bluetooth.svg" x="237.0" y="240.4" width="126.0" height="31.2" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="300.0" y="304.0" text-anchor="middle" class="lb" style="font-weight:600">Bluetooth LE</text>
+<text x="300.0" y="324.0" text-anchor="middle" class="tiny">2.4 GHz</text>
+<text x="300.0" y="340.0" text-anchor="middle" class="tiny">Star · 低耗電</text>
+<text x="300.0" y="360.0" text-anchor="middle" class="num">不需 Hub</text>
+</g>
+<g class="node dim" data-hi="5">
+<g class="tile ">
+<image href="assets/logos/matter.svg" x="427.0" y="242.5" width="126.0" height="27.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="490.0" y="304.0" text-anchor="middle" class="lb" style="font-weight:600">Matter</text>
+<text x="490.0" y="324.0" text-anchor="middle" class="tiny">Wi-Fi / Thread</text>
+<text x="490.0" y="340.0" text-anchor="middle" class="tiny">應用層標準</text>
+<text x="490.0" y="360.0" text-anchor="middle" class="num">跑在底層之上</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">04 · Protocols</span>
+<h2>六種協定，一次看一個</h2>
+<p class="lead">每個協定只問兩件事：省不省電？要不要中介設備？</p>
+<ol class="marks">
+<li>Wi-Fi</li>
+<li>Thread</li>
+<li>Zigbee</li>
+<li>Z-Wave</li>
+<li>Bluetooth LE</li>
+<li>Matter</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Wi-Fi</span>幾乎所有設備都支援、不需額外 Hub、速度快適合攝影機。缺點：<b>耗電大</b>不適合電池設備，設備一多容易壅塞。適合攝影機、冰箱、洗衣機。</div>
+<div class="step" data-k="1">
+<span class="k">Thread</span>極低功耗、基於 IPv6 的新世代 Mesh：設備加入自動形成最佳路徑，加密與身份驗證完善。缺點：支援設備仍在成長，要搭配 Matter 或 Border Router。適合感應器、開關。</div>
+<div class="step" data-k="2">
+<span class="k">Zigbee</span>低功耗、Mesh 自動中繼覆蓋廣、內建加密、市佔率高（最多 65,000 個節點）。缺點：不同廠牌晶片有微小差異未必互通，<b>要橋接 Hub 才能接入 HomeKit</b>。適合燈泡、開關、感應器。</div>
+<div class="step" data-k="3">
+<span class="k">Z-Wave</span>低功耗、用 868 / 908 MHz 避開 2.4 GHz 干擾、穿牆佳、加密良好。缺點：需要協調器（Hub），設備比 Zigbee 少、部分偏貴。適合門鎖、開關、感應器。</div>
+<div class="step" data-k="4">
+<span class="k">Bluetooth LE</span>低功耗、配對簡單不需 Hub、模組便宜。缺點：距離短（約 10 公尺）、多設備易干擾、無法跨房間遠端。適合門鎖、體重計、近距離感應器。</div>
+<div class="step" data-k="5">
+<span class="k">Matter</span>
+<b>應用層</b>標準（2022 年推出），跑在 Wi-Fi 或 Thread 之上。跨平台：同一設備不鎖單一平台；開源、隱私、資料不經雲端中轉。缺點：支援仍在擴展，需要支援 Matter 的 Hub 或 Border Router。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">對照表</div>
+<div>
+<h3>六種協定一覽</h3>
+<div class="tbl-wrap">
+<table class="tbl stack">
+<thead>
+<tr>
+<th>協定</th>
+<th>頻段</th>
+<th>拓撲</th>
+<th>耗電</th>
+<th>需要 Hub</th>
+<th>適合設備</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-th="協定">Wi-Fi</td>
+<td data-th="頻段">2.4 / 5 GHz</td>
+<td data-th="拓撲">Star</td>
+<td data-th="耗電">高</td>
+<td data-th="需要 Hub">不需要</td>
+<td data-th="適合設備">攝影機、冰箱、洗衣機</td>
+<td data-th="備註">直接連路由器，設定最簡單</td>
+</tr>
+<tr>
+<td data-th="協定">Thread</td>
+<td data-th="頻段">2.4 GHz</td>
+<td data-th="拓撲">Mesh</td>
+<td data-th="耗電">極低</td>
+<td data-th="需要 Hub">Border Router</td>
+<td data-th="適合設備">感應器、開關、Matter 設備</td>
+<td data-th="備註">基於 IPv6，Matter 的底層傳輸之一</td>
+</tr>
+<tr>
+<td data-th="協定">Zigbee</td>
+<td data-th="頻段">2.4 GHz</td>
+<td data-th="拓撲">Mesh</td>
+<td data-th="耗電">低</td>
+<td data-th="需要 Hub">需要</td>
+<td data-th="適合設備">燈泡、開關、感應器</td>
+<td data-th="備註">最多 65,000 個節點，市佔率高</td>
+</tr>
+<tr>
+<td data-th="協定">Z-Wave</td>
+<td data-th="頻段">868 / 908 MHz</td>
+<td data-th="拓撲">Mesh</td>
+<td data-th="耗電">低</td>
+<td data-th="需要 Hub">需要</td>
+<td data-th="適合設備">門鎖、開關、感應器</td>
+<td data-th="備註">不受 2.4 GHz 干擾，穿牆效果佳</td>
+</tr>
+<tr>
+<td data-th="協定">Bluetooth LE</td>
+<td data-th="頻段">2.4 GHz</td>
+<td data-th="拓撲">Star</td>
+<td data-th="耗電">低</td>
+<td data-th="需要 Hub">不需要</td>
+<td data-th="適合設備">門鎖、體重計、感應器</td>
+<td data-th="備註">距離短（約 10 公尺），近距離設備</td>
+</tr>
+<tr>
+<td data-th="協定">Matter</td>
+<td data-th="頻段">Wi-Fi / Thread</td>
+<td data-th="拓撲">Star / Mesh</td>
+<td data-th="耗電">依底層</td>
+<td data-th="需要 Hub">不需要</td>
+<td data-th="適合設備">新世代跨平台設備</td>
+<td data-th="備註">應用層標準，跑在 Wi-Fi 或 Thread 上</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x2" id="s4-hub" data-ch="第四章 通訊協定" data-sub="Hub 與 Border Router" data-stages="2">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g data-s="0" data-hi="0">
+<g class="tile ">
+<image href="assets/img/led-bulb-on.jpg" x="44.2" y="66.0" width="51.6" height="88.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="70.0" y="170.0" text-anchor="middle" class="lb ">Zigbee 燈泡</text>
+<text x="70.0" y="186.0" text-anchor="middle" class="sub">沒有 IP 位址</text>
+</g>
+<g class="tile ">
+<image href="assets/logos/zigbee.svg" x="35.0" y="33.6" width="70.0" height="16.8" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/img/hub-bridge.jpg" x="264.7" y="70.0" width="70.7" height="80.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="166.0" text-anchor="middle" class="lb ">Hub / Bridge</text>
+<text x="300.0" y="182.0" text-anchor="middle" class="sub">翻譯官：Zigbee → IP</text>
+</g>
+<g class="tile ">
+<image href="assets/img/router.jpg" x="479.5" y="78.0" width="80.9" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="520.0" y="158.0" text-anchor="middle" class="lb ">路由器</text>
+</g>
+<line x1="91.9" y1="110.0" x2="262.6" y2="110.0" class="ln draw"/>
+<g>
+<path d="M254.6 104.0l8 6-8 6" class="ln"/>
+</g>
+<line x1="337.5" y1="110.0" x2="484.2" y2="110.0" class="ln draw"/>
+<g>
+<path d="M476.2 104.0l8 6-8 6" class="ln"/>
+</g>
+<text x="300.0" y="44.0" text-anchor="middle" class="cap">Zigbee · Z-Wave · Bluetooth</text>
+<text x="300.0" y="204.0" text-anchor="middle" class="tiny">例：Aqara Hub M2、Philips Hue Bridge</text>
+</g>
+<g data-s="1" data-hi="1">
+<g class="tile ">
+<image href="assets/img/led-bulb-on.jpg" x="44.2" y="276.0" width="51.6" height="88.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="70.0" y="380.0" text-anchor="middle" class="lb ">Thread 燈泡</text>
+<text x="70.0" y="396.0" text-anchor="middle" class="sub">本身就是 IPv6</text>
+</g>
+<g class="tile ">
+<image href="assets/logos/thread.svg" x="32.0" y="245.0" width="76.0" height="14.1" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/img/apple-tv.jpg" x="253.9" y="297.0" width="92.2" height="46.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="359.0" text-anchor="middle" class="lb ">Border Router</text>
+<text x="300.0" y="375.0" text-anchor="middle" class="sub">橋樑：不翻譯，只接通</text>
+</g>
+<g class="tile ">
+<image href="assets/img/router.jpg" x="479.5" y="288.0" width="80.9" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="520.0" y="368.0" text-anchor="middle" class="lb ">路由器</text>
+</g>
+<line x1="91.9" y1="320.0" x2="252.5" y2="320.0" class="ln draw"/>
+<g>
+<path d="M244.5 314.0l8 6-8 6" class="ln"/>
+</g>
+<line x1="347.3" y1="320.0" x2="484.2" y2="320.0" class="ln draw"/>
+<g>
+<path d="M476.2 314.0l8 6-8 6" class="ln"/>
+</g>
+<text x="300.0" y="254.0" text-anchor="middle" class="cap">Thread</text>
+<text x="300.0" y="397.0" text-anchor="middle" class="tiny">例：Apple TV 4K、HomePod（內建 Thread Border Router）</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">04 · Hub vs Border Router</span>
+<h2>翻譯官，還是橋樑</h2>
+<ol class="marks">
+<li>Hub / Bridge</li>
+<li>Border Router</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Hub / Bridge · 協定橋接</span>Zigbee、Z-Wave、Bluetooth 設備<b>本身沒有 IP 位址</b>，沒辦法直接跟網路講話。Hub 的工作是把這些「非 IP 協定」翻譯成 IP 訊號，再轉交給 HomeKit。</div>
+<div class="step" data-k="1">
+<span class="k">Border Router · 邊界路由器</span>Thread 設備<b>本身就是 IPv6 設備</b>，有自己的 IP。Border Router 不做翻譯，只負責把 Thread 的 Mesh 網路「接通」到家裡的 Wi-Fi。Apple TV 4K、HomePod 內建這個角色。</div>
+</div>
+<p class="note">
+<b>一句話記住：</b>Hub 是翻譯官，設備不懂 IP，它幫忙翻譯。Border Router 是橋樑，設備本身懂 IP，它只幫忙接路。</p>
+</div>
+</div>
+</section>
+<section class="slide x3 flip" id="s4-arch" data-ch="第四章 通訊協定" data-sub="協定架構圖" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 460" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/led-bulb-on.jpg" x="53.6" y="368.0" width="32.8" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="70.0" y="440.0" text-anchor="middle" class="lb ">燈 / 開關</text>
+<text x="70.0" y="456.0" text-anchor="middle" class="sub">Zigbee</text>
+</g>
+<g class="tile ">
+<image href="assets/img/door-lock.jpg" x="136.9" y="368.0" width="26.2" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="150.0" y="440.0" text-anchor="middle" class="lb ">門鎖</text>
+<text x="150.0" y="456.0" text-anchor="middle" class="sub">BT</text>
+</g>
+<g class="tile ">
+<image href="assets/img/smart-plug.jpg" x="232.3" y="368.0" width="55.3" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="260.0" y="440.0" text-anchor="middle" class="lb ">插座</text>
+<text x="260.0" y="456.0" text-anchor="middle" class="sub">Wi-Fi</text>
+</g>
+<g class="tile ">
+<image href="assets/img/camera.jpg" x="319.3" y="368.0" width="41.4" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="340.0" y="440.0" text-anchor="middle" class="lb ">攝影機</text>
+<text x="340.0" y="456.0" text-anchor="middle" class="sub">Wi-Fi</text>
+</g>
+<g class="tile ">
+<image href="assets/img/led-bulb-on.jpg" x="433.6" y="368.0" width="32.8" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="450.0" y="440.0" text-anchor="middle" class="lb ">燈 / 開關</text>
+<text x="450.0" y="456.0" text-anchor="middle" class="sub">Thread</text>
+</g>
+<g class="tile ">
+<image href="assets/img/motion-sensor.jpg" x="506.5" y="368.0" width="47.0" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="530.0" y="440.0" text-anchor="middle" class="lb ">感應器</text>
+<text x="530.0" y="456.0" text-anchor="middle" class="sub">Thread</text>
+</g>
+<g data-s="1">
+<line x1="70.0" y1="306.0" x2="70.0" y2="362.0" class="ln draw"/>
+<line x1="150.0" y1="306.0" x2="150.0" y2="362.0" class="ln draw"/>
+<line x1="260.0" y1="306.0" x2="260.0" y2="362.0" class="ln draw"/>
+<line x1="340.0" y1="306.0" x2="340.0" y2="362.0" class="ln draw"/>
+<line x1="450.0" y1="306.0" x2="450.0" y2="362.0" class="ln draw"/>
+<line x1="530.0" y1="306.0" x2="530.0" y2="362.0" class="ln draw"/>
+<rect x="40.0" y="248.0" width="140.0" height="52.0" rx="0" class="box"/>
+<text x="110.0" y="270.0" text-anchor="middle" class="lb" style="font-weight:600">Hub / Bridge</text>
+<text x="110.0" y="288.0" text-anchor="middle" class="tiny">協定翻譯，轉為 IP</text>
+<rect x="230.0" y="248.0" width="140.0" height="52.0" rx="0" class="box"/>
+<text x="300.0" y="270.0" text-anchor="middle" class="lb" style="font-weight:600">Wi-Fi 直連</text>
+<text x="300.0" y="288.0" text-anchor="middle" class="tiny">不需中介設備</text>
+<rect x="420.0" y="248.0" width="140.0" height="52.0" rx="0" class="box"/>
+<text x="490.0" y="270.0" text-anchor="middle" class="lb" style="font-weight:600">Border Router</text>
+<text x="490.0" y="288.0" text-anchor="middle" class="tiny">Thread 路由橋通</text>
+</g>
+<g class="tile " data-s="2">
+<image href="assets/img/homepod-mini.jpg" x="207.9" y="55.0" width="64.1" height="70.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="240.0" y="141.0" text-anchor="middle" class="lb ">HomePod</text>
+<text x="240.0" y="157.0" text-anchor="middle" class="sub">Home Hub</text>
+</g>
+<g class="tile " data-s="2">
+<image href="assets/img/apple-tv.jpg" x="319.9" y="76.0" width="80.2" height="40.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="360.0" y="132.0" text-anchor="middle" class="lb ">Apple TV</text>
+<text x="360.0" y="148.0" text-anchor="middle" class="sub">Home Hub</text>
+</g>
+<g data-s="2" data-until="3">
+<line x1="110.0" y1="242.0" x2="110.0" y2="196.0" class="ln draw"/>
+<line x1="300.0" y1="242.0" x2="300.0" y2="196.0" class="ln draw"/>
+<line x1="490.0" y1="242.0" x2="490.0" y2="196.0" class="ln draw"/>
+<line x1="110.0" y1="196.0" x2="490.0" y2="196.0" class="ln draw"/>
+<line x1="300.0" y1="196.0" x2="300.0" y2="158.0" class="ln draw"/>
+</g>
+<g data-s="3">
+<line x1="110.0" y1="242.0" x2="110.0" y2="222.0" class="ln draw"/>
+<line x1="300.0" y1="242.0" x2="300.0" y2="222.0" class="ln draw"/>
+<line x1="490.0" y1="242.0" x2="490.0" y2="222.0" class="ln draw"/>
+<line x1="300.0" y1="170.0" x2="300.0" y2="158.0" class="ln draw"/>
+</g>
+<g data-s="3">
+<rect x="40.0" y="176.0" width="520.0" height="40.0" rx="0" class="box acc" style="stroke-width:1.6"/>
+<g class="tile ">
+<image href="assets/logos/matter.svg" x="138.7" y="185.0" width="102.6" height="22.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="300.0" y="201.0" text-anchor="start" class="lb acc" style="font-weight:600">Matter 整合平台</text>
+</g>
+<text x="300.0" y="22.0" text-anchor="middle" class="cap">Architecture · 從設備到 Home Hub</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">04 · Architecture</span>
+<h2>從設備到 Home Hub，訊號怎麼上去</h2>
+<ol class="marks">
+<li>設備</li>
+<li>三種中介</li>
+<li>Home Hub</li>
+<li>Matter</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Layer 1 · 設備</span>牆上的燈、開關、門鎖、插座、攝影機、感應器。每一個都講自己的語言：Zigbee、藍牙、Wi-Fi、Thread。</div>
+<div class="step" data-k="1">
+<span class="k">Layer 2 · 三種中介</span>Zigbee 和藍牙設備經 Hub 翻譯；Wi-Fi 設備直連路由器；Thread 設備經 Border Router 接通。三條路都通往家裡的 IP 網路。</div>
+<div class="step" data-k="2">
+<span class="k">Layer 3 · Home Hub</span>HomePod 或 Apple TV 在最上面收所有設備的狀態、發指令、跑自動化，出門時代收遠端指令。</div>
+<div class="step" data-k="3">
+<span class="k">Layer 4 · Matter</span>Matter 橫跨在上面，統一指令格式：同一台設備，不同品牌的 Hub 與 App 都聽得懂，不鎖單一平台。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x2" id="s4-tri" data-ch="第四章 通訊協定" data-sub="三位一體" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<circle cx="300" cy="150" r="115" class="ln draw" data-s="2"/>
+<circle cx="222" cy="272" r="115" class="ln draw" data-s="0"/>
+<circle cx="378" cy="272" r="115" class="ln draw" data-s="1"/>
+<g data-s="0" data-hi="0">
+<g class="tile ">
+<image href="assets/logos/matter.svg" x="122.0" y="258.1" width="92.0" height="19.7" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="168.0" y="300.0" text-anchor="middle" class="lb" style="font-weight:600">Matter</text>
+<text x="168.0" y="318.0" text-anchor="middle" class="tiny">跨品牌互通</text>
+</g>
+<g data-s="1" data-hi="1">
+<g class="tile ">
+<image href="assets/logos/thread.svg" x="386.0" y="259.5" width="92.0" height="17.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="432.0" y="300.0" text-anchor="middle" class="lb" style="font-weight:600">Thread</text>
+<text x="432.0" y="318.0" text-anchor="middle" class="tiny">低功耗 Mesh</text>
+</g>
+<g data-s="2" data-hi="2">
+<g class="tile ">
+<image href="assets/logos/home-app-icon.png" x="277.0" y="67.0" width="46.0" height="46.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="300.0" y="132.0" text-anchor="middle" class="lb" style="font-weight:600">HomeKit</text>
+<text x="300.0" y="150.0" text-anchor="middle" class="tiny">隱私 · 端對端加密</text>
+</g>
+<text x="300.0" y="238.0" text-anchor="middle" class="sub acc" style="font-weight:600" data-s="2">現代</text>
+<text x="300.0" y="254.0" text-anchor="middle" class="sub acc" style="font-weight:600" data-s="2">智能家庭</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">04 · Matter + Thread + HomeKit</span>
+<h2>三位一體：HomeKit 的未來</h2>
+<ol class="marks">
+<li>Matter</li>
+<li>Thread</li>
+<li>HomeKit</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">Matter · 跨品牌互通標準</span>打破品牌壁壘，所有支援 Matter 的設備順暢溝通。同一設備不再鎖定單一平台。</div>
+<div class="step" data-k="1">
+<span class="k">Thread · 低功耗 Mesh 連線</span>每個 Thread 設備都能當訊號中繼點，形成可自我修復的 Mesh。某設備離線，網路自動找最佳路徑，反應更快、更穩。</div>
+<div class="step" data-k="2">
+<span class="k">HomeKit · 三者合一</span>HomeKit 高標準隱私 ＋ Matter 跨平台互通 ＋ Thread 穩定 Mesh，共同構成現代智能家庭的最佳標準。<b>HomePod、Apple TV 4K（第 2 代後）自動擔任 Thread Border Router</b>，不用另外買設備。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">選擇建議</div>
+<div>
+<h3>現場怎麼選</h3>
+<ul class="rule c2">
+<li>
+<div class="h">一般住宅新裝</div>
+<span>優先選 <b>Matter + Thread</b> 生態設備。未來相容性最好，不鎖單一平台。</span>
+</li>
+<li>
+<div class="h">預算有限 / 改裝</div>
+<span>選 <b>Zigbee</b> 生態（Aqara、飛利浦 Hue、IKEA Tradfri）。設備選擇多、價格親民。</span>
+</li>
+</ul>
+<div class="band">
+<span class="k">注意</span>
+<p>Zigbee 與 Z-Wave 都需要 Hub（橋接器）才能接入 HomeKit。常見 Hub：Philips Hue Bridge、Samsung SmartThings、Home Assistant。</p>
+</div>
+<div class="band">
+<span class="k">Thread 也在 2.4 GHz</span>
+<p>Thread 用 IEEE 802.15.4，頻道編號 11 到 26（共 16 個，每個 5 MHz 寬），跟 Wi-Fi 的頻道號碼系統<b>完全不同</b>，不可混用。Thread 建議用 15、20、25 或 26，這些恰好落在 Wi-Fi 頻道 1、6、11 的空隙或邊緣，干擾最小。第三章把 Wi-Fi 固定在 1、6、11 之後，Thread 也能在乾淨的頻譜裡跑。</p>
+</div>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">本章重點</div>
+<div class="recap">
+<h3>第四章 相關通訊協定總覽</h3>
+<ol>
+<li>Thread 是傳輸層（Mesh 網狀、低功耗、2.4 GHz），Matter 是應用層（統一指令格式），兩者不衝突，常一起使用</li>
+<li>Wi-Fi 設備配置最簡單但功耗高；Thread 設備穩定省電，但需要 Border Router（Apple TV / HomePod mini）</li>
+<li>Zigbee / Z-Wave 設備需要各自的 Hub 作為翻譯橋，不支援 Matter 的舊設備無法直接加入 HomeKit</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="slide x2 opener flip" id="s5" data-ch="第五章 電氣知識" data-sub="章首">
+<div class="stage">
+<div class="vis">
+<div class="stats">
+<div class="rise" style="--t:.05">
+<b>110V</b>
+<span>一般用電（照明／插座）</span>
+</div>
+<div class="rise" style="--t:.15">
+<b>220V</b>
+<span>冷氣／烘衣機</span>
+</div>
+<div class="rise" style="--t:.25">
+<b>60Hz</b>
+<span>電源頻率</span>
+</div>
+<div class="rise" style="--t:.35">
+<b>15A</b>
+<span>一般迴路額定電流</span>
+</div>
+</div>
+</div>
+<div class="txt">
+<span class="chno">05</span>
+<span class="tag">Chapter 05</span>
+<h2>接燈與開關的電氣知識</h2>
+<p class="lead">訊號的第五站，也是唯一會碰到 110V 的一站。台灣家用電的基礎數字，先看這四個。</p>
+<ul class="kp">
+<li class="rise" style="--t:0.06">
+<b>先斷電，再驗電</b>接線前關斷路器、用驗電筆確認無電。這不是建議，是底線。</li>
+<li class="rise" style="--t:0.18">
+<b>開關只裝在火線上</b>N 零線直通燈具、繞過開關；開關關了，電箱到開關那段火線仍帶電。</li>
+<li class="rise" style="--t:0.30">
+<b>控制器要 L 也要 N</b>零火版靠 N 待機；單火版只靠 L，LED 可能閃，懷疑鬼火先加電容。</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="slide x3" id="s5-wires" data-ch="第五章 電氣知識" data-sub="電線顏色" data-stages="5">
+<div class="stage">
+<div class="vis">
+<svg class="dg fade" viewBox="0 0 600 330" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/wire-ends.jpg" x="20.0" y="99.9" width="360.0" height="150.1" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="dim" data-hi="0">
+<line x1="392.0" y1="117.7" x2="408.0" y2="117.7" class="wl" style="stroke-width:3.2"/>
+<text x="418.0" y="122.2" text-anchor="start" class="lb" style="font-weight:600">紅 · 火線 L · 電燈迴路</text>
+</g>
+<g class="dim" data-hi="1">
+<line x1="392.0" y1="144.4" x2="408.0" y2="144.4" class="wk" style="stroke-width:3.2"/>
+<text x="418.0" y="148.9" text-anchor="start" class="lb" style="font-weight:600">黑 · 火線 L · 插座迴路</text>
+</g>
+<g class="dim" data-hi="2">
+<line x1="392.0" y1="175.0" x2="408.0" y2="175.0" class="ln" style="stroke:#9a9a97;stroke-width:3.2"/>
+<line x1="392.0" y1="175.0" x2="408.0" y2="175.0" class="ln" style="stroke:#f4f4f2;stroke-width:1.6"/>
+<text x="418.0" y="179.5" text-anchor="start" class="lb" style="font-weight:600">白 / 灰 · 中性線 N（零線）</text>
+</g>
+<g class="dim" data-hi="3">
+<line x1="392.0" y1="198.3" x2="408.0" y2="198.3" class="we" style="stroke-width:3.2"/>
+<text x="418.0" y="202.8" text-anchor="start" class="lb" style="font-weight:600">綠 · 接地線 E（Earth）</text>
+</g>
+<g class="dim" data-hi="4">
+<line x1="392.0" y1="225.1" x2="408.0" y2="225.1" class="wy" style="stroke-width:3.2"/>
+<text x="418.0" y="229.6" text-anchor="start" class="lb" style="font-weight:600">黃 / 藍 · 燈線（控制線）</text>
+</g>
+<text x="300.0" y="300.0" text-anchor="middle" class="cap">Taiwan wiring colours · 台灣配線慣例</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">05 · Wire colours</span>
+<h2>五種顏色，各是什麼</h2>
+<ol class="marks">
+<li>紅：火線 L（電燈）</li>
+<li>黑：火線 L（插座）</li>
+<li>白／灰：中性線 N</li>
+<li>綠：接地線 E</li>
+<li>黃／藍：燈線</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">紅</span>火線 L，電燈迴路。帶電 110V，需謹慎操作。</div>
+<div class="step" data-k="1">
+<span class="k">黑</span>火線 L，插座迴路。一樣帶電 110V，舊式配線常見。</div>
+<div class="step" data-k="2">
+<span class="k">白／灰</span>中性線 N，也叫零線。是電流的回路，近似 0V，從電箱直通燈具、不經過開關。</div>
+<div class="step" data-k="3">
+<span class="k">綠</span>接地線 E（Earth）。安全保護用，正常情況不通電流。</div>
+<div class="step" data-k="4">
+<span class="k">黃／藍</span>燈線，也叫控制線。開關到燈具的那一段。開關打開時它<b>也帶電</b>，別當它是安全的。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x4 flip" id="s5-loop" data-ch="第五章 電氣知識" data-sub="一般迴路" data-stages="6">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile " data-s="0" data-hi="0">
+<image href="assets/img/breaker-panel.jpg" x="19.9" y="50.0" width="140.2" height="80.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="90.0" y="146.0" text-anchor="middle" class="lb ">電箱</text>
+<text x="90.0" y="162.0" text-anchor="middle" class="sub">配電盤 NFB</text>
+</g>
+<g data-s="0">
+<circle cx="166.1" cy="90.0" r="4.5" class="tl term"/>
+<circle cx="90.0" cy="172.0" r="4.5" class="tn term"/>
+</g>
+<g class="tile " data-s="2" data-hi="2">
+<image href="assets/img/wall-switch-on.jpg" x="294.4" y="35.0" width="71.3" height="110.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/wall-switch-off.jpg" x="294.4" y="35.0" width="71.3" height="110.0" preserveAspectRatio="xMidYMid meet" class="" data-s="5"/>
+<text x="330.0" y="161.0" text-anchor="middle" class="lb ">開關</text>
+</g>
+<g data-s="1">
+<line x1="172.1" y1="90.0" x2="288.4" y2="90.0" class="wl draw"/>
+<text x="230.0" y="78.0" text-anchor="middle" class="tiny" style="fill:var(--wl);font-weight:600">L 火線（紅）</text>
+</g>
+<text x="230.0" y="110.0" text-anchor="middle" class="tiny bad" style="font-weight:600" data-s="5">開關關了，這段仍帶電</text>
+<g data-s="2">
+<text x="286.4" y="80.0" text-anchor="end" class="num" style="fill:var(--wl)">0</text>
+<text x="373.6" y="80.0" text-anchor="start" class="num" style="fill:var(--wy)">1</text>
+</g>
+<g class="tile " data-s="3" data-hi="3">
+<image href="assets/img/lamp-off.jpg" x="560.4" y="25.0" width="79.3" height="130.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/lamp-on.jpg" x="560.4" y="25.0" width="79.3" height="130.0" preserveAspectRatio="xMidYMid meet" class="" data-s="4" data-until="5"/>
+<text x="600.0" y="171.0" text-anchor="middle" class="lb ">燈具</text>
+</g>
+<g data-s="3">
+<line x1="371.6" y1="90.0" x2="577.2" y2="90.0" class="wy draw"/>
+<text x="463.0" y="78.0" text-anchor="middle" class="tiny" style="fill:var(--wy);font-weight:600">燈線（黃）</text>
+</g>
+<g data-s="5">
+<line x1="371.6" y1="90.0" x2="577.2" y2="90.0" class="wg"/>
+<text x="463.0" y="110.0" text-anchor="middle" class="tiny">不帶電</text>
+</g>
+<g data-s="4">
+<polyline points="600.0,181.0 600.0,232.0 90.0,232.0 90.0,178.0" class="wn draw"/>
+<circle cx="600.0" cy="181.0" r="4.5" class="tn term"/>
+<text x="345.0" y="254.0" text-anchor="middle" class="tiny" style="font-weight:600">N 零線（白）繞過開關，回到電箱</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">05 · Circuit</span>
+<h2>一般迴路：電從哪來，從哪回去</h2>
+<ol class="marks">
+<li>電箱</li>
+<li>火線 L 到開關</li>
+<li>開關</li>
+<li>燈線到燈具</li>
+<li>零線 N 回電箱</li>
+<li>把開關關掉</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">1 · 電箱</span>家中每一條燈具迴路都從電箱（配電盤）出發。每條迴路有自己的無熔絲開關（NFB）。</div>
+<div class="step" data-k="1">
+<span class="k">2 · 火線 L</span>火線從電箱出來，<b>先進開關</b>。台灣電燈迴路用紅線，帶電 110V。</div>
+<div class="step" data-k="2">
+<span class="k">3 · 開關</span>開關就裝在火線上，只做一件事：把火線接通或斷開。端子 0 進、1 出。</div>
+<div class="step" data-k="3">
+<span class="k">4 · 燈線</span>從開關 1 號端子出來到燈具的那一段叫燈線（黃）。開關打開時它帶電。</div>
+<div class="step" data-k="4">
+<span class="k">5 · 零線 N</span>零線從電箱<b>直接</b>拉到燈具、繞過開關。電流從 L 進、經燈、由 N 回電箱，迴路完整，燈亮。</div>
+<div class="step" data-k="5">
+<span class="k">6 · 開關關掉</span>開關斷開後，燈線不帶電、燈暗。但<b>電箱到開關那段火線仍然帶電</b>。N 完全不受開關控制。</div>
+</div>
+<p class="note">
+<b>重點觀念：</b>開關只安裝在火線（L）上。這就是為什麼關了開關還是會被電。</p>
+</div>
+</div>
+</section>
+<section class="slide x3" id="s5-sw" data-ch="第五章 電氣知識" data-sub="單切與雙切" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g data-s="0" data-until="1">
+<g class="tile ">
+<image href="assets/img/breaker-panel.jpg" x="20.9" y="74.0" width="98.1" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="70.0" y="146.0" text-anchor="middle" class="lb ">電箱</text>
+</g>
+<g class="tile ">
+<image href="assets/img/wall-switch-on.jpg" x="270.8" y="57.0" width="58.3" height="90.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="163.0" text-anchor="middle" class="lb ">單切開關</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-on.jpg" x="495.6" y="62.0" width="48.8" height="80.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="520.0" y="158.0" text-anchor="middle" class="lb ">燈</text>
+</g>
+<circle cx="125.1" cy="102.0" r="4" class="tl term"/>
+<circle cx="70.0" cy="156.0" r="4" class="tn term"/>
+<line x1="131.1" y1="102.0" x2="264.8" y2="102.0" class="wl"/>
+<text x="262.8" y="92.0" text-anchor="end" class="num" style="fill:var(--wl)">0</text>
+<text x="337.2" y="92.0" text-anchor="start" class="num" style="fill:var(--wy)">1</text>
+<line x1="335.2" y1="102.0" x2="503.7" y2="102.0" class="wy"/>
+<polyline points="520.0,168.0 520.0,200.0 70.0,200.0 70.0,162.0" class="wn"/>
+<text x="300.0" y="236.0" text-anchor="middle" class="lb">0 接火線 L（進），1 接燈線（出）。台灣標準。</text>
+<text x="300.0" y="258.0" text-anchor="middle" class="tiny">改智能開關時，要在 0 與 1 之外再引一條 N 給控制器待機用（下一頁）</text>
+</g>
+<g data-s="1">
+<g class="tile ">
+<image href="assets/img/breaker-panel.jpg" x="6.9" y="81.0" width="84.1" height="48.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="49.0" y="145.0" text-anchor="middle" class="lb ">電箱</text>
+</g>
+<g class="tile ">
+<image href="assets/img/wall-switch-on.jpg" x="128.9" y="57.0" width="62.2" height="96.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/wall-switch-off.jpg" x="128.9" y="57.0" width="62.2" height="96.0" preserveAspectRatio="xMidYMid meet" class="" data-s="2"/>
+<text x="160.0" y="169.0" text-anchor="middle" class="lb ">雙切開關 1</text>
+</g>
+<g class="tile ">
+<image href="assets/img/wall-switch-on.jpg" x="358.9" y="57.0" width="62.2" height="96.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/wall-switch-off.jpg" x="358.9" y="57.0" width="62.2" height="96.0" preserveAspectRatio="xMidYMid meet" class="" data-s="3"/>
+<text x="390.0" y="169.0" text-anchor="middle" class="lb ">雙切開關 2</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-off.jpg" x="495.6" y="65.0" width="48.8" height="80.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/lamp-on.jpg" x="495.6" y="65.0" width="48.8" height="80.0" preserveAspectRatio="xMidYMid meet" class="" data-s="1" data-until="2"/>
+<text x="520.0" y="161.0" text-anchor="middle" class="lb ">燈</text>
+</g>
+<circle cx="97.1" cy="105.0" r="4" class="tl term"/>
+<circle cx="49.0" cy="155.0" r="4" class="tn term"/>
+<line x1="103.1" y1="105.0" x2="122.9" y2="105.0" class="wl"/>
+<text x="120.9" y="95.0" text-anchor="end" class="num" style="fill:var(--wl)">0</text>
+<text x="199.1" y="78.0" text-anchor="start" class="num">1</text>
+<text x="199.1" y="140.0" text-anchor="start" class="num">3</text>
+<text x="350.9" y="78.0" text-anchor="end" class="num">1</text>
+<text x="350.9" y="140.0" text-anchor="end" class="num">3</text>
+<text x="429.1" y="95.0" text-anchor="start" class="num" style="fill:var(--wy)">0</text>
+<line x1="427.1" y1="105.0" x2="503.7" y2="105.0" class="wy"/>
+<polyline points="520.0,171.0 520.0,200.0 49.0,200.0 49.0,161.0" class="wn"/>
+<text x="275.0" y="76.0" text-anchor="middle" class="tiny">雙切線 1</text>
+<text x="275.0" y="140.0" text-anchor="middle" class="tiny">雙切線 3</text>
+</g>
+<image href="assets/img/lamp-on.jpg" x="495.6" y="65.0" width="48.8" height="80.0" preserveAspectRatio="xMidYMid meet" class="" data-s="3"/>
+<line x1="197.1" y1="86.0" x2="352.9" y2="86.0" class="ln trav" style="stroke:#7a7a76;stroke-width:2" data-s="1" data-hi="1"/>
+<line x1="197.1" y1="124.0" x2="352.9" y2="124.0" class="ln trav" style="stroke:#7a7a76;stroke-width:2" data-s="1" data-hi="3"/>
+<text x="245.0" y="240.0" text-anchor="middle" class="lb" data-s="1" data-until="2">兩個開關都撥向 1：電流走雙切線 1，導通，燈亮</text>
+<text x="245.0" y="240.0" text-anchor="middle" class="lb" data-s="2" data-until="3">撥開關 1 到 3：開關 2 還在 1，路斷了，燈暗</text>
+<text x="245.0" y="240.0" text-anchor="middle" class="lb" data-s="3">再撥開關 2 到 3：電流改走雙切線 3，又導通，燈亮</text>
+<text x="245.0" y="264.0" text-anchor="middle" class="tiny" data-s="1">樓梯上下各一個開關，任一邊撥動都能開關同一盞燈</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">05 · Switches</span>
+<h2>單切開關與雙切開關</h2>
+<ol class="marks">
+<li>單切：0 進 1 出</li>
+<li>雙切：兩邊都撥上</li>
+<li>撥開關 1</li>
+<li>撥開關 2</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">單切開關 · Single Pole</span>控制單一燈具。兩個端子：<b>0</b> 接火線 L（進），<b>1</b> 接燈線（出）。台灣標準。</div>
+<div class="step" data-k="1">
+<span class="k">雙切開關 · 3-Way</span>兩個位置控制同一盞燈（樓梯）。每個開關三個端子：<b>0</b>（公共端）、<b>1</b>、<b>3</b>。兩個開關之間用「雙切線 1」和「雙切線 3」互連。兩邊都撥向 1，電流走雙切線 1，燈亮。</div>
+<div class="step" data-k="2">
+<span class="k">撥動開關 1</span>開關 1 的 0 改接到 3。但開關 2 還接在 1，電流沒有路，燈暗。</div>
+<div class="step" data-k="3">
+<span class="k">撥動開關 2</span>開關 2 的 0 也改接到 3。電流改走雙切線 3，迴路又通，燈亮。撥動任一開關都改變 1／3 的通斷組合，這就是樓梯上下各控一燈的原理。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide x3 flip" id="s5-smart" data-ch="第五章 電氣知識" data-sub="智能化" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/breaker-panel.jpg" x="10.9" y="68.0" width="98.1" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="60.0" y="140.0" text-anchor="middle" class="lb ">電箱</text>
+<text x="60.0" y="156.0" text-anchor="middle" class="sub">NFB</text>
+</g>
+<circle cx="115.1" cy="96.0" r="4.5" class="tl term"/>
+<circle cx="60.0" cy="166.0" r="4.5" class="tn term"/>
+<g class="tile ">
+<image href="assets/img/lamp-on.jpg" x="448.5" y="28.0" width="39.0" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="468.0" y="108.0" text-anchor="middle" class="lb ">燈 1</text>
+</g>
+<g data-s="0" data-until="1">
+<g class="tile ">
+<image href="assets/img/wall-switch-on.jpg" x="175.4" y="58.0" width="49.2" height="76.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="200.0" y="150.0" text-anchor="middle" class="lb ">一般開關</text>
+</g>
+<line x1="121.1" y1="96.0" x2="169.4" y2="96.0" class="wl"/>
+<text x="167.4" y="84.0" text-anchor="end" class="num" style="fill:var(--wl)">0</text>
+<text x="232.6" y="84.0" text-anchor="start" class="num" style="fill:var(--wy)">1</text>
+<polyline points="230.6,96.0 300.0,96.0 300.0,60.0 453.8,60.0" class="wy"/>
+</g>
+<g data-s="1" data-hi="1">
+<g class="tile ">
+<image href="assets/img/controller-module.jpg" x="145.5" y="57.0" width="109.0" height="66.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="200.0" y="139.0" text-anchor="middle" class="lb ">開關控制器</text>
+</g>
+<circle cx="160.0" cy="162.0" r="8" class="tl term"/>
+<text x="160.0" y="165.5" text-anchor="middle" class="num" style="fill:#fff;font-size:9px">L</text>
+<circle cx="187.0" cy="162.0" r="8" class="tn term"/>
+<text x="187.0" y="165.5" text-anchor="middle" class="num" style="fill:#fff;font-size:9px">N</text>
+<circle cx="214.0" cy="162.0" r="8" class="ty term"/>
+<text x="214.0" y="165.5" text-anchor="middle" class="num" style="fill:#fff;font-size:8px">L1</text>
+<circle cx="241.0" cy="162.0" r="8" class="ty term"/>
+<text x="241.0" y="165.5" text-anchor="middle" class="num" style="fill:#fff;font-size:8px">L2</text>
+<polyline points="121.1,96.0 135.0,96.0 135.0,162.0 151.0,162.0" class="wl draw"/>
+<polyline points="214.0,170.0 214.0,190.0 300.0,190.0 300.0,60.0 453.8,60.0" class="wy draw"/>
+<text x="300.0" y="236.0" text-anchor="middle" class="tiny">串入原本的迴路</text>
+<text x="300.0" y="252.0" text-anchor="middle" class="tiny">裡面有 Wi-Fi / Zigbee 晶片</text>
+</g>
+<g data-s="2" data-hi="2">
+<polyline points="187.0,170.0 187.0,215.0 60.0,215.0 60.0,172.0" class="wn draw"/>
+<text x="72.0" y="232.0" text-anchor="start" class="tiny acc" style="font-weight:600">N 零線：控制器待機供電</text>
+</g>
+<g class="tile " data-s="3">
+<image href="assets/img/lamp-on.jpg" x="448.5" y="118.0" width="39.0" height="64.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="468.0" y="198.0" text-anchor="middle" class="lb ">燈 2</text>
+</g>
+<g data-s="3">
+<polyline points="241.0,170.0 241.0,205.0 330.0,205.0 330.0,150.0 453.8,150.0" class="wy draw"/>
+<g>
+<rect x="125.0" y="10.0" width="150.0" height="28" rx="16" class="box"/>
+<text x="200.0" y="28.5" text-anchor="middle" class="tiny acc">App · 排程 · 語音</text>
+</g>
+<line x1="482.2" y1="150.0" x2="512.0" y2="150.0" class="wn"/>
+</g>
+<line x1="482.2" y1="60.0" x2="512.0" y2="60.0" class="wn"/>
+<polyline points="512.0,60.0 512.0,270.0 60.0,270.0 60.0,172.0" class="wn"/>
+<text x="300.0" y="290.0" text-anchor="middle" class="tiny">N 零線回路至電箱</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">05 · Smart circuit</span>
+<h2>把控制器串進迴路</h2>
+<ol class="marks">
+<li>原本的迴路</li>
+<li>換上控制器</li>
+<li>補一條 N</li>
+<li>一顆控多燈</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">原本</span>一般開關只做火線通斷。一個開關對應一盞燈，沒有遠端、沒有排程。</div>
+<div class="step" data-k="1">
+<span class="k">換上控制器</span>智能開關控制器等於把「開關」換成一顆有晶片的盒子，串入原本的迴路。火線 L 進來、燈線從 L1 出去到燈。但晶片要有電才能待機。</div>
+<div class="step" data-k="2">
+<span class="k">補一條 N</span>所以控制器<b>需要同時接 L 火線與 N 零線</b>，從 L→N 取電，才能一直開著等指令。原本開關盒沒引 N 線的迴路，要補拉 N 線，或改選「免 N 線」型號（下一頁）。</div>
+<div class="step" data-k="3">
+<span class="k">一顆控多燈</span>接好 L 與 N 之後，一顆控制器可以獨立控制 L1、L2 多組燈具，支援 App 遠端、排程、語音。</div>
+</div>
+<p class="note">
+<b>重要差異：</b>零火版控制器要 L＋N 才能待機。舊線路沒有 N 到開關盒，先重新配線補拉，或選單火版。</p>
+</div>
+</div>
+</section>
+<section class="slide x3" id="s5-single" data-ch="第五章 電氣知識" data-sub="單火與電容" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/breaker-panel.jpg" x="4.9" y="110.0" width="98.1" height="56.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="54.0" y="182.0" text-anchor="middle" class="lb ">電箱</text>
+<text x="54.0" y="198.0" text-anchor="middle" class="sub">NFB</text>
+</g>
+<circle cx="109.1" cy="138.0" r="4.5" class="tl term"/>
+<circle cx="54.0" cy="208.0" r="4.5" class="tn term"/>
+<g class="tile ">
+<image href="assets/img/controller-module.jpg" x="170.5" y="75.0" width="109.0" height="66.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="225.0" y="157.0" text-anchor="middle" class="lb ">智能開關</text>
+</g>
+<circle cx="190.0" cy="180.0" r="8" class="tl term"/>
+<text x="190.0" y="183.5" text-anchor="middle" class="num" style="fill:#fff;font-size:9px">L</text>
+<circle cx="225.0" cy="180.0" r="8" class="tn term"/>
+<text x="225.0" y="183.5" text-anchor="middle" class="num" style="fill:#fff;font-size:9px">N</text>
+<circle cx="260.0" cy="180.0" r="8" class="ty term"/>
+<text x="260.0" y="183.5" text-anchor="middle" class="tiny" style="fill:#fff;font-size:9px">燈</text>
+<polyline points="115.1,138.0 140.0,138.0 140.0,180.0 181.0,180.0" class="wl"/>
+<g class="tile ">
+<image href="assets/img/led-bulb-off.jpg" x="437.8" y="95.0" width="64.5" height="110.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="470.0" y="221.0" text-anchor="middle" class="lb ">LED 燈</text>
+<text x="470.0" y="237.0" text-anchor="middle" class="sub">阻抗高</text>
+</g>
+<polyline points="269.0,180.0 300.0,180.0 300.0,150.0 431.8,150.0" class="wy"/>
+<polyline points="470.0,247.0 470.0,300.0 54.0,300.0 54.0,214.0" class="wn"/>
+<g data-s="0" data-until="1">
+<polyline points="54.0,260.0 225.0,260.0 225.0,189.0" class="wn draw"/>
+<text x="140.0" y="280.0" text-anchor="start" class="tiny" style="font-weight:600">零火版：N 直接給控制器，L→N 取電，穩定</text>
+<text x="225.0" y="52.0" text-anchor="middle" class="lb">零火版（需 N 線）</text>
+</g>
+<g data-s="1">
+<path d="M219 174l12 12M231 174l-12 12" class="bad mark" stroke-width="1.6"/>
+<text x="225.0" y="206.0" text-anchor="middle" class="tiny">開關盒沒有 N</text>
+<text x="225.0" y="52.0" text-anchor="middle" class="lb">單火版（免 N 線）</text>
+</g>
+<g data-s="1" data-until="3">
+<polyline points="115.1,138.0 140.0,138.0 140.0,180.0 181.0,180.0" class="flow"/>
+<polyline points="269.0,180.0 300.0,180.0 300.0,150.0 431.8,150.0" class="flow"/>
+<polyline points="470.0,247.0 470.0,300.0 54.0,300.0 54.0,214.0" class="flow"/>
+<text x="300.0" y="336.0" text-anchor="middle" class="tiny acc" style="font-weight:600">關燈時仍有 ＜1 mA 持功電流，經燈具回 N，供控制器待機</text>
+</g>
+<image href="assets/img/led-bulb-on.jpg" x="437.8" y="95.0" width="64.5" height="110.0" preserveAspectRatio="xMidYMid meet" class="flick" data-s="2" data-until="3"/>
+<g data-s="2" data-until="3">
+<text x="470.0" y="82.0" text-anchor="middle" class="tiny bad" style="font-weight:600">微閃／鬼火</text>
+<text x="300.0" y="318.0" text-anchor="middle" class="tiny">微電流不斷幫 LED 內部電容充電，累積到一定程度就閃一下</text>
+</g>
+<g class="tile " data-s="3">
+<image href="assets/img/capacitor.jpg" x="334.1" y="205.0" width="71.9" height="40.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g data-s="3">
+<line x1="370.0" y1="150.0" x2="370.0" y2="199.0" class="ln acc draw"/>
+<line x1="370.0" y1="251.0" x2="370.0" y2="300.0" class="ln acc draw"/>
+<text x="322.0" y="222.0" text-anchor="end" class="tiny acc" style="font-weight:600">電容（單火適配器）</text>
+<text x="322.0" y="238.0" text-anchor="end" class="tiny">並聯在燈線與 N 之間</text>
+<polyline points="115.1,138.0 140.0,138.0 140.0,180.0 181.0,180.0" class="flow"/>
+<polyline points="269.0,180.0 300.0,180.0 300.0,150.0 370.0,150.0 370.0,199.0" class="flow"/>
+<polyline points="370.0,251.0 370.0,300.0 54.0,300.0 54.0,214.0" class="flow"/>
+<text x="300.0" y="336.0" text-anchor="middle" class="tiny acc" style="font-weight:600">微電流優先走電容這條低阻抗旁路，不流進 LED，燈不閃</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">05 · No-neutral switch</span>
+<h2>零火、單火，以及為什麼要加電容</h2>
+<ol class="marks">
+<li>零火版（需 N 線）</li>
+<li>單火版（免 N 線）</li>
+<li>為什麼 LED 會閃</li>
+<li>並聯一顆電容</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">零火版</span>開關盒有 <b>L 火線</b>和 <b>N 零線</b>兩條線。控制器從 L→N 直接取電，供電穩定、功能完整、支援所有燈具。適合新裝修或已預留 N 線的盒體。缺點：舊線路要補拉 N。</div>
+<div class="step" data-k="1">
+<span class="k">單火版</span>開關盒只有 L 和燈線、沒有 N。控制器在「關燈」狀態下，靠一股微弱的持功電流（＜1 mA）<b>穿過燈具</b>回 N，為自己的待機電路充電。免重新配線，安裝簡單。</div>
+<div class="step" data-k="2">
+<span class="k">為什麼 LED 會閃</span>LED 燈啟動功率極低。那股微電流會不斷幫 LED 內部電容充電，累積到一定程度就閃一下（微閃），或夜裡隱隱發亮，俗稱鬼火。燈具阻抗太高時，控制器也可能因供電不足而重啟、掉線。</div>
+<div class="step" data-k="3">
+<span class="k">並聯一顆電容</span>在燈具兩端（燈線與 N 之間）並聯一顆電容，也叫單火適配器。它在交流電路裡是一條<b>旁路（Bypass）</b>：關燈時微電流優先走電容、不流進 LED 驅動晶片，閃爍消失；同時給控制器一條低阻抗的穩定迴路。通常裝在燈具或天花板接線盒內。</div>
+</div>
+<p class="note">
+<b>選購：</b>開關盒有 N 線就選零火版，穩定度高。確定沒有 N 才選單火版，並先確認燈具品牌相容，必要時補電容或換燈。</p>
+</div>
+</div>
+</section>
+<section class="slide x3 flip" id="s5-live" data-ch="第五章 電氣知識" data-sub="活電作業" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/nfb-on.jpg" x="40.1" y="65.0" width="119.8" height="150.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/nfb-off.jpg" x="40.1" y="65.0" width="119.8" height="150.0" preserveAspectRatio="xMidYMid meet" class="" data-s="2" data-until="3"/>
+<text x="100.0" y="231.0" text-anchor="middle" class="lb ">配電盤 NFB</text>
+</g>
+<text x="100.0" y="254.0" text-anchor="middle" class="num" data-s="0" data-until="2">ON</text>
+<text x="100.0" y="254.0" text-anchor="middle" class="num bad" data-s="2" data-until="3">OFF</text>
+<text x="100.0" y="254.0" text-anchor="middle" class="num" data-s="3">ON</text>
+<line x1="170.0" y1="110.0" x2="352.0" y2="110.0" class="wl"/>
+<line x1="170.0" y1="140.0" x2="352.0" y2="140.0" class="ln" style="stroke:#9a9a97;stroke-width:3.2"/>
+<line x1="170.0" y1="140.0" x2="352.0" y2="140.0" class="ln" style="stroke:#f4f4f2;stroke-width:1.6"/>
+<line x1="170.0" y1="170.0" x2="352.0" y2="170.0" class="wy"/>
+<g data-s="2" data-until="3">
+<line x1="170.0" y1="110.0" x2="352.0" y2="110.0" class="wg"/>
+<line x1="170.0" y1="170.0" x2="352.0" y2="170.0" class="wg"/>
+<text x="261.0" y="200.0" text-anchor="middle" class="tiny">全部無電</text>
+</g>
+<g class="tile ">
+<image href="assets/img/tester-pen.jpg" x="369.5" y="115.0" width="101.0" height="50.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g data-s="0" data-until="2">
+<circle cx="392" cy="186" r="5" class="accfill"/>
+<text x="402.0" y="190.0" text-anchor="start" class="tiny acc" style="font-weight:600">亮：這條帶電</text>
+<text x="392.0" y="208.0" text-anchor="start" class="tiny">不用碰到線體，靠近就知道</text>
+</g>
+<g data-s="2" data-until="3">
+<circle cx="392" cy="186" r="5" fill="none" stroke="var(--grey)"/>
+<text x="402.0" y="190.0" text-anchor="start" class="tiny" style="font-weight:600">不亮：確認無電</text>
+<text x="392.0" y="208.0" text-anchor="start" class="tiny">再驗一次才動手</text>
+</g>
+<g data-s="1" class="tape">
+<rect x="300.0" y="100.0" width="34.0" height="20.0" rx="0" class="box"/>
+<text x="317.0" y="114.0" text-anchor="middle" class="num">L</text>
+<rect x="300.0" y="130.0" width="34.0" height="20.0" rx="0" class="box"/>
+<text x="317.0" y="144.0" text-anchor="middle" class="num">N</text>
+<rect x="300.0" y="160.0" width="34.0" height="20.0" rx="0" class="box"/>
+<text x="317.0" y="174.0" text-anchor="middle" class="num">燈</text>
+<text x="317.0" y="236.0" text-anchor="middle" class="tiny" data-until="2">膠帶標記，放下工具也不會忘</text>
+</g>
+<g data-s="3">
+<rect x="352.0" y="103.0" width="16.0" height="14.0" rx="3" class="box"/>
+<rect x="352.0" y="133.0" width="16.0" height="14.0" rx="3" class="box"/>
+<rect x="352.0" y="163.0" width="16.0" height="14.0" rx="3" class="box"/>
+<text x="392.0" y="262.0" text-anchor="start" class="tiny" style="font-weight:600">線頭包覆、螺絲鎖緊</text>
+<text x="392.0" y="280.0" text-anchor="start" class="tiny">確認後才恢復供電測試</text>
+<text x="392.0" y="298.0" text-anchor="start" class="tiny">不要帶電測試接線對不對</text>
+</g>
+<text x="300.0" y="340.0" text-anchor="middle" class="cap">Live-wire procedure · 活電作業</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">05 · Safety</span>
+<h2>活電作業四步驟</h2>
+<p class="lead">這是合理的操作需求，但每一步都不能省。</p>
+<ol class="marks">
+<li>確認帶電線</li>
+<li>標記各線</li>
+<li>關閉 NFB</li>
+<li>施工完成才送電</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">1 · 確認帶電線</span>確認迴路時，通常要在<b>通電狀態</b>下用驗電筆判斷各線角色（L、N、燈線）。非接觸式驗電筆靠近導線，看指示燈亮不亮。<b>驗電筆不需碰線體，切勿用手指感知。</b>
+</div>
+<div class="step" data-k="1">
+<span class="k">2 · 標記各線</span>確認後立刻用膠帶標記 L、N、燈線各自的功能。避免放下工具後忘記，造成二次混淆。</div>
+<div class="step" data-k="2">
+<span class="k">3 · 關閉 NFB</span>到配電盤關閉對應迴路的無熔絲開關。<b>關閉後再用驗電筆確認無電</b>，才能動手接線。</div>
+<div class="step" data-k="3">
+<span class="k">4 · 施工完成才送電</span>確認線頭包覆、螺絲鎖緊後才恢復供電測試。不要帶電測試接線正確與否。</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">工具與禁止</div>
+<div>
+<h3>必備工具，絕對禁止</h3>
+<ul class="rule c2">
+<li>
+<div class="h">非接觸式驗電筆</div>
+<span>不碰線體即可確認帶電狀態</span>
+</li>
+<li>
+<div class="h">三用電表</div>
+<span>量測電壓、確認 N 線是否到位</span>
+</li>
+<li>
+<div class="h">絕緣手柄工具</div>
+<span>螺絲起子、尖嘴鉗須有絕緣外皮</span>
+</li>
+</ul>
+<ul class="rule c2" style="margin-top:28px;border-top-color:var(--wl)">
+<li>
+<div class="h">絕對禁止</div>
+<span class="no">雙手同時觸碰 L 線與 N 線</span>
+</li>
+<li>
+<div class="h">
+</div>
+<span class="no">在潮濕環境進行電氣作業</span>
+</li>
+<li>
+<div class="h">
+</div>
+<span class="no">用手直接觸碰裸露線頭確認是否帶電</span>
+</li>
+<li>
+<div class="h">
+</div>
+<span class="no">未確認無電就拆接線</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="flow">
+<div class="grid">
+<div class="lbl">本章重點</div>
+<div class="recap">
+<h3>第五章 接燈與開關的電氣知識</h3>
+<ol>
+<li>接線前務必關斷路器並用驗電筆確認無電，這不是建議，是安全底線</li>
+<li>零火版開關需要 L + N 兩條線；單火版只需要 L，但 LED 燈可能閃爍，懷疑鬼火先試加電容</li>
+<li>雙切開關端子是 0、1、3（台灣標準），0 接火線進，1 與 3 是聯動線</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="slide x3" id="fix" data-ch="附錄 排查" data-sub="沿著路查" data-stages="5">
+<div class="stage">
+<div class="vis">
+<svg class="dg " viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true">
+<g class="tile ">
+<image href="assets/img/iphone.jpg" x="68.3" y="45.0" width="63.4" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="100.0" y="161.0" text-anchor="middle" class="lb ">手機</text>
+<text x="100.0" y="178.0" text-anchor="middle" class="cap">第二章</text>
+</g>
+<g class="tile " data-hi="2">
+<image href="assets/img/homepod-mini.jpg" x="254.2" y="45.0" width="91.6" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="161.0" text-anchor="middle" class="lb ">家庭 App</text>
+<text x="300.0" y="177.0" text-anchor="middle" class="sub">Home Hub</text>
+<text x="300.0" y="193.0" text-anchor="middle" class="cap">第二章</text>
+</g>
+<g class="tile " data-hi="0,1">
+<image href="assets/img/router.jpg" x="446.9" y="53.0" width="106.2" height="84.0" preserveAspectRatio="xMidYMid meet"/>
+<text x="500.0" y="153.0" text-anchor="middle" class="lb ">路由器</text>
+<text x="500.0" y="170.0" text-anchor="middle" class="cap">第三章</text>
+</g>
+<g class="tile" data-hi="3">
+<g class="tile ">
+<image href="assets/logos/wifi.svg" x="71.3" y="251.0" width="57.4" height="34.0" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/thread.svg" x="52.0" y="295.1" width="96.0" height="17.8" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<g class="tile ">
+<image href="assets/logos/zigbee.svg" x="56.0" y="319.5" width="88.0" height="21.1" preserveAspectRatio="xMidYMid meet"/>
+</g>
+<text x="100.0" y="358.0" text-anchor="middle" class="lb">協定</text>
+<text x="100.0" y="374.0" text-anchor="middle" class="cap">第四章</text>
+</g>
+<g class="tile " data-hi="4">
+<image href="assets/img/controller-module.jpg" x="238.0" y="254.5" width="124.0" height="75.1" preserveAspectRatio="xMidYMid meet"/>
+<text x="300.0" y="345.5" text-anchor="middle" class="lb ">開關控制器</text>
+<text x="300.0" y="362.5" text-anchor="middle" class="cap">第五章</text>
+</g>
+<g class="tile ">
+<image href="assets/img/lamp-off.jpg" x="469.5" y="242.0" width="61.0" height="100.0" preserveAspectRatio="xMidYMid meet"/>
+<image href="assets/img/lamp-on.jpg" x="469.5" y="242.0" width="61.0" height="100.0" preserveAspectRatio="xMidYMid meet" class=""/>
+<text x="500.0" y="358.0" text-anchor="middle" class="lb ">燈</text>
+</g>
+<line x1="121.9" y1="95.0" x2="252.2" y2="95.0" class="ln draw"/>
+<line x1="347.8" y1="95.0" x2="454.9" y2="95.0" class="ln draw"/>
+<polyline points="500.0,180.0 500.0,218.0 100.0,218.0 100.0,244.0" class="ln draw"/>
+<line x1="156.0" y1="292.0" x2="239.1" y2="292.0" class="ln draw"/>
+<line x1="360.7" y1="292.0" x2="481.1" y2="292.0" class="ln draw"/>
+<g data-s="0" data-until="1">
+<circle cx="565.1103202846975" cy="57.0" r="8" fill="#fff" class="bad" stroke-width="1.3"/>
+<path d="M561.6103202846975 53.5l7 7M568.6103202846975 53.5l-7 7" class="bad" stroke-width="1.3"/>
+</g>
+<g data-s="1" data-until="2">
+<circle cx="565.1103202846975" cy="57.0" r="8" fill="#fff" class="bad" stroke-width="1.3"/>
+<path d="M561.6103202846975 53.5l7 7M568.6103202846975 53.5l-7 7" class="bad" stroke-width="1.3"/>
+</g>
+<g data-s="2" data-until="3">
+<circle cx="357.7899716177862" cy="49.0" r="8" fill="#fff" class="bad" stroke-width="1.3"/>
+<path d="M354.2899716177862 45.5l7 7M361.2899716177862 45.5l-7 7" class="bad" stroke-width="1.3"/>
+</g>
+<g data-s="3" data-until="4">
+<circle cx="162" cy="254" r="8" fill="#fff" class="bad" stroke-width="1.3"/>
+<path d="M158.5 250.5l7 7M165.5 250.5l-7 7" class="bad" stroke-width="1.3"/>
+</g>
+<g data-s="4" data-until="5">
+<circle cx="374.0" cy="258.47058823529414" r="8" fill="#fff" class="bad" stroke-width="1.3"/>
+<path d="M370.5 254.97058823529414l7 7M377.5 254.97058823529414l-7 7" class="bad" stroke-width="1.3"/>
+</g>
+<text x="300.0" y="22.0" text-anchor="middle" class="cap">Troubleshoot · 沿著路查</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Appendix · Troubleshooting</span>
+<h2>出問題了，沿著那條路查</h2>
+<p class="lead">章節的順序就是排查的順序：從手機那一端往牆裡查。</p>
+<ol class="marks">
+<li>設備加不進 HomeKit</li>
+<li>設備頻繁掉線</li>
+<li>遠端無法控制</li>
+<li>Thread 設備訊號差</li>
+<li>裝了智能開關後燈會閃</li>
+</ol>
+<div class="steps">
+<div class="step" data-k="0">
+<span class="k">站 3 · 路由器／Wi-Fi 頻段</span>設備只支援 2.4 GHz，但路由器把 2.4 / 5 GHz 混成同一個 SSID。分開 SSID，確保設備連到 2.4 GHz。<b>第三章。</b>
+</div>
+<div class="step" data-k="1">
+<span class="k">站 3 · 路由器</span>Wi-Fi 干擾、IP 衝突、DHCP 租約問題。改用靜態 IP，或在 DHCP 中把設備的 IP 固定。<b>第三章。</b>
+</div>
+<div class="step" data-k="2">
+<span class="k">站 2 · Home Hub</span>Home Hub 離線或網路有問題。確認 Apple TV / HomePod 是否在線，重啟 Home Hub。<b>第二章。</b>
+</div>
+<div class="step" data-k="3">
+<span class="k">站 4 · 頻道衝突</span>Thread（2.4 GHz）與 Wi-Fi 頻道重疊。把 Wi-Fi 固定在 1、6 或 11，避開 Thread。<b>第三章、第四章。</b>
+</div>
+<div class="step" data-k="4">
+<span class="k">站 5 · 開關控制器</span>單火版控制器的持功電流讓 LED 微閃或鬼火，供電不足時控制器還會重開機。在燈具兩端加裝電容，或開關盒有 N 線就改零火版。<b>第五章。</b>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="flow" id="glossary">
+<div class="grid">
+<div class="lbl">附錄 · 術語速查表</div>
+<div>
+<h3>25 個詞，遇到不熟的回來查</h3>
+<dl class="gloss">
+<div class="gh">平台</div>
+<div>
+<dt>Home Hub</dt>
+<dd>HomeKit 的遠端控制中樞，必須是 Apple TV 或 HomePod，沒有 Home Hub 出門後就失去控制能力</dd>
+</div>
+<div>
+<dt>MFi 認證</dt>
+<dd>Made for iPhone/iPad/iPod，Apple 對 HomeKit 配件的硬體授權認證，無此認證無法接入 HomeKit</dd>
+</div>
+<div>
+<dt>Scene（情境）</dt>
+<dd>一組設備狀態的快照，按一下按鈕同時執行多個設備動作，需手動觸發</dd>
+</div>
+<div>
+<dt>Automation（自動化）</dt>
+<dd>根據條件自動執行的規則（時間、位置、感應器觸發），無需手動操作</dd>
+</div>
+<div>
+<dt>Home Assistant</dt>
+<dd>開源智能家庭平台，可橋接幾乎所有協定和品牌，技術門檻較高，適合進階整合需求</dd>
+</div>
+<div class="gh">網路</div>
+<div>
+<dt>DHCP</dt>
+<dd>路由器自動分配 IP 給設備的服務，設備重啟或租約到期後 IP 可能改變</dd>
+</div>
+<div>
+<dt>靜態 IP</dt>
+<dd>手動指定固定 IP，設備重啟後不變，智能 Hub、NAS、攝影機建議使用</dd>
+</div>
+<div>
+<dt>VLAN</dt>
+<dd>虛擬區域網路，將設備邏輯上分隔在不同網段，常用於隔離 IoT 設備與主網路</dd>
+</div>
+<div>
+<dt>PoE</dt>
+<dd>Power over Ethernet，讓網路線在傳輸資料同時供電，802.3af 為 15 W，802.3at（PoE+）為 30 W</dd>
+</div>
+<div>
+<dt>Non-overlapping channels</dt>
+<dd>2.4 GHz 頻段中，頻道 1、6、11 彼此間距 25 MHz 完全不重疊，設定 Wi-Fi 時應選這三個</dd>
+</div>
+<div class="gh">協定</div>
+<div>
+<dt>Matter</dt>
+<dd>2022 年推出的跨平台智能家庭應用層標準，同一設備可被多個平台同時控制</dd>
+</div>
+<div>
+<dt>Thread</dt>
+<dd>IEEE 802.15.4 的 Mesh 網狀傳輸協定，2.4 GHz 低功耗，設備間互相中繼訊號，需要 Border Router 接入 IP 網路</dd>
+</div>
+<div>
+<dt>Border Router</dt>
+<dd>將 Thread 網路橋接至家庭 Wi-Fi 的設備，Apple TV 4K / HomePod mini / HomePod 第 2 代自動擔任此角色</dd>
+</div>
+<div>
+<dt>Zigbee</dt>
+<dd>802.15.4 低功耗 Mesh 協定，與 Thread 底層相似但不互通，需要各品牌自己的 Hub</dd>
+</div>
+<div>
+<dt>Z-Wave</dt>
+<dd>868/908 MHz 低功耗協定，避開 2.4 GHz 干擾，穿牆佳，但設備選擇較少</dd>
+</div>
+<div>
+<dt>Bridge / Hub（橋接器）</dt>
+<dd>將非 IP 協定（Zigbee、Z-Wave）翻譯為 IP 訊號的設備，如 Philips Hue Bridge、Samsung SmartThings</dd>
+</div>
+<div class="gh">電氣</div>
+<div>
+<dt>L 線（火線）</dt>
+<dd>帶電的相線，台灣標準用黑色或紅色線，電壓約 110V，觸碰有觸電危險</dd>
+</div>
+<div>
+<dt>N 線（零線）</dt>
+<dd>中性線，台灣標準用白色線，電壓接近 0V，形成電流迴路的回路</dd>
+</div>
+<div>
+<dt>零火版開關</dt>
+<dd>需要 L + N 兩條線供電的智能開關，供電穩定，功能完整，適合新裝修或有 N 線的盒體</dd>
+</div>
+<div>
+<dt>單火版開關</dt>
+<dd>只需 L 線的智能開關，靠微弱漏電流維持待機，適合舊線路，但可能導致 LED 燈鬼火</dd>
+</div>
+<div>
+<dt>電容（旁路電容）</dt>
+<dd>並聯在燈具兩端，為單火開關提供穩定工作迴路並消除 LED 閃爍／鬼火，通常裝在燈具接線盒</dd>
+</div>
+<div>
+<dt>單切開關</dt>
+<dd>控制一條迴路的開關，端子 0（火線進）和 1（燈線出），台灣標準</dd>
+</div>
+<div>
+<dt>雙切開關</dt>
+<dd>兩個開關控制同一燈具（樓梯燈），端子 0（COM）、1、3，兩頭皆可開關</dd>
+</div>
+<div>
+<dt>斷路器（無熔絲開關）</dt>
+<dd>電箱內的過電流保護裝置，作業前必須先關斷對應迴路的斷路器</dd>
+</div>
+<div>
+<dt>驗電筆</dt>
+<dd>確認線路是否帶電的工具，接線前必備，用來驗證斷路器是否確實斷開對應迴路</dd>
+</div>
+</dl>
+</div>
+</div>
+</section>
+<section class="slide x2 end flip" id="end" data-ch="收尾" data-sub="">
+<div class="stage">
+<div>
+<h2 class="rise" style="--t:.1">一盞燈，從手機到牆裡。</h2>
+<p class="lead rise" style="--t:.3;max-width:32em">平台、網路、協定、牆裡的線。訊號走過的路，就是你排查的路。</p>
+<div class="credit rise" style="--t:.5">威琳工程 內部教育訓練<br>智能家庭入門介紹 vG · 2026-09-16 · 整理自 v1.0（2026-05-29）</div>
+</div>
+</div>
+</section>
 <footer>
-  <strong>智能家庭入職培訓手冊</strong> &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; 2026-05-29<br>
-  <span style="margin-top:6px; display:block;">如有疑問請洽詢資深工程師</span>
+<span>威琳工程 內部教育訓練</span>
+<span>智能家庭入門介紹 vG · 整理自 v1.0（2026-05-29）</span>
 </footer>
+<script>
+(function () {
+  var slides = [].slice.call(document.querySelectorAll('section.slide'));
+  var total = slides.length;
+  var cTL = document.getElementById('c-tl'), cTR = document.getElementById('c-tr'), cBL = document.getElementById('c-bl');
+  var navLinks = [].slice.call(document.querySelectorAll('#nav a'));
+  var chapters = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var typed = document.getElementById('typed'), heroText = '嘿 Siri，打開客廳燈';
 
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+
+  // 描邊動畫要知道每條線多長：量一次塞進 --len（排到第一次繪製之後，免得載入時卡一下）
+  requestAnimationFrame(function () {
+    document.querySelectorAll('.dg .draw').forEach(function (el) {
+      try { el.style.setProperty('--len', (el.getTotalLength() + 2).toFixed(1)); } catch (e) {}
+    });
+  });
+  // 每頁的位置與高度只在版面變動時量一次，捲動時不再逐頁讀 offsetTop
+  var rects = [], chTops = [];
+  function measure() {
+    rects = slides.map(function (s) { return { top: s.offsetTop, h: s.offsetHeight }; });
+    chTops = chapters.map(function (el) { return el ? el.offsetTop : Infinity; });
+  }
+  measure();
+
+  // 分階段頁：data-s 從第幾階段起出現、data-until 到第幾階段消失、data-hi 哪幾個階段強調
+  function applyStage(s, k) {
+    if (s._stage === k) return;
+    s._stage = k;
+    s.querySelectorAll('[data-s]').forEach(function (el) {
+      var from = +el.dataset.s, until = el.dataset.until ? +el.dataset.until : Infinity;
+      el.classList.toggle('on', k >= from && k < until);
+    });
+    s.querySelectorAll('[data-until]:not([data-s])').forEach(function (el) {
+      el.classList.toggle('on', k < +el.dataset.until);
+    });
+    s.querySelectorAll('[data-hi]').forEach(function (el) {
+      var ks = el.dataset.hi.split(',').map(Number);
+      el.classList.toggle('hi', ks.indexOf(k) !== -1);
+    });
+    s.querySelectorAll('.marks li').forEach(function (li, i) {
+      li.classList.toggle('cur', i === k); li.classList.toggle('done', i < k);
+    });
+    s.querySelectorAll('.step').forEach(function (p) { p.classList.toggle('cur', +p.dataset.k === k); });
+  }
+  window.__applyStage = applyStage;   // 給驗證腳本逐階段截圖用
+
+  function paint(s, p) {
+    s.style.setProperty('--p', p.toFixed(3));
+    if (s.dataset.stages) {
+      var N = +s.dataset.stages;
+      // 最後一個階段多留一點捲動距離（×0.6），免得剛出現就被下一頁蓋掉
+      applyStage(s, Math.min(N - 1, Math.floor(p * (N + 0.6))));
+    }
+    if (s.classList.contains('hero') && typed) {
+      var q = clamp01((p - 0.08) / 0.32), n = Math.round(q * heroText.length);
+      if (typed.textContent.length !== n) typed.textContent = heroText.slice(0, n);
+    }
+  }
+
+  var active = -1, activeCh = -1;
+  function tick() {
+    var y = window.scrollY, vh = window.innerHeight, mid = y + vh * 0.5, cur = -1;
+    slides.forEach(function (s, i) {
+      var top = rects[i].top, h = rects[i].h;
+      if (top > y + vh * 2 || top + h < y - vh) { return; }   // 離視窗太遠的不算
+      var p = reduce ? 1 : clamp01((y - top) / Math.max(1, h - vh));
+      paint(s, p);
+      if (top <= mid && top + h > mid) cur = i;
+    });
+    if (cur !== active) {
+      active = cur;
+      document.body.classList.toggle('inslide', cur >= 0);
+      if (cur >= 0) {
+        var s = slides[cur];
+        cTL.textContent = s.dataset.ch || '';
+        cTR.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+        cBL.textContent = s.dataset.sub || '';
+      }
+    }
+    var ch = -1;
+    chTops.forEach(function (t, i) { if (t <= mid) ch = i; });
+    if (ch !== activeCh) { activeCh = ch; navLinks.forEach(function (a, i) { a.classList.toggle('on', i === ch); }); }
+  }
+
+  var ticking = false;
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; tick(); }); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { measure(); onScroll(); });
+  // 所有分階段頁先套第 0 階段，捲到時第一格已經在
+  slides.forEach(function (s) { if (s.dataset.stages) applyStage(s, reduce ? +s.dataset.stages - 1 : 0); });
+  if (reduce && typed) typed.textContent = heroText;
+  tick();
+  // 平滑捲動等載入完成才開：帶 #hash 開頁時，錨點要直接落定、不要動畫捲幾千 px
+  window.addEventListener('load', function () { setTimeout(function () { document.documentElement.classList.add('smooth'); measure(); tick(); }, 80); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); tick(); });
+
+  // Home Hub 有沒有：沿用 vE 的語意（data-hub=1 的能力要有 Hub 才行）
+  var hubToggle = document.getElementById('hubToggle'), hubSlide = document.getElementById('s2-hub');
+  function renderHub() {
+    var has = hubToggle.checked;
+    hubSlide.classList.toggle('nohub', !has);
+    document.querySelectorAll('#capList li').forEach(function (li) {
+      var ok = li.dataset.hub !== '1' || has, pill = li.querySelector('.pill');
+      li.classList.toggle('off', !ok); pill.textContent = ok ? '可以' : '不行'; pill.classList.toggle('no', !ok);
+    });
+  }
+  if (hubToggle) { hubToggle.addEventListener('change', renderHub); renderHub(); }
+})();
+</script>
 </body>
 </html>
