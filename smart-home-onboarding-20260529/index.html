@@ -2761,10 +2761,37 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
       li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStage(s, i); } });
     });
   });
-  // ← →：先切這頁的階段，到頭了就翻頁（沒階段的頁直接翻）；↑ ↓ 與空白鍵是瀏覽器原生捲動，配吸附自然一頁一頁走
+  // 鍵盤兩套走法（Jack 2026-09-18）：
+  //   ← →：只在幻燈頁之間走——先切這頁的階段，到頭了翻到下一張幻燈（跳過中間的表格／卡片段）。
+  //   ↑ ↓：一小格一小格走完整份——先切階段；到頭了走到下一個吸附段（幻燈、表格段、頁尾都算）；
+  //        比一屏高的段落每按一下捲 85% 屏、捲到底才進下一段。
+  //        ↑ 退回有階段的頁時落在它最後一階、↓ 進來落在第一階，這樣來回走看到的順序才對得上。
+  //   滑鼠／觸控板不受影響，照 scroll-snap 整頁吸附。
+  var stops = [].slice.call(document.querySelectorAll('section.slide, section.flow, footer'));
+  function stepVertical(d) {
+    var vh = window.innerHeight, cur = -1, tol = 4;
+    var rs = stops.map(function (el) { return el.getBoundingClientRect(); });
+    rs.forEach(function (r, i) { if (r.top <= tol) cur = i; });   // 現在停在哪一段：頂邊已到（或超過）畫面頂的最後一段；短段落用畫面正中判會誤判成下一段
+    if (cur < 0) return false;
+    var el = stops[cur], r = rs[cur], bh = reduce ? 'auto' : 'smooth';
+    if (el.dataset.stages && setStage(el, (el._stage || 0) + d)) return true;
+    if (r.height > vh + tol) {   // 比一屏高：還沒捲到底（頂）就先在段落裡面捲
+      if (d > 0 && r.bottom > vh + tol) { window.scrollBy({ top: Math.min(vh * 0.85, r.bottom - vh), behavior: bh }); return true; }
+      if (d < 0 && r.top < -tol) { window.scrollBy({ top: -Math.min(vh * 0.85, -r.top), behavior: bh }); return true; }
+    }
+    var next = stops[cur + d];
+    if (!next) return false;
+    if (next.dataset.stages) applyStage(next, d > 0 ? 0 : +next.dataset.stages - 1);
+    var tall = next.getBoundingClientRect().height > vh + tol;
+    next.scrollIntoView({ behavior: bh, block: d < 0 && tall ? 'end' : 'start' });   // 往上進高段落：先看它的尾巴
+    return true;
+  }
   window.addEventListener('keydown', function (e) {
-    if (active < 0 || e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.altKey || e.metaKey || e.ctrlKey) return;
     if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    var v = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+    if (v) { if (stepVertical(v)) e.preventDefault(); return; }
+    if (active < 0) return;
     var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
     if (!d) return;
     e.preventDefault();
