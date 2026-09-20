@@ -24,6 +24,16 @@
   <itunes:type>episodic</itunes:type>
   <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>AI 代理架構與視覺決策介面</title>
+    <description>〔深入探討〕本週新增／更新：AI、網站製作。涵蓋 AI Agent 設計模式（10 格對照）、_AI地圖、網站設計參考庫。</description>
+    <itunes:summary>〔深入探討〕本週新增／更新：AI、網站製作。涵蓋 AI Agent 設計模式（10 格對照）、_AI地圖、網站設計參考庫。</itunes:summary>
+    <enclosure url="https://jack72624-lab.github.io/claude-reports/kb-c16ecc6d513a2279/audio/ep-2026-09-21-mixed.mp3" length="19899172" type="audio/mpeg"/>
+    <guid isPermaLink="false">ep-2026-09-21-mixed</guid>
+    <pubDate>Mon, 21 Sep 2026 09:00:00 +0800</pubDate>
+    <itunes:author>Jack</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+  </item>
+  <item>
     <title>15美金打造始祖鳥級AI廣告</title>
     <description>〔深入探討〕本週複習：AI影像生成。涵蓋 Nano-Banana提示詞庫、生圖工具與資源、生成式 AI 影片 pipeline 庫。</description>
     <itunes:summary>〔深入探討〕本週複習：AI影像生成。涵蓋 Nano-Banana提示詞庫、生圖工具與資源、生成式 AI 影片 pipeline 庫。</itunes:summary>
