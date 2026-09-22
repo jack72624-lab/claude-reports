@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>傳送會議邀請</title>
+<!--
+  這一頁只做一件事：用「我本人」的身分，把一張會議卡片傳進 LINE 對話。
+
+  這是一個 LIFF app（LINE 的內嵌瀏覽器）。流程：
+    手機 Claude 給的連結  https://liff.line.me/<LIFF_ID>?t=…&s=…&u=…
+      → LINE 開這一頁
+      → liff.init() 跑完，網址參數才會還原（見下面 liff.state 那段註解）
+      → liff.shareTargetPicker() 跳出「要傳給誰」
+      → 對方收到一張 Flex Message 卡片（不是純文字連結）
+
+  跟 card.html 的分工：
+    share.html = 我要「發出去」的時候開的（只有我會開）
+    card.html  = 對方收到卡片、按「加入行事曆」才會開的
+  欄位縮寫兩邊一樣（t/s/e/u/p/o/l/n），改了要兩支一起改。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+  :root{
+    --ink:#16181c; --ink-soft:#6b7280; --line:#e4e6eb;
+    --bg:#f2f3f5; --card:#fff; --accent:#1d5fd0;
+    --line-green:#06c755; --btn-bg:#eceef1; --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#f0f1f3; --ink-soft:#9aa1ab; --line:#31343a;
+      --bg:#131417; --card:#1c1e22; --btn-bg:#2a2d33; --accent:#5b93ef;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Noto Serif TC","Songti TC",serif;
+    line-height:1.7; -webkit-font-smoothing:antialiased;
+    padding:20px 16px calc(24px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:440px; margin:0 auto;}
+  .card{
+    background:var(--card); border-radius:var(--radius); padding:18px 18px 20px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.07);
+  }
+  .eyebrow{font-size:13px; letter-spacing:.08em; color:var(--accent); margin:0 0 4px; font-weight:700;}
+  h1{font-size:21px; font-weight:700; margin:0 0 6px; line-height:1.4; word-break:break-word;}
+  .meta{color:var(--ink-soft); font-size:15px; margin:0;}
+  .btn{
+    display:block; width:100%; text-align:center; margin-top:14px;
+    padding:15px 16px; border-radius:11px; border:0;
+    font-family:inherit; font-size:17px; font-weight:500;
+    text-decoration:none; cursor:pointer;
+    background:var(--line-green); color:#fff;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn.sub{background:var(--btn-bg); color:var(--ink); font-size:15px; padding:12px 16px;}
+  .btn:active{opacity:.75;}
+  .msg{font-size:15px; color:var(--ink-soft); margin:14px 0 0;}
+  .msg.bad{color:#b4541a;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .msg.bad{color:#e0975c;} }
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card" id="app">
+  <p class="eyebrow">會議邀請</p>
+  <p class="meta" id="boot">正在連線 LINE…</p>
+</div></div>
+
+<script>
+const LIFF_ID = '2011700361-ZulqKsCR';
+const CARD_URL = new URL('card.html', location.href).toString();
+const FIELDS = ['t','s','e','u','p','o','l','n'];
+
+// ---- 讀網址參數（跟 card.html 同一套規則）----
+function decodeData(s){
+  const b64 = s.replace(/-/g,'+').replace(/_/g,'/') + '==='.slice((s.length + 3) % 4);
+  const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+function readData(){
+  const q = new URLSearchParams(location.search);
+  const packed = q.get('d');
+  if(packed){ try{ return decodeData(packed); }catch(e){ return null; } }
+  const d = {};
+  for(const k of FIELDS){ const v = (q.get(k)||'').trim(); if(v) d[k] = v; }
+  return d.t ? d : null;
+}
+
+// ---- 時間（跟 card.html 同一套，改了要兩邊一起改）----
+const WEEK = ['日','一','二','三','四','五','六'];
+const two = n => String(n).padStart(2,'0');
+function parseLocal(str){
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(str || '');
+  return m ? new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5]) : null;
+}
+function humanRange(a, b){
+  if(!a) return '';
+  let s = `${a.getFullYear()}/${a.getMonth()+1}/${a.getDate()}（${WEEK[a.getDay()]}）${two(a.getHours())}:${two(a.getMinutes())}`;
+  if(b){
+    const sameDay = a.toDateString() === b.toDateString();
+    s += '–' + (sameDay ? `${two(b.getHours())}:${two(b.getMinutes())}`
+                        : `${b.getMonth()+1}/${b.getDate()} ${two(b.getHours())}:${two(b.getMinutes())}`);
+  }
+  return s;
+}
+
+// 卡片網址：把這次的欄位原樣接回 card.html，給「加入行事曆」那顆按鈕用
+function cardUrlFor(d){
+  const u = new URL(CARD_URL);
+  FIELDS.forEach(k => { if(d[k]) u.searchParams.set(k, d[k]); });
+  return u.toString();
+}
+
+// ---- 組 Flex Message（LINE 對話裡那張卡片）----
+// 限制：按鈕的動作只能是「開網址」(uri)，空字串會讓整則訊息被退回，
+// 所以每個元素都先確認有值才放進去。
+function flexMessage(d, start, end){
+  const rows = [];
+  function row(label, value){
+    if(!value) return;
+    rows.push({
+      type:'box', layout:'baseline', spacing:'sm',
+      contents:[
+        {type:'text', text:label, size:'sm', color:'#9aa1ab', flex:2},
+        {type:'text', text:String(value), size:'sm', color:'#16181c', flex:5, wrap:true}
+      ]
+    });
+  }
+  row('時間', humanRange(start, end));
+  row('地點', d.l || (d.u ? '線上會議' : ''));
+  row('密碼', d.p);
+  row('主辦', d.o);
+
+  const body = [
+    {type:'text', text:'會議邀請', size:'xs', color:'#1d5fd0', weight:'bold'},
+    {type:'text', text:d.t, size:'xl', weight:'bold', wrap:true, margin:'sm'}
+  ];
+  if(d.n) body.push({type:'text', text:d.n, size:'sm', color:'#6b7280', wrap:true, margin:'sm'});
+  if(rows.length){
+    body.push({type:'separator', margin:'lg'});
+    body.push({type:'box', layout:'vertical', spacing:'sm', margin:'lg', contents:rows});
+  }
+
+  const footer = [];
+  if(d.u){
+    footer.push({type:'button', style:'primary', color:'#1d5fd0', height:'sm',
+      action:{type:'uri', label:'前往會議', uri:d.u}});
+  }
+  footer.push({type:'button', style:'secondary', height:'sm',
+    action:{type:'uri', label:'加入行事曆', uri:cardUrlFor(d)}});
+
+  // altText 是電腦版／通知列看到的純文字，上限 400 字，超過整則會被退回
+  const alt = ('【會議邀請】' + d.t + ' ' + humanRange(start, end)).slice(0, 380);
+
+  return {
+    type:'flex', altText:alt,
+    contents:{
+      type:'bubble',
+      body:{type:'box', layout:'vertical', contents:body},
+      footer:{type:'box', layout:'vertical', spacing:'sm', contents:footer}
+    }
+  };
+}
+
+// ---- 畫面 ----
+const app = document.getElementById('app');
+function say(text, bad){
+  const p = document.createElement('p');
+  p.className = 'msg' + (bad ? ' bad' : '');
+  p.textContent = text;
+  app.appendChild(p);
+  return p;
+}
+function button(text, onClick, sub){
+  const b = document.createElement('button');
+  b.className = 'btn' + (sub ? ' sub' : '');
+  b.textContent = text;
+  b.addEventListener('click', onClick);
+  app.appendChild(b);
+  return b;
+}
+
+async function main(){
+  // liff.init() 一定要先跑完再讀網址參數。
+  // 原因：LINE 第一次打開這一頁時，會把我們帶的參數整包塞進一個叫 liff.state 的
+  // 參數裡，要等 init 跑完 SDK 才把網址還原成 ?t=…&s=…。提早讀會讀到空的。
+  try{
+    await liff.init({liffId: LIFF_ID});
+  }catch(e){
+    document.getElementById('boot').textContent = '連不上 LINE：' + (e && e.message ? e.message : e);
+    return;
+  }
+
+  const d = readData();
+  if(!d){
+    document.getElementById('boot').textContent = '這個連結沒有會議資料。';
+    return;
+  }
+
+  // 在外部瀏覽器開的話要先登入；在 LINE 裡開本來就是登入狀態
+  if(!liff.isLoggedIn()){
+    liff.login({redirectUri: location.href});
+    return;
+  }
+
+  const start = parseLocal(d.s);
+  const end = (function(){
+    const e = parseLocal(d.e);
+    if(e) return e;
+    return start ? new Date(start.getTime() + 60*60*1000) : null;  // 沒填結束就當一小時
+  })();
+
+  // 先把要傳的東西顯示出來，免得傳錯場次自己不知道
+  app.innerHTML = '';
+  const eyebrow = document.createElement('p');
+  eyebrow.className = 'eyebrow'; eyebrow.textContent = '要傳出去的會議';
+  app.appendChild(eyebrow);
+  const h = document.createElement('h1'); h.textContent = d.t; app.appendChild(h);
+  const meta = document.createElement('p');
+  meta.className = 'meta'; meta.textContent = humanRange(start, end);
+  app.appendChild(meta);
+
+  if(!liff.isApiAvailable('shareTargetPicker')){
+    say('這個環境不能選聯絡人。請在 LINE App 裡開這個連結。', true);
+    return;
+  }
+
+  const msg = flexMessage(d, start, end);
+
+  async function pick(){
+    try{
+      const res = await liff.shareTargetPicker([msg]);
+      // 舊版 SDK 成功時回 undefined，所以「沒有 res」也算成功
+      if(res === undefined || (res && res.status === 'success')){
+        app.innerHTML = '';
+        app.appendChild(eyebrow); app.appendChild(h);
+        say('已經傳出去了。可以關掉這一頁。');
+        button('再傳給別人', pick, true);
+      }else{
+        say('取消了，沒有傳出去。');
+        button('重新選擇要傳給誰', pick);
+      }
+    }catch(e){
+      say('傳送失敗：' + (e && e.message ? e.message : e), true);
+      button('再試一次', pick);
+    }
+  }
+
+  const go = button('選擇要傳給誰', pick);
+  // 直接幫他按一次，省一步；被擋下來的話上面那顆按鈕還在
+  try{ go.click(); }catch(e){ /* 擋掉就讓他自己按 */ }
+}
+
+main();
+</script>
+</body>
+</html>
