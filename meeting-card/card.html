@@ -232,6 +232,35 @@ function el(tag, attrs, text){
   return n;
 }
 
+// 這張卡片自己的網址，但拿掉 go 參數。
+// 收件人點開的應該是「卡片」，不是又被彈去分享畫面，所以轉傳出去的網址不能帶 go。
+function cleanCardUrl(){
+  const u = new URL(location.href);
+  u.searchParams.delete('go');
+  return u.toString();
+}
+
+// 組出 LINE 的分享網址。
+//
+// 為什麼傳的是「一段文字」而不是 LINE 那種卡片（Flex Message）：Flex Message 要嘛
+// 官方帳號推播（收件人得先加好友），要嘛走 LIFF 的 shareTargetPicker（要先在
+// LINE Developers 後台建一個 LINE Login channel）。兩個都還沒做，所以先把重點
+// 直接寫進訊息本文——對方在對話視窗就看得到時間跟 Meet 連結，不用點進卡片頁。
+//
+// 編碼一定要交給 encodeURIComponent 算，別用手拼：卡片網址裡有 &，
+// 沒編碼的話 LINE 收到的文字會在第一個 & 就被切掉。
+function lineShareHref(d, start, end){
+  const msg = ['【會議邀請】' + (d.t || '會議')];
+  if(start) msg.push(humanRange(start, end));
+  if(d.n) msg.push(d.n);
+  if(d.l) msg.push('地點：' + d.l);
+  if(d.u) msg.push('會議連結：' + d.u);
+  if(d.p) msg.push('密碼：' + d.p);
+  if(d.o) msg.push('主辦：' + d.o);
+  msg.push('', '加入行事曆：' + cleanCardUrl());
+  return 'https://line.me/R/share?text=' + encodeURIComponent(msg.join('\n'));
+}
+
 function render(){
   const app = document.getElementById('app');
   const d = readData();
@@ -245,6 +274,15 @@ function render(){
 
   const start = parseLocal(d.s);
   const end = endOrDefault(start, parseLocal(d.e));
+
+  // ?go=line：一載入就直接跳進 LINE 的「要傳給誰」畫面，省掉「先開卡片再按按鈕」。
+  // 用 replace 不用 href，這樣按上一頁不會又被彈回來。
+  // 手機上 LINE 會接管；電腦上會開網頁版 LINE。
+  if(new URLSearchParams(location.search).get('go') === 'line'){
+    app.appendChild(el('p', {class:'note'}, '正在開啟 LINE…'));
+    location.replace(lineShareHref(d, start, end));
+    return;
+  }
 
   const card = el('div', {class:'card'});
   card.appendChild(el('p', {class:'eyebrow'}, '會議邀請'));
@@ -294,11 +332,8 @@ function render(){
     actions.appendChild(ics);
   }
 
-  // 轉傳到 LINE。編碼交給瀏覽器算（encodeURIComponent），不要用手拼——
-  // 卡片網址裡有 &，沒編碼的話分享文字會在第一個 & 就被切掉。
   actions.appendChild(el('a', {
-    class:'btn share',
-    href:'https://line.me/R/share?text=' + encodeURIComponent((d.t || '會議') + '\n' + location.href),
+    class:'btn share', href: lineShareHref(d, start, end),
     target:'_blank', rel:'noopener'
   }, '轉傳到 LINE'));
 
