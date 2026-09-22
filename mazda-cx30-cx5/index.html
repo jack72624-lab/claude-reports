@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>CX-30 對 CX-5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   設計讀法：跟智能家庭 vG 同一套——白底、一種墨色、灰角標、霧藍當重點色、鼠尾草標「做完的」。
+   一頁只講一件事，左圖右字交替；圖是線圖不是插畫。中文思源宋體，拉丁與數字走系統無襯線；不用斜體、不用 emoji。
+   ───────────────────────────────────────────────────────────── */
+:root{
+  color-scheme:light;
+  --bg:#fff; --ink:#1f1f1f; --ink-2:#55534f; --grey:#8a8a86; --grey-2:#c9c7c2; --line:rgba(31,31,31,.12); --line-2:rgba(31,31,31,.28);
+  --acc:#6e8199; --acc-soft:rgba(110,129,153,.10); --sage:#8a9e8c; --warm:#a39b90; --paper:#f4f3f1; --red:#c8402c;
+  --font:-apple-system,"Noto Serif TC","Songti TC",serif;
+  --latin:-apple-system,"Helvetica Neue","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --gutter:clamp(20px,4vw,72px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto;scroll-snap-type:y mandatory}   /* 上下滑＝換頁 */
+html.smooth{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{margin:0;font-weight:500;line-height:1.2}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+strong,b{font-weight:600}
+.latin{font-family:var(--latin)}
+.caps{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+::selection{background:var(--acc);color:#fff}
+
+/* ── 頂列 nav ── */
+.top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;align-items:center;gap:18px;padding:12px var(--gutter);
+  background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .brand{font-family:var(--latin);font-size:12px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.top nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.top nav::-webkit-scrollbar{display:none}
+.top nav a{display:inline-flex;align-items:center;font-size:13px;color:var(--ink-2);padding:6px 10px;white-space:nowrap;border-bottom:1px solid transparent;transition:color .25s,border-color .25s}
+.top nav a em{font-style:normal;font-family:var(--latin);font-size:11px;letter-spacing:.1em;margin-right:6px;color:var(--grey)}
+.top nav a.on{color:var(--ink);border-color:var(--acc)}
+@media (max-width:720px){.top nav{gap:6px}.top nav a{padding:8px 5px}.top nav a span{display:none}.top nav a em{margin:0;font-size:12px}.top{padding:10px 16px}.top .brand{font-size:11px}}
+
+/* ── 四角固定索引 ── */
+.corner{position:fixed;z-index:20;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);pointer-events:none;opacity:0;transition:opacity .4s}
+body.inslide .corner{opacity:1}
+body.inslide .corner.fade{opacity:0;transition-duration:.15s}
+.c-tl{left:var(--gutter);top:58px}.c-tr{right:var(--gutter);top:58px}
+.c-bl{left:var(--gutter);bottom:18px}.c-br{right:var(--gutter);bottom:18px}
+@media (max-width:720px){.c-bl,.c-br{display:none}}
+
+/* ── 幻燈：每頁剛好一屏、整頁吸附；頁內階段用點的 ── */
+.slide{position:relative;scroll-snap-align:start;height:100dvh}
+.stage{position:sticky;top:0;height:100dvh;display:grid;grid-template-columns:7fr 5fr;gap:clamp(20px,4vw,64px);align-items:center;
+  padding:80px var(--gutter) 48px;overflow:hidden auto}
+.slide.flip .stage{grid-template-columns:5fr 7fr}
+.slide.flip .vis{order:2}.slide.flip .txt{order:1}
+.vis{position:relative;height:100%;max-height:calc(100dvh - 128px);display:grid;place-items:center;min-width:0}
+.vis svg.dg{width:100%;height:100%;max-height:78dvh;overflow:visible}
+.txt{min-width:0;max-width:34em}
+.txt .tag{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:14px}
+.txt h2{font-size:clamp(26px,3.1vw,40px);font-weight:500;letter-spacing:-.005em;margin-bottom:18px}
+.txt p.lead{font-size:17px;line-height:1.8;color:var(--ink-2);margin-bottom:20px}
+.txt p.note{font-size:14px;line-height:1.75;color:var(--ink-2);margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.txt p.note b{color:var(--ink)}
+/* 階段清單：● 霧藍＝現在這一項、小 ● 鼠尾草＝做完的 */
+.marks{position:relative;list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+.marks .pt{position:absolute;left:0;top:0;width:8px;height:8px;border-radius:50%;background:var(--acc);transition:transform .5s var(--ease);pointer-events:none}
+.marks li{position:relative;padding:3px 0 3px 22px;font-size:15px;color:var(--grey);transition:color .35s;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){.marks li:not(.cur):hover{color:var(--ink-2)}}
+.marks li:focus-visible{outline:1px solid var(--acc);outline-offset:2px;border-radius:2px}
+.marks li::before{content:"";position:absolute;left:0;top:calc(.62em + 3px);width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:0;transform:scale(.4);transition:opacity .35s,transform .35s var(--ease),background .35s}
+.marks li.cur{color:var(--ink)}
+.marks li.cur::before{opacity:0}   /* 現在這項的點由 .pt 滑過來，不各自冒出 */
+.marks li.done{color:var(--ink-2)}
+.marks li.done::before{opacity:1;transform:scale(.7);background:var(--sage)}
+.steps{display:grid;min-height:6.5em}
+.step{grid-area:1/1;opacity:0;transform:translateY(8px);transition:opacity .45s,transform .45s var(--ease);font-size:16px;line-height:1.8;pointer-events:none}
+.step.cur{opacity:1;transform:none;pointer-events:auto}
+.step b{font-weight:600}
+.step .k{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.rise{--u:clamp(0,calc((var(--p,0) - var(--t,0)) * 4),1);opacity:var(--u);transform:translateY(calc((1 - var(--u)) * 20px))}
+.kp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.kp li{position:relative;padding-left:26px;font-size:16px;line-height:1.7}
+.kp li::before{content:"";position:absolute;left:0;top:.7em;width:14px;height:1px;background:var(--acc)}
+.kp li b{display:block;font-weight:600}
+
+/* ── 圖解 SVG 通用 ── */
+.dg{font-family:var(--font);font-size:12px}
+.dg text{fill:var(--ink);stroke:none}
+.dg text.lb{font-size:12.5px}
+.dg text.sub{font-size:11px;fill:var(--ink-2)}
+.dg text.tiny{font-size:10px;fill:var(--ink-2)}
+.dg text.cap{font-family:var(--latin);font-size:10px;letter-spacing:.14em;fill:var(--grey)}
+.dg text.num{font-family:var(--latin);font-size:10px;font-weight:600;fill:var(--grey)}
+.dg text.big{font-family:var(--latin);font-size:34px;font-weight:300;letter-spacing:-.02em}
+.dg text.ans{font-size:11.5px;fill:var(--ink-2)}
+.dg .ln{stroke:var(--ink);stroke-width:1.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .thin{stroke:var(--line-2);stroke-width:1;fill:none}
+.dg .box{fill:#fff;stroke:var(--ink);stroke-width:1.2}
+.dg .soft{fill:var(--paper);stroke:none}
+.dg .dash{stroke-dasharray:4 4}
+.dg .dot{fill:var(--acc);stroke:none}
+/* 2026-09-20 下午：方框卡片全部改成「編號＋細線」的列（Jack 不要方格）。編號淡灰、輪到它時跟標題一起變霧藍；每列底線用 .draw 逐階段描出來 */
+.dg text.no{font-family:var(--latin);font-size:28px;font-weight:300;fill:var(--grey-2);letter-spacing:-.02em;transition:fill .35s}
+.dg .hi text.no{fill:var(--acc)}
+.dg .hi text.cap{fill:var(--acc)}
+/* 階段顯示：data-s＝從第幾階段起出現、data-until＝到第幾階段消失；data-hi＝哪幾個階段強調 */
+.dg [data-s]{opacity:0;transition:opacity .5s,transform .6s var(--ease)}
+.dg [data-s].on{opacity:1}
+.dg .hi .ln{stroke:var(--acc)}
+.dg .hi text.lb{fill:var(--acc)}
+.dg .hi text.big{fill:var(--acc)}
+.dg .hi text.ans{fill:var(--acc)}
+.dg .hi rect.box{stroke:var(--acc);stroke-width:1.6}
+.dg .hi circle.box{stroke:var(--acc);stroke-width:1.6}
+/* 描邊：JS 量長度填 --len */
+.dg .draw{stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);transition:stroke-dashoffset .9s var(--ease) .15s,opacity .4s}
+.dg .on .draw,.dg .draw.on{stroke-dashoffset:0}
+.dg .acc{stroke:var(--acc)}
+.dg text.acc{fill:var(--acc);stroke:none}
+.dg .bad{stroke:var(--red)}
+.dg text.bad{fill:var(--red)}
+/* 照片不做進場動畫（2026-09-22 Jack 定）：版型原本的圓形揭開拿掉，圖一進頁就完整顯示 */
+.dg image{clip-path:none;transform:none}
+
+/* ── 章首 ── */
+.opener .txt h2{font-size:clamp(34px,4.4vw,58px);margin-bottom:16px}
+.opener .txt .chno{font-family:var(--latin);font-size:clamp(60px,8vw,96px);font-weight:200;line-height:1;letter-spacing:-.03em;color:var(--ink);display:block;margin-bottom:4px}  /* 2026-09-20：120px 時 900 高的畫面塞不下第一章章首，stage 會多出 21px 可捲、滾輪先吃掉那段才翻頁 */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:18px clamp(16px,3vw,44px);width:100%;max-width:520px}
+.stats div{border-top:1px solid var(--ink);padding-top:12px}
+.stats b{display:block;font-family:var(--latin);font-weight:300;font-size:clamp(40px,5.2vw,72px);line-height:1;letter-spacing:-.02em}
+.stats span{display:block;font-size:13.5px;color:var(--ink-2);margin-top:8px}
+
+/* ── Hero ── */
+.hero .typed{font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.3;min-height:2.6em;display:flex;align-items:center;flex-wrap:wrap;gap:.2em}
+.hero .typed .dot{width:.5em;height:.5em;border-radius:50%;background:var(--ink);flex:none;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero h1{font-size:clamp(30px,4vw,54px);font-weight:500;line-height:1.15;margin:0 0 18px}
+.hero .sub{color:var(--ink-2);font-size:17px;line-height:1.8;max-width:30em}
+.hero .hint{position:absolute;left:var(--gutter);bottom:18px;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.hero .hint::after{content:"";display:inline-block;width:1px;height:26px;background:var(--grey);margin-left:12px;vertical-align:middle;animation:nudge 1.6s var(--ease) infinite}
+@keyframes nudge{50%{transform:translateY(6px)}}
+/* hero 核章：字打完（--p ≥ .6）章才淡入 */
+.herob{--u:clamp(0,calc((var(--p,0) - .6) * 4),1)}
+.herob .lit{opacity:var(--u)}
+
+/* ── 內文區（表格、清單、術語） ── */
+/* 2026-09-20 下午：每段至少一屏（短的置中、長的照常往下捲），同一章的表格與本章重點合成一段，捲一下就是整屏換頁 */
+.flow{scroll-snap-align:start;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:clamp(40px,7vh,72px);padding:clamp(72px,10vh,120px) var(--gutter);max-width:1180px;margin:0 auto}
+.flow .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:24px clamp(24px,5vw,80px)}
+.flow .grid>div{min-width:0}
+.flow .lbl{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding-top:6px}
+.flow h3{font-size:clamp(20px,2.2vw,26px);font-weight:500;margin-bottom:16px}
+.flow p{color:var(--ink-2);line-height:1.8;max-width:60ch}
+.flow p+p{margin-top:10px}
+.flow p b{color:var(--ink)}
+.flow .band{border-left:2px solid var(--acc);padding:4px 0 4px 18px;margin-top:20px;max-width:60ch}
+.flow .band .k{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.flow .band.warn{border-color:var(--red)}.flow .band.warn .k{color:var(--red)}
+.flow .band p{color:var(--ink)}
+.rule{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.rule li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1.6fr);gap:10px 24px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.65}
+.rule.c2 li{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+.rule li .h{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink)}
+.rule li span{color:var(--ink-2)}
+.rule li .h img.lg{height:24px;width:auto;max-width:110px;flex:none}
+.port{float:right;width:clamp(96px,13vw,150px);margin:0 0 10px 20px}.port img{width:100%;display:block;border-radius:8px}.port figcaption{font-size:11px;color:var(--grey);margin-top:6px;line-height:1.4}
+.rule li span.then::before{content:"→ ";color:var(--acc)}
+.rule li span.no::before{content:"×  ";color:var(--red);font-family:var(--latin)}
+@media (max-width:720px){.rule li,.rule.c2 li{grid-template-columns:1fr;gap:4px}}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.55;border-top:1px solid var(--ink)}
+.tbl th{text-align:left;font-weight:500;font-family:var(--latin);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding:10px 12px 10px 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+.tbl td.on{color:var(--ink)}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl-wrap .tbl{min-width:640px}
+.recap{border-top:1px solid var(--ink);padding-top:18px;margin-top:8px}
+.recap ol{margin:0;padding:0 0 0 1.4em;display:flex;flex-direction:column;gap:8px;font-size:15.5px;line-height:1.7}
+.recap ol li::marker{font-family:var(--latin);color:var(--grey)}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 clamp(24px,4vw,56px);margin:0}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--line)}
+.gloss dt{font-weight:600;font-size:15px}
+.gloss dd{margin:2px 0 0;font-size:14px;line-height:1.7;color:var(--ink-2)}
+.gloss .gh{grid-column:1/-1;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding:28px 0 8px;border:0}
+.gloss .gh:first-child{padding-top:0}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.cards3 div{border-top:1px solid var(--ink);padding-top:14px}
+.cards3 .h{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:6px}
+.cards3 p{font-size:14.5px}
+@media (max-width:720px){.cards3{grid-template-columns:1fr}}
+/* 12 類疾病：一列一個 details，點開看是什麼病＋啟動條件＋來源 */
+.dz{border-top:1px solid var(--ink)}
+.dz-head,.dz summary{display:grid;grid-template-columns:2.6em minmax(0,1.3fr) minmax(0,1.4fr) 5em;gap:0 14px;align-items:baseline}
+.dz-head{font-family:var(--latin);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding:10px 0;border-bottom:1px solid var(--line)}
+.dz details{border-bottom:1px solid var(--line)}
+.dz summary{cursor:pointer;list-style:none;padding:11px 0;font-size:14px;line-height:1.55;color:var(--ink-2)}
+.dz summary::-webkit-details-marker{display:none}
+.dz summary:hover .zh{color:var(--acc)}
+.dz summary .n{color:var(--ink);font-weight:600;font-family:var(--latin)}
+.dz summary .zh{color:var(--ink)}
+.dz summary .tg{font-size:12px;letter-spacing:.1em;color:var(--acc);text-align:right;white-space:nowrap}
+.dz summary .tg::before{content:"看是什麼"}
+.dz details[open] summary .tg::before{content:"收起"}
+.dz details[open] summary .zh{color:var(--acc)}
+.dz-body{padding:2px 0 18px calc(2.6em + 14px);font-size:14.5px;line-height:1.75;color:var(--ink-2);max-width:68ch}
+.dz-body p{margin:0 0 8px}
+.dz-body b{color:var(--ink)}
+.dz-body ol{margin:0 0 10px;padding-left:1.4em;display:flex;flex-direction:column;gap:4px}
+.dz-body ol li::marker{font-family:var(--latin);color:var(--grey)}
+.dz-body .src{font-size:12.5px;color:var(--grey)}
+.dz-body .src a{color:var(--acc);text-decoration:none;border-bottom:1px solid var(--acc)}
+@media (max-width:720px){
+  .dz-head{display:none}
+  .dz summary{grid-template-columns:2.2em minmax(0,1fr) auto;gap:0 10px}
+  .dz summary .en{grid-column:2;grid-row:2;font-size:12.5px;color:var(--grey)}
+  .dz summary .tg{grid-column:3;grid-row:1}
+  .dz-body{padding-left:0}
+}
+/* 逐條與全文：一條一個 details，點開看原文（灰底、逐字）、白話、細則對應、一句重點 */
+.art{border-top:1px solid var(--ink)}
+.art details{border-bottom:1px solid var(--line)}
+.art summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:5.2em minmax(0,1fr) 4em;gap:0 14px;align-items:baseline;padding:12px 0;font-size:15px;line-height:1.6}
+.art summary::-webkit-details-marker{display:none}
+.art summary .no{font-family:var(--latin);font-weight:600;color:var(--ink);white-space:nowrap}
+.art summary .ti{color:var(--ink)}
+.art summary .ti small{display:block;font-size:13px;color:var(--ink-2);font-weight:400;line-height:1.5}
+.art summary .tg{font-size:12px;letter-spacing:.1em;color:var(--acc);text-align:right;white-space:nowrap}
+.art summary .tg::before{content:"看原文"}
+.art details[open] summary .tg::before{content:"收起"}
+.art details[open] summary .ti{color:var(--acc)}
+.art summary:hover .ti{color:var(--acc)}
+.art-body{padding:0 0 20px calc(5.2em + 14px);max-width:72ch}
+.law{margin:0 0 14px;padding:14px 18px;background:var(--paper);font-size:14.5px;line-height:1.85;color:var(--ink)}
+.law .k{display:block;font-family:var(--latin);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+.law p{margin:0}
+.law p+p{margin-top:4px}
+.law p.i{padding-left:1.6em}
+.art-body h4{font-size:11px;font-family:var(--latin);letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:500;margin:14px 0 6px}
+.art-body p.x{font-size:15px;line-height:1.8;color:var(--ink-2)}
+.art-body p.x b{color:var(--ink)}
+.art-body ul.rel{margin:0;padding-left:1.2em;font-size:14px;line-height:1.75;color:var(--ink-2);display:flex;flex-direction:column;gap:4px}
+.art-body ul.rel li::marker{color:var(--grey)}
+.art-body p.pt{margin-top:12px;padding:8px 14px;border-left:2px solid var(--acc);font-size:14.5px;line-height:1.7;color:var(--ink)}
+.art-body .src{margin-top:12px;font-size:12.5px;color:var(--grey)}
+.art-body .src a{color:var(--acc);border-bottom:1px solid var(--acc)}
+@media (max-width:720px){.art summary{grid-template-columns:4em minmax(0,1fr) auto;gap:0 10px}.art-body{padding-left:0}}
+/* 點開補充：原生 details，塞在段落裡的小補充（本章重點第二章用） */
+.more{margin-top:8px}
+.more summary{cursor:pointer;list-style:none;display:inline-block;font-size:13.5px;letter-spacing:.06em;color:var(--acc);border-bottom:1px solid var(--acc);padding-bottom:1px}
+.more summary::-webkit-details-marker{display:none}
+.more summary::after{content:"　＋"}
+.more[open] summary::after{content:"　－"}
+.more .box{margin-top:12px;padding:14px 18px;background:var(--paper);font-size:14.5px;line-height:1.75;color:var(--ink-2)}
+.more .box b{color:var(--ink)}
+.more .box ul{margin:8px 0 10px;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.more .box ul li::marker{color:var(--grey)}
+/* 自測：原生 details，點題目翻答案 */
+.quiz{margin:0;padding:0;border-top:1px solid var(--ink)}
+.quiz details{border-bottom:1px solid var(--line)}
+.quiz summary{cursor:pointer;padding:14px 0;font-size:15.5px;line-height:1.6;list-style:none;display:flex;gap:14px;align-items:baseline;color:var(--ink)}
+.quiz summary::-webkit-details-marker{display:none}
+.quiz summary .n{font-family:var(--latin);font-size:11px;letter-spacing:.14em;color:var(--grey);flex:none;width:2.4em}
+.quiz summary::after{content:"看答案";margin-left:auto;font-size:12px;letter-spacing:.1em;color:var(--acc);flex:none}
+.quiz details[open] summary::after{content:"收起"}
+.quiz .a{padding:0 0 16px 3.3em;font-size:15px;line-height:1.75;color:var(--ink-2)}
+.quiz .a b{color:var(--ink)}
+
+/* ── 結尾 ── */
+.end .stage{grid-template-columns:1fr;place-items:center;text-align:center}
+.end h2{font-size:clamp(30px,5vw,64px);font-weight:500;letter-spacing:-.01em}
+.end .credit{margin-top:26px;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);line-height:2}
+footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);font-family:var(--latin)}
+
+/* ── 手機：上圖下字 ── */
+@media (max-width:860px){
+  .stage,.slide.flip .stage{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);gap:10px;padding:60px 18px 18px;align-items:start}  /* 2026-09-20：上排原本固定 34dvh，圖比較矮時白白佔位、文字欄塞不下就變成可捲，滾輪先滾那幾十 px 才翻頁。改 auto，.vis 仍有 max-height 34dvh 上限 */
+  .slide.flip .vis{order:1}.slide.flip .txt{order:2}
+  .vis{max-height:34dvh;align-self:stretch}
+  .vis svg.dg{max-height:33dvh}
+  .txt{max-width:none}
+  .txt .tag{margin-bottom:8px}
+  .txt h2{font-size:22px;margin-bottom:8px}
+  .txt p.lead{font-size:14px;line-height:1.6;margin-bottom:8px}
+  .txt p.note{font-size:13.5px;line-height:1.55;margin-top:6px;padding-top:8px}
+  .opener .txt h2{font-size:28px;margin-bottom:12px}
+  .opener .txt .chno{font-size:48px;margin-bottom:4px}
+  .kp{gap:8px}.kp li{font-size:14px;line-height:1.55;padding-left:20px}
+  .step{font-size:14.5px;line-height:1.6}  /* 2026-09-20：390×844 時 s1-why 差 5px 塞不下，這幾行一起收 */
+  .step .k{margin-bottom:3px}
+  .steps{min-height:4.5em}
+  .marks{flex-direction:row;flex-wrap:wrap;gap:0 14px;margin-bottom:6px}
+  .marks li{font-size:14px;padding:6px 0 6px 14px}
+  .marks li::before{width:6px;height:6px;top:calc(.55em + 6px)}
+  .marks .pt{width:6px;height:6px}
+  .hero .typed{font-size:24px}
+  .stats b{font-size:32px}
+  .stats{gap:8px 12px}.stats div{padding-top:8px}.stats span{font-size:12px;margin-top:4px}  /* 2026-09-20：34dvh 塞不下四格 40px 數字，會從上方溢出蓋到章名 */
+  .flow .grid{grid-template-columns:minmax(0,1fr);gap:10px}
+}
+/* 列印：舞台退回文件流，所有階段與說明攤開 */
+@media print{
+  .top,.corner,.hero .hint{display:none}
+  .slide{height:auto!important}
+  .stage{position:static!important;height:auto!important;overflow:visible!important;padding:24px 0;break-inside:avoid}
+  .vis{max-height:none;height:auto}
+  .vis svg.dg{max-height:55vh}
+  .step{position:static;opacity:1!important;transform:none!important;margin-bottom:8px}
+  .steps{display:block}
+  .rise,.dg [data-s]{opacity:1!important;transform:none!important}
+  .dg .draw{stroke-dashoffset:0!important}
+  .marks li{color:var(--ink)}
+  .marks .pt{display:none}
+  .dg image{clip-path:none!important;transform:none!important}
+  .flow{min-height:0;display:block}
+  .quiz details{display:block}
+  .quiz .a{display:block}
+}
+@media (prefers-reduced-motion:reduce){
+  html.smooth{scroll-behavior:auto}
+  .rise,.step,.marks li,.marks .pt,.corner,.dg [data-s],.dg .draw{transition:none}
+  .dg .draw{stroke-dashoffset:0}
+  .hero .typed .dot,.hero .hint::after{animation:none}
+}
+@media (max-width:860px){.slide.photo .vis{margin-top:16px}
+  .dg text.lb{font-size:16px}.dg text.cap{font-size:13px}.dg text.sub{font-size:14px}.dg text.no{font-size:34px}}
+</style>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="#top">CX-30 對 CX-5</a>
+<nav id="nav" aria-label="章節">
+<a href="#s1"><em>01</em><span>兩台車</span></a>
+<a href="#s2"><em>02</em><span>價格與年費</span></a>
+<a href="#s3"><em>03</em><span>一樣的</span></a>
+<a href="#s4"><em>04</em><span>不一樣的</span></a>
+<a href="#s5"><em>05</em><span>怎麼選</span></a>
+<a href="#appendix"><em>附</em><span>名詞與來源</span></a>
+</nav>
+</header>
+<div class="corner c-tl" id="c-tl"></div>
+<div class="corner c-tr" id="c-tr"></div>
+<div class="corner c-bl" id="c-bl"></div>
+<div class="corner c-br">CX-30 對 CX-5 · 2026-09-22</div>
+
+<!-- ═══ 封面 ═══ -->
+<section class="slide hero photo" id="top" data-ch="CX-30 對 CX-5" data-sub="">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 300" aria-hidden="true">
+<image href="cx30-vs-cx5-img/cx5-ext-rear-bonus.jpg" x="0" y="0" width="600" height="300" preserveAspectRatio="xMidYMid slice"/>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Mazda 台灣 · 2027 年式 · 2026-09-22 查證</span>
+<h1>CX-30 Premium 對 CX-5 Elite、Exclusive</h1>
+<div class="typed"><span id="typed" data-text="三台逐項對完，選哪台。"></span><span class="dot" id="tdot"></span></div>
+<p class="sub rise" style="--t:.66">先看錢，再看一樣的和不一樣的，最後一頁是我的選擇。配備名詞看不懂，翻到最後的附錄。</p>
+</div>
+<div class="hint">Scroll</div>
+</div>
+</section>
+
+<!-- ═══ 01 兩台車 ═══ -->
+<section class="slide opener flip" id="s1" data-ch="01 兩台車" data-sub="章首">
+<div class="stage">
+<div class="vis">
+<div class="stats">
+<div class="rise" style="--t:.05"><b>3</b><span>台候選：CX-30 Premium、CX-5 Elite、CX-5 Exclusive，都是 2027 年式</span></div>
+<div class="rise" style="--t:.15"><b>4<small style="font-size:.4em">萬</small></b><span>CX-5 Elite 比 CX-30 Premium 便宜的金額</span></div>
+<div class="rise" style="--t:.25"><b>295<small style="font-size:.4em">mm</small></b><span>CX-5 比 CX-30 長的距離，約一個半手掌</span></div>
+<div class="rise" style="--t:.35"><b>25</b><span>項配備不一樣，其餘全部相同</span></div>
+</div>
+</div>
+<div class="txt">
+<span class="chno">01</span>
+<span class="tag">Chapter 01</span>
+<h2>先認識這兩台</h2>
+<p class="lead">同一家、同一種引擎設計、同一套安全配備。差在大小、動力、和椅子舒不舒服。</p>
+<ul class="kp">
+<li class="rise" style="--t:.06"><b>CX-30</b>小一號的跨界休旅，2.0L 前輪驅動。Premium 是中高階，配備幾乎給滿。</li>
+<li class="rise" style="--t:.18"><b>CX-5</b>中型休旅，第三代 2026 年 8 月剛上市。2.5L、全車系四輪驅動。</li>
+<li class="rise" style="--t:.30"><b>Elite 與 Exclusive</b>同一台 CX-5 的最低階和第二階，差 14 萬，差在椅子和音響。</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section class="slide photo" id="s1-cx30" data-ch="01 兩台車" data-sub="CX-30 外觀">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 300" aria-hidden="true">
+<image href="cx30-vs-cx5-img/cx30-ext.jpg" x="0" y="0" width="600" height="300" preserveAspectRatio="xMidYMid slice"/>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Mazda CX-30 · Premium</span>
+<h2>98.8 萬，小一號、配備給滿</h2>
+<p class="lead">車長 4.4 公尺、2.0L 165 匹、前輪驅動。九月中改 2027 年式，Premium 降了 1 萬。</p>
+<ul class="kp">
+<li><b>開起來有感</b>車輕 1,408 公斤，車主評價「內裝質感、隔音、配備齊全」。</li>
+<li><b>該有的都有</b>真皮電動椅、加熱通風、抬頭顯示、360 環景、電動尾門、換檔撥片。</li>
+<li><b>要注意</b>後座椅背很直、長途不舒服。後廂 430 公升、後座 6/4 分割。</li>
+</ul>
+<p class="note">圖：Mazda 台灣官網。</p>
+</div>
+</div>
+</section>
+
+<section class="slide flip photo" id="s1-cx30-int" data-ch="01 兩台車" data-sub="CX-30 內裝">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 300" aria-hidden="true">
+<image href="cx30-vs-cx5-img/cx30-int.jpg" x="0" y="0" width="600" height="300" preserveAspectRatio="xMidYMid slice"/>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Mazda CX-30 · 內裝</span>
+<h2>10.25 吋螢幕、7 吋儀表，坐進去像高一級的車</h2>
+<p class="lead">中控用旋鈕操作、不是觸控。真皮、十向電動椅附記憶。8 支喇叭。</p>
+<ul class="kp">
+<li><b>有</b>抬頭顯示、前座加熱＋通風、無線 CarPlay、電動收摺後視鏡。</li>
+<li><b>沒有</b>手機無線充電（要 Signature 才有）、天窗（全車系無）。</li>
+</ul>
+<p class="note">圖：Mazda 台灣官網。</p>
+</div>
+</div>
+</section>
+
+<section class="slide photo" id="s1-cx5" data-ch="01 兩台車" data-sub="CX-5 外觀">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 300" aria-hidden="true">
+<image href="cx30-vs-cx5-img/cx5-ext.jpg" x="0" y="0" width="600" height="300" preserveAspectRatio="xMidYMid slice"/>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Mazda CX-5 · Elite 94.9 · Exclusive 108.9</span>
+<h2>大一號、四輪驅動、2.5L 188 匹</h2>
+<p class="lead">車長 4.69 公尺、軸距 2,815。第三代 2026 年 8 月 18 日上市，全車系四驅、無渦輪。</p>
+<ul class="kp">
+<li><b>空間是它的理由</b>後座 4/2/4 分割，中間放倒可以穿長物、兩邊還能坐人。原廠型錄寫放得下公路車。</li>
+<li><b>Elite 與 Exclusive 外觀差</b>17 吋鎢灰輪圈對 19 吋鈦黑輪圈；Exclusive 多車頂架和前後 LED 光條。</li>
+<li><b>要注意</b>剛換代，沒有任何車主開過一年。油耗還在能源局認證中。</li>
+</ul>
+<p class="note">圖：Mazda 台灣官網。</p>
+</div>
+</div>
+</section>
+
+<section class="slide flip photo" id="s1-cx5-int" data-ch="01 兩台車" data-sub="CX-5 內裝">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 300" aria-hidden="true">
+<image href="cx30-vs-cx5-img/cx5-int.jpg" x="0" y="0" width="600" height="300" preserveAspectRatio="xMidYMid slice"/>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Mazda CX-5 · 內裝</span>
+<h2>12.9 吋大螢幕、10.25 吋儀表，椅子看等級</h2>
+<p class="lead">新內裝兩款都一樣：大螢幕、數位儀表、手機無線充電、9 顆氣囊。差在椅子和音響。</p>
+<ul class="kp">
+<li><b>Elite</b>織布椅、手動調整、沒有抬頭顯示、沒有電動尾門、8 支喇叭。</li>
+<li><b>Exclusive</b>透氣真皮、十向電動附記憶、前座通風、抬頭顯示、電動尾門、12 支 BOSE。</li>
+<li><b>兩款都沒有</b>360 環景、換檔撥片、前座加熱、方向盤加熱。要再上一階 114.9 萬才有。</li>
+</ul>
+<p class="note">圖：Mazda 台灣官網。</p>
+</div>
+</div>
+</section>
+
+<section class="slide photo" id="s1-cx5-space" data-ch="01 兩台車" data-sub="CX-5 空間">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 300" aria-hidden="true">
+<image href="cx30-vs-cx5-img/cx5-cargo.jpg" x="0" y="0" width="600" height="300" preserveAspectRatio="xMidYMid slice"/>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Mazda CX-5 · 空間</span>
+<h2>買 CX-5 的理由只有一個：放得下</h2>
+<p class="lead">車長多 30 公分、軸距多 16 公分，全部給後座和後廂。</p>
+<ul class="kp">
+<li><b>後座 4/2/4</b>中間單獨放倒可以穿長物，兩邊還坐得了人。CX-30 是 6/4，只能兩段。</li>
+<li><b>後廂容積</b>台灣規配表沒列。歐規 583 公升，CX-30 是 430 公升。原廠型錄寫放得下公路車。</li>
+<li><b>要自己驗</b>去展間把單車搬進去一次，比任何數字準。</li>
+</ul>
+<p class="note">圖：Mazda 台灣官網。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══ 02 價格與年費 ═══ -->
+<section class="slide flip" id="s2" data-ch="02 價格與年費" data-sub="四筆錢" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<text x="280" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
+<text x="405" y="44" text-anchor="middle" class="cap">CX-5 Elite</text>
+<text x="530" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
+<g data-s="0" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="80" y="74" class="cap">車價</text>
+<text x="80" y="96" class="lb">牌價・萬</text>
+<text x="280" y="96" text-anchor="middle" class="lb">98.8</text>
+<text x="405" y="96" text-anchor="middle" class="lb">94.9</text>
+<text x="530" y="96" text-anchor="middle" class="lb">108.9</text>
+<line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
+</g>
+<g data-s="1" data-hi="1">
+<text x="42" y="166" class="no">2</text>
+<text x="80" y="144" class="cap">每年稅金</text>
+<text x="80" y="166" class="lb">牌照稅＋燃料費</text>
+<text x="280" y="166" text-anchor="middle" class="lb">17,410</text>
+<text x="405" y="166" text-anchor="middle" class="lb">22,410</text>
+<text x="530" y="166" text-anchor="middle" class="lb">22,410</text>
+<line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
+</g>
+<g data-s="2" data-hi="2">
+<text x="42" y="236" class="no">3</text>
+<text x="80" y="214" class="cap">每年保險</text>
+<text x="80" y="236" class="lb">三險合計（估）</text>
+<text x="280" y="236" text-anchor="middle" class="lb">約 3.0 萬</text>
+<text x="405" y="236" text-anchor="middle" class="lb">約 2.9 萬</text>
+<text x="530" y="236" text-anchor="middle" class="lb">約 3.2 萬</text>
+<line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
+</g>
+<g data-s="3" data-hi="3">
+<text x="42" y="306" class="no">4</text>
+<text x="80" y="284" class="cap">保養</text>
+<text x="80" y="306" class="lb">6 萬公里累計</text>
+<text x="280" y="306" text-anchor="middle" class="lb">21,454</text>
+<text x="405" y="306" text-anchor="middle" class="lb">舊款 26,228</text>
+<text x="530" y="306" text-anchor="middle" class="lb">同 Elite</text>
+<line x1="40" y1="320" x2="560" y2="320" class="thin draw"/>
+</g>
+<text x="300" y="380" text-anchor="middle" class="cap" data-s="3">五年稅金＋強制＋第三人：CX-30 約 13 萬 · CX-5 約 15.5 萬</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Chapter 02 · 四筆錢</span>
+<h2>買了之後，每年要付什麼</h2>
+<p class="lead">車價只是第一筆。後面三筆每年都來，其中稅金跟排氣量綁死、跟你開多少無關。</p>
+<ol class="marks"><li>車價</li><li>稅金</li><li>保險</li><li>保養</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 車價</span>Elite 最便宜，比 CX-30 Premium 少 4 萬。Exclusive 超過 100 萬預算 8.9 萬。CX-30 九月中改年式降了 1 萬。</div>
+<div class="step" data-k="1"><span class="k">2 · 稅金</span><b>牌照稅</b>和<b>燃料費</b>都看排氣量級距。2.0L 一年 17,410，2.5L 一年 22,410，差 5,000，五年差 2.5 萬。</div>
+<div class="step" data-k="2"><span class="k">3 · 保險</span><b>強制險</b> 1,398 三台一樣；<b>第三人責任險</b> 6,400–7,400 跟車無關；<b>乙式車體險</b>跟車價走，估 2.1–2.4 萬，要真報價。</div>
+<div class="step" data-k="3"><span class="k">4 · 保養</span>每 1 萬公里或半年回廠。CX-30 六萬公里累計 21,454；CX-5 新款沒數據，舊款 2.5L 是 26,228。油耗 CX-30 15.0 km/L，CX-5 還在認證。</div>
+</div>
+<p class="note"><b>一句話：</b>CX-5 每年多付約 5,000 稅金，油也多一點。買 Elite 省下的 4 萬夠付八年的稅差。</p>
+</div>
+</div>
+</section>
+
+<section class="flow" id="s2-table">
+<div class="grid">
+<div class="lbl">每年費用明細</div>
+<div>
+<h3>三台的持有成本</h3>
+<p>稅金是台北市稅捐處公告；保險是 30–60 歲男性、無肇事紀錄的費率；乙式車體險是拿 Altis 的線上投保例子按車價比例估的，不是報價。</p>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th>項目</th><th>CX-30 Premium</th><th>CX-5 Elite</th><th>CX-5 Exclusive</th></tr></thead>
+<tbody>
+<tr><td>牌價</td><td>98.8 萬（2027 年式）</td><td class="on">94.9 萬</td><td>108.9 萬</td></tr>
+<tr><td>排氣量</td><td>1,998 cc</td><td>2,488 cc</td><td>2,488 cc</td></tr>
+<tr><td>牌照稅／年</td><td>11,230</td><td>15,210</td><td>15,210</td></tr>
+<tr><td>燃料費／年</td><td>6,180</td><td>7,200</td><td>7,200</td></tr>
+<tr><td>強制險／年</td><td>1,398</td><td>1,398</td><td>1,398</td></tr>
+<tr><td>第三人責任險／年</td><td>6,400–7,400</td><td>6,400–7,400</td><td>6,400–7,400</td></tr>
+<tr><td>固定合計／年</td><td class="on">約 2.6 萬</td><td>約 3.1 萬</td><td>約 3.1 萬</td></tr>
+<tr><td>乙式車體險（估）</td><td>約 2.2 萬</td><td>約 2.1 萬</td><td>約 2.4 萬</td></tr>
+<tr><td>保養 6 萬 km 累計</td><td>21,454</td><td>新款無；舊款 26,228</td><td>同 Elite</td></tr>
+<tr><td>油耗（能源局）</td><td>15.0 km/L・3 級</td><td>認證測試中</td><td>認證測試中</td></tr>
+<tr><td>輪胎</td><td>18 吋 215/55</td><td>17 吋 225/65</td><td>19 吋 225/55（換胎較貴）</td></tr>
+<tr><td>五年稅金＋保險（不含乙式）</td><td class="on">約 13 萬</td><td>約 15.5 萬</td><td>約 15.5 萬</td></tr>
+</tbody>
+</table>
+</div>
+<div class="band"><span class="k">一句話版本</span><p>CX-5 比 CX-30 每年多約 5,000 稅金；Elite 便宜 4 萬，把八年的差額先賺回來。</p></div>
+</div>
+</div>
+</section>
+
+<!-- ═══ 03 一樣的 ═══ -->
+<section class="slide" id="s3" data-ch="03 一樣的" data-sub="不用比的" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g data-s="0" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="80" y="74" class="cap">動力型式</text>
+<text x="80" y="96" class="lb">自然進氣引擎＋6 速手自排，沒渦輪、沒 CVT</text>
+<line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
+</g>
+<g data-s="1" data-hi="1">
+<text x="42" y="166" class="no">2</text>
+<text x="80" y="144" class="cap">主動安全整包</text>
+<text x="80" y="166" class="lb">跟車、車道維持、自動煞車、盲點、後方車流、疲勞警示</text>
+<line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
+</g>
+<g data-s="2" data-hi="2">
+<text x="42" y="236" class="no">3</text>
+<text x="80" y="214" class="cap">便利配備</text>
+<text x="80" y="236" class="lb">無線 CarPlay、Keyless、雙區恆溫、LED 頭燈、Auto Hold</text>
+<line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
+</g>
+<g data-s="2">
+<text x="80" y="300" class="cap">三台都沒有</text>
+<text x="80" y="322" class="sub">FCTA 前方橫向車流警示・ALH 進階頭燈・方向盤加熱・天窗</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Chapter 03 · 不用比的</span>
+<h2>三台一樣的東西</h2>
+<p class="lead">這些不用拿來選，因為選哪台都有。</p>
+<ol class="marks"><li>動力型式</li><li>安全</li><li>便利</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 動力型式</span><b>自然進氣</b>＝沒有渦輪增壓器，結構簡單、少一個會壞的東西。<b>6 速手自排</b>＝傳統齒輪變速箱，比 CVT 鋼帶式耐用。</div>
+<div class="step" data-k="1"><span class="k">2 · 安全</span>Mazda 叫 i-Activsense。全速域跟車、塞車時幫你維持車道、快撞到自動煞車、盲點警示、倒車時偵測左右來車、自動遠光燈。每一項的白話解釋在附錄。</div>
+<div class="step" data-k="2"><span class="k">3 · 便利</span>手機不插線就能投到中控、鑰匙放口袋就能開門發動、駕駛與副駕各自設溫度、紅燈踩停放開煞車不會滑。</div>
+</div>
+<p class="note"><b>三台都沒有：</b>從巷口探出去時偵測左右來車（FCTA）、會自動遮對向車的遠燈（ALH）、方向盤加熱、天窗。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══ 04 不一樣的 ═══ -->
+<section class="slide flip" id="s4" data-ch="04 不一樣的" data-sub="25 項" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<text x="280" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
+<text x="405" y="44" text-anchor="middle" class="cap">CX-5 Elite</text>
+<text x="530" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
+<g data-s="0" data-until="1">
+<text x="80" y="90" class="lb">引擎</text><text x="280" y="90" text-anchor="middle" class="lb">2.0L 165 匹</text><text x="405" y="90" text-anchor="middle" class="lb">2.5L 188 匹</text><text x="530" y="90" text-anchor="middle" class="lb">同 Elite</text>
+<line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
+<text x="80" y="146" class="lb">驅動</text><text x="280" y="146" text-anchor="middle" class="lb">前驅</text><text x="405" y="146" text-anchor="middle" class="lb">四驅</text><text x="530" y="146" text-anchor="middle" class="lb">四驅</text>
+<line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
+<text x="80" y="202" class="lb">車長・軸距</text><text x="280" y="202" text-anchor="middle" class="lb">4,395・2,655</text><text x="405" y="202" text-anchor="middle" class="lb">4,690・2,815</text><text x="530" y="202" text-anchor="middle" class="lb">同 Elite</text>
+<line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
+<text x="80" y="258" class="lb">車重</text><text x="280" y="258" text-anchor="middle" class="lb">1,408 kg</text><text x="405" y="258" text-anchor="middle" class="lb">1,684 kg</text><text x="530" y="258" text-anchor="middle" class="lb">1,703 kg</text>
+<line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
+<text x="80" y="314" class="lb">油耗</text><text x="280" y="314" text-anchor="middle" class="lb">15.0 km/L</text><text x="405" y="314" text-anchor="middle" class="lb">認證中</text><text x="530" y="314" text-anchor="middle" class="lb">認證中</text>
+<line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
+<text x="300" y="380" text-anchor="middle" class="cap">動力與車體</text>
+</g>
+<g data-s="1" data-until="2">
+<text x="80" y="90" class="lb">氣囊</text><text x="280" y="90" text-anchor="middle" class="lb">7 顆</text><text x="405" y="90" text-anchor="middle" class="lb">9 顆</text><text x="530" y="90" text-anchor="middle" class="lb">9 顆</text>
+<line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
+<text x="80" y="146" class="lb">360 環景</text><text x="280" y="146" text-anchor="middle" class="lb">有</text><text x="405" y="146" text-anchor="middle" class="lb">無・倒車顯影</text><text x="530" y="146" text-anchor="middle" class="lb">無・倒車顯影</text>
+<line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
+<text x="80" y="202" class="lb">轉向頭燈</text><text x="280" y="202" text-anchor="middle" class="lb">AFS 有</text><text x="405" y="202" text-anchor="middle" class="lb">無</text><text x="530" y="202" text-anchor="middle" class="lb">無</text>
+<line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
+<text x="80" y="258" class="lb">後座分割</text><text x="280" y="258" text-anchor="middle" class="lb">6/4</text><text x="405" y="258" text-anchor="middle" class="lb">4/2/4</text><text x="530" y="258" text-anchor="middle" class="lb">4/2/4</text>
+<line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
+<text x="300" y="380" text-anchor="middle" class="cap">安全與空間</text>
+</g>
+<g data-s="2" data-until="3">
+<text x="80" y="90" class="lb">座椅材質</text><text x="280" y="90" text-anchor="middle" class="lb">真皮</text><text x="405" y="90" text-anchor="middle" class="lb">織布</text><text x="530" y="90" text-anchor="middle" class="lb">透氣真皮</text>
+<line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
+<text x="80" y="146" class="lb">駕駛座調整</text><text x="280" y="146" text-anchor="middle" class="lb">十向電動＋記憶</text><text x="405" y="146" text-anchor="middle" class="lb">手動</text><text x="530" y="146" text-anchor="middle" class="lb">十向電動＋記憶</text>
+<line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
+<text x="80" y="202" class="lb">前座通風</text><text x="280" y="202" text-anchor="middle" class="lb">有</text><text x="405" y="202" text-anchor="middle" class="lb">無</text><text x="530" y="202" text-anchor="middle" class="lb">有</text>
+<line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
+<text x="80" y="258" class="lb">前座加熱</text><text x="280" y="258" text-anchor="middle" class="lb">有</text><text x="405" y="258" text-anchor="middle" class="lb">無</text><text x="530" y="258" text-anchor="middle" class="lb">無</text>
+<line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
+<text x="80" y="314" class="lb">後視鏡記憶</text><text x="280" y="314" text-anchor="middle" class="lb">無</text><text x="405" y="314" text-anchor="middle" class="lb">無</text><text x="530" y="314" text-anchor="middle" class="lb">有</text>
+<line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
+<text x="300" y="380" text-anchor="middle" class="cap">座椅</text>
+</g>
+<g data-s="3">
+<text x="80" y="90" class="lb">中控・儀表</text><text x="280" y="90" text-anchor="middle" class="lb">10.25・7 吋</text><text x="405" y="90" text-anchor="middle" class="lb">12.9・10.25 吋</text><text x="530" y="90" text-anchor="middle" class="lb">同 Elite</text>
+<line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
+<text x="80" y="146" class="lb">喇叭</text><text x="280" y="146" text-anchor="middle" class="lb">8 支</text><text x="405" y="146" text-anchor="middle" class="lb">8 支</text><text x="530" y="146" text-anchor="middle" class="lb">12 支 BOSE</text>
+<line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
+<text x="80" y="202" class="lb">抬頭顯示</text><text x="280" y="202" text-anchor="middle" class="lb">有</text><text x="405" y="202" text-anchor="middle" class="lb">無</text><text x="530" y="202" text-anchor="middle" class="lb">有</text>
+<line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
+<text x="80" y="258" class="lb">無線充電</text><text x="280" y="258" text-anchor="middle" class="lb">無</text><text x="405" y="258" text-anchor="middle" class="lb">有</text><text x="530" y="258" text-anchor="middle" class="lb">有</text>
+<line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
+<text x="80" y="314" class="lb">電動尾門・撥片</text><text x="280" y="314" text-anchor="middle" class="lb">有・有</text><text x="405" y="314" text-anchor="middle" class="lb">無・無</text><text x="530" y="314" text-anchor="middle" class="lb">有・無</text>
+<line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
+<text x="300" y="380" text-anchor="middle" class="cap">車機與便利</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Chapter 04 · 25 項</span>
+<h2>不一樣的，分四組看</h2>
+<p class="lead">左邊每翻一組換一批。完整 25 項表在下一頁。</p>
+<ol class="marks"><li>動力車體</li><li>安全空間</li><li>座椅</li><li>車機便利</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 動力與車體</span>CX-5 多 23 匹、重 280 公斤、長 30 公分，四驅。車重除以馬力兩台差不多，所以「多 23 匹」不會覺得比較快。</div>
+<div class="step" data-k="1"><span class="k">2 · 安全與空間</span>CX-5 多 2 顆氣囊（後座側邊）。CX-30 有 360 環景、CX-5 兩款都只有倒車鏡頭。後座 4/2/4 是載長物的關鍵。</div>
+<div class="step" data-k="2"><span class="k">3 · 座椅</span>Elite 是織布手動椅，其他兩台都是真皮十向電動附記憶。前座加熱只有 CX-30 有；通風 Elite 沒有。</div>
+<div class="step" data-k="3"><span class="k">4 · 車機與便利</span>CX-5 螢幕大很多、有無線充電。CX-30 有抬頭顯示、電動尾門、撥片；Elite 三樣都沒有，Exclusive 補回前兩樣。</div>
+</div>
+<p class="note"><b>看的方法：</b>Elite 少的東西全是舒服類；CX-5 多的東西全是換不掉的。</p>
+</div>
+</div>
+</section>
+
+<section class="flow" id="s4-table">
+<div class="grid">
+<div class="lbl">完整對照</div>
+<div>
+<h3>25 項不一樣的</h3>
+<p>逐項抄自原廠 2027 年式型錄。每個名詞是什麼意思，附錄有一句話解釋。</p>
+<div class="tbl-wrap">
+<table class="tbl">
+<thead><tr><th>項目</th><th>CX-30 Premium 98.8</th><th>CX-5 Elite 94.9</th><th>CX-5 Exclusive 108.9</th></tr></thead>
+<tbody>
+<tr><td>引擎</td><td>2.0L 165ps／21.7kg-m</td><td>2.5L 188ps／26.2kg-m</td><td>同 Elite</td></tr>
+<tr><td>驅動</td><td>前輪驅動</td><td class="on">四輪驅動（全車系）</td><td class="on">四輪驅動</td></tr>
+<tr><td>車長／軸距</td><td>4,395／2,655 mm</td><td class="on">4,690／2,815 mm</td><td class="on">同 Elite</td></tr>
+<tr><td>車重</td><td>1,408 kg</td><td>1,684 kg</td><td>1,703 kg</td></tr>
+<tr><td>油箱</td><td>51 L</td><td>58 L</td><td>58 L</td></tr>
+<tr><td>輪圈・輪胎</td><td>18 吋・215/55 R18</td><td>17 吋・225/65 R17</td><td>19 吋・225/55 R19</td></tr>
+<tr><td>油耗（能源局）</td><td>15.0 km/L・3 級</td><td>認證測試中</td><td>認證測試中</td></tr>
+<tr><td>後廂</td><td>430 L（U-CAR）</td><td>台規沒公布・歐規 583 L</td><td>同 Elite</td></tr>
+<tr><td>氣囊</td><td>7 顆</td><td class="on">9 顆</td><td class="on">9 顆</td></tr>
+<tr><td>360 環景</td><td class="on">有</td><td>無（倒車顯影）</td><td>無（倒車顯影）</td></tr>
+<tr><td>轉向頭燈 AFS</td><td class="on">有</td><td>無</td><td>無</td></tr>
+<tr><td>座椅材質</td><td class="on">真皮</td><td>高機能織布</td><td class="on">透氣真皮</td></tr>
+<tr><td>駕駛座調整</td><td class="on">十向電動＋記憶</td><td>手動</td><td class="on">十向電動＋記憶</td></tr>
+<tr><td>前座通風</td><td class="on">有</td><td>無</td><td class="on">有</td></tr>
+<tr><td>前座加熱</td><td class="on">有</td><td>無</td><td>無</td></tr>
+<tr><td>後座分割</td><td>6/4</td><td class="on">4/2/4</td><td class="on">4/2/4</td></tr>
+<tr><td>中控螢幕</td><td>10.25 吋</td><td class="on">12.9 吋</td><td class="on">12.9 吋</td></tr>
+<tr><td>數位儀表</td><td>7 吋</td><td class="on">10.25 吋</td><td class="on">10.25 吋</td></tr>
+<tr><td>喇叭</td><td>8 支</td><td>8 支</td><td class="on">12 支 BOSE</td></tr>
+<tr><td>抬頭顯示 HUD</td><td class="on">有</td><td>無</td><td class="on">有</td></tr>
+<tr><td>手機無線充電</td><td>無</td><td class="on">有</td><td class="on">有</td></tr>
+<tr><td>後座 USB-C</td><td>規配表沒分前後</td><td>無</td><td class="on">有</td></tr>
+<tr><td>電動尾門</td><td class="on">有</td><td>無</td><td class="on">有（非腳踢）</td></tr>
+<tr><td>換檔撥片</td><td class="on">有</td><td>無</td><td>無</td></tr>
+<tr><td>後視鏡記憶・車頂架・LED 光條</td><td>無・—・—</td><td>無・無・無</td><td class="on">有・有・有</td></tr>
+</tbody>
+</table>
+</div>
+<div class="band"><span class="k">一句話版本</span><p>Elite 少的是舒服的東西；CX-5 多的是大小、氣囊、四驅、4/2/4，這些買了就換不掉。</p></div>
+</div>
+</div>
+</section>
+
+<!-- ═══ 05 怎麼選 ═══ -->
+<section class="slide" id="s5" data-ch="05 怎麼選" data-sub="我的選擇" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g data-s="0" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="80" y="74" class="cap">我會選</text>
+<text x="80" y="96" class="lb">CX-5 Elite 94.9 萬</text>
+<text x="560" y="96" text-anchor="end" class="sub">少的是舒服，多的是換不掉的</text>
+<line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
+</g>
+<g data-s="1" data-hi="1">
+<text x="42" y="166" class="no">2</text>
+<text x="80" y="144" class="cap">什麼情況改選</text>
+<text x="80" y="166" class="lb">CX-30 Premium 98.8 萬</text>
+<text x="560" y="166" text-anchor="end" class="sub">坐進去覺得布椅不行、或單車放得下</text>
+<line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
+</g>
+<g data-s="2" data-hi="2">
+<text x="42" y="236" class="no">3</text>
+<text x="80" y="214" class="cap">不用看</text>
+<text x="80" y="236" class="lb">CX-5 Exclusive 108.9 萬</text>
+<text x="560" y="236" text-anchor="end" class="sub">14 萬買的東西不對，而且超預算</text>
+<line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
+</g>
+<text x="300" y="380" text-anchor="middle" class="cap" data-s="2">去展間把單車搬進去試一次，比表格準</text>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Chapter 05 · 我的選擇</span>
+<h2>選 CX-5 Elite</h2>
+<p class="lead">兩台都是好車，差別在你要空間還是要舒服。我的排序如下。</p>
+<ol class="marks"><li>選 Elite</li><li>改 CX-30</li><li>Exclusive</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 選 CX-5 Elite</span>它少的：皮椅、電動椅、抬頭顯示、環景、電尾門。它多的：大一號、後座 4/2/4、9 顆氣囊、四驅，還便宜 4 萬。代價是一年多 5,000 稅金、油多一點、剛換代零數據。</div>
+<div class="step" data-k="1"><span class="k">2 · 什麼情況改 CX-30</span>坐進 Elite 的手動布椅，覺得「95 萬的車這樣不行」；或單車拆前輪放得進 430 公升、你不需要那個空間。這時答案是 CX-30 Premium，不是加錢到 Exclusive。</div>
+<div class="step" data-k="2"><span class="k">3 · Exclusive 為什麼不用看</span>多 14 萬買到皮椅、電動椅、抬頭顯示、BOSE、電尾門、19 吋輪圈。加熱椅、撥片、360 環景還是沒有，要再上一階 114.9 才有。而且超預算 8.9 萬。</div>
+</div>
+<p class="note"><b>現在可以做的：</b>約 Mazda 展間，兩台一次看。把單車搬進 Elite、後座坐十分鐘。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══ 附錄 ═══ -->
+<section class="flow" id="appendix">
+<div class="grid">
+<div class="lbl">名詞</div>
+<div>
+<h3>表格裡的名詞，一句話講清楚</h3>
+<dl class="gloss">
+<div class="gh">動力</div>
+<div><dt>自然進氣</dt><dd>引擎靠自己吸空氣，沒有渦輪增壓器。結構簡單、少一個會壞的零件，但同排氣量馬力較低。</dd></div>
+<div><dt>6 速手自排</dt><dd>傳統齒輪式自排變速箱，可以手動切檔。比 CVT（鋼帶無段變速）耐用，換檔有頓挫感是正常的。</dd></div>
+<div><dt>ps／kg-m</dt><dd>ps 是馬力（衝多快），kg-m 是扭力（起步多有力）。CX-5 兩個都多，但車也重 280 公斤，體感差不多。</dd></div>
+<div><dt>四輪驅動 AWD</dt><dd>引擎的力量四個輪子都出。雨天、山路、上坡更穩；代價是多耗油、多重量。CX-5 全車系標配，關不掉。</dd></div>
+<div class="gh">主動安全（Mazda 叫 i-Activsense）</div>
+<div><dt>MRCC 全速域主動車距巡航</dt><dd>定速時自動跟著前車保持距離。前車停你也停、前車走你也走。「全速域」＝從塞車到高速都能用。</dd></div>
+<div><dt>CTS 巡航車道維持</dt><dd>塞車時幫你微調方向盤、保持在車道中間，配合 MRCC 跟車。減輕塞車時的疲勞。</dd></div>
+<div><dt>SBS 智慧防撞</dt><dd>偵測快撞上前車或行人，先警告、來不及就自動煞車。</dd></div>
+<div><dt>BSM 盲點警示</dt><dd>旁邊車道的後視鏡死角有車時，後視鏡上亮燈；這時打方向燈會響。</dd></div>
+<div><dt>RCTA 後方橫向車流警示</dt><dd>倒車出停車格時，偵測左右有車開過來就警告。</dd></div>
+<div><dt>LAS／LDWS 車道偏移</dt><dd>LDWS 是壓線時警告你；LAS 是輕輕把方向盤拉回車道。三台都有。</dd></div>
+<div><dt>DAA 駕駛疲勞警示</dt><dd>從你握方向盤的方式判斷是不是累了，提醒休息。</dd></div>
+<div><dt>HBC 遠近光自動切換</dt><dd>晚上自動開遠燈，對向有車自動切近燈。</dd></div>
+<div><dt>FCTA 前方橫向車流警示</dt><dd>從巷口慢慢探出去時，偵測左右來車。三台都沒有，要 Premium 以上。</dd></div>
+<div><dt>ALH 進階頭燈</dt><dd>遠燈分成很多區塊，只遮掉對向車那塊、其他保持遠燈。三台都沒有。CX-30 Premium 是舊一代的 AFS：轉彎時頭燈跟著轉。</dd></div>
+<div><dt>360 環景</dt><dd>四個鏡頭合成一張俯視圖，停車時螢幕看得到車子四周。CX-30 有、CX-5 兩款只有倒車鏡頭。</dd></div>
+<div><dt>氣囊 7 顆 vs 9 顆</dt><dd>CX-5 多的兩顆在後座側邊，保護後座乘客的側撞。</dd></div>
+<div class="gh">舒適與車機</div>
+<div><dt>HUD 抬頭顯示</dt><dd>車速、導航箭頭投在前擋玻璃上，眼睛不用往下看儀表。</dd></div>
+<div><dt>十向電動＋記憶</dt><dd>椅子前後、高低、椅背、腰靠等十個方向用電動調；記憶是存兩個人的位置、一鍵回位。手動＝拉桿自己拉。</dd></div>
+<div><dt>前座通風／加熱</dt><dd>通風是椅面吹風、夏天不黏背；加熱是冬天暖椅。台灣通風比加熱實用。</dd></div>
+<div><dt>後座 6/4 vs 4/2/4</dt><dd>後座椅背分幾段各自放倒。4/2/4 中間單獨倒，可以穿長物（公路車、滑雪板）、兩邊還能坐人。6/4 只能兩段。</dd></div>
+<div><dt>換檔撥片</dt><dd>方向盤後面的兩片撥桿，手不離方向盤就能降檔，下坡用引擎煞車。</dd></div>
+<div><dt>電動尾門／腳踢感應</dt><dd>按鍵開關後車廂。腳踢感應是手拿東西時腳在後保桿下掃一下就開，三台都不是腳踢。</dd></div>
+<div><dt>Auto Hold</dt><dd>紅燈踩停之後放開煞車，車不會滑。配合電子手煞車（按鈕式，不是拉桿）。</dd></div>
+<div><dt>Qi 無線充電</dt><dd>手機放在中央的板子上就充電，不用插線。</dd></div>
+<div><dt>無線 CarPlay／Android Auto</dt><dd>手機不插線就把地圖、音樂投到中控螢幕。三台都有。</dd></div>
+<div><dt>Keyless</dt><dd>鑰匙放口袋就能開門、按鈕發動。</dd></div>
+<div><dt>雙區恆溫</dt><dd>駕駛跟副駕各自設溫度。</dd></div>
+<div class="gh">錢的名詞</div>
+<div><dt>牌照稅</dt><dd>每年繳給地方政府的稅，只看排氣量級距、不看你開多少。1,801–2,400cc 是 11,230，2,401–3,000cc 是 15,210。</dd></div>
+<div><dt>燃料費</dt><dd>每年繳給公路局的費用，也是看排氣量、跟你加多少油無關。2025 年 12 月起改叫「公路使用養護安全管理費」，金額沒變。</dd></div>
+<div><dt>強制險</dt><dd>法律規定一定要保。撞到人時賠對方的醫療和死傷，不賠任何車。三台都是 1,398。</dd></div>
+<div><dt>第三人責任險</dt><dd>自己選擇保的。撞到別人的車或人，賠超過強制險上限的部分。保費跟車無關、看你的年齡與肇事紀錄。</dd></div>
+<div><dt>乙式車體險</dt><dd>賠自己的車：撞到東西、翻覆、火災。停車被不明原因刮傷不賠（那是更貴的甲式）。保費跟車價走，這份是按比例估的。</dd></div>
+<div><dt>能源局油耗與能效等級</dt><dd>政府測的平均油耗，越高越省。等級 1 級最省、5 級最耗。CX-30 是 3 級，CX-5 新款還在認證。</dd></div>
+<div><dt>貨物稅</dt><dd>買新車要繳的稅，已經含在牌價裡，不用另外付。</dd></div>
+</dl>
+</div>
+</div>
+<div class="grid">
+<div class="lbl">來源</div>
+<div>
+<h3>資料從哪來</h3>
+<ul class="rule c2">
+<li><div class="h">配備與規格</div><span>原廠 2027 年式型錄：<a href="https://www.mazda.com.tw/globalassets/cars/cx-30/pdf/2026/0914/2027_mazda-cx-30_brochure_1.pdf" style="border-bottom:1px solid var(--acc)">CX-30 型錄（9/14 版）</a>、<a href="https://www.mazda.com.tw/globalassets/cars/cx-5/pdf/2026_mazda-cx-5_brochure_1.pdf" style="border-bottom:1px solid var(--acc)">CX-5 正式型錄</a>。後廂容積三台規配表都沒列。</span></li>
+<li><div class="h">稅金</div><span><a href="https://tpctax.gov.taipei/ct.asp?xItem=1080492&ctNode=78733&mp=103011" style="border-bottom:1px solid var(--acc)">台北市稅捐處牌照稅級距</a>（2026-07）；燃料費三篇媒體一致（公路局官網是動態頁抓不到）。</span></li>
+<li><div class="h">保險</div><span><a href="https://www.cali.org.tw/Rate/Default" style="border-bottom:1px solid var(--acc)">強制險費率係數</a>（2024-04 版）；第三人與乙式是 2026 年保險比價網的試算，乙式按車價比例換算、不是報價。</span></li>
+<li><div class="h">保養與評價</div><span>CX-30 保養是 U-CAR 養車成本（2025 後）；CX-5 新款沒有任何保養與車主資料，舊款 2.5L 是 2019 年資料，只當量級看。</span></li>
+<li><div class="h">照片</div><span>Mazda 台灣官網與官方型錄，只供個人看車參考。</span></li>
+</ul>
+<div class="band"><span class="k">資料品質</span><p>售價與配備是 2026-09-22 從原廠抓的一手資料。保險是估的、CX-5 油耗與保養是空的，這三格去展間時要問。</p></div>
+</div>
+</div>
+</section>
+
+<!-- ═══ 結尾 ═══ -->
+<section class="slide end flip" id="end" data-ch="收尾" data-sub="">
+<div class="stage">
+<div>
+<h2 class="rise" style="--t:.1">去展間，把單車搬進 Elite 試一次。</h2>
+<p class="lead rise" style="--t:.3;max-width:32em">椅子坐得下去就是 CX-5 Elite；坐不下去就是 CX-30 Premium。兩台都不會錯。</p>
+<div class="credit rise" style="--t:.5">資料：Mazda 台灣 2027 年式型錄 · 台北市稅捐處 · 強制險費率<br>2026-09-22 · 給 Jack 看車用</div>
+</div>
+</div>
+</section>
+<footer>
+<span>CX-30 對 CX-5 · 2026-09-22</span>
+<span>來源：Mazda 台灣官方型錄、台北市稅捐處、強制險費率係數、U-CAR 養車成本</span>
+</footer>
+
+<script>
+(function () {
+  var slides = [].slice.call(document.querySelectorAll('section.slide'));
+  var total = slides.length;
+  var cTL = document.getElementById('c-tl'), cTR = document.getElementById('c-tr'), cBL = document.getElementById('c-bl');
+  var navLinks = [].slice.call(document.querySelectorAll('#nav a'));
+  var chapters = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var typed = document.getElementById('typed'), heroText = (typed && typed.dataset.text) || '';
+
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+
+  // 描邊動畫要知道每條線多長：量一次塞進 --len
+  requestAnimationFrame(function () {
+    document.querySelectorAll('.dg .draw').forEach(function (el) {
+      try { el.style.setProperty('--len', (el.getTotalLength() + 2).toFixed(1)); } catch (e) {}
+    });
+  });
+  var rects = [], chTops = [];
+  function measure() {
+    rects = slides.map(function (s) { return { top: s.offsetTop, h: s.offsetHeight }; });
+    chTops = chapters.map(function (el) { return el ? el.offsetTop : Infinity; });
+    slides.forEach(placePt);
+  }
+  measure();
+
+  // 分階段頁：data-s 從第幾階段起出現、data-until 到第幾階段消失、data-hi 哪幾個階段強調
+  function applyStage(s, k) {
+    if (s._stage === k) return;
+    s._stage = k;
+    s.querySelectorAll('[data-s]').forEach(function (el) {
+      var from = +el.dataset.s, until = el.dataset.until ? +el.dataset.until : Infinity;
+      el.classList.toggle('on', k >= from && k < until);
+    });
+    s.querySelectorAll('[data-hi]').forEach(function (el) {
+      var ks = el.dataset.hi.split(',').map(Number);
+      el.classList.toggle('hi', ks.indexOf(k) !== -1);
+    });
+    s.querySelectorAll('.marks li').forEach(function (li, i) {
+      li.classList.toggle('cur', i === k); li.classList.toggle('done', i < k);
+    });
+    s.querySelectorAll('.step').forEach(function (p) { p.classList.toggle('cur', +p.dataset.k === k); });
+    placePt(s);
+  }
+  // 清單旁那顆霧藍點是同一顆在滑（openai demo 的 marks .pt）：算出現在這項的位置、translate 過去
+  function placePt(s) {
+    var ul = s.querySelector('.marks'); if (!ul) return;
+    var pt = ul.querySelector('.pt'), li = ul.querySelectorAll('li')[s._stage || 0]; if (!pt || !li) return;
+    pt.style.transform = 'translate(' + li.offsetLeft + 'px,' + (li.offsetTop + li.offsetHeight / 2 - pt.offsetHeight / 2).toFixed(1) + 'px)';
+  }
+  slides.forEach(function (s) {
+    var ul = s.querySelector('.marks'); if (!ul) return;
+    var pt = document.createElement('i'); pt.className = 'pt'; pt.setAttribute('aria-hidden', 'true'); ul.appendChild(pt);
+  });
+  // 每頁文字進場：標題、導言、清單、說明依序浮上來（.rise 吃 --p，進到這頁才跑一次）；章首、首頁、結尾自己已經標好
+  slides.forEach(function (s) {
+    if (s.classList.contains('opener') || s.classList.contains('hero') || s.classList.contains('end')) return;
+    ['.tag', 'h2', 'p.lead', '.marks', '.steps', 'p.note'].forEach(function (sel, i) {
+      var el = s.querySelector('.txt > ' + sel); if (!el) return;
+      el.classList.add('rise'); el.style.setProperty('--t', (i * 0.08).toFixed(2));
+    });
+  });
+  window.__applyStage = applyStage;   // 給驗證腳本逐階段截圖用
+
+  // --p 只管進場淡入（.rise）與 hero 打字
+  function paint(s, p) {
+    s.style.setProperty('--p', p.toFixed(3));
+    if (s.classList.contains('hero') && typed) {
+      var q = clamp01((p - 0.08) / 0.32), n = Math.round(q * heroText.length);
+      if (typed.textContent.length !== n) typed.textContent = heroText.slice(0, n);
+    }
+  }
+  // 第一次進到某頁：--p 在 1 秒內從 0 跑到 1（hero 2.4 秒）；回頭再看不重播
+  function enter(s) {
+    if (s._entered) return;
+    s._entered = true;
+    if (reduce) { paint(s, 1); return; }
+    var dur = s.classList.contains('hero') ? 2400 : 1000, t0 = performance.now();
+    (function frame(now) {
+      var p = clamp01((now - t0) / dur);
+      paint(s, p);
+      if (p < 1) requestAnimationFrame(frame);
+    })(t0);
+  }
+
+  // 角標換頁：先淡出 150ms、換字、再淡入（openai demo 的 setCorners）
+  var cornerT = 0, corners = [cTL, cTR, cBL];
+  function swapCorners(a, b, c) {
+    corners.forEach(function (el) { el.classList.add('fade'); });
+    clearTimeout(cornerT);
+    cornerT = setTimeout(function () { cTL.textContent = a; cTR.textContent = b; cBL.textContent = c; corners.forEach(function (el) { el.classList.remove('fade'); }); }, reduce ? 0 : 160);
+  }
+  var active = -1, activeCh = -1;
+  function tick() {
+    var y = window.scrollY, vh = window.innerHeight, mid = y + vh * 0.5, cur = -1;
+    slides.forEach(function (s, i) {
+      var top = rects[i].top, h = rects[i].h;
+      if (top <= mid && top + h > mid) cur = i;
+    });
+    if (cur !== active) {
+      active = cur;
+      document.body.classList.toggle('inslide', cur >= 0);
+      if (cur >= 0) {
+        var s = slides[cur];
+        enter(s);
+        swapCorners(s.dataset.ch || '', String(cur + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0'), s.dataset.sub || '');
+      }
+    }
+    var ch = -1;
+    chTops.forEach(function (t, i) { if (t <= mid) ch = i; });
+    if (ch !== activeCh) { activeCh = ch; navLinks.forEach(function (a, i) { a.classList.toggle('on', i === ch); }); }
+  }
+
+  var ticking = false;
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; tick(); }); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { measure(); onScroll(); });
+  // 點開／收起補充框或自測答案會改變頁面高度，快取的段落位置要重量，不然角落頁碼會指錯頁
+  document.querySelectorAll('details').forEach(function (d) { d.addEventListener('toggle', function () { measure(); onScroll(); }); });
+  slides.forEach(function (s) { if (s.dataset.stages) applyStage(s, reduce ? +s.dataset.stages - 1 : 0); });
+
+  // 換階段：夾在 0..N-1；超出範圍回 false（讓 ← → 知道該翻頁了）
+  function setStage(s, k) {
+    var N = +s.dataset.stages || 0;
+    if (!N || k < 0 || k > N - 1) return false;
+    applyStage(s, k); return true;
+  }
+  // 小主題清單（.marks li）：點哪個就跳到那個階段；Enter／空白鍵也算點
+  slides.forEach(function (s) {
+    if (!s.dataset.stages) return;
+    s.querySelectorAll('.marks li').forEach(function (li, i) {
+      li.setAttribute('role', 'button'); li.tabIndex = 0;
+      li.addEventListener('click', function () { setStage(s, i); });
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStage(s, i); } });
+    });
+  });
+  // 鍵盤兩套走法（Jack 2026-09-18）：
+  //   ← →：只在幻燈頁之間走——先切這頁的階段，到頭了翻到下一張幻燈（跳過中間的表格／卡片段）。
+  //   ↑ ↓：一小格一小格走完整份——先切階段；到頭了走到下一個吸附段（幻燈、表格段、頁尾都算）；
+  //        比一屏高的段落每按一下捲 85% 屏、捲到底才進下一段。
+  //        ↑ 退回有階段的頁時落在它最後一階、↓ 進來落在第一階，這樣來回走看到的順序才對得上。
+  //   滑鼠／觸控板不受影響，照 scroll-snap 整頁吸附。
+  var stops = [].slice.call(document.querySelectorAll('section.slide, section.flow, footer'));
+  function stepVertical(d) {
+    var vh = window.innerHeight, cur = -1, tol = 4;
+    var rs = stops.map(function (el) { return el.getBoundingClientRect(); });
+    rs.forEach(function (r, i) { if (r.top <= tol) cur = i; });   // 現在停在哪一段：頂邊已到（或超過）畫面頂的最後一段；短段落用畫面正中判會誤判成下一段
+    if (cur < 0) return false;
+    var el = stops[cur], r = rs[cur], bh = reduce ? 'auto' : 'smooth';
+    if (el.dataset.stages && setStage(el, (el._stage || 0) + d)) return true;
+    if (r.height > vh + tol) {   // 比一屏高：還沒捲到底（頂）就先在段落裡面捲
+      if (d > 0 && r.bottom > vh + tol) { window.scrollBy({ top: Math.min(vh * 0.85, r.bottom - vh), behavior: bh }); return true; }
+      if (d < 0 && r.top < -tol) { window.scrollBy({ top: -Math.min(vh * 0.85, -r.top), behavior: bh }); return true; }
+    }
+    var next = stops[cur + d];
+    if (!next) return false;
+    if (next.dataset.stages) applyStage(next, d > 0 ? 0 : +next.dataset.stages - 1);
+    var tall = next.getBoundingClientRect().height > vh + tol;
+    next.scrollIntoView({ behavior: bh, block: d < 0 && tall ? 'end' : 'start' });   // 往上進高段落：先看它的尾巴
+    return true;
+  }
+  window.addEventListener('keydown', function (e) {
+    if (e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    var v = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+    if (v) { if (stepVertical(v)) e.preventDefault(); return; }
+    if (active < 0) return;
+    var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    var s = slides[active];
+    if (setStage(s, (s._stage || 0) + d)) return;
+    var next = slides[active + d];
+    if (next) next.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+  if (reduce && typed) typed.textContent = heroText;
+  tick();
+  window.addEventListener('load', function () { setTimeout(function () { document.documentElement.classList.add('smooth'); measure(); tick(); }, 80); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); tick(); });
+})();
+</script>
+</body>
+</html>
