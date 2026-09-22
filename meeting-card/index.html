@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>建立會議邀請卡</title>
+<!--
+  建會議表單。填完產生 card.html 的網址（資料塞在 ?d= 裡），
+  然後一鍵分享到 LINE 或複製網址。沒有後端、沒有資料庫。
+  最近一次填的內容會存在瀏覽器裡（主辦單位這種每次都一樣的欄位不用重打）。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16181c; --ink-soft:#6b7280; --line:#e4e6eb;
+    --bg:#f2f3f5; --card:#ffffff; --field:#ffffff;
+    --accent:#1d5fd0; --accent-btn:#1d5fd0; --line-green:#06c755; --btn-bg:#eceef1;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#f0f1f3; --ink-soft:#9aa1ab; --line:#31343a;
+      --bg:#131417; --card:#1c1e22; --field:#23262b;
+      --btn-bg:#2a2d33; --accent:#5b93ef; --accent-btn:#2f6fe0;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#f0f1f3; --ink-soft:#9aa1ab; --line:#31343a;
+    --bg:#131417; --card:#1c1e22; --field:#23262b;
+    --btn-bg:#2a2d33; --accent:#5b93ef; --accent-btn:#2f6fe0;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"Noto Serif TC","Songti TC",serif;
+    line-height:1.7; -webkit-font-smoothing:antialiased;
+    padding:24px 16px calc(32px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .wrap{width:100%; max-width:440px;}
+
+  h1{font-size:24px; font-weight:700; margin:0 0 4px; letter-spacing:-.01em;}
+  .sub{color:var(--ink-soft); font-size:15px; margin:0 0 20px;}
+
+  .card{
+    background:var(--card); border-radius:var(--radius); padding:22px 20px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.07);
+  }
+
+  label{display:block; margin-bottom:16px;}
+  .lab{display:block; font-size:15px; color:var(--ink-soft); margin-bottom:6px;}
+  .req{color:var(--accent);}
+  input,textarea{
+    width:100%; padding:12px 13px;
+    font-family:-apple-system,system-ui,sans-serif; font-size:16px;
+    color:var(--ink); background:var(--field);
+    border:1px solid var(--line); border-radius:10px;
+    -webkit-appearance:none; appearance:none;
+  }
+  textarea{font-family:inherit; min-height:72px; resize:vertical;}
+  input:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:-1px; border-color:transparent;}
+  /* 兩欄並排。min-width:0 是必要的——grid 子元素預設不會縮到比內容窄，
+     少了它，日期時間這種「天生很寬」的輸入框會把整頁撐出橫向捲軸。 */
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:0 12px;}
+  .two > label{min-width:0;}
+  .two input{min-width:0;}
+  /* 日期時間輸入框在手機寬度塞不進兩欄（系統原生控制項有自己的最小寬度），
+     窄螢幕改成上下排。密碼／地點是短欄位，並排沒問題。 */
+  @media (max-width:520px){ .two.dates{grid-template-columns:1fr;} }
+  @media (max-width:340px){ .two{grid-template-columns:1fr;} }
+
+  button.btn,a.btn{
+    display:block; width:100%; text-align:center;
+    padding:15px 16px; border-radius:11px; border:0;
+    font-family:inherit; font-size:17px; font-weight:500;
+    text-decoration:none; cursor:pointer;
+    background:var(--btn-bg); color:var(--ink);
+    -webkit-tap-highlight-color:transparent;
+  }
+  button.btn.primary{background:var(--accent-btn); color:#fff;}
+  a.btn.share{background:var(--line-green); color:#fff;}
+  button.btn:active,a.btn:active{opacity:.75;}
+  .stack{display:flex; flex-direction:column; gap:10px;}
+
+  .out{margin-top:16px;}
+  .out[hidden]{display:none;}
+  .urlbox{
+    background:var(--field); border:1px solid var(--line); border-radius:10px;
+    padding:11px 12px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12px; color:var(--ink-soft); word-break:break-all; line-height:1.5;
+    max-height:96px; overflow:auto; margin-bottom:10px;
+  }
+  .hint{color:var(--ink-soft); font-size:14px; margin:12px 0 0;}
+  .warn{color:#b4541a; font-size:14px; margin:0 0 14px;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .warn{color:#e0975c;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>建立會議邀請卡</h1>
+  <p class="sub">填完按下面的按鈕，產生一張可以轉到 LINE 的卡片。</p>
+
+  <div class="card">
+    <form id="f" novalidate>
+      <label>
+        <span class="lab">會議名稱 <span class="req">必填</span></span>
+        <input name="t" required placeholder="例：九月產品會議">
+      </label>
+
+      <div class="two dates">
+        <label>
+          <span class="lab">開始時間 <span class="req">必填</span></span>
+          <input type="datetime-local" name="s" required>
+        </label>
+        <label>
+          <span class="lab">結束時間</span>
+          <input type="datetime-local" name="e">
+        </label>
+      </div>
+
+      <label>
+        <span class="lab">會議連結（Google Meet／Zoom／Teams）</span>
+        <input type="url" name="u" placeholder="https://meet.google.com/...">
+      </label>
+
+      <div class="two">
+        <label>
+          <span class="lab">會議密碼</span>
+          <input name="p" placeholder="沒有就留空">
+        </label>
+        <label>
+          <span class="lab">地點</span>
+          <input name="l" placeholder="實體會議才填">
+        </label>
+      </div>
+
+      <label>
+        <span class="lab">主辦單位／主辦人</span>
+        <input name="o" placeholder="例：產品部">
+      </label>
+
+      <label>
+        <span class="lab">一句說明</span>
+        <textarea name="n" placeholder="例：討論第四季上線時程與分工"></textarea>
+      </label>
+
+      <button type="submit" class="btn primary">產生邀請卡</button>
+    </form>
+
+    <div class="out" id="out" hidden>
+      <hr style="border:0;border-top:1px solid var(--line);margin:22px 0 18px;">
+      <p class="warn" id="lenWarn" hidden>網址偏長，有些聊天軟體會截斷。把「一句說明」縮短一點比較保險。</p>
+      <div class="urlbox" id="urlbox"></div>
+      <div class="stack">
+        <a class="btn share" id="shareLine" target="_blank" rel="noopener">分享到 LINE</a>
+        <button type="button" class="btn" id="copyBtn">複製網址</button>
+        <a class="btn" id="preview" target="_blank" rel="noopener">預覽卡片</a>
+      </div>
+      <p class="hint">在電腦上按「分享到 LINE」會開網頁版 LINE；手機上會直接跳進 LINE 選聯絡人。</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- 資料 -> 網址：JSON 轉 UTF-8 再轉 base64url（中文不能直接 btoa）----
+function encodeData(obj){
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  let bin = '';
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+
+const form = document.getElementById('f');
+const out = document.getElementById('out');
+const urlbox = document.getElementById('urlbox');
+const lenWarn = document.getElementById('lenWarn');
+
+// 每次都要重打的欄位很煩，把主辦記在瀏覽器裡。
+// 讀寫都包 try/catch：無痕模式或封鎖網站資料時 localStorage 會直接丟錯。
+const REMEMBER = ['o'];
+try{
+  const saved = JSON.parse(localStorage.getItem('meetingCard.last') || '{}');
+  REMEMBER.forEach(k => { if(saved[k]) form.elements[k].value = saved[k]; });
+}catch(e){ /* 讀不到就算了，不影響功能 */ }
+
+form.addEventListener('submit', ev => {
+  ev.preventDefault();
+
+  const d = {};
+  for(const k of ['t','s','e','u','p','l','o','n']){
+    const v = form.elements[k].value.trim();
+    if(v) d[k] = v;   // 空欄位不進網址，網址才不會白白變長
+  }
+
+  if(!d.t || !d.s){
+    alert('會議名稱和開始時間要填。');
+    return;
+  }
+
+  // card.html 跟這支檔案放在同一層，用相對路徑算出完整網址，
+  // 這樣本機開跟部署上線都對。
+  const url = new URL('card.html', location.href);
+  url.search = '?d=' + encodeData(d);
+  const link = url.toString();
+
+  urlbox.textContent = link;
+  document.getElementById('preview').href = link;
+  // LINE 的分享網址：把要送出的文字（含網址）放進 text 參數
+  document.getElementById('shareLine').href =
+    'https://line.me/R/share?text=' + encodeURIComponent(d.t + '\n' + link);
+
+  // 太長的網址在某些聊天軟體會被截斷，先提醒
+  lenWarn.hidden = link.length < 900;
+
+  try{
+    const keep = {};
+    REMEMBER.forEach(k => { if(d[k]) keep[k] = d[k]; });
+    localStorage.setItem('meetingCard.last', JSON.stringify(keep));
+  }catch(e){ /* 存不進去不影響功能 */ }
+
+  out.hidden = false;
+  out.scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('copyBtn');
+  const text = urlbox.textContent;
+  try{
+    // clipboard API 在非 https 的環境不一定有，失敗就退回舊做法
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    btn.textContent = '已複製';
+    setTimeout(() => btn.textContent = '複製網址', 1600);
+  }catch(e){
+    btn.textContent = '複製失敗，請手動選取';
+    setTimeout(() => btn.textContent = '複製網址', 2400);
+  }
+});
+</script>
+</body>
+</html>
