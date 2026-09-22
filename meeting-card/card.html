@@ -293,6 +293,15 @@ function render(){
     });
     actions.appendChild(ics);
   }
+
+  // 轉傳到 LINE。編碼交給瀏覽器算（encodeURIComponent），不要用手拼——
+  // 卡片網址裡有 &，沒編碼的話分享文字會在第一個 & 就被切掉。
+  actions.appendChild(el('a', {
+    class:'btn share',
+    href:'https://line.me/R/share?text=' + encodeURIComponent((d.t || '會議') + '\n' + location.href),
+    target:'_blank', rel:'noopener'
+  }, '轉傳到 LINE'));
+
   card.appendChild(actions);
   app.appendChild(card);
 
