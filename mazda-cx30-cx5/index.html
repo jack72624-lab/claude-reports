@@ -2,21 +2,25 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CX-30 對 CX-5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ─────────────────────────────────────────────────────────────
-   設計讀法：跟智能家庭 vG 同一套——白底、一種墨色、灰角標、霧藍當重點色、鼠尾草標「做完的」。
-   一頁只講一件事，左圖右字交替；圖是線圖不是插畫。中文思源宋體，拉丁與數字走系統無襯線；不用斜體、不用 emoji。
+   骨架＝報告幻燈版型 v2，皮膚是這份自己的（2026-09-22）：
+   為什麼是這個色：內容是「買哪台 Mazda」——底色用暖紙白 #faf8f5（紙感、消費決策，不是技術文件的冷白），
+     墨色帶一點暖 #22201e，重點色取 Mazda 的招牌車漆魂動紅、壓深成 #8c1c13（原色太亮，整頁會吵）。一份只有一個重點色。
+   為什麼是這個字：中文維持思源宋體（這份是要讀完的決策報告、不是規格表），但所有數字改等寬對齊（tabular-nums），
+     因為整份都在上下比價格、稅金、公分。
+   照片不加動畫（Jack 2026-09-22 定），動的是圖：四筆錢一列一列從左滑進、21 項換組時從右進、結論從中心長大、關鍵價格數字從 0 跳到目標。
    ───────────────────────────────────────────────────────────── */
 :root{
   color-scheme:light;
-  --bg:#fff; --ink:#1f1f1f; --ink-2:#55534f; --grey:#8a8a86; --grey-2:#c9c7c2; --line:rgba(31,31,31,.12); --line-2:rgba(31,31,31,.28);
-  --acc:#6e8199; --acc-soft:rgba(110,129,153,.10); --sage:#8a9e8c; --warm:#a39b90; --paper:#f4f3f1; --red:#c8402c;
+  --bg:#faf8f5; --ink:#22201e; --ink-2:#5b5650; --grey:#8f8880; --grey-2:#cec7bd; --line:rgba(34,32,30,.12); --line-2:rgba(34,32,30,.26);
+  --acc:#8c1c13; --acc-soft:rgba(140,28,19,.08); --sage:#7d8c7e; --warm:#a39b90; --paper:#f1ede6; --red:#c8402c;
   --font:-apple-system,"Noto Serif TC","Songti TC",serif;
   --latin:-apple-system,"Helvetica Neue","Segoe UI",system-ui,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,monospace;
@@ -112,8 +116,21 @@ body.inslide .corner.fade{opacity:0;transition-duration:.15s}
 .dg .hi text.no{fill:var(--acc)}
 .dg .hi text.cap{fill:var(--acc)}
 /* 階段顯示：data-s＝從第幾階段起出現、data-until＝到第幾階段消失；data-hi＝哪幾個階段強調 */
-.dg [data-s]{opacity:0;transition:opacity .5s,transform .6s var(--ease)}
-.dg [data-s].on{opacity:1}
+/* 圖示動法菜單（版型 2026-09-22）：掛在 <g data-s> 上，這份用到 in-left（四筆錢）／in-right（21 項換組）／in-grow（結論） */
+.dg [data-s]{opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease),transform .6s var(--ease),clip-path .7s var(--ease)}
+.dg [data-s].in-left{transform:translateX(-18px)}
+.dg [data-s].in-right{transform:translateX(18px)}
+.dg [data-s].in-drop{transform:translateY(-14px)}
+.dg [data-s].in-grow{transform-box:fill-box;transform-origin:center;transform:scale(.86)}
+.dg [data-s].in-wipe{transform:none;clip-path:inset(-5% 100% -5% -5%)}
+.dg [data-s].on{opacity:1;transform:none}
+.dg [data-s].in-wipe.on{clip-path:inset(-5% -5% -5% -5%)}
+.dg .bar{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform .85s var(--ease) .1s}
+.dg .barw{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);transition:transform .85s var(--ease) .1s}
+.dg .on .bar,.dg .bar.on{transform:none}
+.dg .on .barw,.dg .barw.on{transform:none}
+/* 整份都在上下比數字，全部走等寬對齊 */
+.stats b,.dg text.lb,.dg text.big,.dg text.num,.tbl td,.tbl th{font-variant-numeric:tabular-nums}
 .dg .hi .ln{stroke:var(--acc)}
 .dg .hi text.lb{fill:var(--acc)}
 .dg .hi text.big{fill:var(--acc)}
@@ -136,7 +153,7 @@ body.inslide .corner.fade{opacity:0;transition-duration:.15s}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:18px clamp(16px,3vw,44px);width:100%;max-width:520px}
 .stats div{border-top:1px solid var(--ink);padding-top:12px}
 .stats b{display:block;font-family:var(--latin);font-weight:300;font-size:clamp(40px,5.2vw,72px);line-height:1;letter-spacing:-.02em}
-.stats span{display:block;font-size:13.5px;color:var(--ink-2);margin-top:8px}
+.stats div > span{display:block;font-size:13.5px;color:var(--ink-2);margin-top:8px}   /* 只挑說明字；數字裡包的 <span data-count> 不算 */
 
 /* ── Hero ── */
 .hero .typed{font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.3;min-height:2.6em;display:flex;align-items:center;flex-wrap:wrap;gap:.2em}
@@ -302,7 +319,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
   .marks .pt{width:6px;height:6px}
   .hero .typed{font-size:24px}
   .stats b{font-size:32px}
-  .stats{gap:8px 12px}.stats div{padding-top:8px}.stats span{font-size:12px;margin-top:4px}  /* 2026-09-20：34dvh 塞不下四格 40px 數字，會從上方溢出蓋到章名 */
+  .stats{gap:8px 12px}.stats div{padding-top:8px}.stats div > span{font-size:12px;margin-top:4px}  /* 2026-09-20：34dvh 塞不下四格 40px 數字，會從上方溢出蓋到章名 */
   .flow .grid{grid-template-columns:minmax(0,1fr);gap:10px}
 }
 /* 列印：舞台退回文件流，所有階段與說明攤開 */
@@ -319,13 +336,15 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
   .marks li{color:var(--ink)}
   .marks .pt{display:none}
   .dg image{clip-path:none!important;transform:none!important}
+  .dg [data-s]{clip-path:none!important}
   .flow{min-height:0;display:block}
   .quiz details{display:block}
   .quiz .a{display:block}
 }
 @media (prefers-reduced-motion:reduce){
   html.smooth{scroll-behavior:auto}
-  .rise,.step,.marks li,.marks .pt,.corner,.dg [data-s],.dg .draw{transition:none}
+  .rise,.step,.marks li,.marks .pt,.corner,.dg [data-s],.dg .draw,.dg .bar,.dg .barw{transition:none}
+  .dg .bar,.dg .barw{transform:none}
   .dg .draw{stroke-dashoffset:0}
   .hero .typed .dot,.hero .hint::after{animation:none}
 }
@@ -389,10 +408,10 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="stage">
 <div class="vis">
 <div class="stats">
-<div class="rise" style="--t:.05"><b>2</b><span>台候選，都是 2027 年式</span></div>
-<div class="rise" style="--t:.15"><b>10<small style="font-size:.4em">萬</small></b><span>CX-5 比 CX-30 貴的金額（108.9 對 98.8）</span></div>
-<div class="rise" style="--t:.25"><b>295<small style="font-size:.4em">mm</small></b><span>CX-5 比 CX-30 長，約一個半手掌</span></div>
-<div class="rise" style="--t:.35"><b>21</b><span>項配備不一樣，其餘全部相同</span></div>
+<div class="rise" style="--t:.05"><b><span data-count="2">2</span></b><span>台候選，都是 2027 年式</span></div>
+<div class="rise" style="--t:.15"><b><span data-count="10">10</span><small style="font-size:.4em">萬</small></b><span>CX-5 比 CX-30 貴的金額（108.9 對 98.8）</span></div>
+<div class="rise" style="--t:.25"><b><span data-count="295">295</span><small style="font-size:.4em">mm</small></b><span>CX-5 比 CX-30 長，約一個半手掌</span></div>
+<div class="rise" style="--t:.35"><b><span data-count="21">21</span></b><span>項配備不一樣，其餘全部相同</span></div>
 </div>
 </div>
 <div class="txt">
@@ -519,7 +538,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
 <text x="340" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
 <text x="500" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
-<g data-s="0" data-hi="0">
+<g data-s="0" data-hi="0" class="in-left">
 <text x="42" y="96" class="no">1</text>
 <text x="80" y="74" class="cap">車價</text>
 <text x="80" y="96" class="lb">牌價・萬</text>
@@ -527,7 +546,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <text x="500" y="96" text-anchor="middle" class="lb">108.9</text>
 <line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
 </g>
-<g data-s="1" data-hi="1">
+<g data-s="1" data-hi="1" class="in-left">
 <text x="42" y="166" class="no">2</text>
 <text x="80" y="144" class="cap">每年稅金</text>
 <text x="80" y="166" class="lb">牌照稅＋燃料費</text>
@@ -535,7 +554,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <text x="500" y="166" text-anchor="middle" class="lb">22,410</text>
 <line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
 </g>
-<g data-s="2" data-hi="2">
+<g data-s="2" data-hi="2" class="in-left">
 <text x="42" y="236" class="no">3</text>
 <text x="80" y="214" class="cap">每年保險</text>
 <text x="80" y="236" class="lb">三險合計（估）</text>
@@ -543,7 +562,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <text x="500" y="236" text-anchor="middle" class="lb">約 3.2 萬</text>
 <line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
 </g>
-<g data-s="3" data-hi="3">
+<g data-s="3" data-hi="3" class="in-left">
 <text x="42" y="306" class="no">4</text>
 <text x="80" y="284" class="cap">保養</text>
 <text x="80" y="306" class="lb">6 萬公里累計</text>
@@ -659,7 +678,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
 <text x="340" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
 <text x="500" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
-<g data-s="0" data-until="1">
+<g data-s="0" data-until="1" class="in-right">
 <text x="80" y="90" class="lb">引擎</text><text x="340" y="90" text-anchor="middle" class="lb">2.0L 165 匹</text><text x="500" y="90" text-anchor="middle" class="lb">2.5L 188 匹</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
 <text x="80" y="146" class="lb">驅動</text><text x="340" y="146" text-anchor="middle" class="lb">前驅</text><text x="500" y="146" text-anchor="middle" class="lb">四驅</text>
@@ -672,7 +691,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
 <text x="300" y="380" text-anchor="middle" class="cap">動力與車體</text>
 </g>
-<g data-s="1" data-until="2">
+<g data-s="1" data-until="2" class="in-right">
 <text x="80" y="90" class="lb">氣囊</text><text x="340" y="90" text-anchor="middle" class="lb">7 顆</text><text x="500" y="90" text-anchor="middle" class="lb">9 顆</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
 <text x="80" y="146" class="lb">360 環景</text><text x="340" y="146" text-anchor="middle" class="lb">有</text><text x="500" y="146" text-anchor="middle" class="lb">無・倒車顯影</text>
@@ -685,7 +704,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
 <text x="300" y="380" text-anchor="middle" class="cap">安全與空間</text>
 </g>
-<g data-s="2" data-until="3">
+<g data-s="2" data-until="3" class="in-right">
 <text x="80" y="90" class="lb">座椅材質</text><text x="340" y="90" text-anchor="middle" class="lb">真皮</text><text x="500" y="90" text-anchor="middle" class="lb">透氣真皮</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
 <text x="80" y="146" class="lb">前座加熱</text><text x="340" y="146" text-anchor="middle" class="lb">有</text><text x="500" y="146" text-anchor="middle" class="lb">無</text>
@@ -698,7 +717,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
 <text x="300" y="380" text-anchor="middle" class="cap">座椅與小配備</text>
 </g>
-<g data-s="3">
+<g data-s="3" class="in-right">
 <text x="80" y="90" class="lb">中控・儀表</text><text x="340" y="90" text-anchor="middle" class="lb">10.25・7 吋</text><text x="500" y="90" text-anchor="middle" class="lb">12.9・10.25 吋</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
 <text x="80" y="146" class="lb">喇叭</text><text x="340" y="146" text-anchor="middle" class="lb">8 支</text><text x="500" y="146" text-anchor="middle" class="lb">12 支 BOSE</text>
@@ -773,21 +792,21 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="stage">
 <div class="vis">
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
-<g data-s="0" data-hi="0">
+<g data-s="0" data-hi="0" class="in-grow">
 <text x="42" y="96" class="no">1</text>
 <text x="80" y="74" class="cap">我會選</text>
 <text x="80" y="96" class="lb">CX-5 Exclusive 108.9 萬</text>
 <text x="560" y="96" text-anchor="end" class="sub">多付的錢買的是換不掉的東西</text>
 <line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
 </g>
-<g data-s="1" data-hi="1">
+<g data-s="1" data-hi="1" class="in-grow">
 <text x="42" y="166" class="no">2</text>
 <text x="80" y="144" class="cap">什麼情況改選</text>
 <text x="80" y="166" class="lb">CX-30 Premium 98.8 萬</text>
 <text x="560" y="166" text-anchor="end" class="sub">100 萬是硬上限、或單車不必進車廂</text>
 <line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
 </g>
-<g data-s="2" data-hi="2">
+<g data-s="2" data-hi="2" class="in-grow">
 <text x="42" y="236" class="no">3</text>
 <text x="80" y="214" class="cap">展間要問</text>
 <text x="80" y="236" class="lb">折扣、油耗、保養價目</text>
@@ -918,6 +937,32 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
   measure();
 
   // 分階段頁：data-s 從第幾階段起出現、data-until 到第幾階段消失、data-hi 哪幾個階段強調
+  // 數字跳動（版型動法菜單）：元素一出現就從 0 數到 data-count，只跑一次
+  function runCount(el) {
+    if (el._counted) return;
+    var to = parseFloat(el.dataset.count);
+    if (isNaN(to)) return;
+    el._counted = true;
+    var dec = +(el.dataset.dec || 0), pre = el.dataset.pre || '', suf = el.dataset.suf || '', sep = !!el.dataset.sep;
+    function put(v) {
+      var t = sep ? v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) : v.toFixed(dec);
+      el.textContent = pre + t + suf;
+    }
+    if (reduce) { put(to); return; }
+    var t0 = performance.now(), dur = 900;
+    (function frame(now) {
+      var u = clamp01((now - t0) / dur); u = 1 - Math.pow(1 - u, 3);
+      put(to * u);
+      if (u < 1) requestAnimationFrame(frame);
+    })(t0);
+  }
+  function countVisible(s) {
+    s.querySelectorAll('[data-count]').forEach(function (el) {
+      var g = el.closest ? el.closest('[data-s]') : null;
+      if (!g || g.classList.contains('on')) runCount(el);
+    });
+  }
+
   function applyStage(s, k) {
     if (s._stage === k) return;
     s._stage = k;
@@ -933,6 +978,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
       li.classList.toggle('cur', i === k); li.classList.toggle('done', i < k);
     });
     s.querySelectorAll('.step').forEach(function (p) { p.classList.toggle('cur', +p.dataset.k === k); });
+    countVisible(s);
     placePt(s);
   }
   // 清單旁那顆霧藍點是同一顆在滑（openai demo 的 marks .pt）：算出現在這項的位置、translate 過去
@@ -967,6 +1013,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
   function enter(s) {
     if (s._entered) return;
     s._entered = true;
+    countVisible(s);
     if (reduce) { paint(s, 1); return; }
     var dur = s.classList.contains('hero') ? 2400 : 1000, t0 = performance.now();
     (function frame(now) {
