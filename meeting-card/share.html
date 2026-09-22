@@ -177,16 +177,16 @@ function flexMessage(d, start, end){
   //                    所以指到 card.html?…&go=ics，那一頁一載入就直接下載。
   const footer = [];
   if(d.u){
-    footer.push({type:'button', style:'primary', color:'#1d5fd0', height:'sm',
+    footer.push({type:'button', style:'primary', color:'#1d5fd0', 
       action:{type:'uri', label:'前往會議', uri:d.u}});
   }
   if(start){
-    footer.push({type:'button', style:'secondary', height:'sm',
+    footer.push({type:'button', style:'secondary', 
       action:{type:'uri', label:'加入 Google 行事曆', uri:googleUrl(d, start, end)}});
-    footer.push({type:'button', style:'secondary', height:'sm',
+    footer.push({type:'button', style:'secondary', 
       action:{type:'uri', label:'加入 Apple 行事曆', uri:cardUrlFor(d, 'ics')}});
   }else{
-    footer.push({type:'button', style:'secondary', height:'sm',
+    footer.push({type:'button', style:'secondary', 
       action:{type:'uri', label:'看邀請卡', uri:cardUrlFor(d)}});
   }
 
@@ -285,14 +285,18 @@ async function main(){
         button('重新選擇要傳給誰', pick);
       }
     }catch(e){
-      say('傳送失敗：' + (e && e.message ? e.message : e), true);
+      // LIFF 的錯誤物件常常沒有 message，只有 code；三個都印出來才查得到原因
+      const detail = [e && e.code, e && e.name, e && e.message].filter(Boolean).join(' / ');
+      say('傳送失敗：' + (detail || String(e)), true);
       button('再試一次', pick);
     }
   }
 
-  const go = button('選擇要傳給誰', pick);
-  // 直接幫他按一次，省一步；被擋下來的話上面那顆按鈕還在
-  try{ go.click(); }catch(e){ /* 擋掉就讓他自己按 */ }
+  // 只放按鈕，不要自動幫他按。
+  // 2026-09-22 踩過：本來用 go.click() 想省一下，結果一進頁面就跳「傳送失敗：Error」。
+  // shareTargetPicker 要由「真的手指按」才打得開，程式自己觸發的 click 會被擋，
+  // 而且錯誤物件沒有 message，畫面上只會看到一個裸的 Error。別再加回來。
+  button('選擇要傳給誰', pick);
 }
 
 main();
