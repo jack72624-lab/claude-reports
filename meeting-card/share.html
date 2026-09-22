@@ -127,6 +127,12 @@ function cardUrlFor(d, go){
 function icsUrl(d){
   const u = new URL(ICS_URL);
   FIELDS.forEach(k => { if(d[k]) u.searchParams.set(k, d[k]); });
+  // 強制用手機的 Safari／Chrome 開，不要用 LINE 內建的瀏覽器。
+  // LINE 內建瀏覽器（WKWebView）不會處理 text/calendar，畫面會整片空白
+  // （2026-09-22 Jack 在 iPhone 實際踩到）。這個參數是 LINE 官方的，
+  // 對一般網址有效、只有 LIFF 網址無效，我們這支不是 LIFF 所以可用。
+  // 參考 https://developers.line.biz/en/docs/line-login/using-line-url-scheme/
+  u.searchParams.set('openExternalBrowser', '1');
   return u.toString();
 }
 
