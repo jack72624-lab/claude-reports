@@ -329,8 +329,24 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
   .dg .draw{stroke-dashoffset:0}
   .hero .typed .dot,.hero .hint::after{animation:none}
 }
-@media (max-width:860px){.slide.photo .vis{margin-top:16px}
-  .dg text.lb{font-size:16px}.dg text.cap{font-size:13px}.dg text.sub{font-size:14px}.dg text.no{font-size:34px}}
+@media (max-width:860px){.slide.photo .vis{margin-top:20px}
+  .dg text.lb{font-size:16px}.dg text.cap{font-size:13px}.dg text.sub{font-size:14px}.dg text.no{font-size:34px}
+  /* 2026-09-22 Jack：手機看太擠。圖矮一點（34→31dvh）把高度讓給文字，行距與段距都放寬 */
+  .stage,.slide.flip .stage{gap:16px;padding:64px 20px 22px}
+  .vis{max-height:31dvh}.vis svg.dg{max-height:30dvh}
+  .txt .tag{margin-bottom:10px}
+  .txt h2{font-size:23px;line-height:1.35;margin-bottom:12px}
+  .txt p.lead{font-size:15px;line-height:1.75;margin-bottom:14px}
+  .kp{gap:10px}.kp li{line-height:1.7}
+  .marks{gap:2px 16px;margin-bottom:12px}
+  .marks li{padding:5px 0 5px 14px}
+  .step{font-size:15px;line-height:1.75}
+  .step .k{margin-bottom:6px}
+  .txt p.note{line-height:1.65;margin-top:14px;padding-top:12px}
+  .opener .vis{max-height:none;margin-top:16px}.opener .txt .chno{font-size:38px}.opener .txt h2{margin-bottom:10px}}
+/* 手機沒有方向鍵：整份關掉手指捲動，改由 script 裡的 touch 手勢一小格一小格走（幻燈頁換階段、表格段每次捲 85% 屏）。
+   一開始只關幻燈頁、表格段留原生捲動，實測捲到段尾時 scroll-snap 會把短滑吸回去、要用力甩才翻得過，所以整份統一 */
+@media (pointer:coarse){body{touch-action:pinch-zoom}}
 </style>
 </head>
 <body>
@@ -360,8 +376,8 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </div>
 <div class="txt">
 <span class="tag">Mazda 台灣 · 2027 年式 · 2026-09-22 查證</span>
-<h1>CX-30 Premium 對 CX-5 Elite、Exclusive</h1>
-<div class="typed"><span id="typed" data-text="三台逐項對完，選哪台。"></span><span class="dot" id="tdot"></span></div>
+<h1>CX-30 Premium 對 CX-5 Exclusive</h1>
+<div class="typed"><span id="typed" data-text="兩台逐項對完，選哪台。"></span><span class="dot" id="tdot"></span></div>
 <p class="sub rise" style="--t:.66">先看錢，再看一樣的和不一樣的，最後一頁是我的選擇。配備名詞看不懂，翻到最後的附錄。</p>
 </div>
 <div class="hint">Scroll</div>
@@ -373,21 +389,21 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="stage">
 <div class="vis">
 <div class="stats">
-<div class="rise" style="--t:.05"><b>3</b><span>台候選：CX-30 Premium、CX-5 Elite、CX-5 Exclusive，都是 2027 年式</span></div>
-<div class="rise" style="--t:.15"><b>4<small style="font-size:.4em">萬</small></b><span>CX-5 Elite 比 CX-30 Premium 便宜的金額</span></div>
-<div class="rise" style="--t:.25"><b>295<small style="font-size:.4em">mm</small></b><span>CX-5 比 CX-30 長的距離，約一個半手掌</span></div>
-<div class="rise" style="--t:.35"><b>25</b><span>項配備不一樣，其餘全部相同</span></div>
+<div class="rise" style="--t:.05"><b>2</b><span>台候選，都是 2027 年式</span></div>
+<div class="rise" style="--t:.15"><b>10<small style="font-size:.4em">萬</small></b><span>CX-5 比 CX-30 貴的金額（108.9 對 98.8）</span></div>
+<div class="rise" style="--t:.25"><b>295<small style="font-size:.4em">mm</small></b><span>CX-5 比 CX-30 長，約一個半手掌</span></div>
+<div class="rise" style="--t:.35"><b>21</b><span>項配備不一樣，其餘全部相同</span></div>
 </div>
 </div>
 <div class="txt">
 <span class="chno">01</span>
 <span class="tag">Chapter 01</span>
 <h2>先認識這兩台</h2>
-<p class="lead">同一家、同一種引擎設計、同一套安全配備。差在大小、動力、和椅子舒不舒服。</p>
+<p class="lead">引擎設計、安全配備、椅子、抬頭顯示都一樣。差在大小、動力、螢幕，和 10 萬。</p>
 <ul class="kp">
-<li class="rise" style="--t:.06"><b>CX-30</b>小一號的跨界休旅，2.0L 前輪驅動。Premium 是中高階，配備幾乎給滿。</li>
-<li class="rise" style="--t:.18"><b>CX-5</b>中型休旅，第三代 2026 年 8 月剛上市。2.5L、全車系四輪驅動。</li>
-<li class="rise" style="--t:.30"><b>Elite 與 Exclusive</b>同一台 CX-5 的最低階和第二階，差 14 萬，差在椅子和音響。</li>
+<li class="rise" style="--t:.06"><b>CX-30</b>小一號跨界休旅，2.0L 前驅。Premium 配備幾乎給滿。</li>
+<li class="rise" style="--t:.18"><b>CX-5</b>中型休旅，第三代今年 8 月剛上市。2.5L、全車系四驅。</li>
+<li class="rise" style="--t:.30"><b>差 10.1 萬</b>CX-30 98.8 在 100 萬預算內；CX-5 108.9 超出 8.9 萬。</li>
 </ul>
 </div>
 </div>
@@ -442,12 +458,12 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </svg>
 </div>
 <div class="txt">
-<span class="tag">Mazda CX-5 · Elite 94.9 · Exclusive 108.9</span>
+<span class="tag">Mazda CX-5 · Exclusive 108.9</span>
 <h2>大一號、四輪驅動、2.5L 188 匹</h2>
 <p class="lead">車長 4.69 公尺、軸距 2,815。第三代 2026 年 8 月 18 日上市，全車系四驅、無渦輪。</p>
 <ul class="kp">
 <li><b>空間是它的理由</b>後座 4/2/4 分割，中間放倒可以穿長物、兩邊還能坐人。原廠型錄寫放得下公路車。</li>
-<li><b>Elite 與 Exclusive 外觀差</b>17 吋鎢灰輪圈對 19 吋鈦黑輪圈；Exclusive 多車頂架和前後 LED 光條。</li>
+<li><b>外觀</b>19 吋鈦黑輪圈、車頂架、前後 LED 光條。輪胎比 CX-30 的 18 吋貴一點。</li>
 <li><b>要注意</b>剛換代，沒有任何車主開過一年。油耗還在能源局認證中。</li>
 </ul>
 <p class="note">圖：Mazda 台灣官網。</p>
@@ -464,12 +480,11 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </div>
 <div class="txt">
 <span class="tag">Mazda CX-5 · 內裝</span>
-<h2>12.9 吋大螢幕、10.25 吋儀表，椅子看等級</h2>
-<p class="lead">新內裝兩款都一樣：大螢幕、數位儀表、手機無線充電、9 顆氣囊。差在椅子和音響。</p>
+<h2>12.9 吋大螢幕、10.25 吋儀表、12 支 BOSE</h2>
+<p class="lead">比 CX-30 大很多的螢幕、數位儀表、手機無線充電、9 顆氣囊。椅子跟 CX-30 同等級。</p>
 <ul class="kp">
-<li><b>Elite</b>織布椅、手動調整、沒有抬頭顯示、沒有電動尾門、8 支喇叭。</li>
-<li><b>Exclusive</b>透氣真皮、十向電動附記憶、前座通風、抬頭顯示、電動尾門、12 支 BOSE。</li>
-<li><b>兩款都沒有</b>360 環景、換檔撥片、前座加熱、方向盤加熱。要再上一階 114.9 萬才有。</li>
+<li><b>有</b>透氣真皮、十向電動附記憶、前座通風、抬頭顯示、電動尾門、後座 USB-C。</li>
+<li><b>沒有</b>360 環景、換檔撥片、前座加熱、方向盤加熱。要再上一階 114.9 萬才有。</li>
 </ul>
 <p class="note">圖：Mazda 台灣官網。</p>
 </div>
@@ -502,46 +517,41 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="stage">
 <div class="vis">
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
-<text x="280" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
-<text x="405" y="44" text-anchor="middle" class="cap">CX-5 Elite</text>
-<text x="530" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
+<text x="340" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
+<text x="500" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
 <g data-s="0" data-hi="0">
 <text x="42" y="96" class="no">1</text>
 <text x="80" y="74" class="cap">車價</text>
 <text x="80" y="96" class="lb">牌價・萬</text>
-<text x="280" y="96" text-anchor="middle" class="lb">98.8</text>
-<text x="405" y="96" text-anchor="middle" class="lb">94.9</text>
-<text x="530" y="96" text-anchor="middle" class="lb">108.9</text>
+<text x="340" y="96" text-anchor="middle" class="lb">98.8</text>
+<text x="500" y="96" text-anchor="middle" class="lb">108.9</text>
 <line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
 </g>
 <g data-s="1" data-hi="1">
 <text x="42" y="166" class="no">2</text>
 <text x="80" y="144" class="cap">每年稅金</text>
 <text x="80" y="166" class="lb">牌照稅＋燃料費</text>
-<text x="280" y="166" text-anchor="middle" class="lb">17,410</text>
-<text x="405" y="166" text-anchor="middle" class="lb">22,410</text>
-<text x="530" y="166" text-anchor="middle" class="lb">22,410</text>
+<text x="340" y="166" text-anchor="middle" class="lb">17,410</text>
+<text x="500" y="166" text-anchor="middle" class="lb">22,410</text>
 <line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
 </g>
 <g data-s="2" data-hi="2">
 <text x="42" y="236" class="no">3</text>
 <text x="80" y="214" class="cap">每年保險</text>
 <text x="80" y="236" class="lb">三險合計（估）</text>
-<text x="280" y="236" text-anchor="middle" class="lb">約 3.0 萬</text>
-<text x="405" y="236" text-anchor="middle" class="lb">約 2.9 萬</text>
-<text x="530" y="236" text-anchor="middle" class="lb">約 3.2 萬</text>
+<text x="340" y="236" text-anchor="middle" class="lb">約 3.0 萬</text>
+<text x="500" y="236" text-anchor="middle" class="lb">約 3.2 萬</text>
 <line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
 </g>
 <g data-s="3" data-hi="3">
 <text x="42" y="306" class="no">4</text>
 <text x="80" y="284" class="cap">保養</text>
 <text x="80" y="306" class="lb">6 萬公里累計</text>
-<text x="280" y="306" text-anchor="middle" class="lb">21,454</text>
-<text x="405" y="306" text-anchor="middle" class="lb">舊款 26,228</text>
-<text x="530" y="306" text-anchor="middle" class="lb">同 Elite</text>
+<text x="340" y="306" text-anchor="middle" class="lb">21,454</text>
+<text x="500" y="306" text-anchor="middle" class="lb">新款無・舊款 26,228</text>
 <line x1="40" y1="320" x2="560" y2="320" class="thin draw"/>
 </g>
-<text x="300" y="380" text-anchor="middle" class="cap" data-s="3">五年稅金＋強制＋第三人：CX-30 約 13 萬 · CX-5 約 15.5 萬</text>
+<text x="300" y="380" text-anchor="middle" class="cap" data-s="3">五年車價＋稅金＋保險：CX-30 約 123 萬 · CX-5 約 136 萬</text>
 </svg>
 </div>
 <div class="txt">
@@ -550,12 +560,12 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <p class="lead">車價只是第一筆。後面三筆每年都來，其中稅金跟排氣量綁死、跟你開多少無關。</p>
 <ol class="marks"><li>車價</li><li>稅金</li><li>保險</li><li>保養</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 車價</span>Elite 最便宜，比 CX-30 Premium 少 4 萬。Exclusive 超過 100 萬預算 8.9 萬。CX-30 九月中改年式降了 1 萬。</div>
+<div class="step" data-k="0"><span class="k">1 · 車價</span>CX-5 Exclusive 貴 10.1 萬，超過 100 萬預算 8.9 萬。CX-30 九月中改年式降了 1 萬。展間的折扣還沒問。</div>
 <div class="step" data-k="1"><span class="k">2 · 稅金</span><b>牌照稅</b>和<b>燃料費</b>都看排氣量級距。2.0L 一年 17,410，2.5L 一年 22,410，差 5,000，五年差 2.5 萬。</div>
-<div class="step" data-k="2"><span class="k">3 · 保險</span><b>強制險</b> 1,398 三台一樣；<b>第三人責任險</b> 6,400–7,400 跟車無關；<b>乙式車體險</b>跟車價走，估 2.1–2.4 萬，要真報價。</div>
+<div class="step" data-k="2"><span class="k">3 · 保險</span><b>強制險</b> 1,398 兩台一樣；<b>第三人責任險</b> 6,400–7,400 跟車無關；<b>乙式車體險</b>跟車價走，估 2.2 對 2.4 萬，要真報價。</div>
 <div class="step" data-k="3"><span class="k">4 · 保養</span>每 1 萬公里或半年回廠。CX-30 六萬公里累計 21,454；CX-5 新款沒數據，舊款 2.5L 是 26,228。油耗 CX-30 15.0 km/L，CX-5 還在認證。</div>
 </div>
-<p class="note"><b>一句話：</b>CX-5 每年多付約 5,000 稅金，油也多一點。買 Elite 省下的 4 萬夠付八年的稅差。</p>
+<p class="note"><b>一句話：</b>CX-5 每年多付約 5,000 稅金、保險多一點、油也多一點。連車價算五年，差約 13 萬，不含油錢。</p>
 </div>
 </div>
 </section>
@@ -564,34 +574,35 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="grid">
 <div class="lbl">每年費用明細</div>
 <div>
-<h3>三台的持有成本</h3>
+<h3>兩台的持有成本</h3>
 <p>稅金是台北市稅捐處公告；保險是 30–60 歲男性、無肇事紀錄的費率；乙式車體險是拿 Altis 的線上投保例子按車價比例估的，不是報價。</p>
 <div class="tbl-wrap">
 <table class="tbl">
-<thead><tr><th>項目</th><th>CX-30 Premium</th><th>CX-5 Elite</th><th>CX-5 Exclusive</th></tr></thead>
+<thead><tr><th>項目</th><th>CX-30 Premium</th><th>CX-5 Exclusive</th></tr></thead>
 <tbody>
-<tr><td>牌價</td><td>98.8 萬（2027 年式）</td><td class="on">94.9 萬</td><td>108.9 萬</td></tr>
-<tr><td>排氣量</td><td>1,998 cc</td><td>2,488 cc</td><td>2,488 cc</td></tr>
-<tr><td>牌照稅／年</td><td>11,230</td><td>15,210</td><td>15,210</td></tr>
-<tr><td>燃料費／年</td><td>6,180</td><td>7,200</td><td>7,200</td></tr>
-<tr><td>強制險／年</td><td>1,398</td><td>1,398</td><td>1,398</td></tr>
-<tr><td>第三人責任險／年</td><td>6,400–7,400</td><td>6,400–7,400</td><td>6,400–7,400</td></tr>
-<tr><td>固定合計／年</td><td class="on">約 2.6 萬</td><td>約 3.1 萬</td><td>約 3.1 萬</td></tr>
-<tr><td>乙式車體險（估）</td><td>約 2.2 萬</td><td>約 2.1 萬</td><td>約 2.4 萬</td></tr>
-<tr><td>保養 6 萬 km 累計</td><td>21,454</td><td>新款無；舊款 26,228</td><td>同 Elite</td></tr>
-<tr><td>油耗（能源局）</td><td>15.0 km/L・3 級</td><td>認證測試中</td><td>認證測試中</td></tr>
-<tr><td>輪胎</td><td>18 吋 215/55</td><td>17 吋 225/65</td><td>19 吋 225/55（換胎較貴）</td></tr>
-<tr><td>五年稅金＋保險（不含乙式）</td><td class="on">約 13 萬</td><td>約 15.5 萬</td><td>約 15.5 萬</td></tr>
+<tr><td>牌價</td><td class="on">98.8 萬（2027 年式）</td><td>108.9 萬</td></tr>
+<tr><td>排氣量</td><td>1,998 cc</td><td>2,488 cc</td></tr>
+<tr><td>牌照稅／年</td><td>11,230</td><td>15,210</td></tr>
+<tr><td>燃料費／年</td><td>6,180</td><td>7,200</td></tr>
+<tr><td>強制險／年</td><td>1,398</td><td>1,398</td></tr>
+<tr><td>第三人責任險／年</td><td>6,400–7,400</td><td>6,400–7,400</td></tr>
+<tr><td>固定合計／年</td><td class="on">約 2.6 萬</td><td>約 3.1 萬</td></tr>
+<tr><td>乙式車體險（估）</td><td>約 2.2 萬</td><td>約 2.4 萬</td></tr>
+<tr><td>保養 6 萬 km 累計</td><td>21,454</td><td>新款無；舊款 26,228</td></tr>
+<tr><td>油耗（能源局）</td><td>15.0 km/L・3 級</td><td>認證測試中</td></tr>
+<tr><td>輪胎</td><td>18 吋 215/55</td><td>19 吋 225/55（換胎較貴）</td></tr>
+<tr><td>五年稅金＋保險（不含乙式）</td><td class="on">約 13 萬</td><td>約 15.5 萬</td></tr>
+<tr><td>五年車價＋稅金＋保險（含乙式估）</td><td class="on">約 123 萬</td><td>約 136 萬</td></tr>
 </tbody>
 </table>
 </div>
-<div class="band"><span class="k">一句話版本</span><p>CX-5 比 CX-30 每年多約 5,000 稅金；Elite 便宜 4 萬，把八年的差額先賺回來。</p></div>
+<div class="band"><span class="k">一句話版本</span><p>CX-5 Exclusive 車價貴 10.1 萬、每年多約 5,000 稅金；五年下來差約 13 萬，不含油錢。</p></div>
 </div>
 </div>
 </section>
 
 <!-- ═══ 03 一樣的 ═══ -->
-<section class="slide" id="s3" data-ch="03 一樣的" data-sub="不用比的" data-stages="3">
+<section class="slide" id="s3" data-ch="03 一樣的" data-sub="不用比的" data-stages="4">
 <div class="stage">
 <div class="vis">
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
@@ -609,103 +620,111 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </g>
 <g data-s="2" data-hi="2">
 <text x="42" y="236" class="no">3</text>
-<text x="80" y="214" class="cap">便利配備</text>
-<text x="80" y="236" class="lb">無線 CarPlay、Keyless、雙區恆溫、LED 頭燈、Auto Hold</text>
+<text x="80" y="214" class="cap">舒適</text>
+<text x="80" y="236" class="lb">真皮十向電動椅附記憶、前座通風、抬頭顯示、電動尾門</text>
 <line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
 </g>
-<g data-s="2">
-<text x="80" y="300" class="cap">三台都沒有</text>
-<text x="80" y="322" class="sub">FCTA 前方橫向車流警示・ALH 進階頭燈・方向盤加熱・天窗</text>
+<g data-s="3" data-hi="3">
+<text x="42" y="306" class="no">4</text>
+<text x="80" y="284" class="cap">便利配備</text>
+<text x="80" y="306" class="lb">無線 CarPlay、Keyless、雙區恆溫、LED 頭燈、Auto Hold</text>
+<line x1="40" y1="320" x2="560" y2="320" class="thin draw"/>
+</g>
+<g data-s="3">
+<text x="80" y="362" class="cap">兩台都沒有</text>
+<text x="80" y="384" class="sub">FCTA 前方橫向車流警示・ALH 進階頭燈・方向盤加熱・天窗</text>
 </g>
 </svg>
 </div>
 <div class="txt">
 <span class="tag">Chapter 03 · 不用比的</span>
-<h2>三台一樣的東西</h2>
+<h2>兩台一樣的東西</h2>
 <p class="lead">這些不用拿來選，因為選哪台都有。</p>
-<ol class="marks"><li>動力型式</li><li>安全</li><li>便利</li></ol>
+<ol class="marks"><li>動力型式</li><li>安全</li><li>舒適</li><li>便利</li></ol>
 <div class="steps">
 <div class="step" data-k="0"><span class="k">1 · 動力型式</span><b>自然進氣</b>＝沒有渦輪增壓器，結構簡單、少一個會壞的東西。<b>6 速手自排</b>＝傳統齒輪變速箱，比 CVT 鋼帶式耐用。</div>
 <div class="step" data-k="1"><span class="k">2 · 安全</span>Mazda 叫 i-Activsense。全速域跟車、塞車時幫你維持車道、快撞到自動煞車、盲點警示、倒車時偵測左右來車、自動遠光燈。每一項的白話解釋在附錄。</div>
-<div class="step" data-k="2"><span class="k">3 · 便利</span>手機不插線就能投到中控、鑰匙放口袋就能開門發動、駕駛與副駕各自設溫度、紅燈踩停放開煞車不會滑。</div>
+<div class="step" data-k="2"><span class="k">3 · 舒適</span>兩台都是真皮椅、十向電動附兩組記憶、椅面會吹風。抬頭顯示把車速投在前擋玻璃上。尾門按鍵開關，都不是腳踢式。</div>
+<div class="step" data-k="3"><span class="k">4 · 便利</span>手機不插線就能投到中控、鑰匙放口袋就能開門發動、駕駛與副駕各自設溫度、紅燈踩停放開煞車不會滑。</div>
 </div>
-<p class="note"><b>三台都沒有：</b>從巷口探出去時偵測左右來車（FCTA）、會自動遮對向車的遠燈（ALH）、方向盤加熱、天窗。</p>
+<p class="note"><b>兩台都沒有：</b>從巷口探出去時偵測左右來車（FCTA）、會自動遮對向車的遠燈（ALH）、方向盤加熱、天窗。</p>
 </div>
 </div>
 </section>
 
 <!-- ═══ 04 不一樣的 ═══ -->
-<section class="slide flip" id="s4" data-ch="04 不一樣的" data-sub="25 項" data-stages="4">
+<section class="slide flip" id="s4" data-ch="04 不一樣的" data-sub="21 項" data-stages="4">
 <div class="stage">
 <div class="vis">
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
-<text x="280" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
-<text x="405" y="44" text-anchor="middle" class="cap">CX-5 Elite</text>
-<text x="530" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
+<text x="340" y="44" text-anchor="middle" class="cap">CX-30 Premium</text>
+<text x="500" y="44" text-anchor="middle" class="cap">CX-5 Exclusive</text>
 <g data-s="0" data-until="1">
-<text x="80" y="90" class="lb">引擎</text><text x="280" y="90" text-anchor="middle" class="lb">2.0L 165 匹</text><text x="405" y="90" text-anchor="middle" class="lb">2.5L 188 匹</text><text x="530" y="90" text-anchor="middle" class="lb">同 Elite</text>
+<text x="80" y="90" class="lb">引擎</text><text x="340" y="90" text-anchor="middle" class="lb">2.0L 165 匹</text><text x="500" y="90" text-anchor="middle" class="lb">2.5L 188 匹</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
-<text x="80" y="146" class="lb">驅動</text><text x="280" y="146" text-anchor="middle" class="lb">前驅</text><text x="405" y="146" text-anchor="middle" class="lb">四驅</text><text x="530" y="146" text-anchor="middle" class="lb">四驅</text>
+<text x="80" y="146" class="lb">驅動</text><text x="340" y="146" text-anchor="middle" class="lb">前驅</text><text x="500" y="146" text-anchor="middle" class="lb">四驅</text>
 <line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
-<text x="80" y="202" class="lb">車長・軸距</text><text x="280" y="202" text-anchor="middle" class="lb">4,395・2,655</text><text x="405" y="202" text-anchor="middle" class="lb">4,690・2,815</text><text x="530" y="202" text-anchor="middle" class="lb">同 Elite</text>
+<text x="80" y="202" class="lb">車長・軸距</text><text x="340" y="202" text-anchor="middle" class="lb">4,395・2,655</text><text x="500" y="202" text-anchor="middle" class="lb">4,690・2,815</text>
 <line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
-<text x="80" y="258" class="lb">車重</text><text x="280" y="258" text-anchor="middle" class="lb">1,408 kg</text><text x="405" y="258" text-anchor="middle" class="lb">1,684 kg</text><text x="530" y="258" text-anchor="middle" class="lb">1,703 kg</text>
+<text x="80" y="258" class="lb">車重</text><text x="340" y="258" text-anchor="middle" class="lb">1,408 kg</text><text x="500" y="258" text-anchor="middle" class="lb">1,703 kg</text>
 <line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
-<text x="80" y="314" class="lb">油耗</text><text x="280" y="314" text-anchor="middle" class="lb">15.0 km/L</text><text x="405" y="314" text-anchor="middle" class="lb">認證中</text><text x="530" y="314" text-anchor="middle" class="lb">認證中</text>
+<text x="80" y="314" class="lb">油耗</text><text x="340" y="314" text-anchor="middle" class="lb">15.0 km/L</text><text x="500" y="314" text-anchor="middle" class="lb">認證中</text>
 <line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
 <text x="300" y="380" text-anchor="middle" class="cap">動力與車體</text>
 </g>
 <g data-s="1" data-until="2">
-<text x="80" y="90" class="lb">氣囊</text><text x="280" y="90" text-anchor="middle" class="lb">7 顆</text><text x="405" y="90" text-anchor="middle" class="lb">9 顆</text><text x="530" y="90" text-anchor="middle" class="lb">9 顆</text>
+<text x="80" y="90" class="lb">氣囊</text><text x="340" y="90" text-anchor="middle" class="lb">7 顆</text><text x="500" y="90" text-anchor="middle" class="lb">9 顆</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
-<text x="80" y="146" class="lb">360 環景</text><text x="280" y="146" text-anchor="middle" class="lb">有</text><text x="405" y="146" text-anchor="middle" class="lb">無・倒車顯影</text><text x="530" y="146" text-anchor="middle" class="lb">無・倒車顯影</text>
+<text x="80" y="146" class="lb">360 環景</text><text x="340" y="146" text-anchor="middle" class="lb">有</text><text x="500" y="146" text-anchor="middle" class="lb">無・倒車顯影</text>
 <line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
-<text x="80" y="202" class="lb">轉向頭燈</text><text x="280" y="202" text-anchor="middle" class="lb">AFS 有</text><text x="405" y="202" text-anchor="middle" class="lb">無</text><text x="530" y="202" text-anchor="middle" class="lb">無</text>
+<text x="80" y="202" class="lb">轉向頭燈</text><text x="340" y="202" text-anchor="middle" class="lb">AFS 有</text><text x="500" y="202" text-anchor="middle" class="lb">無</text>
 <line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
-<text x="80" y="258" class="lb">後座分割</text><text x="280" y="258" text-anchor="middle" class="lb">6/4</text><text x="405" y="258" text-anchor="middle" class="lb">4/2/4</text><text x="530" y="258" text-anchor="middle" class="lb">4/2/4</text>
+<text x="80" y="258" class="lb">後座分割</text><text x="340" y="258" text-anchor="middle" class="lb">6/4</text><text x="500" y="258" text-anchor="middle" class="lb">4/2/4</text>
 <line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
+<text x="80" y="314" class="lb">後廂</text><text x="340" y="314" text-anchor="middle" class="lb">430 L</text><text x="500" y="314" text-anchor="middle" class="lb">歐規 583 L</text>
+<line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
 <text x="300" y="380" text-anchor="middle" class="cap">安全與空間</text>
 </g>
 <g data-s="2" data-until="3">
-<text x="80" y="90" class="lb">座椅材質</text><text x="280" y="90" text-anchor="middle" class="lb">真皮</text><text x="405" y="90" text-anchor="middle" class="lb">織布</text><text x="530" y="90" text-anchor="middle" class="lb">透氣真皮</text>
+<text x="80" y="90" class="lb">座椅材質</text><text x="340" y="90" text-anchor="middle" class="lb">真皮</text><text x="500" y="90" text-anchor="middle" class="lb">透氣真皮</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
-<text x="80" y="146" class="lb">駕駛座調整</text><text x="280" y="146" text-anchor="middle" class="lb">十向電動＋記憶</text><text x="405" y="146" text-anchor="middle" class="lb">手動</text><text x="530" y="146" text-anchor="middle" class="lb">十向電動＋記憶</text>
+<text x="80" y="146" class="lb">前座加熱</text><text x="340" y="146" text-anchor="middle" class="lb">有</text><text x="500" y="146" text-anchor="middle" class="lb">無</text>
 <line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
-<text x="80" y="202" class="lb">前座通風</text><text x="280" y="202" text-anchor="middle" class="lb">有</text><text x="405" y="202" text-anchor="middle" class="lb">無</text><text x="530" y="202" text-anchor="middle" class="lb">有</text>
+<text x="80" y="202" class="lb">換檔撥片</text><text x="340" y="202" text-anchor="middle" class="lb">有</text><text x="500" y="202" text-anchor="middle" class="lb">無</text>
 <line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
-<text x="80" y="258" class="lb">前座加熱</text><text x="280" y="258" text-anchor="middle" class="lb">有</text><text x="405" y="258" text-anchor="middle" class="lb">無</text><text x="530" y="258" text-anchor="middle" class="lb">無</text>
+<text x="80" y="258" class="lb">後視鏡記憶</text><text x="340" y="258" text-anchor="middle" class="lb">無</text><text x="500" y="258" text-anchor="middle" class="lb">有</text>
 <line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
-<text x="80" y="314" class="lb">後視鏡記憶</text><text x="280" y="314" text-anchor="middle" class="lb">無</text><text x="405" y="314" text-anchor="middle" class="lb">無</text><text x="530" y="314" text-anchor="middle" class="lb">有</text>
+<text x="80" y="314" class="lb">輪圈</text><text x="340" y="314" text-anchor="middle" class="lb">18 吋</text><text x="500" y="314" text-anchor="middle" class="lb">19 吋</text>
 <line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
-<text x="300" y="380" text-anchor="middle" class="cap">座椅</text>
+<text x="300" y="380" text-anchor="middle" class="cap">座椅與小配備</text>
 </g>
 <g data-s="3">
-<text x="80" y="90" class="lb">中控・儀表</text><text x="280" y="90" text-anchor="middle" class="lb">10.25・7 吋</text><text x="405" y="90" text-anchor="middle" class="lb">12.9・10.25 吋</text><text x="530" y="90" text-anchor="middle" class="lb">同 Elite</text>
+<text x="80" y="90" class="lb">中控・儀表</text><text x="340" y="90" text-anchor="middle" class="lb">10.25・7 吋</text><text x="500" y="90" text-anchor="middle" class="lb">12.9・10.25 吋</text>
 <line x1="40" y1="104" x2="560" y2="104" class="thin draw"/>
-<text x="80" y="146" class="lb">喇叭</text><text x="280" y="146" text-anchor="middle" class="lb">8 支</text><text x="405" y="146" text-anchor="middle" class="lb">8 支</text><text x="530" y="146" text-anchor="middle" class="lb">12 支 BOSE</text>
+<text x="80" y="146" class="lb">喇叭</text><text x="340" y="146" text-anchor="middle" class="lb">8 支</text><text x="500" y="146" text-anchor="middle" class="lb">12 支 BOSE</text>
 <line x1="40" y1="160" x2="560" y2="160" class="thin draw"/>
-<text x="80" y="202" class="lb">抬頭顯示</text><text x="280" y="202" text-anchor="middle" class="lb">有</text><text x="405" y="202" text-anchor="middle" class="lb">無</text><text x="530" y="202" text-anchor="middle" class="lb">有</text>
+<text x="80" y="202" class="lb">無線充電</text><text x="340" y="202" text-anchor="middle" class="lb">無</text><text x="500" y="202" text-anchor="middle" class="lb">有</text>
 <line x1="40" y1="216" x2="560" y2="216" class="thin draw"/>
-<text x="80" y="258" class="lb">無線充電</text><text x="280" y="258" text-anchor="middle" class="lb">無</text><text x="405" y="258" text-anchor="middle" class="lb">有</text><text x="530" y="258" text-anchor="middle" class="lb">有</text>
+<text x="80" y="258" class="lb">後座 USB-C</text><text x="340" y="258" text-anchor="middle" class="lb">型錄沒分前後</text><text x="500" y="258" text-anchor="middle" class="lb">有</text>
 <line x1="40" y1="272" x2="560" y2="272" class="thin draw"/>
-<text x="80" y="314" class="lb">電動尾門・撥片</text><text x="280" y="314" text-anchor="middle" class="lb">有・有</text><text x="405" y="314" text-anchor="middle" class="lb">無・無</text><text x="530" y="314" text-anchor="middle" class="lb">有・無</text>
+<text x="80" y="314" class="lb">車頂架・光條</text><text x="340" y="314" text-anchor="middle" class="lb">無</text><text x="500" y="314" text-anchor="middle" class="lb">有</text>
 <line x1="40" y1="328" x2="560" y2="328" class="thin draw"/>
 <text x="300" y="380" text-anchor="middle" class="cap">車機與便利</text>
 </g>
 </svg>
 </div>
 <div class="txt">
-<span class="tag">Chapter 04 · 25 項</span>
+<span class="tag">Chapter 04 · 21 項</span>
 <h2>不一樣的，分四組看</h2>
-<p class="lead">左邊每翻一組換一批。完整 25 項表在下一頁。</p>
-<ol class="marks"><li>動力車體</li><li>安全空間</li><li>座椅</li><li>車機便利</li></ol>
+<p class="lead">左邊每翻一組換一批。完整 21 項表在下一頁。</p>
+<ol class="marks"><li>動力車體</li><li>安全空間</li><li>座椅配備</li><li>車機便利</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 動力與車體</span>CX-5 多 23 匹、重 280 公斤、長 30 公分，四驅。車重除以馬力兩台差不多，所以「多 23 匹」不會覺得比較快。</div>
-<div class="step" data-k="1"><span class="k">2 · 安全與空間</span>CX-5 多 2 顆氣囊（後座側邊）。CX-30 有 360 環景、CX-5 兩款都只有倒車鏡頭。後座 4/2/4 是載長物的關鍵。</div>
-<div class="step" data-k="2"><span class="k">3 · 座椅</span>Elite 是織布手動椅，其他兩台都是真皮十向電動附記憶。前座加熱只有 CX-30 有；通風 Elite 沒有。</div>
-<div class="step" data-k="3"><span class="k">4 · 車機與便利</span>CX-5 螢幕大很多、有無線充電。CX-30 有抬頭顯示、電動尾門、撥片；Elite 三樣都沒有，Exclusive 補回前兩樣。</div>
+<div class="step" data-k="0"><span class="k">1 · 動力與車體</span>CX-5 多 23 匹、重 295 公斤、長 30 公分，四驅。車重除以馬力兩台差不多，所以不會覺得比較快；差的是穩和大。</div>
+<div class="step" data-k="1"><span class="k">2 · 安全與空間</span>CX-5 多 2 顆氣囊（後座側邊），後座 4/2/4 可以穿長物。CX-30 有 360 環景和轉彎跟著轉的頭燈，CX-5 只有倒車鏡頭。</div>
+<div class="step" data-k="2"><span class="k">3 · 座椅與小配備</span>椅子同等級，CX-5 的真皮是透氣款。CX-30 多前座加熱和換檔撥片；CX-5 多後視鏡記憶，輪圈大一吋、換胎較貴。</div>
+<div class="step" data-k="3"><span class="k">4 · 車機與便利</span>CX-5 螢幕大很多（12.9 對 10.25）、12 支 BOSE、有無線充電和後座 USB-C。CX-30 這四樣都是小一號或沒有。</div>
 </div>
-<p class="note"><b>看的方法：</b>Elite 少的東西全是舒服類；CX-5 多的東西全是換不掉的。</p>
+<p class="note"><b>看的方法：</b>CX-5 多的是大小、四驅、氣囊、螢幕，買了就換不掉；CX-30 多的是環景、加熱、撥片，好用但不是必要。</p>
 </div>
 </div>
 </section>
@@ -714,41 +733,37 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="grid">
 <div class="lbl">完整對照</div>
 <div>
-<h3>25 項不一樣的</h3>
+<h3>21 項不一樣的</h3>
 <p>逐項抄自原廠 2027 年式型錄。每個名詞是什麼意思，附錄有一句話解釋。</p>
 <div class="tbl-wrap">
 <table class="tbl">
-<thead><tr><th>項目</th><th>CX-30 Premium 98.8</th><th>CX-5 Elite 94.9</th><th>CX-5 Exclusive 108.9</th></tr></thead>
+<thead><tr><th>項目</th><th>CX-30 Premium 98.8</th><th>CX-5 Exclusive 108.9</th></tr></thead>
 <tbody>
-<tr><td>引擎</td><td>2.0L 165ps／21.7kg-m</td><td>2.5L 188ps／26.2kg-m</td><td>同 Elite</td></tr>
-<tr><td>驅動</td><td>前輪驅動</td><td class="on">四輪驅動（全車系）</td><td class="on">四輪驅動</td></tr>
-<tr><td>車長／軸距</td><td>4,395／2,655 mm</td><td class="on">4,690／2,815 mm</td><td class="on">同 Elite</td></tr>
-<tr><td>車重</td><td>1,408 kg</td><td>1,684 kg</td><td>1,703 kg</td></tr>
-<tr><td>油箱</td><td>51 L</td><td>58 L</td><td>58 L</td></tr>
-<tr><td>輪圈・輪胎</td><td>18 吋・215/55 R18</td><td>17 吋・225/65 R17</td><td>19 吋・225/55 R19</td></tr>
-<tr><td>油耗（能源局）</td><td>15.0 km/L・3 級</td><td>認證測試中</td><td>認證測試中</td></tr>
-<tr><td>後廂</td><td>430 L（U-CAR）</td><td>台規沒公布・歐規 583 L</td><td>同 Elite</td></tr>
-<tr><td>氣囊</td><td>7 顆</td><td class="on">9 顆</td><td class="on">9 顆</td></tr>
-<tr><td>360 環景</td><td class="on">有</td><td>無（倒車顯影）</td><td>無（倒車顯影）</td></tr>
-<tr><td>轉向頭燈 AFS</td><td class="on">有</td><td>無</td><td>無</td></tr>
-<tr><td>座椅材質</td><td class="on">真皮</td><td>高機能織布</td><td class="on">透氣真皮</td></tr>
-<tr><td>駕駛座調整</td><td class="on">十向電動＋記憶</td><td>手動</td><td class="on">十向電動＋記憶</td></tr>
-<tr><td>前座通風</td><td class="on">有</td><td>無</td><td class="on">有</td></tr>
-<tr><td>前座加熱</td><td class="on">有</td><td>無</td><td>無</td></tr>
-<tr><td>後座分割</td><td>6/4</td><td class="on">4/2/4</td><td class="on">4/2/4</td></tr>
-<tr><td>中控螢幕</td><td>10.25 吋</td><td class="on">12.9 吋</td><td class="on">12.9 吋</td></tr>
-<tr><td>數位儀表</td><td>7 吋</td><td class="on">10.25 吋</td><td class="on">10.25 吋</td></tr>
-<tr><td>喇叭</td><td>8 支</td><td>8 支</td><td class="on">12 支 BOSE</td></tr>
-<tr><td>抬頭顯示 HUD</td><td class="on">有</td><td>無</td><td class="on">有</td></tr>
-<tr><td>手機無線充電</td><td>無</td><td class="on">有</td><td class="on">有</td></tr>
-<tr><td>後座 USB-C</td><td>規配表沒分前後</td><td>無</td><td class="on">有</td></tr>
-<tr><td>電動尾門</td><td class="on">有</td><td>無</td><td class="on">有（非腳踢）</td></tr>
-<tr><td>換檔撥片</td><td class="on">有</td><td>無</td><td>無</td></tr>
-<tr><td>後視鏡記憶・車頂架・LED 光條</td><td>無・—・—</td><td>無・無・無</td><td class="on">有・有・有</td></tr>
+<tr><td>引擎</td><td>2.0L 165ps／21.7kg-m</td><td>2.5L 188ps／26.2kg-m</td></tr>
+<tr><td>驅動</td><td>前輪驅動</td><td class="on">四輪驅動（全車系）</td></tr>
+<tr><td>車長／軸距</td><td>4,395／2,655 mm</td><td class="on">4,690／2,815 mm</td></tr>
+<tr><td>車重</td><td>1,408 kg</td><td>1,703 kg</td></tr>
+<tr><td>油箱</td><td>51 L</td><td>58 L</td></tr>
+<tr><td>輪圈・輪胎</td><td>18 吋・215/55 R18</td><td>19 吋・225/55 R19</td></tr>
+<tr><td>油耗（能源局）</td><td>15.0 km/L・3 級</td><td>認證測試中</td></tr>
+<tr><td>後廂</td><td>430 L（U-CAR）</td><td>台規沒公布・歐規 583 L</td></tr>
+<tr><td>氣囊</td><td>7 顆</td><td class="on">9 顆</td></tr>
+<tr><td>360 環景</td><td class="on">有</td><td>無（倒車顯影）</td></tr>
+<tr><td>轉向頭燈 AFS</td><td class="on">有</td><td>無</td></tr>
+<tr><td>座椅材質</td><td>真皮</td><td class="on">透氣真皮</td></tr>
+<tr><td>前座加熱</td><td class="on">有</td><td>無</td></tr>
+<tr><td>後座分割</td><td>6/4</td><td class="on">4/2/4</td></tr>
+<tr><td>中控螢幕</td><td>10.25 吋</td><td class="on">12.9 吋</td></tr>
+<tr><td>數位儀表</td><td>7 吋</td><td class="on">10.25 吋</td></tr>
+<tr><td>喇叭</td><td>8 支</td><td class="on">12 支 BOSE</td></tr>
+<tr><td>手機無線充電</td><td>無</td><td class="on">有</td></tr>
+<tr><td>後座 USB-C</td><td>規配表沒分前後</td><td class="on">有</td></tr>
+<tr><td>換檔撥片</td><td class="on">有</td><td>無</td></tr>
+<tr><td>後視鏡記憶・車頂架・LED 光條</td><td>無・—・—</td><td class="on">有・有・有</td></tr>
 </tbody>
 </table>
 </div>
-<div class="band"><span class="k">一句話版本</span><p>Elite 少的是舒服的東西；CX-5 多的是大小、氣囊、四驅、4/2/4，這些買了就換不掉。</p></div>
+<div class="band"><span class="k">一句話版本</span><p>CX-5 多的是大小、氣囊、四驅、4/2/4、螢幕，買了就換不掉；CX-30 多的是環景、加熱、撥片，好用但不是必要。</p></div>
 </div>
 </div>
 </section>
@@ -761,38 +776,38 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <g data-s="0" data-hi="0">
 <text x="42" y="96" class="no">1</text>
 <text x="80" y="74" class="cap">我會選</text>
-<text x="80" y="96" class="lb">CX-5 Elite 94.9 萬</text>
-<text x="560" y="96" text-anchor="end" class="sub">少的是舒服，多的是換不掉的</text>
+<text x="80" y="96" class="lb">CX-5 Exclusive 108.9 萬</text>
+<text x="560" y="96" text-anchor="end" class="sub">多付的錢買的是換不掉的東西</text>
 <line x1="40" y1="110" x2="560" y2="110" class="thin draw"/>
 </g>
 <g data-s="1" data-hi="1">
 <text x="42" y="166" class="no">2</text>
 <text x="80" y="144" class="cap">什麼情況改選</text>
 <text x="80" y="166" class="lb">CX-30 Premium 98.8 萬</text>
-<text x="560" y="166" text-anchor="end" class="sub">坐進去覺得布椅不行、或單車放得下</text>
+<text x="560" y="166" text-anchor="end" class="sub">100 萬是硬上限、或單車不必進車廂</text>
 <line x1="40" y1="180" x2="560" y2="180" class="thin draw"/>
 </g>
 <g data-s="2" data-hi="2">
 <text x="42" y="236" class="no">3</text>
-<text x="80" y="214" class="cap">不用看</text>
-<text x="80" y="236" class="lb">CX-5 Exclusive 108.9 萬</text>
-<text x="560" y="236" text-anchor="end" class="sub">14 萬買的東西不對，而且超預算</text>
+<text x="80" y="214" class="cap">展間要問</text>
+<text x="80" y="236" class="lb">折扣、油耗、保養價目</text>
+<text x="560" y="236" text-anchor="end" class="sub">這三格表上還是空的</text>
 <line x1="40" y1="250" x2="560" y2="250" class="thin draw"/>
 </g>
-<text x="300" y="380" text-anchor="middle" class="cap" data-s="2">去展間把單車搬進去試一次，比表格準</text>
+<text x="300" y="380" text-anchor="middle" class="cap" data-s="2">去展間把單車搬進去、後座坐十分鐘，比表格準</text>
 </svg>
 </div>
 <div class="txt">
 <span class="tag">Chapter 05 · 我的選擇</span>
-<h2>選 CX-5 Elite</h2>
-<p class="lead">兩台都是好車，差別在你要空間還是要舒服。我的排序如下。</p>
-<ol class="marks"><li>選 Elite</li><li>改 CX-30</li><li>Exclusive</li></ol>
+<h2>選 CX-5 Exclusive</h2>
+<p class="lead">兩台配備等級一樣高，差別在你要不要那個空間，和願不願意超預算。我的排序如下。</p>
+<ol class="marks"><li>選 CX-5</li><li>改 CX-30</li><li>展間要問</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 選 CX-5 Elite</span>它少的：皮椅、電動椅、抬頭顯示、環景、電尾門。它多的：大一號、後座 4/2/4、9 顆氣囊、四驅，還便宜 4 萬。代價是一年多 5,000 稅金、油多一點、剛換代零數據。</div>
-<div class="step" data-k="1"><span class="k">2 · 什麼情況改 CX-30</span>坐進 Elite 的手動布椅，覺得「95 萬的車這樣不行」；或單車拆前輪放得進 430 公升、你不需要那個空間。這時答案是 CX-30 Premium，不是加錢到 Exclusive。</div>
-<div class="step" data-k="2"><span class="k">3 · Exclusive 為什麼不用看</span>多 14 萬買到皮椅、電動椅、抬頭顯示、BOSE、電尾門、19 吋輪圈。加熱椅、撥片、360 環景還是沒有，要再上一階 114.9 才有。而且超預算 8.9 萬。</div>
+<div class="step" data-k="0"><span class="k">1 · 選 CX-5 Exclusive</span>多付 10.1 萬，買到大一號、後座 4/2/4、9 顆氣囊、四驅、大螢幕、BOSE，這些買了就換不掉。少的是環景、加熱椅、撥片，好用但不必要。代價：超預算 8.9 萬、一年多 5,000 稅金、剛換代零數據。</div>
+<div class="step" data-k="1"><span class="k">2 · 什麼情況改 CX-30</span>100 萬是硬上限、單車拆前輪放得進 430 公升、後座很少坐人。這三個中兩個，就是 CX-30 Premium：配備給滿、五年省 13 萬。要注意它後座椅背很直，長途載家人不舒服。</div>
+<div class="step" data-k="2"><span class="k">3 · 展間要問的三件事</span>折扣後的實際價（差距可能縮小）、CX-5 的油耗（能源局還沒公布）、保養價目表。這三格表上還是空的，問完再拍板。</div>
 </div>
-<p class="note"><b>現在可以做的：</b>約 Mazda 展間，兩台一次看。把單車搬進 Elite、後座坐十分鐘。</p>
+<p class="note"><b>現在可以做的：</b>約 Mazda 展間，兩台一次看。把單車搬進 CX-5、後座坐十分鐘，順便問折扣。</p>
 </div>
 </div>
 </section>
@@ -807,7 +822,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="gh">動力</div>
 <div><dt>自然進氣</dt><dd>引擎靠自己吸空氣，沒有渦輪增壓器。結構簡單、少一個會壞的零件，但同排氣量馬力較低。</dd></div>
 <div><dt>6 速手自排</dt><dd>傳統齒輪式自排變速箱，可以手動切檔。比 CVT（鋼帶無段變速）耐用，換檔有頓挫感是正常的。</dd></div>
-<div><dt>ps／kg-m</dt><dd>ps 是馬力（衝多快），kg-m 是扭力（起步多有力）。CX-5 兩個都多，但車也重 280 公斤，體感差不多。</dd></div>
+<div><dt>ps／kg-m</dt><dd>ps 是馬力（衝多快），kg-m 是扭力（起步多有力）。CX-5 兩個都多，但車也重 295 公斤，體感差不多。</dd></div>
 <div><dt>四輪驅動 AWD</dt><dd>引擎的力量四個輪子都出。雨天、山路、上坡更穩；代價是多耗油、多重量。CX-5 全車系標配，關不掉。</dd></div>
 <div class="gh">主動安全（Mazda 叫 i-Activsense）</div>
 <div><dt>MRCC 全速域主動車距巡航</dt><dd>定速時自動跟著前車保持距離。前車停你也停、前車走你也走。「全速域」＝從塞車到高速都能用。</dd></div>
@@ -815,29 +830,29 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div><dt>SBS 智慧防撞</dt><dd>偵測快撞上前車或行人，先警告、來不及就自動煞車。</dd></div>
 <div><dt>BSM 盲點警示</dt><dd>旁邊車道的後視鏡死角有車時，後視鏡上亮燈；這時打方向燈會響。</dd></div>
 <div><dt>RCTA 後方橫向車流警示</dt><dd>倒車出停車格時，偵測左右有車開過來就警告。</dd></div>
-<div><dt>LAS／LDWS 車道偏移</dt><dd>LDWS 是壓線時警告你；LAS 是輕輕把方向盤拉回車道。三台都有。</dd></div>
+<div><dt>LAS／LDWS 車道偏移</dt><dd>LDWS 是壓線時警告你；LAS 是輕輕把方向盤拉回車道。兩台都有。</dd></div>
 <div><dt>DAA 駕駛疲勞警示</dt><dd>從你握方向盤的方式判斷是不是累了，提醒休息。</dd></div>
 <div><dt>HBC 遠近光自動切換</dt><dd>晚上自動開遠燈，對向有車自動切近燈。</dd></div>
-<div><dt>FCTA 前方橫向車流警示</dt><dd>從巷口慢慢探出去時，偵測左右來車。三台都沒有，要 Premium 以上。</dd></div>
-<div><dt>ALH 進階頭燈</dt><dd>遠燈分成很多區塊，只遮掉對向車那塊、其他保持遠燈。三台都沒有。CX-30 Premium 是舊一代的 AFS：轉彎時頭燈跟著轉。</dd></div>
-<div><dt>360 環景</dt><dd>四個鏡頭合成一張俯視圖，停車時螢幕看得到車子四周。CX-30 有、CX-5 兩款只有倒車鏡頭。</dd></div>
+<div><dt>FCTA 前方橫向車流警示</dt><dd>從巷口慢慢探出去時，偵測左右來車。兩台都沒有，CX-5 要 Premium 以上。</dd></div>
+<div><dt>ALH 進階頭燈</dt><dd>遠燈分成很多區塊，只遮掉對向車那塊、其他保持遠燈。兩台都沒有。CX-30 Premium 是舊一代的 AFS：轉彎時頭燈跟著轉。</dd></div>
+<div><dt>360 環景</dt><dd>四個鏡頭合成一張俯視圖，停車時螢幕看得到車子四周。CX-30 有、CX-5 只有倒車鏡頭。</dd></div>
 <div><dt>氣囊 7 顆 vs 9 顆</dt><dd>CX-5 多的兩顆在後座側邊，保護後座乘客的側撞。</dd></div>
 <div class="gh">舒適與車機</div>
 <div><dt>HUD 抬頭顯示</dt><dd>車速、導航箭頭投在前擋玻璃上，眼睛不用往下看儀表。</dd></div>
-<div><dt>十向電動＋記憶</dt><dd>椅子前後、高低、椅背、腰靠等十個方向用電動調；記憶是存兩個人的位置、一鍵回位。手動＝拉桿自己拉。</dd></div>
+<div><dt>十向電動＋記憶</dt><dd>椅子前後、高低、椅背、腰靠等十個方向用電動調；記憶是存兩個人的位置、一鍵回位。兩台都有。</dd></div>
 <div><dt>前座通風／加熱</dt><dd>通風是椅面吹風、夏天不黏背；加熱是冬天暖椅。台灣通風比加熱實用。</dd></div>
 <div><dt>後座 6/4 vs 4/2/4</dt><dd>後座椅背分幾段各自放倒。4/2/4 中間單獨倒，可以穿長物（公路車、滑雪板）、兩邊還能坐人。6/4 只能兩段。</dd></div>
 <div><dt>換檔撥片</dt><dd>方向盤後面的兩片撥桿，手不離方向盤就能降檔，下坡用引擎煞車。</dd></div>
-<div><dt>電動尾門／腳踢感應</dt><dd>按鍵開關後車廂。腳踢感應是手拿東西時腳在後保桿下掃一下就開，三台都不是腳踢。</dd></div>
+<div><dt>電動尾門／腳踢感應</dt><dd>按鍵開關後車廂。腳踢感應是手拿東西時腳在後保桿下掃一下就開，兩台都不是腳踢。</dd></div>
 <div><dt>Auto Hold</dt><dd>紅燈踩停之後放開煞車，車不會滑。配合電子手煞車（按鈕式，不是拉桿）。</dd></div>
 <div><dt>Qi 無線充電</dt><dd>手機放在中央的板子上就充電，不用插線。</dd></div>
-<div><dt>無線 CarPlay／Android Auto</dt><dd>手機不插線就把地圖、音樂投到中控螢幕。三台都有。</dd></div>
+<div><dt>無線 CarPlay／Android Auto</dt><dd>手機不插線就把地圖、音樂投到中控螢幕。兩台都有。</dd></div>
 <div><dt>Keyless</dt><dd>鑰匙放口袋就能開門、按鈕發動。</dd></div>
 <div><dt>雙區恆溫</dt><dd>駕駛跟副駕各自設溫度。</dd></div>
 <div class="gh">錢的名詞</div>
 <div><dt>牌照稅</dt><dd>每年繳給地方政府的稅，只看排氣量級距、不看你開多少。1,801–2,400cc 是 11,230，2,401–3,000cc 是 15,210。</dd></div>
 <div><dt>燃料費</dt><dd>每年繳給公路局的費用，也是看排氣量、跟你加多少油無關。2025 年 12 月起改叫「公路使用養護安全管理費」，金額沒變。</dd></div>
-<div><dt>強制險</dt><dd>法律規定一定要保。撞到人時賠對方的醫療和死傷，不賠任何車。三台都是 1,398。</dd></div>
+<div><dt>強制險</dt><dd>法律規定一定要保。撞到人時賠對方的醫療和死傷，不賠任何車。兩台都是 1,398。</dd></div>
 <div><dt>第三人責任險</dt><dd>自己選擇保的。撞到別人的車或人，賠超過強制險上限的部分。保費跟車無關、看你的年齡與肇事紀錄。</dd></div>
 <div><dt>乙式車體險</dt><dd>賠自己的車：撞到東西、翻覆、火災。停車被不明原因刮傷不賠（那是更貴的甲式）。保費跟車價走，這份是按比例估的。</dd></div>
 <div><dt>能源局油耗與能效等級</dt><dd>政府測的平均油耗，越高越省。等級 1 級最省、5 級最耗。CX-30 是 3 級，CX-5 新款還在認證。</dd></div>
@@ -850,7 +865,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div>
 <h3>資料從哪來</h3>
 <ul class="rule c2">
-<li><div class="h">配備與規格</div><span>原廠 2027 年式型錄：<a href="https://www.mazda.com.tw/globalassets/cars/cx-30/pdf/2026/0914/2027_mazda-cx-30_brochure_1.pdf" style="border-bottom:1px solid var(--acc)">CX-30 型錄（9/14 版）</a>、<a href="https://www.mazda.com.tw/globalassets/cars/cx-5/pdf/2026_mazda-cx-5_brochure_1.pdf" style="border-bottom:1px solid var(--acc)">CX-5 正式型錄</a>。後廂容積三台規配表都沒列。</span></li>
+<li><div class="h">配備與規格</div><span>原廠 2027 年式型錄：<a href="https://www.mazda.com.tw/globalassets/cars/cx-30/pdf/2026/0914/2027_mazda-cx-30_brochure_1.pdf" style="border-bottom:1px solid var(--acc)">CX-30 型錄（9/14 版）</a>、<a href="https://www.mazda.com.tw/globalassets/cars/cx-5/pdf/2026_mazda-cx-5_brochure_1.pdf" style="border-bottom:1px solid var(--acc)">CX-5 正式型錄</a>。後廂容積兩台規配表都沒列。</span></li>
 <li><div class="h">稅金</div><span><a href="https://tpctax.gov.taipei/ct.asp?xItem=1080492&ctNode=78733&mp=103011" style="border-bottom:1px solid var(--acc)">台北市稅捐處牌照稅級距</a>（2026-07）；燃料費三篇媒體一致（公路局官網是動態頁抓不到）。</span></li>
 <li><div class="h">保險</div><span><a href="https://www.cali.org.tw/Rate/Default" style="border-bottom:1px solid var(--acc)">強制險費率係數</a>（2024-04 版）；第三人與乙式是 2026 年保險比價網的試算，乙式按車價比例換算、不是報價。</span></li>
 <li><div class="h">保養與評價</div><span>CX-30 保養是 U-CAR 養車成本（2025 後）；CX-5 新款沒有任何保養與車主資料，舊款 2.5L 是 2019 年資料，只當量級看。</span></li>
@@ -865,8 +880,8 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <section class="slide end flip" id="end" data-ch="收尾" data-sub="">
 <div class="stage">
 <div>
-<h2 class="rise" style="--t:.1">去展間，把單車搬進 Elite 試一次。</h2>
-<p class="lead rise" style="--t:.3;max-width:32em">椅子坐得下去就是 CX-5 Elite；坐不下去就是 CX-30 Premium。兩台都不會錯。</p>
+<h2 class="rise" style="--t:.1">去展間，把單車搬進 CX-5 試一次。</h2>
+<p class="lead rise" style="--t:.3;max-width:32em">放得進、後座坐得舒服，就是 CX-5 Exclusive；100 萬是硬上限，就是 CX-30 Premium。兩台都不會錯。</p>
 <div class="credit rise" style="--t:.5">資料：Mazda 台灣 2027 年式型錄 · 台北市稅捐處 · 強制險費率<br>2026-09-22 · 給 Jack 看車用</div>
 </div>
 </div>
@@ -1036,6 +1051,20 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
     var tall = next.getBoundingClientRect().height > vh + tol;
     next.scrollIntoView({ behavior: bh, block: d < 0 && tall ? 'end' : 'start' });   // 往上進高段落：先看它的尾巴
     return true;
+  }
+  // 手機沒有方向鍵（Jack 2026-09-22）：手指往上滑一下＝按一次 ↓、往下滑＝↑，跟鍵盤一樣一小格一小格走（幻燈頁換階段、表格段每次 85% 屏）。
+  // 靠 CSS 那條 body{touch-action} 把原生捲動整份關掉，不然短滑會被 scroll-snap 吸回原頁。
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    var t0x = 0, t0y = 0, single = false;
+    window.addEventListener('touchstart', function (e) {
+      var t = e.touches[0]; t0x = t.clientX; t0y = t.clientY; single = e.touches.length === 1;
+    }, { passive: true });
+    window.addEventListener('touchend', function (e) {
+      if (!single || e.touches.length) return;   // 兩指縮放不算
+      var t = e.changedTouches[0], dx = t0x - t.clientX, dy = t0y - t.clientY;
+      if (Math.abs(dy) < 30 || Math.abs(dy) < Math.abs(dx)) return;   // 太短、或偏橫向的不算
+      stepVertical(dy > 0 ? 1 : -1);
+    }, { passive: true });
   }
   window.addEventListener('keydown', function (e) {
     if (e.altKey || e.metaKey || e.ctrlKey) return;
