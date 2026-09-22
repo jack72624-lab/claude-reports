@@ -118,6 +118,12 @@ function decodeData(s){
 // 舊的 ?d= 連結照常運作，不會因為多了這條就失效。
 const FIELDS = ['t','s','e','u','p','o','l','n'];
 
+// Cloudflare Worker，回傳真正的 .ics 檔案（Content-Type: text/calendar）。
+// 以前這一頁是自己用 Blob 生檔案再觸發下載，但 LINE 的內建瀏覽器和
+// iOS Safari 常常把那種下載擋掉，iPhone 就不會跳「加入行事曆」。
+// 改成開一個真的網址之後，手機是照一般檔案處理，穩定得多。
+const ICS_URL = 'https://damp-frost-9576.jack72624.workers.dev/';
+
 function readData(){
   const q = new URLSearchParams(location.search);
   const packed = q.get('d');
@@ -178,6 +184,13 @@ function calDetails(d){
   return lines.join('\n');
 }
 
+// .ics 網址：欄位名稱原樣接給 Worker，Worker 那邊照同一組讀。
+function icsUrl(d){
+  const u = new URL(ICS_URL);
+  FIELDS.forEach(k => { if(d[k]) u.searchParams.set(k, d[k]); });
+  return u.toString();
+}
+
 function googleUrl(d, start, end){
   const p = new URLSearchParams({
     action:'TEMPLATE',
@@ -187,62 +200,6 @@ function googleUrl(d, start, end){
     location: d.l || d.u || ''
   });
   return 'https://calendar.google.com/calendar/render?' + p.toString();
-}
-
-// RFC 5545 規定一行不能超過 75 個 byte，太長要「折行」：
-// 換行之後開頭放一個空格，解析器會把它接回去。中文一個字是 3 個 byte，
-// 不折的話中文說明很容易超過，有些行事曆程式會整個讀不進來。
-function fold(line){
-  const enc = new TextEncoder();
-  const out = [];
-  let cur = '', curBytes = 0;
-  for(const ch of line){                       // 用 for...of 逐字元，避免把中文切斷
-    const n = enc.encode(ch).length;
-    // 續行前面多一個空格，所以續行的可用長度少 1
-    const limit = out.length === 0 ? 75 : 74;
-    if(curBytes + n > limit){ out.push(cur); cur = ''; curBytes = 0; }
-    cur += ch; curBytes += n;
-  }
-  out.push(cur);
-  return out.join('\r\n ');
-}
-
-// .ics 檔內容。RFC 5545 規定換行是 CRLF，描述欄裡的逗號、分號、換行要跳脫。
-function icsText(d, start, end){
-  const esc = t => String(t||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
-  return [
-    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//meeting-card//TW//ZH','CALSCALE:GREGORIAN',
-    'BEGIN:VEVENT',
-    'UID:' + Date.now() + '@meeting-card',
-    'DTSTAMP:' + utcStamp(new Date()),
-    'DTSTART:' + utcStamp(start),
-    'DTEND:' + utcStamp(end),
-    'SUMMARY:' + esc(d.t || '會議'),
-    'DESCRIPTION:' + esc(calDetails(d)),
-    'LOCATION:' + esc(d.l || d.u || ''),
-    'BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:' + esc(d.t || '會議'),'END:VALARM',
-    'END:VEVENT','END:VCALENDAR'
-  ].map(fold).join('\r\n');
-}
-
-function el(tag, attrs, text){
-  const n = document.createElement(tag);
-  for(const k in (attrs||{})) n.setAttribute(k, attrs[k]);
-  if(text != null) n.textContent = text;
-  return n;
-}
-
-// 產生 .ics 檔並讓瀏覽器下載。iPhone 上會跳出「加入行事曆」的畫面。
-function downloadIcs(d, start, end){
-  const blob = new Blob([icsText(d, start, end)], {type:'text/calendar;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const tmp = document.createElement('a');
-  tmp.href = url;
-  tmp.download = (d.t || '會議').replace(/[\/:*?"<>|]/g,'_') + '.ics';
-  document.body.appendChild(tmp);
-  tmp.click();
-  document.body.removeChild(tmp);
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 // 這張卡片自己的網址，但拿掉 go 參數。
@@ -298,26 +255,11 @@ function render(){
     return;
   }
 
-  // ?go=ics：LINE 卡片上「加入 Apple 行事曆」那顆按鈕指到這裡。
-  // Flex 的按鈕只能開網址、不能跑程式，所以下載得由這一頁代勞。
-  // 一載入就先試著下載；iOS Safari 有時候會擋掉「沒有經過手指按」的下載，
-  // 所以底下一定要留一顆按鈕給他自己按，不能只靠自動觸發。
+  // ?go=ics：舊版 LINE 卡片上「加入 Apple 行事曆」那顆按鈕指到這裡。
+  // 現在卡片改成直接開 Worker，但已經傳出去的卡片還在流通，
+  // 所以這一段留著，把人轉過去，不要讓舊連結壞掉。
   if(go === 'ics' && start){
-    const box = el('div', {class:'card'});
-    box.appendChild(el('p', {class:'eyebrow'}, '加入行事曆'));
-    box.appendChild(el('h1', null, d.t));
-    box.appendChild(el('p', {class:'note'}, humanRange(start, end)));
-    const acts = el('div', {class:'actions'});
-    const btn = el('a', {class:'btn primary', href:'#'}, '加入 Apple 行事曆');
-    btn.addEventListener('click', ev => { ev.preventDefault(); downloadIcs(d, start, end); });
-    acts.appendChild(btn);
-    acts.appendChild(el('a', {
-      class:'btn', href: googleUrl(d, start, end), target:'_blank', rel:'noopener'
-    }, '改用 Google 行事曆'));
-    acts.appendChild(el('a', {class:'btn', href: cleanCardUrl()}, '看完整邀請卡'));
-    box.appendChild(acts);
-    app.appendChild(box);
-    try{ downloadIcs(d, start, end); }catch(e){ /* 擋掉就讓他按上面那顆 */ }
+    location.replace(icsUrl(d));
     return;
   }
 
@@ -351,11 +293,12 @@ function render(){
       class:'btn', href: googleUrl(d, start, end), target:'_blank', rel:'noopener'
     }, '加入 Google 行事曆'));
 
-    // Apple／系統行事曆：產生 .ics 檔讓瀏覽器下載，
-    // iPhone 點了會跳出「加入行事曆」的畫面。
-    const ics = el('a', {class:'btn', href:'#'}, '加入 Apple 行事曆');
-    ics.addEventListener('click', ev => { ev.preventDefault(); downloadIcs(d, start, end); });
-    actions.appendChild(ics);
+    // Apple／系統行事曆：開 Worker 給的 .ics 網址。
+    // iPhone 收到 text/calendar 就會跳出「加入行事曆」，
+    // Android 會交給它的預設行事曆。檔案裡帶開會前 15 分鐘提醒。
+    actions.appendChild(el('a', {
+      class:'btn', href: icsUrl(d)
+    }, '加入 Apple 行事曆'));
   }
 
   actions.appendChild(el('a', {
