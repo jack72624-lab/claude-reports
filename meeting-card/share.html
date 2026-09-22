@@ -189,10 +189,12 @@ function flexMessage(d, start, end){
   }
 
   // 按鈕。Flex 的按鈕只能「開一個網址」，不能跑程式。
-  // 「加入行事曆」指到 Worker，回傳的是一個真的 .ics 檔案：
-  // iPhone 會跳系統行事曆、Android 會跳它的預設行事曆，一顆通吃。
-  // 檔案裡帶了開會前 15 分鐘的提醒（TRIGGER:-PT15M）。
-  // 想用 Google 行事曆的人，點「看邀請卡」那頁還有專用按鈕。
+  // 兩種行事曆各給一顆，因為對方用哪一套我們不知道（2026-09-23 Jack
+  // 在 iPhone 實測兩顆都會跳到各自的 App，所以不合併）：
+  //   Google → 純網址，LINE 內建瀏覽器直接開得起來。
+  //   Apple  → 指到 Worker。從 LINE 點會先看到一頁「請用 Safari 開」，
+  //            換 Safari 之後才拿得到 .ics（LINE 的瀏覽器開不了行事曆檔）。
+  //            .ics 裡帶開會前 15 分鐘的提醒（TRIGGER:-PT15M）。
   const footer = [];
   if(d.u){
     footer.push({type:'button', style:'primary', color:'#1d5fd0', 
@@ -200,7 +202,9 @@ function flexMessage(d, start, end){
   }
   if(start){
     footer.push({type:'button', style:'secondary', 
-      action:{type:'uri', label:'加入行事曆', uri:icsUrl(d)}});
+      action:{type:'uri', label:'加入 Google 行事曆', uri:googleUrl(d, start, end)}});
+    footer.push({type:'button', style:'secondary', 
+      action:{type:'uri', label:'加入 Apple 行事曆', uri:icsUrl(d)}});
   }else{
     footer.push({type:'button', style:'secondary', 
       action:{type:'uri', label:'看邀請卡', uri:cardUrlFor(d)}});
