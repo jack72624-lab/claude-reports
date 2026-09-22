@@ -76,6 +76,10 @@
 <script>
 const LIFF_ID = '2011700361-ZulqKsCR';
 const CARD_URL = new URL('card.html', location.href).toString();
+// Cloudflare Worker，回傳真正的 .ics 檔案。
+// 靜態網站給不出 Content-Type: text/calendar，iPhone 就不會跳
+// 「加入行事曆」，所以這一段一定要走外部服務。
+const ICS_URL = 'https://damp-frost-9576.jack72624.workers.dev/';
 const FIELDS = ['t','s','e','u','p','o','l','n'];
 
 // ---- 讀網址參數（跟 card.html 同一套規則）----
@@ -116,6 +120,13 @@ function cardUrlFor(d, go){
   const u = new URL(CARD_URL);
   FIELDS.forEach(k => { if(d[k]) u.searchParams.set(k, d[k]); });
   if(go) u.searchParams.set('go', go);
+  return u.toString();
+}
+
+// .ics 網址：欄位名稱跟 card.html 完全一樣，Worker 那邊照同一組讀。
+function icsUrl(d){
+  const u = new URL(ICS_URL);
+  FIELDS.forEach(k => { if(d[k]) u.searchParams.set(k, d[k]); });
   return u.toString();
 }
 
@@ -171,10 +182,11 @@ function flexMessage(d, start, end){
     body.push({type:'box', layout:'vertical', spacing:'sm', margin:'lg', contents:rows});
   }
 
-  // 按鈕。Flex 的按鈕只能「開一個網址」，不能跑程式，所以：
-  //   Google 行事曆 → 本來就是一個純網址，可以直接放，點一下就進 Google。
-  //   Apple 行事曆   → 要先生出 .ics 檔，靜態網站給不出這種網址，
-  //                    所以指到 card.html?…&go=ics，那一頁一載入就直接下載。
+  // 按鈕。Flex 的按鈕只能「開一個網址」，不能跑程式。
+  // 「加入行事曆」指到 Worker，回傳的是一個真的 .ics 檔案：
+  // iPhone 會跳系統行事曆、Android 會跳它的預設行事曆，一顆通吃。
+  // 檔案裡帶了開會前 15 分鐘的提醒（TRIGGER:-PT15M）。
+  // 想用 Google 行事曆的人，點「看邀請卡」那頁還有專用按鈕。
   const footer = [];
   if(d.u){
     footer.push({type:'button', style:'primary', color:'#1d5fd0', 
@@ -182,9 +194,7 @@ function flexMessage(d, start, end){
   }
   if(start){
     footer.push({type:'button', style:'secondary', 
-      action:{type:'uri', label:'加入 Google 行事曆', uri:googleUrl(d, start, end)}});
-    footer.push({type:'button', style:'secondary', 
-      action:{type:'uri', label:'加入 Apple 行事曆', uri:cardUrlFor(d, 'ics')}});
+      action:{type:'uri', label:'加入行事曆', uri:icsUrl(d)}});
   }else{
     footer.push({type:'button', style:'secondary', 
       action:{type:'uri', label:'看邀請卡', uri:cardUrlFor(d)}});
