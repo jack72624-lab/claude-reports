@@ -346,7 +346,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
   .opener .vis{max-height:none;margin-top:16px}.opener .txt .chno{font-size:38px}.opener .txt h2{margin-bottom:10px}}
 /* 手機沒有方向鍵：整份關掉手指捲動，改由 script 裡的 touch 手勢一小格一小格走（幻燈頁換階段、表格段每次捲 85% 屏）。
    一開始只關幻燈頁、表格段留原生捲動，實測捲到段尾時 scroll-snap 會把短滑吸回去、要用力甩才翻得過，所以整份統一 */
-@media (pointer:coarse){body{touch-action:pinch-zoom}}
+@media (pointer:coarse){body{touch-action:pinch-zoom}.stage{overscroll-behavior:contain}}   /* iOS Safari 不理 body 的 touch-action，真正擋捲動的是 script 裡的 touchmove preventDefault；這行留給 Chrome */
 </style>
 </head>
 <body>
@@ -1053,18 +1053,36 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
     return true;
   }
   // 手機沒有方向鍵（Jack 2026-09-22）：手指往上滑一下＝按一次 ↓、往下滑＝↑，跟鍵盤一樣一小格一小格走（幻燈頁換階段、表格段每次 85% 屏）。
-  // 靠 CSS 那條 body{touch-action} 把原生捲動整份關掉，不然短滑會被 scroll-snap 吸回原頁。
+  // iOS Safari 不理 body 的 touch-action（文件層的捲動它自己管），要在 touchmove 裡 preventDefault（passive:false）才擋得住原生捲動；
+  // 第一版只設 CSS，Jack 手機上滑一下還是整頁翻、小標題不會走。放行兩種情況：橫向可捲的表格／章節列的橫滑、塞不下一屏的頁先讓它自己捲。
   if (window.matchMedia('(pointer: coarse)').matches) {
-    var t0x = 0, t0y = 0, single = false;
+    var t0x = 0, t0y = 0, single = false, axis = '', hwrap = null, sstage = null;
     window.addEventListener('touchstart', function (e) {
-      var t = e.touches[0]; t0x = t.clientX; t0y = t.clientY; single = e.touches.length === 1;
+      var t = e.touches[0]; t0x = t.clientX; t0y = t.clientY; single = e.touches.length === 1; axis = '';
+      var el = e.target && e.target.closest ? e.target : null;
+      hwrap = el && el.closest('.tbl-wrap, .top nav');
+      sstage = el && el.closest('.stage');
+      if (sstage && sstage.scrollHeight <= sstage.clientHeight + 4) sstage = null;
     }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (!single || e.touches.length !== 1) return;   // 兩指縮放放行
+      var t = e.touches[0], dx = t.clientX - t0x, dy = t.clientY - t0y;
+      if (!axis) axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';   // 第一下就要決定：瀏覽器只讓你擋第一個 touchmove
+      if (axis === 'x' && hwrap) return;
+      if (axis === 'y' && sstage) return;
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
     window.addEventListener('touchend', function (e) {
-      if (!single || e.touches.length) return;   // 兩指縮放不算
+      if (!single || e.touches.length) return;
       var t = e.changedTouches[0], dx = t0x - t.clientX, dy = t0y - t.clientY;
       if (Math.abs(dy) < 30 || Math.abs(dy) < Math.abs(dx)) return;   // 太短、或偏橫向的不算
+      if (sstage) {   // 這頁自己還有沒捲完的內容：先不翻
+        if (dy > 0 && sstage.scrollTop + sstage.clientHeight < sstage.scrollHeight - 4) return;
+        if (dy < 0 && sstage.scrollTop > 4) return;
+      }
       stepVertical(dy > 0 ? 1 : -1);
     }, { passive: true });
+    window.addEventListener('touchcancel', function () { single = false; }, { passive: true });
   }
   window.addEventListener('keydown', function (e) {
     if (e.altKey || e.metaKey || e.ctrlKey) return;
