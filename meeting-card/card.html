@@ -232,6 +232,19 @@ function el(tag, attrs, text){
   return n;
 }
 
+// 產生 .ics 檔並讓瀏覽器下載。iPhone 上會跳出「加入行事曆」的畫面。
+function downloadIcs(d, start, end){
+  const blob = new Blob([icsText(d, start, end)], {type:'text/calendar;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const tmp = document.createElement('a');
+  tmp.href = url;
+  tmp.download = (d.t || '會議').replace(/[\/:*?"<>|]/g,'_') + '.ics';
+  document.body.appendChild(tmp);
+  tmp.click();
+  document.body.removeChild(tmp);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
 // 這張卡片自己的網址，但拿掉 go 參數。
 // 收件人點開的應該是「卡片」，不是又被彈去分享畫面，所以轉傳出去的網址不能帶 go。
 function cleanCardUrl(){
@@ -278,9 +291,33 @@ function render(){
   // ?go=line：一載入就直接跳進 LINE 的「要傳給誰」畫面，省掉「先開卡片再按按鈕」。
   // 用 replace 不用 href，這樣按上一頁不會又被彈回來。
   // 手機上 LINE 會接管；電腦上會開網頁版 LINE。
-  if(new URLSearchParams(location.search).get('go') === 'line'){
+  const go = new URLSearchParams(location.search).get('go');
+  if(go === 'line'){
     app.appendChild(el('p', {class:'note'}, '正在開啟 LINE…'));
     location.replace(lineShareHref(d, start, end));
+    return;
+  }
+
+  // ?go=ics：LINE 卡片上「加入 Apple 行事曆」那顆按鈕指到這裡。
+  // Flex 的按鈕只能開網址、不能跑程式，所以下載得由這一頁代勞。
+  // 一載入就先試著下載；iOS Safari 有時候會擋掉「沒有經過手指按」的下載，
+  // 所以底下一定要留一顆按鈕給他自己按，不能只靠自動觸發。
+  if(go === 'ics' && start){
+    const box = el('div', {class:'card'});
+    box.appendChild(el('p', {class:'eyebrow'}, '加入行事曆'));
+    box.appendChild(el('h1', null, d.t));
+    box.appendChild(el('p', {class:'note'}, humanRange(start, end)));
+    const acts = el('div', {class:'actions'});
+    const btn = el('a', {class:'btn primary', href:'#'}, '加入 Apple 行事曆');
+    btn.addEventListener('click', ev => { ev.preventDefault(); downloadIcs(d, start, end); });
+    acts.appendChild(btn);
+    acts.appendChild(el('a', {
+      class:'btn', href: googleUrl(d, start, end), target:'_blank', rel:'noopener'
+    }, '改用 Google 行事曆'));
+    acts.appendChild(el('a', {class:'btn', href: cleanCardUrl()}, '看完整邀請卡'));
+    box.appendChild(acts);
+    app.appendChild(box);
+    try{ downloadIcs(d, start, end); }catch(e){ /* 擋掉就讓他按上面那顆 */ }
     return;
   }
 
@@ -317,18 +354,7 @@ function render(){
     // Apple／系統行事曆：產生 .ics 檔讓瀏覽器下載，
     // iPhone 點了會跳出「加入行事曆」的畫面。
     const ics = el('a', {class:'btn', href:'#'}, '加入 Apple 行事曆');
-    ics.addEventListener('click', ev => {
-      ev.preventDefault();
-      const blob = new Blob([icsText(d, start, end)], {type:'text/calendar;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const tmp = document.createElement('a');
-      tmp.href = url;
-      tmp.download = (d.t || '會議').replace(/[\/:*?"<>|]/g,'_') + '.ics';
-      document.body.appendChild(tmp);
-      tmp.click();
-      document.body.removeChild(tmp);
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
-    });
+    ics.addEventListener('click', ev => { ev.preventDefault(); downloadIcs(d, start, end); });
     actions.appendChild(ics);
   }
 
