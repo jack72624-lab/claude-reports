@@ -112,10 +112,33 @@ function humanRange(a, b){
 }
 
 // 卡片網址：把這次的欄位原樣接回 card.html，給「加入行事曆」那顆按鈕用
-function cardUrlFor(d){
+function cardUrlFor(d, go){
   const u = new URL(CARD_URL);
   FIELDS.forEach(k => { if(d[k]) u.searchParams.set(k, d[k]); });
+  if(go) u.searchParams.set('go', go);
   return u.toString();
+}
+
+// Google 行事曆的「新增活動」網址。跟 card.html 的 googleUrl() 是同一套，
+// 改了要兩邊一起改（兩支都是無依賴單檔，沒有共用檔）。
+function utcStamp(dt){
+  return dt.getUTCFullYear() + two(dt.getUTCMonth()+1) + two(dt.getUTCDate()) + 'T'
+       + two(dt.getUTCHours()) + two(dt.getUTCMinutes()) + '00Z';
+}
+function googleUrl(d, start, end){
+  const detail = [];
+  if(d.n) detail.push(d.n);
+  if(d.u) detail.push('會議連結：' + d.u);
+  if(d.p) detail.push('密碼：' + d.p);
+  if(d.o) detail.push('主辦：' + d.o);
+  const p = new URLSearchParams({
+    action:'TEMPLATE',
+    text: d.t || '會議',
+    dates: utcStamp(start) + '/' + utcStamp(end),
+    details: detail.join('\n'),
+    location: d.l || d.u || ''
+  });
+  return 'https://calendar.google.com/calendar/render?' + p.toString();
 }
 
 // ---- 組 Flex Message（LINE 對話裡那張卡片）----
@@ -148,13 +171,24 @@ function flexMessage(d, start, end){
     body.push({type:'box', layout:'vertical', spacing:'sm', margin:'lg', contents:rows});
   }
 
+  // 按鈕。Flex 的按鈕只能「開一個網址」，不能跑程式，所以：
+  //   Google 行事曆 → 本來就是一個純網址，可以直接放，點一下就進 Google。
+  //   Apple 行事曆   → 要先生出 .ics 檔，靜態網站給不出這種網址，
+  //                    所以指到 card.html?…&go=ics，那一頁一載入就直接下載。
   const footer = [];
   if(d.u){
     footer.push({type:'button', style:'primary', color:'#1d5fd0', height:'sm',
       action:{type:'uri', label:'前往會議', uri:d.u}});
   }
-  footer.push({type:'button', style:'secondary', height:'sm',
-    action:{type:'uri', label:'加入行事曆', uri:cardUrlFor(d)}});
+  if(start){
+    footer.push({type:'button', style:'secondary', height:'sm',
+      action:{type:'uri', label:'加入 Google 行事曆', uri:googleUrl(d, start, end)}});
+    footer.push({type:'button', style:'secondary', height:'sm',
+      action:{type:'uri', label:'加入 Apple 行事曆', uri:cardUrlFor(d, 'ics')}});
+  }else{
+    footer.push({type:'button', style:'secondary', height:'sm',
+      action:{type:'uri', label:'看邀請卡', uri:cardUrlFor(d)}});
+  }
 
   // altText 是電腦版／通知列看到的純文字，上限 400 字，超過整則會被退回
   const alt = ('【會議邀請】' + d.t + ' ' + humanRange(start, end)).slice(0, 380);
@@ -237,14 +271,17 @@ async function main(){
   async function pick(){
     try{
       const res = await liff.shareTargetPicker([msg]);
-      // 舊版 SDK 成功時回 undefined，所以「沒有 res」也算成功
-      if(res === undefined || (res && res.status === 'success')){
+      // 只有明確回 status:'success' 才算傳出去了。
+      // 2026-09-22 踩過：本來把「回傳 undefined」也當成功，但使用者按取消時
+      // SDK 也是回 undefined，結果明明沒選人卻顯示「已經傳出去了」。
+      // 寧可成功時少講一句，也不要騙他說傳出去了。
+      if(res && res.status === 'success'){
         app.innerHTML = '';
         app.appendChild(eyebrow); app.appendChild(h);
         say('已經傳出去了。可以關掉這一頁。');
         button('再傳給別人', pick, true);
       }else{
-        say('取消了，沒有傳出去。');
+        say('沒有傳出去（你取消了，或 LINE 沒回報結果）。');
         button('重新選擇要傳給誰', pick);
       }
     }catch(e){
