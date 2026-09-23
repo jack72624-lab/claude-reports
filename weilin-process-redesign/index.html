@@ -27,7 +27,8 @@
     拿掉「長相跟現在一樣」；「老闆一眼看收到哪」改「快速知道款項收到哪」；工程類別「音響」改「影音」
     （只有粗的那層，設備類別那格仍叫音響——影音是大類、音響是裡面一種設備）；「行政自己改」改「可自己調整」；
     「設計公司直接丟」改「設計公司提供檔案」。
-    2026-09-23 再改一處：工程類別「監控」→「監控/門禁」（同樣只改粗那層，設備類別那格仍叫監控）。
+    2026-09-23 再改兩處：工程類別「監控」→「監控/門禁」（只改粗那層）；設備類別多加一項「門禁」。
+    分類樹 SVG 因此重排：右欄改 10 項、固定間距 30，左欄父項對齊自己那組子項的中線。
     另加一件新的：備料清單加第五欄「別案也要」＋新增一屏 #s05b 總備貨區（跨案場看同一種料要多少）。
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -564,16 +565,19 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <text x="330" y="30" class="cap">設備類別 · 細 · 料號填這層</text>
 <line x1="60" y1="40" x2="560" y2="40" class="thin"/>
 <text x="60" y="76" class="lb">網路</text><line x1="150" y1="72" x2="320" y2="72" class="ln draw"/><text x="330" y="76" class="lb">網路設備</text>
-<text x="60" y="118" class="lb">監控/門禁</text><line x1="150" y1="114" x2="320" y2="114" class="ln draw"/><text x="330" y="118" class="lb">監控</text>
-<text x="60" y="160" class="lb acc">智能</text>
-<path d="M150 156 H235 V246 M235 156 H320 M235 186 H320 M235 216 H320 M235 246 H320" class="ln acc draw"/>
-<text x="330" y="160" class="lb acc">燈光控制</text>
-<text x="330" y="190" class="lb acc">冷氣控制</text>
-<text x="330" y="220" class="lb acc">電動窗簾</text>
-<text x="330" y="250" class="lb acc">感應器</text>
-<text x="60" y="296" class="lb">影音</text><line x1="150" y1="292" x2="320" y2="292" class="ln draw"/><text x="330" y="296" class="lb">音響</text>
-<text x="60" y="334" class="lb">燈具</text><line x1="150" y1="330" x2="320" y2="330" class="ln draw"/><text x="330" y="334" class="lb">燈具</text>
-<text x="60" y="372" class="lb">線材與耗材</text><line x1="150" y1="368" x2="320" y2="368" class="ln draw"/><text x="330" y="372" class="lb">線材與耗材</text>
+<text x="60" y="121" class="lb">監控/門禁</text>
+<path d="M150 117 H235 M235 102 V132 M235 102 H320 M235 132 H320" class="ln draw"/>
+<text x="330" y="106" class="lb">監控</text>
+<text x="330" y="136" class="lb">門禁</text>
+<text x="60" y="211" class="lb acc">智能</text>
+<path d="M150 207 H235 M235 162 V252 M235 162 H320 M235 192 H320 M235 222 H320 M235 252 H320" class="ln acc draw"/>
+<text x="330" y="166" class="lb acc">燈光控制</text>
+<text x="330" y="196" class="lb acc">冷氣控制</text>
+<text x="330" y="226" class="lb acc">電動窗簾</text>
+<text x="330" y="256" class="lb acc">感應器</text>
+<text x="60" y="286" class="lb">影音</text><line x1="150" y1="282" x2="320" y2="282" class="ln draw"/><text x="330" y="286" class="lb">音響</text>
+<text x="60" y="316" class="lb">燈具</text><line x1="150" y1="312" x2="320" y2="312" class="ln draw"/><text x="330" y="316" class="lb">燈具</text>
+<text x="60" y="346" class="lb">線材與耗材</text><line x1="150" y1="342" x2="320" y2="342" class="ln draw"/><text x="330" y="346" class="lb">線材與耗材</text>
 </g>
 <!-- 階段 1：里程碑 -->
 <g class="in-grow" data-s="1" data-until="2">
