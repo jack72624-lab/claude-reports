@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>流程重新設計</title>
+<!--
+  威琳內部系統・流程重新設計（2026-09-20）：對細節用的白話版。內容正本在同資料夾 CLAUDE.md〈流程重新設計・九站的決定〉，
+  討論過程與否決掉的選項在 CHANGELOG.md〈2026-09-20〉。程式與資料結構尚未依此修改。
+  版型：照 _global/templates/report-slides（Jack 2026-09-20 定的報告預設版型），CSS 與捲動 JS 整段照
+  工作/為愛前行社會福利基金會/生命教育學習資料/index.html（同一套的最新版：一頁一屏吸附、頁內階段用點的、← → 切階段、↑ ↓ 逐格走、
+  清單旁同一顆點在滑、角標淡出換字）。圖一律 SVG 線圖、「編號＋細線列」不畫方框（Jack 2026-09-20 下午定）。
+  這個檔是手寫的，要改直接改這裡。第一版（2026-09-20 中午）照錯了 smart-home-onboarding 舊版型，備份在 data/.bak/。
+
+  2026-09-22 照 v2 新規重做皮膚與動法（Jack：骨架可以固定，色調、字體、動畫要照內容設計）：
+    霧藍拿掉了——它跟它自己在描述的那套系統剛好相反（DESIGN.md 2026-09-18 已經「藍換墨」、公司 logo 也是純黑）。
+    改成冷灰白紙底、純墨、琥珀燈色當重點；中文從宋體換黑體（這份講的是一套軟體怎麼運作，那套系統自己全用無襯線）。
+    錢與日期改走等寬 SF Mono，收款那三欄才對得齊。理由寫在下面 <style> 開頭的「設計讀法」。
+    動法只用三種、每種對應一種內容：in-left 編號順序列、in-drop 往下分支或往下走的流程、in-grow 狀態圓圈那排。
+    同時補上版型 v2 的手機手勢：滑一下走一小格（這份原本沒有）。
+  同日再加：五張「介面示意」（Jack：「讓他們知道系統內這部分的功能大概會長怎樣」）——五頁各多一個階段，
+    照系統自己的設計語言畫成螢幕的樣子。內容全是舉例、不是規格；畫法見 <style> 裡 .ui* 那組的註解。改前備份 data/.bak/威琳-流程重新設計-20260922-pre-skin.html。
+  2026-09-23 Jack 看完提九點，全改進頁（備份 data/.bak/威琳-流程重新設計-20260923-pre-9items.html）：
+    標題與說明拿掉「給老闆」字樣；「要拍板的三件」從第 2 屏搬到最後（一開始什麼都還沒看就要拍板很怪），
+    導覽連結跟著搬（JS 靠 nav 順序 == 文件順序算章節高亮）；重點色琥珀 #965c14 換深紅 #9b1c2c；
+    拿掉「長相跟現在一樣」；「老闆一眼看收到哪」改「快速知道款項收到哪」；工程類別「音響」改「影音」
+    （只有粗的那層，設備類別那格仍叫音響——影音是大類、音響是裡面一種設備）；「行政自己改」改「可自己調整」；
+    「設計公司直接丟」改「設計公司提供檔案」。
+    另加一件新的：備料清單加第五欄「別案也要」＋新增一屏 #s05b 總備貨區（跨案場看同一種料要多少）。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   設計讀法（2026-09-22 重做。骨架照版型 v2 不動，色／字／動法這三樣照這份的內容重挑）：
+
+   色是從這份在講的東西身上取的，不是挑好看的：
+     · 冷灰白 #f3f3f5 當底——這正是老闆天天打開內部系統看到的底色（DESIGN.md colors.bg 就是 #f5f5f7），
+       報告跟它描述的系統穿同一件衣服；冷灰也是「辦公室、規格、照著做」的情緒，不是讀物的情緒。
+     · 純墨 #1d1d1f 當字——公司 logo（public/company-logo.png）取樣出來是純黑，沒有品牌色；
+       而系統自己 2026-09-18 已經把主色「藍換回墨」。所以這份原本的霧藍 #6e8199 是跟它自己矛盾的，拿掉。
+     · 深紅 #9b1c2c 當重點（2026-09-23 Jack 換掉原本的琥珀 #965c14）——琥珀的原理是「燈亮起來的顏色」，
+       但實際在冷灰紙上偏土、對比只有 4.94:1；深紅在同一個底上是 7.3:1（WCAG 公式算的），
+       重點字一眼就跳出來。輪到哪一站、哪一格收了錢，就那一處亮。
+       ⚠️ 這份另有一個 --red #b8362a 專門給負向的東西（「不做的」那頁的 ×、.dg .bad、.band.warn）。
+       兩個都是紅但深淺差得開（7.3 vs 5.27），而且負向那組永遠帶 × 或在 warn 框裡，不會跟重點字搞混。
+       要再動顏色時兩個一起看，別只改一個。
+
+   字只有兩處刻意分工：
+     · 中文黑體（Noto Sans TC）——這份講的是一套軟體怎麼運作，那套系統自己的字 100% 是無襯線（DESIGN.md
+       每一條 typography 都是 SF Pro／PingFang）。宋體是讀物的字，這份是規格。
+       中文字在宋體與黑體裡都是等寬方塊，所以換字體不會改變換行，版面高度不動。
+     · 錢與日期走等寬 SF Mono（.dg text.num）——08 收款那張是訂金／工程款／尾款三欄並排比，
+       等寬數字才對得齊；日期同理。其餘數字（站號、編號）走系統無襯線＋tabular-nums。
+
+   動法三種，照內容分、不照頁數分（版型動法菜單挑的）：
+     · in-left  從左滑進：有先後的編號列（九站、每一站的步驟、最後那要拍板的三件）——跟讀的方向一致。
+     · in-drop  從上落下：往下分支或往下走的流程（四個詞的兩層分類樹、報修的往下箭頭、里程碑往下長）。
+     · in-grow  從中心長大：一次整塊出現的「成品」——收款的狀態圓圈那排，以及六張介面示意畫面。
+
+   介面示意（2026-09-22 Jack 要的：「讓他們知道系統內這部分的功能大概會長怎樣」）：
+     六張，各是那一頁的最後一個階段；前面的概念圖用 data-until 退場，不疊在一起。
+     05 備料清單 ／ 05 總備貨區（2026-09-23 加）／ 07 驗收清單 ／ 08 案場列表一排掃過去 ／
+     09 客戶手機上那一頁 ／ 九站之外 安裝教學在工地。
+     ⚠️ 備料清單那張跟總備貨區那張的數字是對得上的（御之苑 6＋松江 5＋文心 3＝14 那組），改一邊要改另一邊。
+     挑這五張的理由：都是老闆現在沒有東西可以指的畫面。02 報價刻意不畫——長相跟現在的報價系統一樣，他已經看得到了。
+     畫法、用色、以及「為什麼這裡可以有方框」，寫在下面 .ui* 那組 CSS 的註解。
+     線本來就用 .draw 自己描出來，那是既有的，沒動。
+
+   一頁只講一件事，左圖右字交替；圖是線圖不是插畫。不用斜體、不用 emoji。
+   ───────────────────────────────────────────────────────────── */
+:root{
+  color-scheme:light;
+  --bg:#f3f3f5; --ink:#1d1d1f; --ink-2:#54545a; --grey:#8a8a90; --grey-2:#c4c4ca; --line:rgba(29,29,31,.12); --line-2:rgba(29,29,31,.30);
+  --acc:#9b1c2c; --acc-soft:rgba(155,28,44,.10); --sage:#3f7a56; --warm:#9a8f80; --paper:#e8e8ec; --red:#b8362a;
+  --font:-apple-system,"Noto Sans TC","PingFang TC",sans-serif;
+  --latin:-apple-system,"Helvetica Neue","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --gutter:clamp(20px,4vw,72px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto;scroll-snap-type:y mandatory}   /* 上下滑＝換頁 */
+html.smooth{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{margin:0;font-weight:500;line-height:1.2}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+strong,b{font-weight:600}
+.latin{font-family:var(--latin)}
+.caps{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+::selection{background:var(--acc);color:#fff}
+
+/* ── 頂列 nav ── */
+.top{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;align-items:center;gap:18px;padding:12px var(--gutter);
+  background:rgba(243,243,245,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top .brand{font-family:var(--latin);font-size:12px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap}
+.top nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.top nav::-webkit-scrollbar{display:none}
+.top nav a{display:inline-flex;align-items:center;font-size:13px;color:var(--ink-2);padding:6px 10px;white-space:nowrap;border-bottom:1px solid transparent;transition:color .25s,border-color .25s}
+.top nav a em{font-style:normal;font-family:var(--latin);font-size:11px;letter-spacing:.1em;margin-right:6px;color:var(--grey)}
+.top nav a.on{color:var(--ink);border-color:var(--acc)}
+.top nav a em:only-child{font-family:var(--font);font-size:13px;letter-spacing:0;margin:0;color:inherit}   /* 沒編號的章：只放字、跟其他連結一樣大 */
+@media (max-width:720px){.top nav{gap:6px}.top nav a{padding:8px 5px}.top nav a span{display:none}.top nav a em{margin:0;font-size:12px}.top{padding:10px 16px}.top .brand{font-size:11px}}
+
+/* ── 四角固定索引 ── */
+.corner{position:fixed;z-index:20;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);pointer-events:none;opacity:0;transition:opacity .4s}
+body.inslide .corner{opacity:1}
+body.inslide .corner.fade{opacity:0;transition-duration:.15s}
+.c-tl{left:var(--gutter);top:58px}.c-tr{right:var(--gutter);top:58px}
+.c-bl{left:var(--gutter);bottom:18px}.c-br{right:var(--gutter);bottom:18px}
+@media (max-width:720px){.c-bl,.c-br{display:none}}
+
+/* ── 幻燈：每頁剛好一屏、整頁吸附；頁內階段用點的 ── */
+.slide{position:relative;scroll-snap-align:start;height:100dvh}
+.stage{position:sticky;top:0;height:100dvh;display:grid;grid-template-columns:7fr 5fr;gap:clamp(20px,4vw,64px);align-items:center;
+  padding:80px var(--gutter) 48px;overflow:hidden auto}
+.slide.flip .stage{grid-template-columns:5fr 7fr}
+.slide.flip .vis{order:2}.slide.flip .txt{order:1}
+.vis{position:relative;height:100%;max-height:calc(100dvh - 128px);display:grid;place-items:center;min-width:0}
+.vis svg.dg{width:100%;height:100%;max-height:78dvh;overflow:visible}
+.txt{min-width:0;max-width:34em}
+.txt .tag{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);margin-bottom:14px}
+.txt h2{font-size:clamp(26px,3.1vw,40px);font-weight:500;letter-spacing:-.005em;margin-bottom:18px}
+.txt p.lead{font-size:17px;line-height:1.8;color:var(--ink-2);margin-bottom:20px}
+.txt p.note{font-size:14px;line-height:1.75;color:var(--ink-2);margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.txt p.note b{color:var(--ink)}
+/* 階段清單：● 霧藍＝現在這一項、小 ● 鼠尾草＝做完的 */
+.marks{position:relative;list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+.marks .pt{position:absolute;left:0;top:0;width:8px;height:8px;border-radius:50%;background:var(--acc);transition:transform .5s var(--ease);pointer-events:none}
+.marks li{position:relative;padding:3px 0 3px 22px;font-size:15px;color:var(--grey);transition:color .35s;cursor:pointer;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){.marks li:not(.cur):hover{color:var(--ink-2)}}
+.marks li:focus-visible{outline:1px solid var(--acc);outline-offset:2px;border-radius:2px}
+.marks li::before{content:"";position:absolute;left:0;top:calc(.62em + 3px);width:8px;height:8px;border-radius:50%;background:var(--acc);opacity:0;transform:scale(.4);transition:opacity .35s,transform .35s var(--ease),background .35s}
+.marks li.cur{color:var(--ink)}
+.marks li.cur::before{opacity:0}   /* 現在這項的點由 .pt 滑過來，不各自冒出 */
+.marks li.done{color:var(--ink-2)}
+.marks li.done::before{opacity:1;transform:scale(.7);background:var(--sage)}
+.steps{display:grid;min-height:6.5em}
+.step{grid-area:1/1;opacity:0;transform:translateY(8px);transition:opacity .45s,transform .45s var(--ease);font-size:16px;line-height:1.8;pointer-events:none}
+.step.cur{opacity:1;transform:none;pointer-events:auto}
+.step b{font-weight:600}
+.step .k{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.rise{--u:clamp(0,calc((var(--p,0) - var(--t,0)) * 4),1);opacity:var(--u);transform:translateY(calc((1 - var(--u)) * 20px))}
+.kp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.kp li{position:relative;padding-left:26px;font-size:16px;line-height:1.7}
+.kp li::before{content:"";position:absolute;left:0;top:.7em;width:14px;height:1px;background:var(--acc)}
+.kp li b{display:block;font-weight:600}
+
+/* ── 圖解 SVG 通用 ── */
+.dg{font-family:var(--font);font-size:12px}
+.dg text{fill:var(--ink);stroke:none}
+.dg text.lb{font-size:12.5px}
+.dg text.sub{font-size:11px;fill:var(--ink-2)}
+.dg text.tiny{font-size:10px;fill:var(--ink-2)}
+.dg text.cap{font-family:var(--latin);font-size:10px;letter-spacing:.14em;fill:var(--grey)}
+/* 錢與日期走等寬（2026-09-22）：08 收款是訂金／工程款／尾款三欄並排比，等寬才對得齊 */
+.dg text.num{font-family:var(--mono);font-size:10px;font-weight:600;fill:var(--grey);font-variant-numeric:tabular-nums}
+.dg text.big{font-family:var(--latin);font-size:34px;font-weight:300;letter-spacing:-.02em}
+.dg text.ans{font-size:11.5px;fill:var(--ink-2)}
+.dg .ln{stroke:var(--ink);stroke-width:1.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .thin{stroke:var(--line-2);stroke-width:1;fill:none}
+.dg .box{fill:var(--bg);stroke:var(--ink);stroke-width:1.2}
+.dg .soft{fill:var(--paper);stroke:none}
+.dg .dash{stroke-dasharray:4 4}
+.dg .dot{fill:var(--acc);stroke:none}
+/* 2026-09-20 下午：方框卡片全部改成「編號＋細線」的列（Jack 不要方格）。編號淡灰、輪到它時跟標題一起變霧藍；每列底線用 .draw 逐階段描出來 */
+.dg text.no{font-family:var(--latin);font-size:28px;font-weight:300;fill:var(--grey-2);letter-spacing:-.02em;font-variant-numeric:tabular-nums;transition:fill .35s}
+.dg .hi text.no{fill:var(--acc)}
+.dg .hi text.cap{fill:var(--acc)}
+/* 階段顯示：data-s＝從第幾階段起出現、data-until＝到第幾階段消失；data-hi＝哪幾個階段強調 */
+/* 動法菜單（2026-09-22 從版型 v2 搬進來）。這份只用三種：in-left 順序列／in-drop 往下走／in-grow 狀態圓圈。
+   變體一定要寫在 .on 前面——同樣是兩個 class 的特異性，後寫的贏，寫在後面 .on 就蓋不掉變體的 transform。 */
+.dg [data-s]{opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease),transform .6s var(--ease),clip-path .7s var(--ease)}
+.dg [data-s].in-left{transform:translateX(-18px)}
+.dg [data-s].in-right{transform:translateX(18px)}
+.dg [data-s].in-drop{transform:translateY(-14px)}
+.dg [data-s].in-grow{transform-box:fill-box;transform-origin:center;transform:scale(.86)}
+.dg [data-s].in-wipe{transform:none;clip-path:inset(-5% 100% -5% -5%)}
+.dg [data-s].on{opacity:1;transform:none}
+.dg [data-s].in-wipe.on{clip-path:inset(-5% -5% -5% -5%)}
+.dg .hi .ln{stroke:var(--acc)}
+.dg .hi text.lb{fill:var(--acc)}
+.dg .hi text.big{fill:var(--acc)}
+.dg .hi text.ans{fill:var(--acc)}
+.dg .hi rect.box{stroke:var(--acc);stroke-width:1.6}
+.dg .hi circle.box{stroke:var(--acc);stroke-width:1.6}
+/* 描邊：JS 量長度填 --len */
+.dg .draw{stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);transition:stroke-dashoffset .9s var(--ease) .15s,opacity .4s}
+.dg .on .draw,.dg .draw.on{stroke-dashoffset:0}
+.dg .acc{stroke:var(--acc)}
+.dg text.acc{fill:var(--acc);stroke:none}
+.dg .bad{stroke:var(--red)}
+.dg text.bad{fill:var(--red)}
+
+/* ── 介面示意（2026-09-22 加）─────────────────────────────────────────────
+   這幾張不是概念圖，是「系統裡這一塊大概會長怎樣」的示意畫面，讓老闆對細節時有個具體的東西可以指。
+   刻意照系統自己的設計語言畫（DESIGN.md：淡灰底 #f5f5f7 上浮白卡、14px 圓角、髮線 #e5e5ea、
+   墨色膠囊鈕、綠＝好了／琥珀＝要處理），所以它擺在這份報告的冷灰紙上，看起來就像從系統上截下來的一塊。
+   兩件事別誤會：
+     ① 這是示意不是規格。畫面上的數字、料名、教學步驟全是舉例，真正長怎樣以做出來的為準。
+     ② 這裡有方框，跟「圖一律不畫方框」（Jack 2026-09-20 下午定）不衝突——那條管的是概念圖，
+        不准拿方框去框一個想法；這裡方框本身就是要畫的東西（螢幕上的卡片跟手機外框）。
+   顏色刻意寫死、不吃 :root：它們是「系統的顏色」不是「這份報告的顏色」，報告換皮膚時不該跟著變。 */
+.dg .uibg{fill:#f5f5f7}
+.dg .uicard{fill:#fff;stroke:#e5e5ea;stroke-width:1}
+.dg .uisep{stroke:#ececf0;stroke-width:1;fill:none}
+.dg .uiink{fill:#1d1d1f}
+.dg .uichip{fill:#ececf0}
+.dg .uiokbg{fill:#e7f4ec}
+.dg .uiwarnbg{fill:#fbf0e0}
+.dg .uifield{fill:#f5f5f7;stroke:#e5e5ea;stroke-width:1}
+.dg .uiarrow{stroke:#a1a1a6;stroke-width:1.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .uitick{stroke:#1f8a4c;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.dg .uiempty{fill:none;stroke:#c9c9ce;stroke-width:1.4}
+.dg .uidash{fill:none;stroke:#c9c9ce;stroke-width:1.2;stroke-dasharray:3 3}
+.dg text.uih{font-size:14px;font-weight:600;fill:#1d1d1f}
+.dg text.uit{font-size:12.5px;fill:#1d1d1f}
+.dg text.uis{font-size:10.5px;fill:#6e6e73}
+.dg text.uim{font-size:10px;fill:#a1a1a6}
+.dg text.uibtn{font-size:10.5px;font-weight:600;fill:#fff}
+.dg text.uinum{font-family:var(--mono);font-size:11.5px;fill:#1d1d1f;font-variant-numeric:tabular-nums}
+.dg text.uibig{font-size:21px;font-weight:500;fill:#1d1d1f;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.dg text.uiok{font-size:10.5px;font-weight:600;fill:#1f8a4c}
+.dg text.uiwarn{font-size:10.5px;font-weight:600;fill:#b25e09}
+.dg text.uicap{font-size:10px;font-weight:600;fill:#6e6e73;letter-spacing:.06em}
+.dg text.uinumx{font-family:var(--mono);font-size:11.5px;fill:#b25e09;font-variant-numeric:tabular-nums}
+/* 照片：這份一張都沒有（全是線圖與介面示意）。2026-09-22 拿掉原本的圓形揭露，照 v2 新規「照片預設不加動畫」。
+   哪天真的要放照片，記兩件事：白底的圖要 mix-blend-mode:multiply 才不會在灰紙上浮出一塊白方塊；
+   而且 .stage 得有自己的 background，因為 position:sticky 自成一個 stacking context，沒底色的話 multiply 等於沒效果。 */
+
+/* ── 章首 ── */
+.opener .txt h2{font-size:clamp(34px,4.4vw,58px);margin-bottom:22px}
+.opener .txt .chno{font-family:var(--latin);font-size:clamp(60px,9vw,120px);font-weight:200;line-height:1;letter-spacing:-.03em;color:var(--ink);display:block;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:18px clamp(16px,3vw,44px);width:100%;max-width:520px}
+.stats div{border-top:1px solid var(--ink);padding-top:12px}
+.stats b{display:block;font-family:var(--latin);font-weight:300;font-size:clamp(40px,5.2vw,72px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats span{display:block;font-size:13.5px;color:var(--ink-2);margin-top:8px}
+
+/* ── Hero ── */
+.hero .typed{font-size:clamp(24px,3.2vw,40px);font-weight:500;line-height:1.3;min-height:2.6em;display:flex;align-items:center;flex-wrap:wrap;gap:.2em}
+.hero .typed .dot{width:.5em;height:.5em;border-radius:50%;background:var(--ink);flex:none;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.hero h1{font-size:clamp(30px,4vw,54px);font-weight:500;line-height:1.15;margin:0 0 18px}
+.hero .sub{color:var(--ink-2);font-size:17px;line-height:1.8;max-width:30em}
+.hero .hint{position:absolute;left:var(--gutter);bottom:18px;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey)}
+.hero .hint::after{content:"";display:inline-block;width:1px;height:26px;background:var(--grey);margin-left:12px;vertical-align:middle;animation:nudge 1.6s var(--ease) infinite}
+@keyframes nudge{50%{transform:translateY(6px)}}
+/* hero 核章：字打完（--p ≥ .6）章才淡入 */
+.herob{--u:clamp(0,calc((var(--p,0) - .6) * 4),1)}
+.herob .lit{opacity:var(--u)}
+
+/* ── 內文區（表格、清單、術語） ── */
+/* 2026-09-20 下午：每段至少一屏（短的置中、長的照常往下捲），同一章的表格與本章重點合成一段，捲一下就是整屏換頁 */
+.flow{scroll-snap-align:start;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:clamp(40px,7vh,72px);padding:clamp(72px,10vh,120px) var(--gutter);max-width:1180px;margin:0 auto}
+.flow .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:24px clamp(24px,5vw,80px)}
+.flow .grid>div{min-width:0}
+.flow .lbl{font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding-top:6px}
+.flow h3{font-size:clamp(20px,2.2vw,26px);font-weight:500;margin-bottom:16px}
+.flow p{color:var(--ink-2);line-height:1.8;max-width:60ch}
+.flow p+p{margin-top:10px}
+.flow p b{color:var(--ink)}
+.flow .band{border-left:2px solid var(--acc);padding:4px 0 4px 18px;margin-top:20px;max-width:60ch}
+.flow .band .k{display:block;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.flow .band.warn{border-color:var(--red)}.flow .band.warn .k{color:var(--red)}
+.flow .band p{color:var(--ink)}
+.rule{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+.rule li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1.6fr);gap:10px 24px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.65}
+.rule.c2 li{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+.rule li .h{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--ink)}
+.rule li span{color:var(--ink-2)}
+.rule li .h img.lg{height:24px;width:auto;max-width:110px;flex:none}
+.port{float:right;width:clamp(96px,13vw,150px);margin:0 0 10px 20px}.port img{width:100%;display:block;border-radius:8px}.port figcaption{font-size:11px;color:var(--grey);margin-top:6px;line-height:1.4}
+.rule li span.then::before{content:"→ ";color:var(--acc)}
+.rule li span.no::before{content:"×  ";color:var(--red);font-family:var(--latin)}
+@media (max-width:720px){.rule li,.rule.c2 li{grid-template-columns:1fr;gap:4px}}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.55;border-top:1px solid var(--ink)}
+.tbl th{text-align:left;font-weight:500;font-family:var(--latin);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding:10px 12px 10px 0;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-2)}
+.tbl td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+.tbl td.on{color:var(--ink)}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tbl-wrap .tbl{min-width:640px}
+.recap{border-top:1px solid var(--ink);padding-top:18px;margin-top:8px}
+.recap ol{margin:0;padding:0 0 0 1.4em;display:flex;flex-direction:column;gap:8px;font-size:15.5px;line-height:1.7}
+.recap ol li::marker{font-family:var(--latin);color:var(--grey)}
+.gloss{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:0 clamp(24px,4vw,56px);margin:0}
+.gloss div{padding:12px 0;border-bottom:1px solid var(--line)}
+.gloss dt{font-weight:600;font-size:15px}
+.gloss dd{margin:2px 0 0;font-size:14px;line-height:1.7;color:var(--ink-2)}
+.gloss .gh{grid-column:1/-1;font-family:var(--latin);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);padding:28px 0 8px;border:0}
+.gloss .gh:first-child{padding-top:0}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.cards3 div{border-top:1px solid var(--ink);padding-top:14px}
+.cards3 .h{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:6px}
+.cards3 p{font-size:14.5px}
+@media (max-width:720px){.cards3{grid-template-columns:1fr}}
+/* 12 類疾病：一列一個 details，點開看是什麼病＋啟動條件＋來源 */
+.dz{border-top:1px solid var(--ink)}
+.dz-head,.dz summary{display:grid;grid-template-columns:2.6em minmax(0,1.3fr) minmax(0,1.4fr) 5em;gap:0 14px;align-items:baseline}
+.dz-head{font-family:var(--latin);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);padding:10px 0;border-bottom:1px solid var(--line)}
+.dz details{border-bottom:1px solid var(--line)}
+.dz summary{cursor:pointer;list-style:none;padding:11px 0;font-size:14px;line-height:1.55;color:var(--ink-2)}
+.dz summary::-webkit-details-marker{display:none}
+.dz summary:hover .zh{color:var(--acc)}
+.dz summary .n{color:var(--ink);font-weight:600;font-family:var(--latin)}
+.dz summary .zh{color:var(--ink)}
+.dz summary .tg{font-size:12px;letter-spacing:.1em;color:var(--acc);text-align:right;white-space:nowrap}
+.dz summary .tg::before{content:"看是什麼"}
+.dz details[open] summary .tg::before{content:"收起"}
+.dz details[open] summary .zh{color:var(--acc)}
+.dz-body{padding:2px 0 18px calc(2.6em + 14px);font-size:14.5px;line-height:1.75;color:var(--ink-2);max-width:68ch}
+.dz-body p{margin:0 0 8px}
+.dz-body b{color:var(--ink)}
+.dz-body ol{margin:0 0 10px;padding-left:1.4em;display:flex;flex-direction:column;gap:4px}
+.dz-body ol li::marker{font-family:var(--latin);color:var(--grey)}
+.dz-body .src{font-size:12.5px;color:var(--grey)}
+.dz-body .src a{color:var(--acc);text-decoration:none;border-bottom:1px solid var(--acc)}
+@media (max-width:720px){
+  .dz-head{display:none}
+  .dz summary{grid-template-columns:2.2em minmax(0,1fr) auto;gap:0 10px}
+  .dz summary .en{grid-column:2;grid-row:2;font-size:12.5px;color:var(--grey)}
+  .dz summary .tg{grid-column:3;grid-row:1}
+  .dz-body{padding-left:0}
+}
+/* 逐條與全文：一條一個 details，點開看原文（灰底、逐字）、白話、細則對應、一句重點 */
+.art{border-top:1px solid var(--ink)}
+.art details{border-bottom:1px solid var(--line)}
+.art summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:5.2em minmax(0,1fr) 4em;gap:0 14px;align-items:baseline;padding:12px 0;font-size:15px;line-height:1.6}
+.art summary::-webkit-details-marker{display:none}
+.art summary .no{font-family:var(--latin);font-weight:600;color:var(--ink);white-space:nowrap}
+.art summary .ti{color:var(--ink)}
+.art summary .ti small{display:block;font-size:13px;color:var(--ink-2);font-weight:400;line-height:1.5}
+.art summary .tg{font-size:12px;letter-spacing:.1em;color:var(--acc);text-align:right;white-space:nowrap}
+.art summary .tg::before{content:"看原文"}
+.art details[open] summary .tg::before{content:"收起"}
+.art details[open] summary .ti{color:var(--acc)}
+.art summary:hover .ti{color:var(--acc)}
+.art-body{padding:0 0 20px calc(5.2em + 14px);max-width:72ch}
+.law{margin:0 0 14px;padding:14px 18px;background:var(--paper);font-size:14.5px;line-height:1.85;color:var(--ink)}
+.law .k{display:block;font-family:var(--latin);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+.law p{margin:0}
+.law p+p{margin-top:4px}
+.law p.i{padding-left:1.6em}
+.art-body h4{font-size:11px;font-family:var(--latin);letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-weight:500;margin:14px 0 6px}
+.art-body p.x{font-size:15px;line-height:1.8;color:var(--ink-2)}
+.art-body p.x b{color:var(--ink)}
+.art-body ul.rel{margin:0;padding-left:1.2em;font-size:14px;line-height:1.75;color:var(--ink-2);display:flex;flex-direction:column;gap:4px}
+.art-body ul.rel li::marker{color:var(--grey)}
+.art-body p.pt{margin-top:12px;padding:8px 14px;border-left:2px solid var(--acc);font-size:14.5px;line-height:1.7;color:var(--ink)}
+.art-body .src{margin-top:12px;font-size:12.5px;color:var(--grey)}
+.art-body .src a{color:var(--acc);border-bottom:1px solid var(--acc)}
+@media (max-width:720px){.art summary{grid-template-columns:4em minmax(0,1fr) auto;gap:0 10px}.art-body{padding-left:0}}
+/* 點開補充：原生 details，塞在段落裡的小補充（本章重點第二章用） */
+.more{margin-top:8px}
+.more summary{cursor:pointer;list-style:none;display:inline-block;font-size:13.5px;letter-spacing:.06em;color:var(--acc);border-bottom:1px solid var(--acc);padding-bottom:1px}
+.more summary::-webkit-details-marker{display:none}
+.more summary::after{content:"　＋"}
+.more[open] summary::after{content:"　－"}
+.more .box{margin-top:12px;padding:14px 18px;background:var(--paper);font-size:14.5px;line-height:1.75;color:var(--ink-2)}
+.more .box b{color:var(--ink)}
+.more .box ul{margin:8px 0 10px;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.more .box ul li::marker{color:var(--grey)}
+/* 自測：原生 details，點題目翻答案 */
+.quiz{margin:0;padding:0;border-top:1px solid var(--ink)}
+.quiz details{border-bottom:1px solid var(--line)}
+.quiz summary{cursor:pointer;padding:14px 0;font-size:15.5px;line-height:1.6;list-style:none;display:flex;gap:14px;align-items:baseline;color:var(--ink)}
+.quiz summary::-webkit-details-marker{display:none}
+.quiz summary .n{font-family:var(--latin);font-size:11px;letter-spacing:.14em;color:var(--grey);flex:none;width:2.4em}
+.quiz summary::after{content:"看答案";margin-left:auto;font-size:12px;letter-spacing:.1em;color:var(--acc);flex:none}
+.quiz details[open] summary::after{content:"收起"}
+.quiz .a{padding:0 0 16px 3.3em;font-size:15px;line-height:1.75;color:var(--ink-2)}
+.quiz .a b{color:var(--ink)}
+
+/* ── 結尾 ── */
+.end .stage{grid-template-columns:1fr;place-items:center;text-align:center}
+.end h2{font-size:clamp(30px,5vw,64px);font-weight:500;letter-spacing:-.01em}
+.end .credit{margin-top:26px;font-family:var(--latin);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grey);line-height:2}
+footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);font-family:var(--latin)}
+
+/* ── 手機：上圖下字 ── */
+@media (max-width:860px){
+  .stage,.slide.flip .stage{grid-template-columns:1fr;grid-template-rows:minmax(0,34dvh) minmax(0,1fr);gap:10px;padding:60px 18px 22px;align-items:start}
+  .slide.flip .vis{order:1}.slide.flip .txt{order:2}
+  .vis{max-height:34dvh;align-self:stretch}
+  .vis svg.dg{max-height:33dvh}
+  .txt{max-width:none}
+  .txt .tag{margin-bottom:8px}
+  .txt h2{font-size:22px;margin-bottom:8px}
+  .txt p.lead{font-size:14px;line-height:1.6;margin-bottom:10px}
+  .txt p.note{font-size:13.5px;line-height:1.55;margin-top:10px;padding-top:8px}
+  .opener .txt h2{font-size:28px;margin-bottom:12px}
+  .opener .txt .chno{font-size:48px;margin-bottom:4px}
+  .kp{gap:8px}.kp li{font-size:14px;line-height:1.55;padding-left:20px}
+  .step{font-size:14.5px;line-height:1.65}
+  .step .k{margin-bottom:3px}
+  .steps{min-height:4.5em}
+  .marks{flex-direction:row;flex-wrap:wrap;gap:0 14px;margin-bottom:6px}
+  .marks li{font-size:14px;padding:6px 0 6px 14px}
+  .marks li::before{width:6px;height:6px;top:calc(.55em + 6px)}
+  .marks .pt{width:6px;height:6px}
+  .hero .typed{font-size:24px}
+  .stats b{font-size:32px}
+  .stats{gap:8px 12px}.stats div{padding-top:8px}.stats span{font-size:12px;margin-top:4px}  /* 2026-09-20：34dvh 塞不下四格 40px 數字，會從上方溢出蓋到章名 */
+  .flow .grid{grid-template-columns:minmax(0,1fr);gap:10px}
+}
+/* 矮螢幕（2026-09-22 加）：iPhone 開著 Safari 工具列時可視高只剩約 700px，上面那段 860px 是照 844 全螢幕調的。
+   用 SHOOT_H=700 量到〈九站之外〉那頁高出 13px（只要多 1px，滾輪第一下就先滾那 1px 才翻頁，手感會變鈍）。
+   這是這份原本就有的——拿改前的備份 data/.bak/威琳-流程重新設計-20260922-pre-skin.html 量過，一樣是 13，
+   不是換皮膚或加示意圖弄出來的。這裡不砍任何內容，只把留白與字級再收一段。 */
+@media (max-width:860px) and (max-height:760px){
+  .stage,.slide.flip .stage{padding:50px 16px 16px;gap:8px}
+  .vis{max-height:31dvh}
+  .vis svg.dg{max-height:30dvh}
+  .txt h2{font-size:20px;margin-bottom:6px}
+  .txt p.lead{font-size:13px;line-height:1.55;margin-bottom:8px}
+  .txt p.note{font-size:12.5px;line-height:1.5;margin-top:8px;padding-top:7px}
+  .opener .txt h2{font-size:24px;margin-bottom:8px}
+  .step{font-size:13.5px;line-height:1.58}
+  .steps{min-height:4.2em}
+  .marks li{font-size:13px;padding:5px 0 5px 13px}
+}
+/* 列印：舞台退回文件流，所有階段與說明攤開 */
+@media print{
+  .top,.corner,.hero .hint{display:none}
+  .slide{height:auto!important}
+  .stage{position:static!important;height:auto!important;overflow:visible!important;padding:24px 0;break-inside:avoid}
+  .vis{max-height:none;height:auto}
+  .vis svg.dg{max-height:55vh}
+  .step{position:static;opacity:1!important;transform:none!important;margin-bottom:8px}
+  .steps{display:block}
+  .rise,.dg [data-s]{opacity:1!important;transform:none!important}
+  .dg [data-s]{clip-path:none!important}
+  .dg .draw{stroke-dashoffset:0!important}
+  .marks li{color:var(--ink)}
+  .marks .pt{display:none}
+  .flow{min-height:0;display:block}
+  .quiz details{display:block}
+  .quiz .a{display:block}
+}
+@media (pointer:coarse){body{touch-action:pinch-zoom}.stage{overscroll-behavior:contain}}
+@media (prefers-reduced-motion:reduce){
+  html.smooth{scroll-behavior:auto}
+  .rise,.step,.marks li,.marks .pt,.corner,.dg [data-s],.dg .draw{transition:none}
+  .dg [data-s]{transform:none;clip-path:none}
+  .dg .draw{stroke-dashoffset:0}
+  .hero .typed .dot,.hero .hint::after{animation:none}
+}
+</style>
+<noscript><style>
+  /* 沒有 JS：所有階段、說明、描邊一律攤開，舞台退回文件流 */
+  .step{opacity:1!important;transform:none!important;position:static!important}
+  .steps{display:block}
+  .rise,.dg [data-s]{opacity:1!important;transform:none!important}
+  .dg .draw{stroke-dashoffset:0!important}
+  .marks li{color:var(--ink)}
+  .slide,.x1,.x2,.x3,.x4{height:auto!important}
+  .stage{position:static!important;height:auto!important;overflow:visible!important;padding-top:72px;padding-bottom:40px}
+  .vis{max-height:none;height:auto}.vis svg.dg{max-height:70vh}
+  #typed:empty::before{content:attr(data-text)}
+  .corner{display:none}
+</style></noscript>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="#top">威琳內部系統</a>
+<nav id="nav" aria-label="章節">
+<a href="#line"><em>整條線</em></a>
+<a href="#terms"><em>四個詞</em></a>
+<a href="#s01"><em>01</em><span>需求</span></a>
+<a href="#s02"><em>02</em><span>報價</span></a>
+<a href="#s04"><em>04</em><span>簽約</span></a>
+<a href="#s05"><em>05</em><span>備料施工</span></a>
+<a href="#s07"><em>07</em><span>驗收</span></a>
+<a href="#s08"><em>08</em><span>收款</span></a>
+<a href="#s09"><em>09</em><span>售後</span></a>
+<a href="#extra"><em>九站外</em></a>
+<a href="#no"><em>不做的</em></a>
+<a href="#decide"><em>要拍板</em></a>
+</nav>
+</header>
+<div class="corner c-tl" id="c-tl"></div>
+<div class="corner c-tr" id="c-tr"></div>
+<div class="corner c-bl" id="c-bl"></div>
+<div class="corner c-br">威琳內部系統 · 流程重新設計</div>
+
+<!-- ═══════════ Hero ═══════════ -->
+<section class="slide hero" id="top" data-ch="流程重新設計" data-sub="">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<!-- 九站一條線：只是封面的形狀，內容在後面 -->
+<line x1="300" y1="30" x2="300" y2="370" class="thin draw on"/>
+<g class="rise" style="--t:.10"><circle cx="300" cy="40" r="5" class="dot"/><text x="282" y="44" text-anchor="end" class="lb">需求進來</text><text x="318" y="44" class="cap">01</text></g>
+<g class="rise" style="--t:.16"><circle cx="300" cy="81" r="5" class="dot"/><text x="318" y="85" class="lb">規劃、報價</text><text x="282" y="85" text-anchor="end" class="cap">02</text></g>
+<g class="rise" style="--t:.22"><circle cx="300" cy="122" r="5" class="dot"/><text x="282" y="126" text-anchor="end" class="lb">討論調整</text><text x="318" y="126" class="cap">03</text></g>
+<g class="rise" style="--t:.28"><circle cx="300" cy="163" r="5" class="dot"/><text x="318" y="167" class="lb">簽約</text><text x="282" y="167" text-anchor="end" class="cap">04</text></g>
+<g class="rise" style="--t:.34"><circle cx="300" cy="204" r="5" class="dot"/><text x="282" y="208" text-anchor="end" class="lb">備料</text><text x="318" y="208" class="cap">05</text></g>
+<g class="rise" style="--t:.40"><circle cx="300" cy="245" r="5" class="dot"/><text x="318" y="249" class="lb">施工</text><text x="282" y="249" text-anchor="end" class="cap">06</text></g>
+<g class="rise" style="--t:.46"><circle cx="300" cy="286" r="5" class="dot"/><text x="282" y="290" text-anchor="end" class="lb">驗收、教學</text><text x="318" y="290" class="cap">07</text></g>
+<g class="rise" style="--t:.52"><circle cx="300" cy="327" r="5" class="dot"/><text x="318" y="331" class="lb">收款</text><text x="282" y="331" text-anchor="end" class="cap">08</text></g>
+<g class="rise" style="--t:.58"><circle cx="300" cy="368" r="5" class="dot"/><text x="282" y="372" text-anchor="end" class="lb">售後</text><text x="318" y="372" class="cap">09</text></g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">威琳 · 內部系統 · 2026-09-20 討論結果</span>
+<h1>流程重新設計</h1>
+<div class="typed"><span id="typed" data-text="九站沒有變，變的是每一站系統接手多少。"></span><span class="dot" id="tdot"></span></div>
+<p class="sub rise" style="--t:.66">把公司從「需求進來」到「售後」九站順了一遍，定下系統以後怎麼接。這份是對細節用的，程式一行都還沒改。要拍板的三件在最後面。</p>
+</div>
+<div class="hint">Scroll</div>
+</div>
+</section>
+
+
+<!-- ═══════════ 整條線 ═══════════ -->
+<section class="slide" id="line" data-ch="整條線長什麼樣" data-sub="九站" data-stages="9">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-hi="0"><text x="42" y="42" class="no" style="font-size:18px">01</text><text x="90" y="42" class="lb">需求進來</text><text x="230" y="42" class="sub">建客戶、建案場、記來源、規劃書勾一下</text><line x1="40" y1="52" x2="560" y2="52" class="thin draw"/></g>
+<g class="in-left" data-s="1" data-hi="1"><text x="42" y="82" class="no" style="font-size:18px">02</text><text x="90" y="82" class="lb">規劃、報價</text><text x="230" y="82" class="sub">報價單在系統裡做</text><line x1="40" y1="92" x2="560" y2="92" class="thin draw"/></g>
+<g class="in-left" data-s="2" data-hi="2"><text x="42" y="122" class="no" style="font-size:18px">03</text><text x="90" y="122" class="lb">討論調整</text><text x="230" y="122" class="sub">報價出新版，改幾版都行</text><line x1="40" y1="132" x2="560" y2="132" class="thin draw"/></g>
+<g class="in-left" data-s="3" data-hi="3"><text x="42" y="162" class="no" style="font-size:18px">04</text><text x="90" y="162" class="lb">簽約</text><text x="230" y="162" class="sub">客戶簽任一張，案件就誕生；收到訂金才往下</text><line x1="40" y1="172" x2="560" y2="172" class="thin draw"/></g>
+<g class="in-left" data-s="4" data-hi="4"><text x="42" y="202" class="no" style="font-size:18px">05</text><text x="90" y="202" class="lb">備料</text><text x="230" y="202" class="sub">照「工程類別」一類一張清單</text><line x1="40" y1="212" x2="560" y2="212" class="thin draw"/></g>
+<g class="in-left" data-s="5" data-hi="5"><text x="42" y="242" class="no" style="font-size:18px">06</text><text x="90" y="242" class="lb">施工</text><text x="230" y="242" class="sub">工作紀錄照舊；裝好拍完成照；增減單草稿自己長</text><line x1="40" y1="252" x2="560" y2="252" class="thin draw"/></g>
+<g class="in-left" data-s="6" data-hi="6"><text x="42" y="282" class="no" style="font-size:18px">07</text><text x="90" y="282" class="lb">驗收、教學</text><text x="230" y="282" class="sub">照「設備類別」打勾，簽字就凍結</text><line x1="40" y1="292" x2="560" y2="292" class="thin draw"/></g>
+<g class="in-left" data-s="7" data-hi="7"><text x="42" y="322" class="no" style="font-size:18px">08</text><text x="90" y="322" class="lb">收款</text><text x="230" y="322" class="sub">每張報價單自己的三期，快速知道款項收到哪</text><line x1="40" y1="332" x2="560" y2="332" class="thin draw"/></g>
+<g class="in-left" data-s="8" data-hi="8"><text x="42" y="362" class="no" style="font-size:18px">09</text><text x="90" y="362" class="lb">售後</text><text x="230" y="362" class="sub">客戶有自己的頁；行政每天看報修、通知人</text><line x1="40" y1="372" x2="560" y2="372" class="thin draw"/></g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">整條線 · 09 站</span>
+<h2>整條線長什麼樣</h2>
+<p class="lead">九站沒有變，變的是每一站系統接手多少。點左邊的站名，或按 → 一站一站看。</p>
+<ol class="marks"><li>需求</li><li>報價</li><li>調整</li><li>簽約</li><li>備料</li><li>施工</li><li>驗收</li><li>收款</li><li>售後</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">01 · 需求進來</span>建客戶、建案場、記案子從哪來、規劃書做了勾一下。平面圖那些照舊放 iCloud。</div>
+<div class="step" data-k="1"><span class="k">02 · 規劃、報價</span>報價單做進內部系統。智能、燈具、影音、弱電各一張。</div>
+<div class="step" data-k="2"><span class="k">03 · 討論調整</span>報價出新版，改幾版都行。這一站併進 02，不另外做。</div>
+<div class="step" data-k="3"><span class="k">04 · 簽約</span>客戶簽任何一張報價單，案件就誕生、發編號。收到訂金才往下走。</div>
+<div class="step" data-k="4"><span class="k">05 · 備料</span>照「工程類別」一類一張清單。哪一類什麼時候備，負責人講一聲，系統不猜。</div>
+<div class="step" data-k="5"><span class="k">06 · 施工</span>工作紀錄照舊。位置裝好拍完成照；增減單草稿在施工中自己長出來。</div>
+<div class="step" data-k="6"><span class="k">07 · 驗收、教學</span>照「設備類別」一項一項打勾，簽字就凍結。燈具先驗、先收。</div>
+<div class="step" data-k="7"><span class="k">08 · 收款</span>每張報價單自己的訂金／工程款／尾款。快速知道款項收到哪一期。</div>
+<div class="step" data-k="8"><span class="k">09 · 售後</span>客戶有自己的頁：設備清單、保固、教學、排除、報修。行政每天看報修、通知人。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 四個詞 ═══════════ -->
+<section class="slide flip" id="terms" data-ch="先懂四個詞" data-sub="後面都在用" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<!-- 階段 0：兩層分類樹 -->
+<g class="in-drop" data-s="0" data-until="1">
+<text x="60" y="30" class="cap">工程類別 · 粗 · 6 個</text>
+<text x="330" y="30" class="cap">設備類別 · 細 · 料號填這層</text>
+<line x1="60" y1="40" x2="560" y2="40" class="thin"/>
+<text x="60" y="76" class="lb">網路</text><line x1="150" y1="72" x2="320" y2="72" class="ln draw"/><text x="330" y="76" class="lb">網路設備</text>
+<text x="60" y="118" class="lb">監控</text><line x1="150" y1="114" x2="320" y2="114" class="ln draw"/><text x="330" y="118" class="lb">監控</text>
+<text x="60" y="160" class="lb acc">智能</text>
+<path d="M150 156 H235 V246 M235 156 H320 M235 186 H320 M235 216 H320 M235 246 H320" class="ln acc draw"/>
+<text x="330" y="160" class="lb acc">燈光控制</text>
+<text x="330" y="190" class="lb acc">冷氣控制</text>
+<text x="330" y="220" class="lb acc">電動窗簾</text>
+<text x="330" y="250" class="lb acc">感應器</text>
+<text x="60" y="296" class="lb">影音</text><line x1="150" y1="292" x2="320" y2="292" class="ln draw"/><text x="330" y="296" class="lb">音響</text>
+<text x="60" y="334" class="lb">燈具</text><line x1="150" y1="330" x2="320" y2="330" class="ln draw"/><text x="330" y="334" class="lb">燈具</text>
+<text x="60" y="372" class="lb">線材與耗材</text><line x1="150" y1="368" x2="320" y2="368" class="ln draw"/><text x="330" y="372" class="lb">線材與耗材</text>
+</g>
+<!-- 階段 1：里程碑 -->
+<g class="in-grow" data-s="1" data-until="2">
+<text x="60" y="34" class="cap">案件 WL-2026-001</text>
+<line x1="60" y1="44" x2="560" y2="44" class="thin"/>
+<line x1="80" y1="70" x2="80" y2="350" class="thin draw"/>
+<circle cx="80" cy="76" r="6" class="dot"/><text x="104" y="80" class="lb">已簽約</text><text x="290" y="80" class="num">09-19</text><text x="360" y="80" class="sub">專案負責人</text>
+<circle cx="80" cy="122" r="6" class="dot"/><text x="104" y="126" class="lb">已收訂金</text><text x="290" y="126" class="num">09-23</text><text x="360" y="126" class="sub">行政 → 可以備料</text>
+<circle cx="80" cy="168" r="6" class="dot"/><text x="104" y="172" class="lb">施工中</text><text x="290" y="172" class="sub">第一張工作紀錄的日期，自動亮</text>
+<circle cx="80" cy="214" r="6" class="box"/><text x="104" y="218" class="lb">已驗收</text><text x="290" y="218" class="num">— —</text>
+<circle cx="80" cy="260" r="6" class="box"/><text x="104" y="264" class="lb">增減單已簽</text><text x="290" y="264" class="num">— —</text>
+<circle cx="80" cy="306" r="6" class="box"/><text x="104" y="310" class="lb">已收尾款</text><text x="290" y="310" class="num">— —</text>
+<circle cx="80" cy="352" r="6" class="box"/><text x="104" y="356" class="lb">結案</text><text x="290" y="356" class="num">— —</text>
+<text x="560" y="390" text-anchor="end" class="cap">實心＝到了 · 空心＝還沒</text>
+</g>
+<!-- 階段 2：報價單是脊椎 -->
+<g class="in-grow" data-s="2" data-until="3">
+<text x="60" y="34" class="cap">案件 · 只做加總</text>
+<line x1="60" y1="44" x2="560" y2="44" class="thin"/>
+<text x="330" y="74" class="cap">收款</text><text x="420" y="74" class="cap">增減單</text><text x="500" y="74" class="cap">驗收簽字</text>
+<text x="60" y="118" class="lb">智能報價單</text>
+<circle cx="336" cy="114" r="7" class="dot"/><circle cx="356" cy="114" r="7" class="box"/><circle cx="376" cy="114" r="7" class="box"/>
+<text x="426" y="118" class="sub">草稿中</text><text x="506" y="118" class="sub">未簽</text>
+<line x1="60" y1="134" x2="560" y2="134" class="thin draw"/>
+<text x="60" y="176" class="lb acc">燈具報價單</text>
+<circle cx="336" cy="172" r="7" class="dot"/><circle cx="356" cy="172" r="7" class="dot"/><circle cx="376" cy="172" r="7" class="dot"/>
+<text x="426" y="176" class="sub">已簽</text><text x="506" y="176" class="lb acc">已簽</text>
+<line x1="60" y1="192" x2="560" y2="192" class="thin draw"/>
+<text x="60" y="234" class="lb">影音報價單</text>
+<circle cx="336" cy="230" r="7" class="dot"/><circle cx="356" cy="230" r="7" class="box"/><circle cx="376" cy="230" r="7" class="box"/>
+<text x="426" y="234" class="sub">—</text><text x="506" y="234" class="sub">未簽</text>
+<line x1="60" y1="250" x2="560" y2="250" class="thin draw"/>
+<text x="60" y="300" class="sub">每張報價單自己走：燈具先完工，就先驗收、先收燈具尾款。</text>
+<text x="60" y="322" class="sub">影音晚兩週才簽，就晚兩週起算，互不干擾。</text>
+</g>
+<!-- 階段 3：設定區 vs 程式 -->
+<g class="in-left" data-s="3">
+<text x="60" y="34" class="cap acc">設定區 · 可自己調整</text>
+<line x1="60" y1="44" x2="280" y2="44" class="thin"/>
+<text x="60" y="76" class="lb">分類樹</text>
+<text x="60" y="106" class="lb">驗收大項</text>
+<text x="60" y="136" class="lb">案子來源</text>
+<text x="60" y="166" class="lb">售價、工資費率</text>
+<text x="60" y="196" class="lb">收款比例</text>
+<text x="60" y="226" class="lb">排除問答</text>
+<text x="330" y="34" class="cap">程式裡 · 改了要想過</text>
+<line x1="330" y1="44" x2="560" y2="44" class="thin"/>
+<text x="330" y="76" class="lb">誰能按什麼</text>
+<text x="330" y="106" class="lb">金額什麼時候凍</text>
+<text x="330" y="136" class="lb">案件什麼時候誕生</text>
+<text x="330" y="166" class="lb">保固怎麼起算</text>
+<line x1="60" y1="300" x2="560" y2="300" class="ln draw"/>
+<text x="60" y="330" class="lb">一年會改超過一次的名單，才放設定區。</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">四個詞</span>
+<h2>先懂四個詞，後面都在用</h2>
+<p class="lead">這四個詞是整套設計的骨架。以後講話就用它們：「備料用工程類別做清單」「驗收照設備類別打勾」。</p>
+<ol class="marks"><li>工程類別、設備類別</li><li>里程碑</li><li>報價單是脊椎</li><li>設定區</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 工程類別、設備類別</span>每一個料號只填一個「設備類別」，它屬於哪個「工程類別」系統自己算。備料看粗的那層，驗收跟教學看細的那層。這棵樹放設定區，以後要搬一項改一行。</div>
+<div class="step" data-k="1"><span class="k">2 · 里程碑</span>一個案件不再只有一個狀態，是一串「做到哪、哪天做的、誰做的」。大部分會自動亮，不用人去按：收到訂金行政登記就亮，第一張工作紀錄一存「施工中」就亮。</div>
+<div class="step" data-k="2"><span class="k">3 · 報價單是脊椎，案件只是容器</span>收款、增減單、驗收簽字都掛在「那一張報價單」上，案件只做加總。所以燈具先完工就先驗收、先收燈具尾款；影音晚兩週才簽就晚兩週起算，互不干擾。</div>
+<div class="step" data-k="3"><span class="k">4 · 設定區</span>會變的名單（分類、驗收大項、案子來源、售價、工資費率、收款比例、排除問答）放設定區，可自己調整、不用等工程師。流程規則（誰能按什麼、金額怎麼凍）寫死在程式裡，改了要想過。一年會改超過一次的才放設定區。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 01 需求進來 ═══════════ -->
+<section class="slide" id="s01" data-ch="01 需求進來" data-sub="建客戶、建案場" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="90" y="70" class="cap">建客戶</text>
+<text x="90" y="96" class="lb">一個客戶可以有好幾個家</text>
+<line x1="40" y1="116" x2="560" y2="116" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-hi="1">
+<text x="42" y="206" class="no">2</text>
+<text x="90" y="180" class="cap">建案場 · 記來源</text>
+<text x="90" y="206" class="lb">舊客戶推薦 ／ 設計公司推薦 ／ 客戶自己找來</text>
+<line x1="40" y1="226" x2="560" y2="226" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-hi="2">
+<text x="42" y="316" class="no">3</text>
+<text x="90" y="290" class="cap">規劃書</text>
+<text x="90" y="316" class="lb">做了勾一下；平面圖那些照舊放 iCloud</text>
+<line x1="40" y1="336" x2="560" y2="336" class="thin draw"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 01</span>
+<h2>需求進來</h2>
+<p class="lead">現在：案子來自設計公司、推薦、屋主自己找、來參觀；資料放 iCloud 公司資料夾，設計公司提供檔案；規劃書自己畫。</p>
+<ol class="marks"><li>建客戶</li><li>建案場、記來源</li><li>規劃書勾一下</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 建客戶</span>先建客戶，再建案場。一個客戶可以有好幾個家，資料不用重打。</div>
+<div class="step" data-k="1"><span class="k">2 · 建案場、記來源</span>案場記「來源」：舊客戶推薦／設計公司推薦／客戶自己找來。對工作流程不重要，但半年後就看得出哪條路帶最多案子。一個下拉、成本很低。</div>
+<div class="step" data-k="2"><span class="k">3 · 規劃書勾一下</span>規劃書做了勾一下就好。之後要進系統、或用 AI 做初步規劃，位置留好了。平面圖、迴路圖照舊放 iCloud，系統不重做檔案管理。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 02 規劃、報價 ═══════════ -->
+<section class="slide flip" id="s02" data-ch="02 規劃、報價" data-sub="03 討論調整併在這裡" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-hi="0">
+<text x="42" y="70" class="no">1</text>
+<text x="90" y="46" class="cap">做進內部系統</text>
+<text x="90" y="70" class="lb">畫面長相照舊、只微調</text>
+<line x1="40" y1="88" x2="560" y2="88" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-hi="1">
+<text x="42" y="156" class="no">2</text>
+<text x="90" y="132" class="cap">四種報價單</text>
+<text x="90" y="156" class="lb">智能、影音、弱電照類別列；燈具照房間列</text>
+<line x1="40" y1="174" x2="560" y2="174" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-hi="2">
+<text x="42" y="242" class="no">3</text>
+<text x="90" y="218" class="cap">簽約那刻凍價</text>
+<text x="90" y="242" class="lb">舊案子不再跟著今天的價跑</text>
+<line x1="40" y1="260" x2="560" y2="260" class="thin draw"/>
+</g>
+<g class="in-left" data-s="3" data-hi="3">
+<text x="42" y="328" class="no">4</text>
+<text x="90" y="304" class="cap">料號只有一份</text>
+<text x="90" y="328" class="lb">報價後台改售價；庫存區看現量與成本</text>
+<line x1="40" y1="346" x2="560" y2="346" class="thin draw"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 02 · 03 併入</span>
+<h2>規劃、報價</h2>
+<p class="lead">現在：兩套獨立的報價程式，智能一套、燈具一套；價格每次開檔用今天的價現算，舊案子會跟著變；報價品項跟庫存料號是兩份名單。</p>
+<ol class="marks"><li>做進系統</li><li>四種報價單</li><li>簽約凍價</li><li>料號一份</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 做進內部系統</span>報價單做進內部系統，畫面長相照舊、只微調。報價改幾版都行；哪一類簽了，就把那一類的舊版清掉。設計公司看報價：給 PDF。</div>
+<div class="step" data-k="1"><span class="k">2 · 四種報價單</span>智能、影音、弱電照類別列；燈具照房間列。影音跟弱電學智能那張的長相。</div>
+<div class="step" data-k="2"><span class="k">3 · 簽約那刻凍價</span>單價在簽約那刻凍住，舊案子不再跟著今天的價跑。報價選的就是料號，簽約後才帶得出「要備哪些」。</div>
+<div class="step" data-k="3"><span class="k">4 · 料號只有一份，畫面跟權限分開</span>報價的人在報價後台改售價、折讓、工資費率；點貨的人在庫存區看現量跟成本。兩邊改的是同一個料號的不同面。</div>
+</div>
+<p class="note"><b>一條公司本來就有的規則：</b>一個案子裡，網路設備只會出現在一張報價單——有弱電報價單就在弱電，沒有就在智能。系統會擋、平常不會遇到。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 04 簽約 ═══════════ -->
+<section class="slide" id="s04" data-ch="04 簽約" data-sub="案件在這裡誕生" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-hi="0">
+<text x="42" y="70" class="no">1</text>
+<text x="90" y="46" class="cap">簽任何一張</text>
+<text x="90" y="70" class="lb">案件就誕生、發編號；影音晚簽再加一張進來</text>
+<line x1="40" y1="88" x2="560" y2="88" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-hi="1">
+<text x="42" y="156" class="no">2</text>
+<text x="90" y="132" class="cap">簽名第一版</text>
+<text x="90" y="156" class="lb">內部按「客戶已簽」、附簽好的檔案</text>
+<line x1="40" y1="174" x2="560" y2="174" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-hi="2">
+<text x="42" y="242" class="no">3</text>
+<text x="90" y="218" class="cap">收到訂金</text>
+<text x="90" y="242" class="lb">行政登記 → 自動亮「已收訂金」→ 可以備料</text>
+<line x1="40" y1="260" x2="560" y2="260" class="thin draw"/>
+</g>
+<g class="in-left" data-s="3" data-hi="3">
+<text x="42" y="328" class="no">4</text>
+<text x="90" y="304" class="cap">簽了沒付</text>
+<text x="90" y="328" class="lb">標「沒做」，不刪</text>
+<line x1="40" y1="346" x2="560" y2="346" class="thin draw"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 04</span>
+<h2>簽約</h2>
+<p class="lead">現在：報價完就先開案，沒做的案子留空號；簽約靠紙本或 LINE。</p>
+<ol class="marks"><li>簽任一張就開案</li><li>簽名第一版</li><li>收到訂金</li><li>簽了沒付</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 簽任何一張，案件就誕生</span>客戶簽任何一張報價單，案件就誕生、發編號。影音晚幾週才簽，再加一張進同一個案件。</div>
+<div class="step" data-k="1"><span class="k">2 · 簽名第一版</span>第一版：內部按「客戶已簽」、附上簽好的檔案。之後客戶登入做好了，改成在系統裡簽。</div>
+<div class="step" data-k="2"><span class="k">3 · 收到訂金</span>行政登記收到訂金，自動進「已收訂金」，就可以備料。</div>
+<div class="step" data-k="3"><span class="k">4 · 簽了沒付訂金</span>標「沒做」，不刪。列表預設只看進行中的；半年後要看哪家設計公司報幾次成幾次。</div>
+</div>
+<p class="note"><b>不做「成交」鈕：</b>訂金要記在案件上，所以案件在客戶簽的那刻就得存在。多一顆「成交」鈕只是多一顆會忘記按的鈕。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 05 06 備料、施工 ═══════════ -->
+<section class="slide flip" id="s05" data-ch="05 06 備料、施工" data-sub="工作紀錄照舊" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-until="3" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="90" y="70" class="cap">備料</text>
+<text x="90" y="96" class="lb">照工程類別一類一張：需要 ／ 庫存有 ／ 要叫貨</text>
+<line x1="40" y1="116" x2="560" y2="116" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-until="3" data-hi="1">
+<text x="42" y="206" class="no">2</text>
+<text x="90" y="180" class="cap">施工照舊記，「階段」不設欄位</text>
+<text x="90" y="206" class="lb">不做「現在到哪個階段」的選項；做到哪從工作紀錄看得出</text>
+<line x1="40" y1="226" x2="560" y2="226" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-until="3" data-hi="2">
+<text x="42" y="316" class="no">3</text>
+<text x="90" y="290" class="cap">工作紀錄</text>
+<text x="90" y="316" class="lb">現有設計保留，接七個小改（下一頁）</text>
+<line x1="40" y1="336" x2="560" y2="336" class="thin draw"/>
+</g>
+<!-- 階段 3：介面示意 · 備料清單（照系統的設計語言畫，數字是舉例） -->
+<g class="in-grow" data-s="3">
+<rect x="0" y="0" width="600" height="400" class="uibg"/>
+<rect x="24" y="18" width="552" height="364" rx="14" class="uicard"/>
+<text x="48" y="54" class="uih">備料清單 · 御之苑 王宅</text>
+<text x="48" y="74" class="uis">工程類別：智能</text>
+<rect x="456" y="36" width="96" height="26" rx="13" class="uiink"/>
+<text x="504" y="53" text-anchor="middle" class="uibtn">印一張帶走</text>
+<line x1="48" y1="92" x2="552" y2="92" class="uisep"/>
+<text x="48" y="130" class="uibig">24</text><text x="48" y="148" class="uis">需要</text>
+<text x="188" y="130" class="uibig">18</text><text x="188" y="148" class="uis">庫存有</text>
+<text x="328" y="130" class="uibig">6</text><text x="328" y="148" class="uis">要叫貨</text>
+<line x1="48" y1="168" x2="552" y2="168" class="uisep"/>
+<text x="48" y="190" class="uicap">料號</text>
+<text x="272" y="190" text-anchor="end" class="uicap">需要</text>
+<text x="340" y="190" text-anchor="end" class="uicap">庫存</text>
+<text x="408" y="190" text-anchor="end" class="uicap">要叫</text>
+<text x="486" y="190" text-anchor="end" class="uicap">別案也要</text>
+<text x="48" y="218" class="uit">智能開關 一路</text>
+<text x="272" y="218" text-anchor="end" class="uinum">8</text><text x="340" y="218" text-anchor="end" class="uinum">8</text><text x="408" y="218" text-anchor="end" class="uinum">—</text><text x="486" y="218" text-anchor="end" class="uinum">—</text>
+<rect x="500" y="206" width="52" height="18" rx="5" class="uiokbg"/><text x="526" y="219" text-anchor="middle" class="uiok">齊了</text>
+<line x1="48" y1="234" x2="552" y2="234" class="uisep"/>
+<text x="48" y="260" class="uit">智能開關 二路</text>
+<text x="272" y="260" text-anchor="end" class="uinum">6</text><text x="340" y="260" text-anchor="end" class="uinum">4</text><text x="408" y="260" text-anchor="end" class="uinum">2</text><text x="486" y="260" text-anchor="end" class="uinumx">8</text>
+<rect x="500" y="248" width="52" height="18" rx="5" class="uiwarnbg"/><text x="526" y="261" text-anchor="middle" class="uiwarn">要叫貨</text>
+<line x1="48" y1="276" x2="552" y2="276" class="uisep"/>
+<text x="48" y="302" class="uit">調光模組</text>
+<text x="272" y="302" text-anchor="end" class="uinum">4</text><text x="340" y="302" text-anchor="end" class="uinum">4</text><text x="408" y="302" text-anchor="end" class="uinum">—</text><text x="486" y="302" text-anchor="end" class="uinum">—</text>
+<rect x="500" y="290" width="52" height="18" rx="5" class="uiokbg"/><text x="526" y="303" text-anchor="middle" class="uiok">齊了</text>
+<line x1="48" y1="318" x2="552" y2="318" class="uisep"/>
+<text x="48" y="344" class="uit">感應器</text>
+<text x="272" y="344" text-anchor="end" class="uinum">6</text><text x="340" y="344" text-anchor="end" class="uinum">2</text><text x="408" y="344" text-anchor="end" class="uinum">4</text><text x="486" y="344" text-anchor="end" class="uinumx">5</text>
+<rect x="500" y="332" width="52" height="18" rx="5" class="uiwarnbg"/><text x="526" y="345" text-anchor="middle" class="uiwarn">要叫貨</text>
+<text x="48" y="370" class="uim">示意畫面，料名與數字都是舉例；「別案也要」是別的案場同一個料還要幾個</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 05 · 06</span>
+<h2>備料、施工</h2>
+<p class="lead">現在：整案一份料單；分階段進場（開場、封板前、封板後、細清前後）是大家的習慣；拍照要切到相簿畫圈再回來選。</p>
+<ol class="marks"><li>備料</li><li>階段不設欄位</li><li>工作紀錄接七點</li><li>清單長這樣</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 備料照工程類別</span>一類一張清單，每張顯示：需要、庫存有、要叫貨。什麼時候備哪一類，負責人講一聲，系統不猜。</div>
+<div class="step" data-k="1"><span class="k">2 · 施工照舊記，「階段」不設欄位</span>師傅每趟做了什麼照舊記在工作紀錄。系統不會多一個「現在是開場／封板前／封板後／進場」的欄位要人選，那是習慣不是規則。做到哪，從工作紀錄跟位置狀態自然看得出來。</div>
+<div class="step" data-k="2"><span class="k">3 · 工作紀錄現有設計保留</span>表單四區（哪一天去哪裡／誰來哪幾天／今天要裝什麼／耗材與工具）跟位置三段點擊都不動，接七個小改，下一頁一條一條列。</div>
+<div class="step" data-k="3"><span class="k">4 · 備料清單長什麼樣</span>照系統現在的樣子畫的示意：上面三個數字（需要／庫存有／要叫貨），底下一條一條料，齊了的標綠、要叫的標琥珀。<b>最右邊多一欄「別案也要」</b>——別的案場同一個料還要幾個，叫貨當下就看得到，要不要多叫一次決定完。料名跟數字都是舉例，真正長怎樣以做出來的為準。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 05 總備貨區（2026-09-23 加）═══════════ -->
+<!-- 沒有導覽連結，跟 #s06、#s09b 一樣靠角標顯示章節；nav 順序必須維持 == 文件順序（見 JS 的 chTops）。 -->
+<section class="slide" id="s05b" data-ch="05 備料" data-sub="總備貨區" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-until="2" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="90" y="70" class="cap">一種料一條，全部案場加起來</text>
+<text x="90" y="96" class="lb">全部要 ／ 庫存有 ／ 要叫，旁邊寫是哪幾個案場各要幾個</text>
+<line x1="40" y1="116" x2="560" y2="116" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-until="2" data-hi="1">
+<text x="42" y="206" class="no">2</text>
+<text x="90" y="180" class="cap">兩個地方都看得到</text>
+<text x="90" y="206" class="lb">案場清單多一欄「別案也要」；總備貨區是另一個入口，一次看全部</text>
+<line x1="40" y1="226" x2="560" y2="226" class="thin draw"/>
+</g>
+<!-- 階段 2：介面示意 · 總備貨區（數字跟前一頁御之苑那張是對得上的，別改單邊） -->
+<g class="in-grow" data-s="2">
+<rect x="0" y="0" width="600" height="400" class="uibg"/>
+<rect x="24" y="18" width="552" height="364" rx="14" class="uicard"/>
+<text x="48" y="54" class="uih">總備貨區 · 全部在備料的案場</text>
+<text x="48" y="74" class="uis">工程類別：智能 · 只列還缺的</text>
+<rect x="456" y="36" width="96" height="26" rx="13" class="uiink"/>
+<text x="504" y="53" text-anchor="middle" class="uibtn">一起叫貨</text>
+<line x1="48" y1="92" x2="552" y2="92" class="uisep"/>
+<text x="48" y="130" class="uibig">3</text><text x="48" y="148" class="uis">案場在備料</text>
+<text x="188" y="130" class="uibig">25</text><text x="188" y="148" class="uis">件要叫</text>
+<text x="328" y="130" class="uibig">2</text><text x="328" y="148" class="uis">種可以合併叫</text>
+<line x1="48" y1="168" x2="552" y2="168" class="uisep"/>
+<text x="48" y="190" class="uicap">料號</text>
+<text x="238" y="190" text-anchor="end" class="uicap">全部要</text>
+<text x="296" y="190" text-anchor="end" class="uicap">庫存</text>
+<text x="354" y="190" text-anchor="end" class="uicap">要叫</text>
+<text x="380" y="190" class="uicap">哪些案場</text>
+<text x="48" y="218" class="uit">智能開關 二路</text>
+<text x="238" y="218" text-anchor="end" class="uinum">14</text><text x="296" y="218" text-anchor="end" class="uinum">4</text><text x="354" y="218" text-anchor="end" class="uinumx">10</text>
+<text x="380" y="218" class="uis">御之苑 6・松江 5・文心 3</text>
+<line x1="48" y1="234" x2="552" y2="234" class="uisep"/>
+<text x="48" y="260" class="uit">感應器</text>
+<text x="238" y="260" text-anchor="end" class="uinum">11</text><text x="296" y="260" text-anchor="end" class="uinum">2</text><text x="354" y="260" text-anchor="end" class="uinumx">9</text>
+<text x="380" y="260" class="uis">御之苑 6・松江 5</text>
+<line x1="48" y1="276" x2="552" y2="276" class="uisep"/>
+<text x="48" y="302" class="uit">電動窗簾馬達</text>
+<text x="238" y="302" text-anchor="end" class="uinum">6</text><text x="296" y="302" text-anchor="end" class="uinum">0</text><text x="354" y="302" text-anchor="end" class="uinumx">6</text>
+<text x="380" y="302" class="uis">文心 6</text>
+<line x1="48" y1="318" x2="552" y2="318" class="uisep"/>
+<text x="48" y="344" class="uit">調光模組</text>
+<text x="238" y="344" text-anchor="end" class="uinum">4</text><text x="296" y="344" text-anchor="end" class="uinum">4</text><text x="354" y="344" text-anchor="end" class="uinum">—</text>
+<text x="380" y="344" class="uis">御之苑 4 · 齊了</text>
+<text x="48" y="370" class="uim">示意畫面，案名與數字都是舉例</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 05 · 總備貨區</span>
+<h2>總備貨區</h2>
+<p class="lead">現在：每個案場各自看各自的料，要不要多叫一點憑印象；兩個案場前後兩週各叫一次同一種料，運費跟時間都多花。</p>
+<ol class="marks"><li>一種料一條</li><li>兩個地方都看得到</li><li>長什麼樣</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 一種料一條，全部案場加起來</span>把所有正在備料的案場，同一個料號的需求加成一條：全部要多少、庫存有多少、要叫多少。旁邊直接寫是哪幾個案場、各要幾個。這是同一份資料換個角度看，不是另外一份要人維護的清單。</div>
+<div class="step" data-k="1"><span class="k">2 · 兩個地方都看得到</span>兩個時機不一樣，所以兩邊都要有。<b>在案場清單上：</b>最右邊那欄「別案也要」，你在叫貨的當下就知道要不要多叫。<b>在總備貨區：</b>還沒決定要叫什麼之前，一次看全部案場，把能併的併成一張單。</div>
+<div class="step" data-k="2"><span class="k">3 · 總備貨區長什麼樣</span>照系統現在的樣子畫的示意：上面三個數字（幾個案場在備料、總共幾件要叫、幾種料兩個以上案場都要），底下一條一條料，最右邊寫哪幾個案場各要幾個。案名跟數字都是舉例，真正長怎樣以做出來的為準。</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="flow" id="s06">
+<div class="grid">
+<div class="lbl">06 · 工作紀錄接的七點</div>
+<div>
+<h3>改什麼、為什麼</h3>
+<p>都是接在現有設計上的小改，不是重做。</p>
+<ul class="rule">
+<li><div class="h">1 · 分組</div><span>「今天要裝什麼」照工程類別分組、可折疊</span><span class="then">一趟通常只做一兩類，工地滑得少</span></li>
+<li><div class="h">2 · 帶人</div><span>下一趟預設帶上一趟的人</span><span class="then">省一排點擊</span></li>
+<li><div class="h">3 · 完成照</div><span>位置點「完成」必拍完成照，圈圈在系統裡畫；紀錄照另一顆鈕</span><span class="then">不用切三次 app</span></li>
+<li><div class="h">4 · 驗收清單</div><span>某類設備全部裝完，那項自己亮「可驗收」</span><span class="then">驗收清單自動長</span></li>
+<li><div class="h">5 · 增減單</div><span>增減單草稿施工中自動長</span><span class="then">驗收那天只確認，不用回想哪裡改了</span></li>
+<li><div class="h">6 · 維修</div><span>維修那趟從報修單直接排；帶料預設同料號一台當備品</span><span class="then">跟售後接起來</span></li>
+<li><div class="h">7 · 列表</div><span>列表看得出這趟是安裝還是維修</span><span class="then">現在看不出來</span></li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 07 驗收、教學 ═══════════ -->
+<section class="slide" id="s07" data-ch="07 驗收、教學" data-sub="簽字就凍結" data-stages="5">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-until="4" data-hi="0">
+<text x="42" y="70" class="no">1</text>
+<text x="90" y="46" class="cap">照設備類別打勾</text>
+<text x="90" y="70" class="lb">每項旁邊「已驗收」「已教學」</text>
+<line x1="40" y1="88" x2="560" y2="88" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-until="4" data-hi="1">
+<text x="42" y="156" class="no">2</text>
+<text x="90" y="132" class="cap">兩個勾分開</text>
+<text x="90" y="156" class="lb">師傅的「裝好了」≠ 客戶的「點收了」</text>
+<line x1="40" y1="174" x2="560" y2="174" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-until="4" data-hi="2">
+<text x="42" y="242" class="no">3</text>
+<text x="90" y="218" class="cap">簽字就凍結</text>
+<text x="90" y="242" class="lb">簽字前清單跟增減單草稿一直跟著實裝變</text>
+<line x1="40" y1="260" x2="560" y2="260" class="thin draw"/>
+</g>
+<g class="in-left" data-s="3" data-until="4" data-hi="3">
+<text x="42" y="328" class="no">4</text>
+<text x="90" y="304" class="cap">跟著報價單走</text>
+<text x="90" y="328" class="lb">燈具先驗、先凍、先收尾款</text>
+<line x1="40" y1="346" x2="560" y2="346" class="thin draw"/>
+</g>
+<!-- 階段 4：介面示意 · 驗收清單（照系統的設計語言畫，內容是舉例） -->
+<g class="in-grow" data-s="4">
+<rect x="0" y="0" width="600" height="400" class="uibg"/>
+<rect x="24" y="18" width="552" height="364" rx="14" class="uicard"/>
+<text x="48" y="54" class="uih">驗收清單 · 御之苑 王宅</text>
+<text x="48" y="74" class="uis">智能報價單 · 客戶還沒簽字</text>
+<rect x="462" y="36" width="90" height="26" rx="13" class="uiink"/>
+<text x="507" y="53" text-anchor="middle" class="uibtn">客戶簽字</text>
+<line x1="48" y1="92" x2="552" y2="92" class="uisep"/>
+<text x="48" y="118" class="uicap">設備類別</text>
+<text x="310" y="118" text-anchor="middle" class="uicap">已驗收</text>
+<text x="392" y="118" text-anchor="middle" class="uicap">已教學</text>
+<text x="430" y="118" class="uicap">這一項的位置</text>
+<text x="48" y="152" class="uit">燈光控制</text>
+<path d="M304 152 l4 5 l8 -10" class="uitick"/>
+<path d="M386 152 l4 5 l8 -10" class="uitick"/>
+<text x="430" y="152" class="uis">18 個位置全裝完</text>
+<line x1="48" y1="168" x2="552" y2="168" class="uisep"/>
+<text x="48" y="194" class="uit">冷氣控制</text>
+<path d="M304 194 l4 5 l8 -10" class="uitick"/>
+<path d="M386 194 l4 5 l8 -10" class="uitick"/>
+<text x="430" y="194" class="uis">4 個位置全裝完</text>
+<line x1="48" y1="210" x2="552" y2="210" class="uisep"/>
+<text x="48" y="236" class="uit">電動窗簾</text>
+<path d="M304 236 l4 5 l8 -10" class="uitick"/>
+<circle cx="392" cy="232" r="7" class="uiempty"/>
+<text x="430" y="236" class="uis">3 個位置全裝完</text>
+<line x1="48" y1="252" x2="552" y2="252" class="uisep"/>
+<text x="48" y="278" class="uit">感應器</text>
+<circle cx="310" cy="274" r="7" class="uiempty"/>
+<circle cx="392" cy="274" r="7" class="uiempty"/>
+<text x="430" y="278" class="uis">還差 2 個位置</text>
+<line x1="48" y1="294" x2="552" y2="294" class="uisep"/>
+<text x="48" y="320" class="uit">網路設備</text>
+<path d="M304 320 l4 5 l8 -10" class="uitick"/>
+<path d="M386 320 l4 5 l8 -10" class="uitick"/>
+<text x="430" y="320" class="uis">6 個位置全裝完</text>
+<text x="48" y="368" class="uim">示意畫面，內容是舉例。簽字那一刻整張凍結，之後的變動走新的增減單</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 07</span>
+<h2>驗收、教學</h2>
+<p class="lead">現在：完工後點交驗收、教學；施工完才回想哪裡改了，做增減單；客戶手上沒有自己家的設備資料。</p>
+<ol class="marks"><li>照設備類別打勾</li><li>兩個勾分開</li><li>簽字就凍結</li><li>跟著報價單走</li><li>清單長這樣</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 照設備類別一項一項打勾</span>不是一台一台，是一項一項：網路設備、燈光控制、冷氣控制、感應器……每項旁邊「已驗收」「已教學」兩個勾。</div>
+<div class="step" data-k="1"><span class="k">2 · 兩個勾分開</span>師傅在 06 按的「裝好了」，跟客戶在 07 的「點收了」是兩回事，分開打、互不覆蓋。</div>
+<div class="step" data-k="2"><span class="k">3 · 簽字就凍結</span>簽字前，驗收清單跟增減單草稿一直跟著實際安裝變；客戶簽字那刻凍結。不另外做「鎖定」鈕。</div>
+<div class="step" data-k="3"><span class="k">4 · 跟著報價單走</span>驗收掛在報價單上：燈具先完工就先驗、先凍、先收燈具尾款。</div>
+<div class="step" data-k="4"><span class="k">5 · 驗收清單長什麼樣</span>一項一列、兩個勾，右邊順手告訴你這一項的位置裝完了沒（沒裝完的項目就還不能驗）。類別與數字是舉例。</div>
+</div>
+<p class="note"><b>驗收打勾的結果就是客戶的設備清單</b>，直接變成售後那頁的保固表，不用再打一次。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 08 收款 ═══════════ -->
+<section class="slide flip" id="s08" data-ch="08 收款" data-sub="快速知道款項收到哪" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-until="3">
+<text x="300" y="60" text-anchor="middle" class="cap">訂金</text>
+<text x="400" y="60" text-anchor="middle" class="cap">工程款</text>
+<text x="500" y="60" text-anchor="middle" class="cap">尾款</text>
+<line x1="60" y1="72" x2="560" y2="72" class="thin"/>
+<text x="560" y="30" text-anchor="end" class="cap">實心＝收了 · 空心＝還沒 · 數字是舉例</text>
+</g>
+<!-- 智能：一直在 -->
+<g class="in-left" data-s="0" data-until="3" data-hi="0,1">
+<text x="60" y="126" class="lb">智能報價單</text>
+<circle cx="300" cy="120" r="14" class="dot"/><circle cx="400" cy="120" r="14" class="box"/><circle cx="500" cy="120" r="14" class="box"/>
+<text x="300" y="154" text-anchor="middle" class="num">184,200</text><text x="400" y="154" text-anchor="middle" class="num">245,600</text><text x="500" y="154" text-anchor="middle" class="num">184,200</text>
+<line x1="60" y1="170" x2="560" y2="170" class="thin draw on"/>
+</g>
+<!-- 增減併尾款：第 2 階段才出現 -->
+<g class="in-drop" data-s="1" data-until="3">
+<!-- 增減併尾款：註記放在智能那排尾款圓圈的正上方，才不會被讀成燈具的 -->
+<text x="560" y="98" text-anchor="end" class="tiny acc">＋增減單 12,000 → 尾款實收 196,200</text>
+</g>
+<!-- 燈具、影音：第 3 階段才出現 -->
+<g class="in-grow" data-s="2" data-until="3" data-hi="2">
+<text x="60" y="246" class="lb">燈具報價單</text>
+<circle cx="300" cy="240" r="14" class="dot"/><circle cx="400" cy="240" r="14" class="dot"/><circle cx="500" cy="240" r="14" class="dot"/>
+<text x="300" y="274" text-anchor="middle" class="num">42,000</text><text x="400" y="274" text-anchor="middle" class="num">56,000</text><text x="500" y="274" text-anchor="middle" class="num">42,000</text>
+<line x1="60" y1="290" x2="560" y2="290" class="thin draw"/>
+<text x="60" y="336" class="lb">影音報價單</text>
+<circle cx="300" cy="330" r="14" class="dot"/><circle cx="400" cy="330" r="14" class="box"/><circle cx="500" cy="330" r="14" class="box"/>
+<text x="300" y="364" text-anchor="middle" class="num">30,000</text><text x="400" y="364" text-anchor="middle" class="num">40,000</text><text x="500" y="364" text-anchor="middle" class="num">30,000</text>
+<line x1="60" y1="380" x2="560" y2="380" class="thin draw"/>
+</g>
+<!-- 階段 3：介面示意 · 案場列表（「案子多的時候一排掃過去」那句話的樣子；數字是舉例） -->
+<g class="in-grow" data-s="3">
+<rect x="0" y="0" width="600" height="400" class="uibg"/>
+<rect x="24" y="18" width="552" height="364" rx="14" class="uicard"/>
+<text x="48" y="54" class="uih">案場</text>
+<rect x="300" y="36" width="150" height="26" rx="8" class="uifield"/>
+<text x="314" y="53" class="uim">搜尋案場</text>
+<rect x="462" y="36" width="90" height="26" rx="13" class="uichip"/>
+<text x="507" y="53" text-anchor="middle" class="uis">進行中 5</text>
+<line x1="48" y1="78" x2="552" y2="78" class="uisep"/>
+<text x="48" y="104" class="uicap">案場</text>
+<text x="330" y="104" text-anchor="middle" class="uicap">訂金</text>
+<text x="396" y="104" text-anchor="middle" class="uicap">工程款</text>
+<text x="462" y="104" text-anchor="middle" class="uicap">尾款</text>
+<text x="552" y="104" text-anchor="end" class="uicap">還差多少</text>
+<text x="48" y="140" class="uit">御之苑 王宅</text>
+<rect x="323" y="129" width="14" height="14" rx="3" class="uiink"/>
+<rect x="389" y="129" width="14" height="14" rx="3" class="uiink"/>
+<rect x="455" y="129" width="14" height="14" rx="3" class="uiempty"/>
+<text x="552" y="140" text-anchor="end" class="uinum">202,200</text>
+<line x1="48" y1="158" x2="552" y2="158" class="uisep"/>
+<text x="48" y="184" class="uit">惠宇之光 李宅</text>
+<rect x="323" y="173" width="14" height="14" rx="3" class="uiink"/>
+<rect x="389" y="173" width="14" height="14" rx="3" class="uiink"/>
+<rect x="455" y="173" width="14" height="14" rx="3" class="uiink"/>
+<text x="552" y="184" text-anchor="end" class="uiok">已收齊</text>
+<line x1="48" y1="202" x2="552" y2="202" class="uisep"/>
+<text x="48" y="228" class="uit">農十六 陳宅</text>
+<rect x="323" y="217" width="14" height="14" rx="3" class="uiink"/>
+<rect x="389" y="217" width="14" height="14" rx="3" class="uiempty"/>
+<rect x="455" y="217" width="14" height="14" rx="3" class="uiempty"/>
+<text x="552" y="228" text-anchor="end" class="uinum">358,000</text>
+<line x1="48" y1="246" x2="552" y2="246" class="uisep"/>
+<text x="48" y="272" class="uit">都廳苑 張宅</text>
+<rect x="323" y="261" width="14" height="14" rx="3" class="uiink"/>
+<rect x="389" y="261" width="14" height="14" rx="3" class="uiink"/>
+<rect x="455" y="261" width="14" height="14" rx="3" class="uiempty"/>
+<text x="552" y="272" text-anchor="end" class="uinum">96,000</text>
+<line x1="48" y1="290" x2="552" y2="290" class="uisep"/>
+<text x="48" y="316" class="uit">安南透天 林宅</text>
+<rect x="323" y="305" width="14" height="14" rx="3" class="uiink"/>
+<rect x="389" y="305" width="14" height="14" rx="3" class="uiink"/>
+<rect x="455" y="305" width="14" height="14" rx="3" class="uiink"/>
+<text x="552" y="316" text-anchor="end" class="uiok">已收齊</text>
+<text x="48" y="366" class="uim">示意畫面，案名與數字都是舉例。實心＝收了，空心＝還沒</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 08</span>
+<h2>收款</h2>
+<p class="lead">現在：施工完先收工程款，驗收後做增減單、收尾款；錢收到哪靠老闆記。</p>
+<ol class="marks"><li>每張報價單三期</li><li>增減併尾款</li><li>老闆看三格</li><li>一排掃過去</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 每張報價單自己的三期</span>訂金／工程款／尾款，簽約時照公司預設比例算好。行政收到錢，在那一行按「收到了」。80% 的案子照預設，特殊的直接改那一案的金額。</div>
+<div class="step" data-k="1"><span class="k">2 · 增減單的錢跟尾款一起收</span>增減單記錄上分開存（合約不動），帳單跟尾款開同一張：尾款實收＝尾款＋增減。多就加上去，少就扣尾款；減得比尾款還多會變負數，系統標紅、人來處理。</div>
+<div class="step" data-k="2"><span class="k">3 · 老闆看到的樣子</span>不是三個數字，是三格。實心＝收了，空心＝還沒。智能、燈具、影音各一排，一個案子只有一張報價單就只顯示那一排。案子多的時候一排掃過去，就知道誰卡在哪一期。</div>
+<div class="step" data-k="3"><span class="k">4 · 案場列表長什麼樣</span>上一格是一個案子拆開看，這一格是全部案子擺在一起：一列一個案場、三格就是三期，右邊直接寫還差多少。案名與數字是舉例。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 09 售後：客戶頁 ═══════════ -->
+<section class="slide" id="s09" data-ch="09 售後" data-sub="客戶自己看的" data-stages="5">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-until="4" data-hi="0">
+<text x="42" y="70" class="no">1</text>
+<text x="90" y="46" class="cap">客戶帳號簽約就開</text>
+<text x="90" y="70" class="lb">一頁隨案子長：合約、付款、里程碑、設備清單、報修</text>
+<line x1="40" y1="88" x2="560" y2="88" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-until="4" data-hi="1">
+<text x="42" y="156" class="no">2</text>
+<text x="90" y="132" class="cap">不給密碼</text>
+<text x="90" y="156" class="lb">LINE 收到連結，點了就登入，這支手機記 90 天</text>
+<line x1="40" y1="174" x2="560" y2="174" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-until="4" data-hi="2">
+<text x="42" y="242" class="no">3</text>
+<text x="90" y="218" class="cap">第一版怎麼發</text>
+<text x="90" y="242" class="lb">行政把連結貼進既有 LINE 群；官方帳號自動發是第二步</text>
+<line x1="40" y1="260" x2="560" y2="260" class="thin draw"/>
+</g>
+<g class="in-left" data-s="3" data-until="4" data-hi="3">
+<text x="42" y="328" class="no">4</text>
+<text x="90" y="304" class="cap">教學與排除</text>
+<text x="90" y="328" class="lb">影片先不拍；每類一頁文字排除；第二版加 AI 客服</text>
+<line x1="40" y1="346" x2="560" y2="346" class="thin draw"/>
+</g>
+<!-- 階段 4：介面示意 · 客戶在自己手機上看到的那一頁（內容是舉例） -->
+<g class="in-grow" data-s="4">
+<rect x="0" y="0" width="600" height="400" class="uibg"/>
+<rect x="56" y="24" width="196" height="352" rx="24" class="uicard"/>
+<text x="72" y="58" class="uih">御之苑 王宅</text>
+<text x="72" y="76" class="uis">威琳科技 · 施工中</text>
+<line x1="72" y1="92" x2="236" y2="92" class="uisep"/>
+<text x="72" y="118" class="uit">合約與付款</text>
+<text x="236" y="118" text-anchor="end" class="uis">收 2/3</text>
+<line x1="72" y1="132" x2="236" y2="132" class="uisep"/>
+<text x="72" y="154" class="uit">施工進度</text>
+<text x="236" y="154" text-anchor="end" class="uis">施工中</text>
+<line x1="72" y1="168" x2="236" y2="168" class="uisep"/>
+<text x="72" y="190" class="uit">設備清單</text>
+<text x="236" y="190" text-anchor="end" class="uis">12 台</text>
+<line x1="72" y1="204" x2="236" y2="204" class="uisep"/>
+<text x="72" y="226" class="uit">保固</text>
+<text x="236" y="226" text-anchor="end" class="uis">最近 2028-03</text>
+<line x1="72" y1="240" x2="236" y2="240" class="uisep"/>
+<text x="72" y="262" class="uit">教學與排除</text>
+<text x="236" y="262" text-anchor="end" class="uis">5 類</text>
+<line x1="72" y1="276" x2="236" y2="276" class="uisep"/>
+<text x="72" y="298" class="uim">完成照</text>
+<rect x="166" y="286" width="70" height="18" rx="5" class="uiwarnbg"/>
+<text x="201" y="299" text-anchor="middle" class="uiwarn">等老闆決定</text>
+<rect x="72" y="324" width="164" height="30" rx="15" class="uiink"/>
+<text x="154" y="344" text-anchor="middle" class="uibtn">報修</text>
+<line x1="252" y1="132" x2="280" y2="132" class="thin"/>
+<text x="288" y="136" class="sub">簽約後先看得到這兩塊</text>
+<line x1="252" y1="204" x2="280" y2="204" class="thin"/>
+<text x="288" y="208" class="sub">驗收打勾的結果直接變成這兩列</text>
+<line x1="252" y1="296" x2="280" y2="296" class="thin"/>
+<text x="288" y="300" class="sub">完成照開不開，是要拍板的三件之一</text>
+<line x1="252" y1="336" x2="280" y2="336" class="thin"/>
+<text x="288" y="340" class="sub">客戶按這顆，行政首頁就多一件</text>
+<text x="288" y="378" class="uim">示意畫面，內容是舉例</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 09 · 客戶自己看的</span>
+<h2>售後：客戶的頁</h2>
+<p class="lead">現在最薄弱的一塊：幾乎靠老闆一個人回，客戶沒有教學也沒有資料。分「客戶自己看的」跟「內部怎麼處理」兩半，這頁是前半。</p>
+<ol class="marks"><li>簽約就開</li><li>不給密碼</li><li>第一版怎麼發</li><li>教學與排除</li><li>客戶看到的樣子</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 客戶帳號簽約就開</span>一頁隨案子長：簽約後看合約與付款進度；施工中看里程碑跟增減單草稿（驗收前就先看過，不會被嚇到）；驗收後看設備清單、每台保固到期、教學、排除；之後報修。施工細節不全給：師傅的內部備註、領料、成本不開；照片開不開等老闆。</div>
+<div class="step" data-k="1"><span class="k">2 · 不給密碼</span>LINE 收到連結，點了就登入、這支手機記 90 天；換手機回 LINE 再點一次。客戶永遠不用記密碼，我們永遠不用處理「忘記密碼」。</div>
+<div class="step" data-k="2"><span class="k">3 · 第一版怎麼發</span>行政把連結貼進既有的 LINE 群，跟客戶本來就在那裡。官方帳號自動發是第二步。</div>
+<div class="step" data-k="3"><span class="k">4 · 教學與排除</span>教學影片先不拍。每個設備類別一頁：影片連結（可先空）＋文字版問題排除，排除問答行政自己加，沒影片也能上線。第二版加 AI 客服：讀我們寫的排除問答加這個客戶家的設備清單，一步一步帶他查；只帶查、不教改設定，查不出來就直接按報修。</div>
+<div class="step" data-k="4"><span class="k">5 · 客戶打開會看到什麼</span>客戶多半在手機上看，所以照手機畫。上面三列簽約後就有，設備清單跟保固要驗收打完勾才長出來，最底下那顆是報修。完成照那一列先留著但不開，等你拍板。內容是舉例。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 09 售後：報修流程 ═══════════ -->
+<section class="slide flip" id="s09b" data-ch="09 售後" data-sub="內部怎麼處理報修" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-hi="0">
+<text x="42" y="66" class="no">1</text>
+<text x="90" y="44" class="cap">客戶</text>
+<text x="90" y="66" class="lb">在網頁按「報修」：選設備類別、寫狀況、拍照</text>
+<line x1="40" y1="82" x2="560" y2="82" class="thin draw"/>
+</g>
+<g class="in-drop" data-s="1"><line x1="60" y1="84" x2="60" y2="110" class="ln draw"/><path d="M54 104l6 8 6-8" class="ln"/></g>
+<g class="in-left" data-s="1" data-hi="1">
+<text x="42" y="152" class="no">2</text>
+<text x="90" y="130" class="cap">行政首頁</text>
+<text x="90" y="152" class="lb">「今天新報修 2 件」，每件自動標 保固內 ／ 已過保</text>
+<line x1="40" y1="168" x2="560" y2="168" class="thin draw"/>
+</g>
+<g class="in-drop" data-s="2"><line x1="60" y1="170" x2="60" y2="196" class="ln draw"/><path d="M54 190l6 8 6-8" class="ln"/><text x="76" y="188" class="tiny">行政通知</text></g>
+<g class="in-left" data-s="2" data-hi="2">
+<text x="42" y="238" class="no">3</text>
+<text x="90" y="216" class="cap">專案人員或老闆</text>
+<text x="90" y="238" class="lb">排一趟「維修」工作紀錄去處理，帶料預設一台備品</text>
+<line x1="40" y1="254" x2="560" y2="254" class="thin draw"/>
+</g>
+<g class="in-drop" data-s="3"><line x1="60" y1="256" x2="60" y2="282" class="ln draw"/><path d="M54 276l6 8 6-8" class="ln"/></g>
+<g class="in-left" data-s="3" data-hi="3">
+<text x="42" y="324" class="no">4</text>
+<text x="90" y="302" class="cap">客戶頁看到</text>
+<text x="90" y="324" class="lb">已收到 → 處理中 → 完成</text>
+<line x1="40" y1="340" x2="560" y2="340" class="thin draw"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">Station 09 · 內部怎麼處理</span>
+<h2>售後：報修怎麼走</h2>
+<p class="lead">報修進來先由行政每天看，再通知專案人員或老闆處理。四步，客戶跟內部各看得到自己那半。</p>
+<ol class="marks"><li>客戶按報修</li><li>行政首頁</li><li>通知處理</li><li>客戶看到狀態</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 客戶按報修</span>在自己的頁按「報修」：選設備類別、寫狀況、拍照。不用打電話、不用在群裡找人。</div>
+<div class="step" data-k="1"><span class="k">2 · 行政首頁</span>行政首頁每天看得到「今天新報修 N 件」。每件自動標<b>保固內／已過保</b>——系統從設備清單算的，決定要不要收費，行政不用翻。</div>
+<div class="step" data-k="2"><span class="k">3 · 通知處理</span>行政不指派，只幫忙注意有沒有新報修、然後告知專案人員或老闆；他們自己排一趟「維修」工作紀錄去處理，帶料預設同料號一台當備品。設備要送回廠商，接現在已經有的送修流程。</div>
+<div class="step" data-k="3"><span class="k">4 · 客戶看到狀態</span>客戶頁看到：已收到 → 處理中 → 完成。不用再問「你們收到了嗎」。</div>
+</div>
+<p class="note"><b>保固怎麼算八月就定了：</b>每種設備自己的保固月數，從它在這個案場第一次安裝那天起算。</p>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 九站之外 ═══════════ -->
+<section class="slide flip" id="extra" data-ch="九站之外" data-sub="系統還要有的三塊" data-stages="4">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-until="3" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="90" y="70" class="cap">打卡</text>
+<text x="90" y="96" class="lb">記「今天有沒有來上班」，跟工作紀錄分開存</text>
+<line x1="40" y1="116" x2="560" y2="116" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-until="3" data-hi="1">
+<text x="42" y="206" class="no">2</text>
+<text x="90" y="180" class="cap">庫存（加一件新的）</text>
+<text x="90" y="206" class="lb">現量、成本、廠商、叫貨、送修；拍照就進出庫</text>
+<line x1="40" y1="226" x2="560" y2="226" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-until="3" data-hi="2">
+<text x="42" y="316" class="no">3</text>
+<text x="90" y="290" class="cap">安裝教學（新加的）</text>
+<text x="90" y="316" class="lb">每種設備怎麼裝，施工的人在工地用手機隨時查</text>
+<line x1="40" y1="336" x2="560" y2="336" class="thin draw"/>
+</g>
+<!-- 階段 3：介面示意 · 安裝教學（師傅在工地用手機查）。步驟文字是舉例，不是規格 -->
+<g class="in-grow" data-s="3">
+<rect x="0" y="0" width="600" height="400" class="uibg"/>
+<rect x="44" y="30" width="190" height="340" rx="22" class="uicard"/>
+<text x="60" y="64" class="uih">今天要裝什麼</text>
+<text x="60" y="82" class="uis">09-24 · 御之苑 王宅</text>
+<line x1="60" y1="96" x2="218" y2="96" class="uisep"/>
+<text x="60" y="126" class="uit">智能開關 一路</text>
+<text x="60" y="144" class="uis">要裝 8 · 帶 8</text>
+<rect x="144" y="112" width="64" height="22" rx="11" class="uiink"/>
+<text x="176" y="127" text-anchor="middle" class="uibtn">怎麼裝</text>
+<line x1="60" y1="160" x2="218" y2="160" class="uisep"/>
+<text x="60" y="190" class="uit">調光模組</text>
+<text x="60" y="208" class="uis">要裝 4 · 帶 4</text>
+<rect x="144" y="176" width="64" height="22" rx="11" class="uiink"/>
+<text x="176" y="191" text-anchor="middle" class="uibtn">怎麼裝</text>
+<line x1="60" y1="224" x2="218" y2="224" class="uisep"/>
+<text x="60" y="254" class="uit">人體感應器</text>
+<text x="60" y="272" class="uis">要裝 6 · 帶 6</text>
+<rect x="144" y="240" width="64" height="22" rx="11" class="uiink"/>
+<text x="176" y="255" text-anchor="middle" class="uibtn">怎麼裝</text>
+<line x1="60" y1="288" x2="218" y2="288" class="uisep"/>
+<path d="M246 200 H350" class="uiarrow"/>
+<path d="M344 194 l7 6 l-7 6" class="uiarrow"/>
+<text x="298" y="188" text-anchor="middle" class="sub">點「怎麼裝」</text>
+<rect x="366" y="30" width="190" height="340" rx="22" class="uicard"/>
+<text x="382" y="64" class="uih">智能開關 一路</text>
+<text x="382" y="82" class="uis">安裝教學 · 掛在料號上</text>
+<line x1="382" y1="96" x2="540" y2="96" class="uisep"/>
+<rect x="382" y="108" width="158" height="74" rx="8" class="uifield"/>
+<text x="461" y="149" text-anchor="middle" class="uim">現場照片</text>
+<text x="382" y="206" class="uit">1 · 先確認迴路共不共火</text>
+<text x="382" y="230" class="uit">2 · 接線照背面的標示</text>
+<text x="382" y="254" class="uit">3 · 裝完用 App 配對</text>
+<rect x="382" y="276" width="158" height="28" rx="8" class="uichip"/>
+<path d="M396 284 l10 6 l-10 6 z" class="uiink"/>
+<text x="414" y="294" class="uis">教學影片 2:14</text>
+<text x="382" y="330" class="uim">示意畫面，步驟是舉例</text>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">九站之外 · 三塊</span>
+<h2>九站之外，系統還要有的三塊</h2>
+<p class="lead">這三塊不屬於哪一站，是整條線都會用到的。</p>
+<ol class="marks"><li>打卡</li><li>庫存</li><li>安裝教學</li><li>工地上長這樣</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 打卡</span>記的是「今天有沒有來上班」。跟工作紀錄裡「誰來這個案場」是兩件事，分開存、看的權限也不同。走 LINE 打卡；怎麼確認人真的在現場還沒定，因為公司對外網路的 IP 固不固定還沒查。資料表有了，畫面還沒寫。</div>
+<div class="step" data-k="1"><span class="k">2 · 庫存（加一件新的）</span>每個料號的現量、成本（移動加權）、廠商、叫貨、缺料、送修。料號跟報價單用同一份，05 備料清單的「庫存有」就是從這裡算的。這次不重做，只接上新的兩層分類，再加一件：<b>拍照就能進出庫</b>。貨到了拍廠商的送貨單、出貨時拍箱子，系統先讀出品名跟數量、對到料號、把表單填好；人看一眼、按確認才寫進帳。系統只幫忙填，最後那一下一定是人按的，看錯不會直接變成庫存數字。先做進貨那端：叫貨單已經在系統裡，系統只要對「還沒到的那幾行」，錯的機會小；出貨拍箱子是第二步。</div>
+<div class="step" data-k="2"><span class="k">3 · 安裝教學（新加的）</span>裝的東西多又複雜，把每種設備的安裝方法放進系統，施工的人在工地用手機隨時查。教學掛在料號上；工作紀錄「今天要裝什麼」每條料旁邊一顆「怎麼裝」，點開就是。內容是文字、照片、影片連結，放設定區，負責人自己加。跟 09 給客戶的教學是兩份：那份教客戶怎麼用，這份教師傅怎麼裝。</div>
+<div class="step" data-k="3"><span class="k">4 · 在工地上長什麼樣</span>左邊是師傅手機上本來就有的「今天要裝什麼」，每條料右邊多一顆「怎麼裝」；點下去就是右邊那頁：照片、幾個步驟、有影片就放連結。步驟文字是舉例，真正內容負責人自己加。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 不做的 ═══════════ -->
+<section class="flow" id="no">
+<div class="grid">
+<div class="lbl">目前決定不做的</div>
+<div>
+<h3>不做的，跟為什麼</h3>
+<p>這是目前討論到的想法，還沒跟公司談過。要重開哪一條都可以。</p>
+<ul class="rule c2">
+<li><div class="h">「成交」鈕、「鎖定」鈕</div><span class="no">都是會忘記按的鈕。案件在簽約那刻誕生，驗收簽字就是凍結點</span></li>
+<li><div class="h">把施工階段做成欄位（開場、封板前後、進場）</div><span class="no">那是習慣不是規則，工作紀錄已經看得出做到哪</span></li>
+<li><div class="h">系統裡重做檔案管理</div><span class="no">設計公司或屋主給的檔我們自己丟進 iCloud，系統做等於重做一個 Finder</span></li>
+<li><div class="h">刪掉沒做的案子</div><span class="no">改標「沒做」，半年後要看哪家設計公司報幾次成幾次</span></li>
+<li><div class="h">客戶密碼</div><span class="no">連結登入，兩邊都省事</span></li>
+<li><div class="h">AI 客服取代影片</div><span class="no">排除交給它，「怎麼用調光」還是影片</span></li>
+<li><div class="h">審核閘（師傅填完要人核准）</div><span class="no">八月就決定拿掉，五人公司沒人想每天按一顆鈕</span></li>
+</ul>
+<div class="band"><span class="k">這份談的是什麼</span><p>是「怎麼做」的決定，程式一行都還沒改、資料結構也還是舊的。最後那三件定了，才排實作順序、更新系統架構圖，然後才動系統。</p></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 要拍板的三件 ═══════════ -->
+<section class="slide flip" id="decide" data-ch="要拍板的三件" data-sub="其他都定了" data-stages="3">
+<div class="stage">
+<div class="vis">
+<svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
+<g class="in-left" data-s="0" data-hi="0">
+<text x="42" y="96" class="no">1</text>
+<text x="90" y="70" class="cap">系統跑在哪</text>
+<text x="90" y="96" class="lb">公司一台 Mac，還是租雲端？決定 iCloud 綁不綁得進來</text>
+<line x1="40" y1="116" x2="560" y2="116" class="thin draw"/>
+</g>
+<g class="in-left" data-s="1" data-hi="1">
+<text x="42" y="206" class="no">2</text>
+<text x="90" y="180" class="cap">完工照片</text>
+<text x="90" y="206" class="lb">要不要開給屋主看？只開「完成照」、只在驗收後</text>
+<line x1="40" y1="226" x2="560" y2="226" class="thin draw"/>
+</g>
+<g class="in-left" data-s="2" data-hi="2">
+<text x="42" y="316" class="no">3</text>
+<text x="90" y="290" class="cap">收款比例</text>
+<text x="90" y="316" class="lb">訂金、工程款、尾款各佔幾 %？給三個數字</text>
+<line x1="40" y1="336" x2="560" y2="336" class="thin draw"/>
+</g>
+</svg>
+</div>
+<div class="txt">
+<span class="tag">要拍板 · 三件</span>
+<h2>要拍板的三件</h2>
+<p class="lead">其他決定都定了。這三件牽涉公司怎麼運作，要一起定，每件都附了建議。</p>
+<ol class="marks"><li>系統跑在哪</li><li>完工照片</li><li>收款比例</li></ol>
+<div class="steps">
+<div class="step" data-k="0"><span class="k">1 · 系統跑在哪、iCloud 綁不綁</span><b>跑公司 Mac：</b>案場一成立，系統自動在 iCloud 建好資料夾（場刊資料／施工圖／規劃書／照片），師傅從系統拍的照片也存進去；設計公司或屋主給的圖跟資料，我們自己丟進同一個資料夾，一處存。代價是那台 Mac 要常開、要關掉「最佳化儲存」、資料夾名字系統取人不能改。<b>跑雲端：</b>系統自己存檔、iCloud 只留連結，檔案分兩處。<b>建議：</b>公司 Mac 加 iCloud 綁定。</div>
+<div class="step" data-k="1"><span class="k">2 · 完工照片要不要開給屋主</span>想法是：師傅知道客戶會看到照片，做工會不一樣。照片分兩種——<b>完成照</b>拍面板成品，驗收後才開給客戶；<b>紀錄照</b>拍天花板內、箱內線路，只給內部維修用、永遠不開。師傅要事先知道完成照客戶會看。施工中的進度回報照舊在 LINE 群。<b>建議：</b>開，但只開完成照、只在驗收後。</div>
+<div class="step" data-k="2"><span class="k">3 · 收款比例的數字</span>訂金、工程款、尾款各佔合約的幾 %，設一組公司預設。簽約那刻自動套進去，特殊案子直接改那一案的金額。<b>要給：</b>三個百分比。<b>建議：</b>照現在最常用的那組寫進去就好，改得回來。</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════ 結尾 ═══════════ -->
+<section class="slide end" id="end" data-ch="接下來" data-sub="">
+<div class="stage">
+<div>
+<h2 class="rise" style="--t:.1">接下來</h2>
+<p class="lead rise" style="--t:.3;max-width:32em">先定三件：系統跑在哪、完工照開不開、收款比例。定了就排實作順序、更新系統架構圖，然後才開始改系統。</p>
+<div class="credit rise" style="--t:.5">威琳內部系統<br>流程重新設計 · 2026-09-20</div>
+</div>
+</div>
+</section>
+<footer>
+<span>威琳內部系統</span>
+<span>流程重新設計 · 2026-09-20 · 程式與資料結構尚未依此修改</span>
+</footer>
+<script>
+(function () {
+  var slides = [].slice.call(document.querySelectorAll('section.slide'));
+  var total = slides.length;
+  var cTL = document.getElementById('c-tl'), cTR = document.getElementById('c-tr'), cBL = document.getElementById('c-bl');
+  var navLinks = [].slice.call(document.querySelectorAll('#nav a'));
+  var chapters = navLinks.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var typed = document.getElementById('typed'), heroText = typed ? (typed.dataset.text || '') : '';   // 打字句寫在 #typed 的 data-text
+
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+
+  // 描邊動畫要知道每條線多長：量一次塞進 --len
+  requestAnimationFrame(function () {
+    document.querySelectorAll('.dg .draw').forEach(function (el) {
+      try { el.style.setProperty('--len', (el.getTotalLength() + 2).toFixed(1)); } catch (e) {}
+    });
+  });
+  var rects = [], chTops = [];
+  function measure() {
+    rects = slides.map(function (s) { return { top: s.offsetTop, h: s.offsetHeight }; });
+    chTops = chapters.map(function (el) { return el ? el.offsetTop : Infinity; });
+    slides.forEach(placePt);
+  }
+  measure();
+
+  // 分階段頁：data-s 從第幾階段起出現、data-until 到第幾階段消失、data-hi 哪幾個階段強調
+  function applyStage(s, k) {
+    if (s._stage === k) return;
+    s._stage = k;
+    s.querySelectorAll('[data-s]').forEach(function (el) {
+      var from = +el.dataset.s, until = el.dataset.until ? +el.dataset.until : Infinity;
+      el.classList.toggle('on', k >= from && k < until);
+    });
+    s.querySelectorAll('[data-hi]').forEach(function (el) {
+      var ks = el.dataset.hi.split(',').map(Number);
+      el.classList.toggle('hi', ks.indexOf(k) !== -1);
+    });
+    s.querySelectorAll('.marks li').forEach(function (li, i) {
+      li.classList.toggle('cur', i === k); li.classList.toggle('done', i < k);
+    });
+    s.querySelectorAll('.step').forEach(function (p) { p.classList.toggle('cur', +p.dataset.k === k); });
+    placePt(s);
+  }
+  // 清單旁那顆霧藍點是同一顆在滑（openai demo 的 marks .pt）：算出現在這項的位置、translate 過去
+  function placePt(s) {
+    var ul = s.querySelector('.marks'); if (!ul) return;
+    var pt = ul.querySelector('.pt'), li = ul.querySelectorAll('li')[s._stage || 0]; if (!pt || !li) return;
+    pt.style.transform = 'translate(' + li.offsetLeft + 'px,' + (li.offsetTop + li.offsetHeight / 2 - pt.offsetHeight / 2).toFixed(1) + 'px)';
+  }
+  slides.forEach(function (s) {
+    var ul = s.querySelector('.marks'); if (!ul) return;
+    var pt = document.createElement('i'); pt.className = 'pt'; pt.setAttribute('aria-hidden', 'true'); ul.appendChild(pt);
+  });
+  // 每頁文字進場：標題、導言、清單、說明依序浮上來（.rise 吃 --p，進到這頁才跑一次）；章首、首頁、結尾自己已經標好
+  slides.forEach(function (s) {
+    if (s.classList.contains('opener') || s.classList.contains('hero') || s.classList.contains('end')) return;
+    ['.tag', 'h2', 'p.lead', '.marks', '.steps', 'p.note'].forEach(function (sel, i) {
+      var el = s.querySelector('.txt > ' + sel); if (!el) return;
+      el.classList.add('rise'); el.style.setProperty('--t', (i * 0.08).toFixed(2));
+    });
+  });
+  window.__applyStage = applyStage;   // 給驗證腳本逐階段截圖用
+
+  // --p 只管進場淡入（.rise）與 hero 打字
+  function paint(s, p) {
+    s.style.setProperty('--p', p.toFixed(3));
+    if (s.classList.contains('hero') && typed) {
+      var q = clamp01((p - 0.08) / 0.32), n = Math.round(q * heroText.length);
+      if (typed.textContent.length !== n) typed.textContent = heroText.slice(0, n);
+    }
+  }
+  // 第一次進到某頁：--p 在 1 秒內從 0 跑到 1（hero 2.4 秒）；回頭再看不重播
+  function enter(s) {
+    if (s._entered) return;
+    s._entered = true;
+    if (reduce) { paint(s, 1); return; }
+    var dur = s.classList.contains('hero') ? 2400 : 1000, t0 = performance.now();
+    (function frame(now) {
+      var p = clamp01((now - t0) / dur);
+      paint(s, p);
+      if (p < 1) requestAnimationFrame(frame);
+    })(t0);
+  }
+
+  // 角標換頁：先淡出 150ms、換字、再淡入（openai demo 的 setCorners）
+  var cornerT = 0, corners = [cTL, cTR, cBL];
+  function swapCorners(a, b, c) {
+    corners.forEach(function (el) { el.classList.add('fade'); });
+    clearTimeout(cornerT);
+    cornerT = setTimeout(function () { cTL.textContent = a; cTR.textContent = b; cBL.textContent = c; corners.forEach(function (el) { el.classList.remove('fade'); }); }, reduce ? 0 : 160);
+  }
+  var active = -1, activeCh = -1;
+  function tick() {
+    var y = window.scrollY, vh = window.innerHeight, mid = y + vh * 0.5, cur = -1;
+    slides.forEach(function (s, i) {
+      var top = rects[i].top, h = rects[i].h;
+      if (top <= mid && top + h > mid) cur = i;
+    });
+    if (cur !== active) {
+      active = cur;
+      document.body.classList.toggle('inslide', cur >= 0);
+      if (cur >= 0) {
+        var s = slides[cur];
+        enter(s);
+        swapCorners(s.dataset.ch || '', String(cur + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0'), s.dataset.sub || '');
+      }
+    }
+    var ch = -1;
+    chTops.forEach(function (t, i) { if (t <= mid) ch = i; });
+    if (ch !== activeCh) { activeCh = ch; navLinks.forEach(function (a, i) { a.classList.toggle('on', i === ch); }); }
+  }
+
+  var ticking = false;
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; tick(); }); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { measure(); onScroll(); });
+  // 點開／收起補充框或自測答案會改變頁面高度，快取的段落位置要重量，不然角落頁碼會指錯頁
+  document.querySelectorAll('details').forEach(function (d) { d.addEventListener('toggle', function () { measure(); onScroll(); }); });
+  slides.forEach(function (s) { if (s.dataset.stages) applyStage(s, reduce ? +s.dataset.stages - 1 : 0); });
+
+  // 換階段：夾在 0..N-1；超出範圍回 false（讓 ← → 知道該翻頁了）
+  function setStage(s, k) {
+    var N = +s.dataset.stages || 0;
+    if (!N || k < 0 || k > N - 1) return false;
+    applyStage(s, k); return true;
+  }
+  // 小主題清單（.marks li）：點哪個就跳到那個階段；Enter／空白鍵也算點
+  slides.forEach(function (s) {
+    if (!s.dataset.stages) return;
+    s.querySelectorAll('.marks li').forEach(function (li, i) {
+      li.setAttribute('role', 'button'); li.tabIndex = 0;
+      li.addEventListener('click', function () { setStage(s, i); });
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStage(s, i); } });
+    });
+  });
+  // 鍵盤兩套走法（Jack 2026-09-18）：
+  //   ← →：只在幻燈頁之間走——先切這頁的階段，到頭了翻到下一張幻燈（跳過中間的表格／卡片段）。
+  //   ↑ ↓：一小格一小格走完整份——先切階段；到頭了走到下一個吸附段（幻燈、表格段、頁尾都算）；
+  //        比一屏高的段落每按一下捲 85% 屏、捲到底才進下一段。
+  //        ↑ 退回有階段的頁時落在它最後一階、↓ 進來落在第一階，這樣來回走看到的順序才對得上。
+  //   滑鼠／觸控板不受影響，照 scroll-snap 整頁吸附。
+  var stops = [].slice.call(document.querySelectorAll('section.slide, section.flow, footer'));
+  function stepVertical(d) {
+    var vh = window.innerHeight, cur = -1, tol = 4;
+    var rs = stops.map(function (el) { return el.getBoundingClientRect(); });
+    rs.forEach(function (r, i) { if (r.top <= tol) cur = i; });   // 現在停在哪一段：頂邊已到（或超過）畫面頂的最後一段；短段落用畫面正中判會誤判成下一段
+    if (cur < 0) return false;
+    var el = stops[cur], r = rs[cur], bh = reduce ? 'auto' : 'smooth';
+    if (el.dataset.stages && setStage(el, (el._stage || 0) + d)) return true;
+    if (r.height > vh + tol) {   // 比一屏高：還沒捲到底（頂）就先在段落裡面捲
+      if (d > 0 && r.bottom > vh + tol) { window.scrollBy({ top: Math.min(vh * 0.85, r.bottom - vh), behavior: bh }); return true; }
+      if (d < 0 && r.top < -tol) { window.scrollBy({ top: -Math.min(vh * 0.85, -r.top), behavior: bh }); return true; }
+    }
+    var next = stops[cur + d];
+    if (!next) return false;
+    if (next.dataset.stages) applyStage(next, d > 0 ? 0 : +next.dataset.stages - 1);
+    var tall = next.getBoundingClientRect().height > vh + tol;
+    next.scrollIntoView({ behavior: bh, block: d < 0 && tall ? 'end' : 'start' });   // 往上進高段落：先看它的尾巴
+    return true;
+  }
+  // 手機／平板沒有方向鍵（Jack 2026-09-22 定，先在 CX-30 對 CX-5 那份實測）：手指往上滑一下＝按一次 ↓、往下滑＝↑，
+  // 跟鍵盤一樣一小格一小格走（幻燈頁換階段、長段每次 85% 屏）。
+  // iOS Safari 不理 body 的 touch-action（文件層的捲動它自己管），要在 touchmove 裡 preventDefault（passive:false）才擋得住原生捲動；
+  // 只設 CSS 是不夠的，iPhone 上滑一下還是整頁翻、小標題不會走。**改捲動手感時別把 passive:false 那段拿掉。**
+  // 放行兩種情況：橫向可捲的表格／章節列的橫滑、塞不下一屏的頁先讓它自己捲（捲到底再翻）。兩指縮放不管。
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    var t0x = 0, t0y = 0, single = false, axis = '', hwrap = null, sstage = null;
+    window.addEventListener('touchstart', function (e) {
+      var t = e.touches[0]; t0x = t.clientX; t0y = t.clientY; single = e.touches.length === 1; axis = '';
+      var el = e.target && e.target.closest ? e.target : null;
+      hwrap = el && el.closest('.tbl-wrap, .top nav');
+      sstage = el && el.closest('.stage');
+      if (sstage && sstage.scrollHeight <= sstage.clientHeight + 4) sstage = null;
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (!single || e.touches.length !== 1) return;   // 兩指縮放放行
+      var t = e.touches[0], dx = t.clientX - t0x, dy = t.clientY - t0y;
+      if (!axis) axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';   // 第一下就要決定：瀏覽器只讓你擋第一個 touchmove
+      if (axis === 'x' && hwrap) return;
+      if (axis === 'y' && sstage) return;
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+    window.addEventListener('touchend', function (e) {
+      if (!single || e.touches.length) return;
+      var t = e.changedTouches[0], dx = t0x - t.clientX, dy = t0y - t.clientY;
+      if (Math.abs(dy) < 30 || Math.abs(dy) < Math.abs(dx)) return;   // 太短、或偏橫向的不算
+      if (sstage) {   // 這頁自己還有沒捲完的內容：先不翻
+        if (dy > 0 && sstage.scrollTop + sstage.clientHeight < sstage.scrollHeight - 4) return;
+        if (dy < 0 && sstage.scrollTop > 4) return;
+      }
+      stepVertical(dy > 0 ? 1 : -1);
+    }, { passive: true });
+    window.addEventListener('touchcancel', function () { single = false; }, { passive: true });
+  }
+  window.addEventListener('keydown', function (e) {
+    if (e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    var v = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+    if (v) { if (stepVertical(v)) e.preventDefault(); return; }
+    if (active < 0) return;
+    var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    var s = slides[active];
+    if (setStage(s, (s._stage || 0) + d)) return;
+    var next = slides[active + d];
+    if (next) next.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  });
+  if (reduce && typed) typed.textContent = heroText;
+  tick();
+  window.addEventListener('load', function () { setTimeout(function () { document.documentElement.classList.add('smooth'); measure(); tick(); }, 80); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { measure(); tick(); });
+})();
+</script>
+</body>
+</html>
