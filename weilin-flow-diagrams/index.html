@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>威琳內部系統・架構總覽</title>
+<style>
+  /* 這頁只是外殼：上方一排分頁，下方整面 iframe 顯示選中的那張圖。
+     五張圖本體各自獨立（01~05-*.html），重新 deliver 任何一張，這頁不用改就會顯示新版。 */
+  :root {
+    --bg: #f5f4f1;
+    --bar: #ffffff;
+    --line: #d9d6cf;
+    --ink: #1d1d1f;
+    --muted: #6e6a63;
+    --active: #0f4c5c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181b;
+      --bar: #1f2226;
+      --line: #33373d;
+      --ink: #e8e6e1;
+      --muted: #9a968e;
+      --active: #7fd0e0;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Noto Serif TC", "Songti TC", serif;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: var(--bar);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 16px 0;
+  }
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  h1 { font-size: 16px; margin: 0 0 8px; font-weight: 700; }
+  .hint { font-size: 12px; color: var(--muted); }
+  nav { display: flex; gap: 4px; flex-wrap: wrap; }
+  nav button {
+    appearance: none;
+    border: 1px solid var(--line);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  nav button.active {
+    background: var(--bg);
+    color: var(--active);
+    font-weight: 700;
+  }
+  main { flex: 1; min-height: 0; }
+  iframe {
+    display: none;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: var(--bg);
+  }
+  iframe.show { display: block; }
+</style>
+</head>
+<body>
+<header>
+  <div class="title-row">
+    <h1>威琳內部系統・架構總覽</h1>
+    <span class="hint">圖內按 / 可搜尋、點線可追整條路徑｜系統仍是 demo，尚無正式資料｜「部署架構」「案場一條線」「案件里程碑」「庫存一條線」畫的是 2026-09 定的目標，程式還沒照它改；只有「操作與資料庫」是現況</span>
+  </div>
+  <nav id="tabs">
+    <button data-src="01-部署架構.html" class="active">部署架構</button>
+    <button data-src="02-案件脊椎.html">案場一條線</button>
+    <button data-src="03-操作與資料.html">操作與資料庫</button>
+    <button data-src="04-案件狀態.html">案件里程碑</button>
+    <button data-src="05-庫存一條線.html">庫存一條線</button>
+  </nav>
+</header>
+<main id="panes"></main>
+<script>
+  // 分頁切換：點到哪張才載入哪張（懶載入），避免一開頁就抓四張大檔。
+  const tabs = document.querySelectorAll('#tabs button');
+  const panes = document.getElementById('panes');
+  const frames = new Map();
+
+  function show(btn) {
+    tabs.forEach(b => b.classList.toggle('active', b === btn));
+    const src = btn.dataset.src;
+    if (!frames.has(src)) {
+      const f = document.createElement('iframe');
+      // 網址後面帶一個當下時間，逼瀏覽器每次都重新抓檔、不用快取
+      //（2026-09-25 Jack 重建 04 後在 Arc 看到的還是舊圖，就是快取害的）
+      f.src = encodeURI(src) + '?v=' + Date.now();
+      f.title = btn.textContent;
+      panes.appendChild(f);
+      frames.set(src, f);
+    }
+    frames.forEach((f, key) => f.classList.toggle('show', key === src));
+    try { localStorage.setItem('weilin-arch-tab', src); } catch (e) {}
+  }
+
+  tabs.forEach(b => b.addEventListener('click', () => show(b)));
+
+  // 記住上次看的分頁；讀不到就開第一張
+  let last = null;
+  try { last = localStorage.getItem('weilin-arch-tab'); } catch (e) {}
+  const initial = [...tabs].find(b => b.dataset.src === last) || tabs[0];
+  show(initial);
+</script>
+</body>
+</html>
