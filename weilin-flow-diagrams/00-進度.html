@@ -4,68 +4,82 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>威琳內部系統・功能完全度</title>
+<title>威琳內部系統・進度</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
 <!--
-  這頁是什麼：12 個功能各做了幾成。2026-10-02 照九站流程重列，取代 架構/系統架構圖.html 的進度條。
-  跟 00-建置進度 的分工：那張講「六大步走到第幾步」，這頁講「每個功能裡的待辦做了幾項」。
+  這頁是什麼：威琳內部系統的進度，一頁看完（2026-10-02 起）。
+    上半＝蓋系統的 6 步走到第幾步（原本是 archify 圖 00-建置進度）
+    下半＝12 個功能各做了幾成（原本是另一個分頁 00-功能完全度）
+  Jack 10-02 問「不能放在一起嗎」→ 合成這一頁。兩份舊檔收在 data/.bak/威琳-進度合併-20261002/。
+  點上半任一步，下半會亮出那一步要推的功能、其他變淡；再點一次恢復。
 
-  ★ 正本就是這個檔最下面 <script> 裡的 FUNCS（不是 archify 產的圖，rebuild.py 不會碰它）。
-    改狀態＝改那一項的第一個字（ok／part／todo／wait），存檔就好，數字和進度條是頁面自己算的。
+  ★ 正本就是這個檔最下面 <script> 裡的三樣東西（手寫頁，rebuild.py 不會碰它）：
+    STEPS   6 步。走完一步：把那步的 st 從 'next' 改 'done'、填 date，下一步改 'next'。
+            funcs 寫這一步要推哪幾個功能（對到 FUNCS 的 n）；下半每列的「第 N 步」標籤是從這裡算的，別在 FUNCS 另寫。
+    NOW／WHY／WAIT  上半那三塊說明文字。
+    FUNCS   12 個功能。改狀態＝改那一項的第一個字（ok／part／todo／wait），存檔就好，
+            數字和進度條是頁面自己算的。
     改完要重推公開站（推法在專案 CLAUDE.md〈冷開場要知道的〉）。
 
-  外觀照 00-建置進度（archify「經典」主題）：色票是從那張圖的 CSS 抄來的，
-  狀態顏色也對到那張圖的圖例——綠＝已完成、灰＝還沒開始、青＝要人決定。
+  色票跟威琳系統本體同一套（globals.css :root 的墨／灰／琥珀／紅），2026-10-02 Jack 說不要綠色才換；
+  換之前是 archify「經典」主題，那版在 data/.bak/威琳-進度合併-20261002/00-進度-換色前.html。
+  步驟顏色：墨＝完成、紅＝下一步、灰＝還沒開始、琥珀＝要人做的事。
 
   這頁會推上公開站：原始碼看得到這段註解，所以這裡也不點名哪些錢的名目要避開
   （清單在專案 CLAUDE.md 的共通三條）；真實密碼、本機路徑也不寫。
 -->
 <style>
-  /* 淺色＝archify 經典主題的 [data-theme="light"]；深色＝同主題的 dark */
+  /* 色票照威琳系統本體（src/app/globals.css :root）：墨＝做好了、灰＝還沒做、琥珀＝等人、紅＝下一步。
+     不用綠（Jack 2026-10-02）。完成跟一部分靠深淺分，不靠色相。 */
   :root {
-    --bg: #f8fafc;
-    --grid: #e2e8f0;
-    --ink: #0f172a;
-    --muted: #64748b;
-    --dim: #94a3b8;
+    --bg: #f5f5f7;
+    --grid: #e5e5ea;
+    --ink: #1d1d1f;
+    --muted: #6e6e73;
+    --dim: #8e8e93;
     --panel: #ffffff;
-    --border: #e2e8f0;
-    --ok: #059669;
-    --ok-fill: rgba(52, 211, 153, 0.18);
-    --part: #6ee7b7;           /* 做了一部分：同一個綠，調淡，放在實心綠後面 */
-    --todo: #cbd5e1;
-    --todo-ink: #64748b;
-    --wait: #0891b2;
-    --wait-fill: rgba(34, 211, 238, 0.15);
-    --tag-bg: #f1f5f9;
-    --accent: #0891b2;
+    --border: #e5e5ea;
+    --ok: #1d1d1f;             /* 做好了：墨色實心 */
+    --ok-fill: #ececf0;
+    --part: #a1a1a6;           /* 做了一部分：中灰，夾在墨跟淺灰中間 */
+    --todo: #e5e5ea;
+    --todo-ink: #6e6e73;
+    --wait: #b25e09;           /* 等人決定／要你做的：琥珀 */
+    --wait-fill: #fbf0e0;
+    --next: #c0392b;           /* 下一步：紅 */
+    --next-fill: #fbeae8;
+    --tag-bg: #f2f2f5;
+    --accent: #1d1d1f;         /* 選中、滑過的外框：跟主色同一個墨 */
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #020617;
-      --grid: #1e293b;
-      --ink: #f8fafc;
-      --muted: #94a3b8;
-      --dim: #64748b;
-      --panel: #0b1222;
-      --border: #1e293b;
-      --ok: #34d399;
-      --ok-fill: rgba(6, 78, 59, 0.4);
-      --part: #065f46;
-      --todo: #334155;
-      --todo-ink: #94a3b8;
-      --wait: #22d3ee;
-      --wait-fill: rgba(8, 51, 68, 0.4);
-      --tag-bg: #111a2e;
-      --accent: #22d3ee;
+      --bg: #161617;
+      --grid: #2c2c2f;
+      --ink: #f5f5f7;
+      --muted: #a1a1a6;
+      --dim: #7c7c82;
+      --panel: #1d1d1f;
+      --border: #3a3a3d;
+      --ok: #f5f5f7;
+      --ok-fill: #2c2c2f;
+      --part: #6e6e73;
+      --todo: #3a3a3d;
+      --todo-ink: #a1a1a6;
+      --wait: #e0a04a;
+      --wait-fill: #3a2c14;
+      --next: #ff6b5e;
+      --next-fill: #3f1f1b;
+      --tag-bg: #26262a;
+      --accent: #f5f5f7;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #020617; --grid: #1e293b; --ink: #f8fafc; --muted: #94a3b8; --dim: #64748b;
-    --panel: #0b1222; --border: #1e293b; --ok: #34d399; --ok-fill: rgba(6, 78, 59, 0.4);
-    --part: #065f46; --todo: #334155; --todo-ink: #94a3b8; --wait: #22d3ee;
-    --wait-fill: rgba(8, 51, 68, 0.4); --tag-bg: #111a2e; --accent: #22d3ee;
+    --bg: #161617; --grid: #2c2c2f; --ink: #f5f5f7; --muted: #a1a1a6; --dim: #7c7c82;
+    --panel: #1d1d1f; --border: #3a3a3d; --ok: #f5f5f7; --ok-fill: #2c2c2f;
+    --part: #6e6e73; --todo: #3a3a3d; --todo-ink: #a1a1a6; --wait: #e0a04a;
+    --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b;
+    --tag-bg: #26262a; --accent: #f5f5f7;
   }
 
   * { box-sizing: border-box; }
@@ -88,6 +102,12 @@
     background: var(--accent); flex: none;
   }
   .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 18px 24px; }
+  h2 {
+    font-size: 15px; margin: 28px 0 4px; font-weight: 700;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  h2 .no { color: var(--dim); font-weight: 500; font-size: 13px; }
+  h2 + .sub { margin-left: 0; }
 
   .panel {
     background: var(--panel);
@@ -95,8 +115,58 @@
     border-radius: 14px;
   }
 
-  /* ── 頂端總數 ── */
-  .total { padding: 18px 20px; margin-bottom: 16px; }
+  /* ── 上半：6 步 ── */
+  .now { padding: 12px 16px; margin-bottom: 14px; font-size: 13.5px; }
+  .now b { font-weight: 700; margin-right: 6px; }
+  .now ul { margin: 4px 0 0; padding-left: 18px; color: var(--muted); }
+
+  /* 兩段：上線前 4 步、上線後 2 步；比例 2:1 讓每張卡一樣寬 */
+  .phases { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+  /* 標籤一列、卡片吃掉剩下的高，左右兩段的卡片才會一樣高 */
+  .phase { display: grid; grid-template-rows: auto 1fr; }
+  .phase-label { font-size: 12px; color: var(--dim); margin: 0 0 6px 2px; }
+  .phase-label::before { content: "— "; }
+  .cards { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 10px; }
+
+  button.stepc {
+    appearance: none; font: inherit; color: inherit; text-align: left;
+    background: var(--panel);
+    border: 1px solid var(--border);   /* 四邊同粗；狀態靠整圈框色，不再加粗頂邊（Jack 10-02） */
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    display: flex; flex-direction: column; gap: 3px;
+    min-width: 0;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  button.stepc:hover { box-shadow: 0 2px 10px rgba(15, 23, 42, .08); }
+  button.stepc:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.stepc[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.stepc.done { border-color: var(--ok); }
+  button.stepc.next { border-color: var(--next); background: var(--next-fill); }
+  .stepc .top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .stepc .k { font-size: 12px; color: var(--dim); }
+  .stepc .t { font-weight: 700; font-size: 15px; }
+  .stepc .s { font-size: 12px; color: var(--muted); }
+  .stepc .you { font-size: 12px; color: var(--wait); display: flex; gap: 6px; align-items: baseline; }
+  .stepc .you::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--wait); flex: none; transform: translateY(-1px);
+  }
+  .stepc .fn { font-size: 11.5px; color: var(--dim); margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border); }
+  .chip { font-size: 11px; border-radius: 6px; padding: 0 7px; white-space: nowrap; }
+  .chip.done { color: var(--ok); background: var(--ok-fill); }
+  .chip.next { color: var(--next); background: var(--panel); }
+  .chip.todo { color: var(--todo-ink); background: var(--tag-bg); }
+
+  .ctx { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .ctx .panel { padding: 12px 16px; }
+  .ctx h3 { margin: 0 0 4px; font-size: 13px; font-weight: 700; }
+  .ctx ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+  .ctx li { margin: 3px 0; }
+
+  /* ── 下半：總數 ── */
+  .total { padding: 18px 20px; margin-bottom: 12px; }
   .total-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
   .big { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
   .big small { font-size: 15px; color: var(--muted); font-weight: 500; margin-left: 6px; }
@@ -104,7 +174,7 @@
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .rule { margin: 12px 0 0; font-size: 12.5px; color: var(--muted); }
 
-  /* 進度條：實心綠＝做好了、淡綠＝做了一部分、青＝等決定、灰＝還沒做 */
+  /* 進度條：墨＝做好了、中灰＝做了一部分、琥珀＝等決定、淺灰＝還沒做 */
   .bar {
     display: flex; height: 10px; border-radius: 99px; overflow: hidden;
     background: var(--todo); margin-top: 12px;
@@ -119,9 +189,25 @@
   .sw.wait { background: var(--wait); opacity: .55; }
   .sw.todo { background: var(--todo); }
 
+  /* 點了某一步之後的提示列 */
+  .focus {
+    display: none; align-items: baseline; justify-content: space-between; gap: 12px;
+    padding: 10px 14px; margin-bottom: 10px; border-radius: 10px;
+    background: var(--tag-bg); font-size: 13px;
+    scroll-margin-top: 12px;
+  }
+  .focus.show { display: flex; }
+  .focus button {
+    appearance: none; font: inherit; font-size: 12px; cursor: pointer; flex: none;
+    color: var(--accent); background: var(--panel); border: 1px solid var(--border);
+    border-radius: 99px; padding: 2px 12px;
+  }
+
   /* ── 12 列 ── */
   .rows { display: grid; gap: 10px; }
-  details.row { padding: 0; }
+  details.row { padding: 0; transition: opacity .2s ease; }
+  details.row.dim { opacity: .35; }
+  details.row.hit { border-color: var(--accent); }
   details.row > summary {
     list-style: none; cursor: pointer;
     padding: 14px 18px;
@@ -135,8 +221,8 @@
   .name { font-weight: 700; font-size: 15.5px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .num { color: var(--dim); font-weight: 500; font-size: 13px; }
   .step {
-    font-size: 11.5px; font-weight: 500; color: var(--wait);
-    background: var(--wait-fill); border-radius: 6px; padding: 1px 8px;
+    font-size: 11.5px; font-weight: 500; color: var(--muted);
+    background: var(--tag-bg); border-radius: 6px; padding: 1px 8px;
   }
   .score { text-align: right; white-space: nowrap; font-weight: 700; }
   .score small { color: var(--muted); font-weight: 500; margin-left: 6px; }
@@ -166,6 +252,16 @@
 
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
+  /* 平板：兩段上下疊，卡片維持 4 欄（上線後那段的 2 張只佔左半，寬度跟上面對齊） */
+  @media (max-width: 900px) {
+    .phases { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  /* 手機：卡片 2 欄 */
+  @media (max-width: 600px) {
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ctx { grid-template-columns: 1fr; }
+  }
   @media (max-width: 560px) {
     .big { font-size: 28px; }
     details.row > summary { padding: 12px 14px; }
@@ -173,11 +269,25 @@
     ul.items li { grid-template-columns: 10px 1fr; }
     ul.items li .src { grid-column: 2; justify-self: start; }
   }
+  @media (prefers-reduced-motion: reduce) {
+    details.row, button.stepc { transition: none; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>威琳內部系統・功能完全度</h1>
+  <h1>威琳內部系統・進度</h1>
+  <p class="sub">上面是蓋系統走到第幾步，下面是 12 個功能各做了幾成。點上面任一步，下面會亮出那一步要推的功能。</p>
+
+  <h2><span class="no">一</span>走到哪一步</h2>
+  <section class="panel now" id="now" aria-label="現在在哪"></section>
+  <div class="phases" id="phases"></div>
+  <div class="ctx">
+    <section class="panel" id="why" aria-label="為什麼是這個順序"></section>
+    <section class="panel" id="wait" aria-label="還在等的"></section>
+  </div>
+
+  <h2><span class="no">二</span>12 個功能各做了幾成</h2>
   <p class="sub">照 2026-09-20 定的九站流程重列（2026-10-02）｜狀態是 2026-09-19 對程式實測的結果，10-02 再抽查過；程式 9/20 之後沒改過</p>
 
   <section class="panel total" aria-label="總數">
@@ -187,26 +297,90 @@
     </div>
     <div class="bar" id="bigBar" role="img"></div>
     <div class="legend" id="legend"></div>
-    <p class="rule">% ＝ 做好了 ÷ 全部。做了一部分的只畫淺綠，不算進 %。被推翻的、還沒決定要不要做的，列在各功能最下面，不算分。<br>
+    <p class="rule">% ＝ 做好了 ÷ 全部。做了一部分的只畫中灰，不算進 %。被推翻的、還沒決定要不要做的，列在各功能最下面，不算分。<br>
     舊版照九站之前的計畫列了 108 項，算出 48%。九站加了很多新東西要做，所以重列之後項目變多、分數往下掉，做好的那些一項都沒少。</p>
   </section>
 
+  <div class="focus" id="focus" role="status"><span></span><button type="button" id="focusOff">看全部</button></div>
   <div class="rows" id="rows"></div>
 </div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════
-   正本：12 個功能（對到 功能/00-地基 … 功能/11-LINE窗口 資料夾）
+   正本一：6 步（原本 00-建置進度.json 的內容，2026-10-02 搬進來）
+     st：done 完成｜next 下一步（同時只有一個）｜todo 還沒開始
+     you：這一步要 Jack 做的事（沒有就留空）
+     funcs：這一步要推哪幾個功能，對到下面 FUNCS 的 n。
+            一個功能只寫在一步裡；下半每列的「第 N 步」標籤從這裡算。
+     fnNote：funcs 是空的時候，卡片底下那行寫什麼
+     why：點了這一步，下半頂端那行提示寫什麼
+   ═══════════════════════════════════════════════════════════════════ */
+const STEPS = [
+  { k: '1', t: '定方向', sub: '在原系統上改、不重寫', st: 'done', date: '10-02',
+    you: '', funcs: [], fnNote: '只做決定，不動功能',
+    why: '這一步只做決定，沒有動到任何功能。' },
+  { k: '2', t: '改脊椎', sub: '先畫資料地圖', st: 'next',
+    you: '看資料地圖，說對了才改', funcs: ['01', '02', '03', '07', '08'],
+    why: '報價單改掛案場、案件改成里程碑，亮起來的這幾個功能都掛在這條脊椎上。' },
+  { k: '3', t: '資料字典', sub: '約 15 個共用名詞', st: 'todo',
+    you: '逐個點「對／不對」', funcs: [], fnNote: '每個功能共用的名詞',
+    why: '不改功能本身，是把每個功能都會用到的名詞先定清楚。' },
+  { k: '4', t: '上線前底線', sub: '主機・備份・帳號', st: 'todo',
+    you: '定雲端用哪家', funcs: ['00'],
+    why: '租主機、加密備份、清掉測試帳號，都在地基這一列。另外要對鼎新 A1 開帳，那項記在庫存列。' },
+  { k: '5', t: '庫存上線', sub: '主倉進出＋盤點', st: 'todo',
+    you: '用過說可以，才算上線', funcs: ['04'],
+    why: '公司第一個開始真的用的功能。' },
+  { k: '6', t: '下一個功能', sub: '一個一個來，順序還沒排', st: 'todo',
+    you: '', funcs: ['05', '06', '09', '10', '11'],
+    why: '剩下的功能一個一個做，順序還沒排。' },
+];
+
+// 兩段：上線前改資料結構不用搬資料；上線後每改一次就要寫搬家程式
+const PHASES = [
+  { label: '上線前・改資料結構不用搬資料', steps: ['1', '2', '3', '4'] },
+  { label: '上線後・有真資料了，改一次結構要搬一次', steps: ['5', '6'] },
+];
+
+// 上半三塊說明（日期改了記得一起改）
+const NOW = {
+  title: '現在在哪（2026-10-02）',
+  items: [
+    '6 步走完第 1 步：決定在原系統上改、不重寫',
+    '下一步先畫新脊椎的資料地圖給你看，你說對才改資料結構',
+    '程式和資料結構到今天都還沒動',
+  ],
+};
+const WHY = {
+  title: '為什麼是這個順序',
+  items: [
+    '現在沒有真資料，改資料結構不用搬任何東西',
+    '公司一開始用，每改一次就要寫一支搬家程式（migration）',
+    '所以脊椎跟名詞定義都要趕在庫存上線前定好',
+  ],
+};
+const WAIT = {
+  title: '還在等的',
+  items: [
+    '雲端用哪家：你定',
+    '出庫到案場：要先有建案件的畫面',
+    '打卡：等 LINE 官方帳號、公司對外 IP 固不固定',
+    '收款比例：老闆之後定，不擋前面幾步',
+  ],
+};
+
+/* ═══════════════════════════════════════════════════════════════════
+   正本二：12 個功能（對到 功能/00-地基 … 功能/11-LINE窗口 資料夾）
    每項 [狀態, 文字, 出處]
      狀態：ok 做好了｜part 做了一部分｜todo 還沒做｜wait 等人決定
      出處：舊頁編號（01-1 這種＝2026-09-14 儀表板的段-項）、「九站 NN」、日期（那天定的）
    ['h', '小標'] 只是分組標題，不算分。
-   step：這個功能在 00-建置進度 的哪一步會被動到（沒有就不寫）
+   屬於第幾步不寫在這裡，寫在上面 STEPS 的 funcs。
    dropped：被九站推翻、或搬到別列的舊項目 [文字, 為什麼, 出處]，不算分
    ideas：還沒決定要不要做 [文字, 出處]，不算分
    ═══════════════════════════════════════════════════════════════════ */
 const FUNCS = [
-  { n: '00', t: '地基', step: '第 4 步「上線前底線」',
+  { n: '00', t: '地基',
     note: '登入、權限、備份、資安。上線前要補齊的大多在這一列。',
     items: [
       ['h', '登入與權限'],
@@ -265,7 +439,7 @@ const FUNCS = [
       ['敏感操作二次驗證，先留位置', '舊頁'],
     ] },
 
-  { n: '01', t: '客戶資料', step: '第 2 步「改脊椎」會動到',
+  { n: '01', t: '客戶資料',
     note: '客戶與案場主檔都有了。九站在案場上多加來源、規劃書、iCloud 連結。',
     items: [
       ['ok', '客戶主檔：一個客戶一份檔', '02-1'],
@@ -282,7 +456,7 @@ const FUNCS = [
       ['接案前先看這個客戶：收款天數、過去的案子', 'D3-3'],
     ] },
 
-  { n: '02', t: '報價單', step: '第 2 步「改脊椎」會動到',
+  { n: '02', t: '報價單',
     note: '九站改最多的一列：報價單變成脊椎、掛在案場上，兩套報價系統重做進來。智能、燈具兩套舊報價系統現在照常在用。',
     items: [
       ['todo', '智能報價重做進系統（畫面照舊，價格從設定檔搬進資料表）', '九站 02'],
@@ -309,7 +483,7 @@ const FUNCS = [
       ['丈量紀錄：量到的線長數字有地方放', '舊頁'],
     ] },
 
-  { n: '03', t: '工程', step: '第 2 步「改脊椎」會動到',
+  { n: '03', t: '工程',
     note: '案場頁、安裝位置、交接都做好了。九站改的是案件要簽約才有、狀態改成里程碑，另外加備料清單、施工階段、驗收。',
     items: [
       ['h', '案場頁'],
@@ -348,7 +522,7 @@ const FUNCS = [
       ['只有某些設備要填位置（嵌燈 43 顆沒人要一顆一顆拍）', '舊頁'],
     ] },
 
-  { n: '04', t: '庫存', step: '第 5 步「庫存上線」',
+  { n: '04', t: '庫存',
     note: '目前最完整的一塊。上線前要補的是盤點、對鼎新 A1 開帳、兩層分類。',
     items: [
       ['h', '進貨與現量'],
@@ -386,7 +560,7 @@ const FUNCS = [
       ['料對不起來的當天就處理', 'D2-5'],
     ] },
 
-  { n: '05', t: '打卡與工作紀錄', step: '',
+  { n: '05', t: '打卡與工作紀錄',
     note: '工作紀錄大致做好了，九站要再接幾個小改。打卡卡在公司的 LINE 官方帳號和對外 IP。',
     items: [
       ['h', '工作紀錄'],
@@ -415,7 +589,7 @@ const FUNCS = [
       ['丈量紀錄：量到的數字誰之後會來拿', '舊頁'],
     ] },
 
-  { n: '06', t: '成本', step: '',
+  { n: '06', t: '成本',
     note: '成本的算法只有一份，已經做好。缺收款那一頭、廠商主頁；零用金排最後。',
     items: [
       ['h', '每趟工'],
@@ -446,7 +620,7 @@ const FUNCS = [
       ['案場負責人抽成（後期）', 'D5-3'],
     ] },
 
-  { n: '07', t: '增減單', step: '第 2 步「改脊椎」會動到',
+  { n: '07', t: '增減單',
     note: '草稿自動產生、客戶簽了才算數，這兩件都有了。九站要它驗收後還能再開一張。',
     items: [
       ['ok', '安裝比報價多或少，自動變成增減單草稿', '05-3'],
@@ -462,7 +636,7 @@ const FUNCS = [
       ['線上簽認：客戶手機點簽，不用紙本', '舊頁'],
     ] },
 
-  { n: '08', t: '收款', step: '第 2 步「改脊椎」會動到',
+  { n: '08', t: '收款',
     note: '資料表有了，畫面一個都還沒做。比例老闆之後定，先做三段。',
     items: [
       ['todo', '每張報價單自己的收款計畫：訂金／工程款／尾款', '09-1・九站 08'],
@@ -479,7 +653,7 @@ const FUNCS = [
       ['平均幾天收到錢，按客戶分', 'D1-6'],
     ] },
 
-  { n: '09', t: '送修與保固', step: '',
+  { n: '09', t: '送修與保固',
     note: '送修流程和保固計算都做好了。九站要把客戶報修接進來。',
     items: [
       ['ok', '送修流程：拆回來的東西走到哪一步，看得到', '07-10'],
@@ -497,7 +671,7 @@ const FUNCS = [
       ['完工三個月後主動回訪一次', 'D3-1'],
     ] },
 
-  { n: '10', t: '客戶登入', step: '',
+  { n: '10', t: '客戶登入',
     note: '還沒開始。九站定了：用網頁登入，不給密碼，點 LINE 收到的連結就登入。',
     items: [
       ['todo', '用連結登入：一次有效 30 分鐘、這支手機記 90 天，不給密碼', '九站 09'],
@@ -519,7 +693,7 @@ const FUNCS = [
       ['第二版：AI 客服（只幫忙查，最後一律導到報修）', '九站 09'],
     ] },
 
-  { n: '11', t: 'LINE 窗口', step: '',
+  { n: '11', t: 'LINE 窗口',
     note: '還沒開始。群組小幫手的第一步「只收不發」不用等老闆，其他都要等公司的官方帳號。',
     items: [
       ['part', '一個 LINE 帳號對到系統裡的哪個人，只認一次（綁定表已建）', '舊頁'],
@@ -542,7 +716,9 @@ const FUNCS = [
 /* ── 以下是畫面，改狀態不用動 ── */
 const LABEL = { ok: '做好了', part: '做了一部分', todo: '還沒做', wait: '等人決定' };
 const ORDER = ['ok', 'part', 'wait', 'todo'];
+const ST_LABEL = { done: '完成', next: '下一步', todo: '還沒開始' };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const $ = id => document.getElementById(id);
 
 // 數一列：只數有狀態的項目，小標不算
 function count(items) {
@@ -550,7 +726,15 @@ function count(items) {
   for (const it of items) if (it[0] !== 'h') { c[it[0]]++; c.all++; }
   return c;
 }
+// 把幾個功能的數字加起來（總數＝全部 12 個；某一步＝那一步的 funcs）
+function sum(ns) {
+  const t = { ok: 0, part: 0, todo: 0, wait: 0, all: 0 };
+  for (const f of FUNCS) if (!ns || ns.includes(f.n)) { const c = count(f.items); for (const k in t) t[k] += c[k]; }
+  return t;
+}
 const pct = c => c.all ? Math.round(c.ok / c.all * 100) : 0;
+// 這個功能屬於哪一步（唯一入口：下半的標籤、上半的亮燈都走這裡的 STEPS.funcs）
+const stepOf = n => STEPS.find(s => s.funcs.includes(n));
 
 // 進度條：照 ORDER 疊色塊，寬度是各狀態佔全部的比例；灰底就是「還沒做」
 function bar(c) {
@@ -560,18 +744,40 @@ function bar(c) {
   return `<div class="bar" role="img" aria-label="${label}">${segs}</div>`;
 }
 
-// 總數
-const total = { ok: 0, part: 0, todo: 0, wait: 0, all: 0 };
-for (const f of FUNCS) { const c = count(f.items); for (const k in total) total[k] += c[k]; }
-document.getElementById('bigPct').innerHTML = `${pct(total)}%<small>完成</small>`;
-document.getElementById('bigCount').textContent = `${total.all} 項裡做好 ${total.ok} 項`;
-document.getElementById('bigBar').outerHTML = bar(total);
-document.getElementById('legend').innerHTML = ORDER.map(k =>
+/* ── 上半 ── */
+const box = (b, bold) => (bold ? `<b>${esc(b.title)}</b>` : `<h3>${esc(b.title)}</h3>`) +
+  `<ul>${b.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`;
+$('now').innerHTML = box(NOW, true);
+$('why').innerHTML = box(WHY);
+$('wait').innerHTML = box(WAIT);
+
+function card(s) {
+  const c = s.funcs.length ? sum(s.funcs) : null;
+  return `<button type="button" class="stepc ${s.st}" data-k="${s.k}" aria-pressed="false">
+    <span class="top"><span class="k">第 ${s.k} 步</span><span class="chip ${s.st}">${ST_LABEL[s.st]}${s.date ? ' ' + esc(s.date) : ''}</span></span>
+    <span class="t">${esc(s.t)}</span>
+    <span class="s">${esc(s.sub)}</span>
+    ${s.you ? `<span class="you">你：${esc(s.you)}</span>` : ''}
+    <span class="fn">${c ? `功能 ${s.funcs.join('・')}｜做好 ${c.ok}／${c.all}` : esc(s.fnNote || '')}</span>
+  </button>`;
+}
+$('phases').innerHTML = PHASES.map(p => `<div class="phase">
+  <div class="phase-label">${esc(p.label)}</div>
+  <div class="cards" style="--n:${p.steps.length}">${p.steps.map(k => card(STEPS.find(s => s.k === k))).join('')}</div>
+</div>`).join('');
+
+/* ── 下半：總數 ── */
+const total = sum();
+$('bigPct').innerHTML = `${pct(total)}%<small>完成</small>`;
+$('bigCount').textContent = `${total.all} 項裡做好 ${total.ok} 項`;
+$('bigBar').outerHTML = bar(total);
+$('legend').innerHTML = ORDER.map(k =>
   `<span><i class="sw ${k}"></i>${LABEL[k]} ${total[k]}</span>`).join('');
 
-// 12 列
-document.getElementById('rows').innerHTML = FUNCS.map(f => {
+/* ── 下半：12 列 ── */
+$('rows').innerHTML = FUNCS.map(f => {
   const c = count(f.items);
+  const st = stepOf(f.n);
   const list = [];
   let open = false;
   for (const it of f.items) {
@@ -589,9 +795,9 @@ document.getElementById('rows').innerHTML = FUNCS.map(f => {
   const side = (title, arr, fmt) => arr && arr.length
     ? `<div class="side"><h3>${title}</h3><ul>${arr.map(fmt).join('')}</ul></div>` : '';
 
-  return `<details class="row panel">
+  return `<details class="row panel" data-n="${f.n}">
     <summary>
-      <div class="name"><span class="num">${f.n}</span>${esc(f.t)}${f.step ? `<span class="step">${esc(f.step)}</span>` : ''}</div>
+      <div class="name"><span class="num">${f.n}</span>${esc(f.t)}${st ? `<span class="step">第 ${st.k} 步「${esc(st.t)}」</span>` : ''}</div>
       <div class="score">${pct(c)}%<small>${c.ok}／${c.all}</small></div>
       ${bar(c)}
       <div class="note">${esc(f.note)}</div>
@@ -603,6 +809,37 @@ document.getElementById('rows').innerHTML = FUNCS.map(f => {
     </div>
   </details>`;
 }).join('');
+
+/* ── 點一步 → 下半亮出那一步的功能，其他變淡；再點一次或按「看全部」恢復 ── */
+let cur = null;
+function update() {
+  const s = STEPS.find(x => x.k === cur);
+  document.querySelectorAll('button.stepc').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.k === cur)));
+  document.querySelectorAll('details.row').forEach(r => {
+    const hit = !!(s && s.funcs.includes(r.dataset.n));
+    r.classList.toggle('hit', hit);
+    r.classList.toggle('dim', !!(s && s.funcs.length && !hit));   // 沒對到任何功能的步（1、3）不淡化別人
+  });
+  const focus = $('focus');
+  if (!s) { focus.classList.remove('show'); return; }
+  const c = s.funcs.length ? sum(s.funcs) : null;
+  focus.querySelector('span').textContent = `第 ${s.k} 步「${s.t}」：${s.why}` +
+    (c ? `（這 ${s.funcs.length} 個功能合起來做好 ${c.ok}／${c.all}）` : '');
+  focus.classList.add('show');
+  // 提示列不在畫面裡（手機上常常在很下面）才捲過去，桌機看得到就不動
+  const r = focus.getBoundingClientRect();
+  if (r.top < 0 || r.top > innerHeight - 80) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    focus.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+  }
+}
+$('phases').addEventListener('click', e => {
+  const b = e.target.closest('button.stepc');
+  if (!b) return;
+  cur = cur === b.dataset.k ? null : b.dataset.k;
+  update();
+});
+$('focusOff').addEventListener('click', () => { cur = null; update(); });
 </script>
 </body>
 </html>
