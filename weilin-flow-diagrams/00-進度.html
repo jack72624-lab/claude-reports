@@ -7,6 +7,21 @@
 <title>威琳內部系統・進度</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<script>
+  // 跟 01–05 用同一個深淺色選擇：那幾頁右上角按「淺色／深色」會存進 localStorage 的 archify-theme
+  // （同一個網站、各分頁共用）。沒存過就跟系統走（下面 CSS 的 prefers-color-scheme）。
+  // 另一個分頁切換時也跟著變（storage 事件只會在別的分頁觸發，正好是這個情況）。
+  (function () {
+    function apply() {
+      var t = null;
+      try { t = localStorage.getItem('archify-theme'); } catch (_) {}
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      else document.documentElement.removeAttribute('data-theme');
+    }
+    apply();
+    addEventListener('storage', function (e) { if (e.key === 'archify-theme') apply(); });
+  })();
+</script>
 <!--
   這頁是什麼：威琳內部系統的進度，一頁看完（2026-10-02 起）。
     上半＝蓋系統的 6 步走到第幾步（原本是 archify 圖 00-建置進度）
@@ -27,64 +42,68 @@
     工程用語（schema、脊椎、資料層、快照、通道…）別寫上頁面。要稱呼 Jack 就寫「Jack」，別寫「你」。
     每項的出處編號只留在資料裡，不畫出來。
 
-  色票跟威琳系統本體同一套（globals.css :root 的墨／灰／琥珀／紅），2026-10-02 Jack 說不要綠色才換；
+  狀態色跟威琳系統本體同一套（globals.css :root 的墨／灰／琥珀／紅），2026-10-02 Jack 說不要綠色才換；
   換之前是 archify「經典」主題，那版在 data/.bak/威琳-進度合併-20261002/00-進度-換色前.html。
   步驟顏色：墨＝完成、紅＝下一步、灰＝還沒開始、琥珀＝要人做的事。
+  同一天更晚 Jack：「進度的顏色可以，但風格可以跟後面再統一一點點嗎？」→ 狀態色不動，
+  底色／框線／字的灰、標題大小、說明卡的樣子改成跟 01–05 一樣，深淺色也跟那幾頁的切換鈕走。
+  改之前那版在 data/.bak/威琳-進度合併-20261002/00-進度-統一風格前.html。
 
   這頁會推上公開站：原始碼看得到這段註解，所以這裡也不點名哪些錢的名目要避開
   （清單在專案 CLAUDE.md 的共通三條）；真實密碼、本機路徑也不寫。
 -->
 <style>
-  /* 色票照威琳系統本體（src/app/globals.css :root）：墨＝做好了、灰＝還沒做、琥珀＝等人、紅＝下一步。
-     不用綠（Jack 2026-10-02）。完成跟一部分靠深淺分，不靠色相。 */
+  /* 兩組顏色分開看（2026-10-02 Jack：「顏色可以，風格跟後面再統一一點點」）：
+     ①狀態色照威琳系統本體（src/app/globals.css :root）：墨＝做好了、中灰＝做了一部分、淺灰＝還沒做、
+       琥珀＝等人、紅＝下一步。不用綠（Jack 2026-10-02）。完成跟一部分靠深淺分，不靠色相。這組別動。
+     ②底色、框線、字的灰照 01–05 那幾張 archify 圖的冷灰（01-部署架構.html 的 [data-theme] 那兩組），
+       切分頁才不會像換了一個網站。01–05 重產換了色，這組跟著改。
+       dim 沒照抄 01 的 #94a3b8：那個在白底只有 2.6:1，這頁拿它寫字，改用 01 介面字用的 #7d8da1（3.4:1）。 */
   :root {
-    --bg: #f5f5f7;
-    --grid: #e5e5ea;
-    --ink: #1d1d1f;
-    --muted: #6e6e73;
-    --dim: #8e8e93;
+    --bg: #f8fafc;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --dim: #7d8da1;
     --panel: #ffffff;
-    --border: #e5e5ea;
+    --border: #e2e8f0;
+    --tag-bg: #f1f5f9;
+    --todo-ink: #64748b;
+    --accent: #0f172a;         /* 選中、滑過的外框：跟字同一個色 */
     --ok: #1d1d1f;             /* 做好了：墨色實心 */
     --ok-fill: #ececf0;
     --part: #a1a1a6;           /* 做了一部分：中灰，夾在墨跟淺灰中間 */
     --todo: #e5e5ea;
-    --todo-ink: #6e6e73;
     --wait: #b25e09;           /* 等人決定／要你做的：琥珀 */
     --wait-fill: #fbf0e0;
     --next: #c0392b;           /* 下一步：紅 */
     --next-fill: #fbeae8;
-    --tag-bg: #f2f2f5;
-    --accent: #1d1d1f;         /* 選中、滑過的外框：跟主色同一個墨 */
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #161617;
-      --grid: #2c2c2f;
-      --ink: #f5f5f7;
-      --muted: #a1a1a6;
-      --dim: #7c7c82;
-      --panel: #1d1d1f;
-      --border: #3a3a3d;
+      --bg: #020617;
+      --ink: #ffffff;
+      --muted: #94a3b8;
+      --dim: #7d8da1;
+      --panel: #090f21;        /* 01 的 rgba(15,23,42,.5) 疊在 #020617 上算出來的實色 */
+      --border: #1e293b;
+      --tag-bg: #131d31;
+      --todo-ink: #94a3b8;
+      --accent: #ffffff;
       --ok: #f5f5f7;
       --ok-fill: #2c2c2f;
       --part: #6e6e73;
       --todo: #3a3a3d;
-      --todo-ink: #a1a1a6;
       --wait: #e0a04a;
       --wait-fill: #3a2c14;
       --next: #ff6b5e;
       --next-fill: #3f1f1b;
-      --tag-bg: #26262a;
-      --accent: #f5f5f7;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #161617; --grid: #2c2c2f; --ink: #f5f5f7; --muted: #a1a1a6; --dim: #7c7c82;
-    --panel: #1d1d1f; --border: #3a3a3d; --ok: #f5f5f7; --ok-fill: #2c2c2f;
-    --part: #6e6e73; --todo: #3a3a3d; --todo-ink: #a1a1a6; --wait: #e0a04a;
+    --bg: #020617; --ink: #ffffff; --muted: #94a3b8; --dim: #7d8da1; --panel: #090f21;
+    --border: #1e293b; --tag-bg: #131d31; --todo-ink: #94a3b8; --accent: #ffffff;
+    --ok: #f5f5f7; --ok-fill: #2c2c2f; --part: #6e6e73; --todo: #3a3a3d; --wait: #e0a04a;
     --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b;
-    --tag-bg: #26262a; --accent: #f5f5f7;
   }
 
   * { box-sizing: border-box; }
@@ -98,8 +117,9 @@
   }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 20px 16px 48px; }
 
+  /* 標題大小照 01–05（1.5rem、字距 -0.025em）；圓點留墨色，01 的藍綠看起來像綠 */
   h1 {
-    font-size: 22px; margin: 0 0 4px; font-weight: 700;
+    font-size: 24px; margin: 0 0 4px; font-weight: 700; letter-spacing: -0.025em;
     display: flex; align-items: center; gap: 12px;
   }
   h1::before {
@@ -117,13 +137,26 @@
   .panel {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 12px;        /* 01–05 的卡片是 0.75rem */
   }
 
+  /* 上半三張說明卡，照 01–05 下方的說明卡做：標題前一顆小圓點、每項前面「•」。
+     圓點照意思配狀態色：現在走到哪＝紅（下一步）、為什麼＝墨、還在等的＝琥珀。
+     字比 01 的 12px 大一點，讀的人是公司的人、不是來看圖的。 */
+  .note-card { padding: 20px; }
+  .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .card-header h3 { margin: 0; font-size: 14px; font-weight: 600; }
+  .card-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--ok); }
+  .card-dot.next { background: var(--next); }
+  .card-dot.wait { background: var(--wait); }
+  .note-card ul { list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--muted); }
+  /* 「•」吊在左邊，換行的字跟第一行對齊 */
+  .note-card li { display: grid; grid-template-columns: 1.4em 1fr; margin-bottom: 6px; }
+  .note-card li:last-child { margin-bottom: 0; }
+  .note-card li::before { content: "•"; }
+
   /* ── 上半：6 步 ── */
-  .now { padding: 12px 16px; margin-bottom: 14px; font-size: 13.5px; }
-  .now b { font-weight: 700; margin-right: 6px; }
-  .now ul { margin: 4px 0 0; padding-left: 18px; color: var(--muted); }
+  .now { margin-bottom: 14px; }
 
   /* 兩段：上線前 4 步、上線後 2 步；比例 2:1 讓每張卡一樣寬 */
   .phases { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
@@ -164,11 +197,7 @@
   .chip.next { color: var(--next); background: var(--panel); }
   .chip.todo { color: var(--todo-ink); background: var(--tag-bg); }
 
-  .ctx { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
-  .ctx .panel { padding: 12px 16px; }
-  .ctx h3 { margin: 0 0 4px; font-size: 13px; font-weight: 700; }
-  .ctx ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
-  .ctx li { margin: 3px 0; }
+  .ctx { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
 
   /* ── 下半：總數 ── */
   .total { padding: 18px 20px; margin-bottom: 12px; }
@@ -280,11 +309,11 @@
   <p class="sub">上面是系統一步一步蓋到哪了，下面是 12 個功能各做了幾成。點上面任一步，下面會亮出那一步會動到的功能。</p>
 
   <h2><span class="no">一</span>走到哪一步</h2>
-  <section class="panel now" id="now" aria-label="現在在哪"></section>
+  <section class="panel note-card now" id="now" aria-label="現在在哪"></section>
   <div class="phases" id="phases"></div>
   <div class="ctx">
-    <section class="panel" id="why" aria-label="為什麼是這個順序"></section>
-    <section class="panel" id="wait" aria-label="還在等的"></section>
+    <section class="panel note-card" id="why" aria-label="為什麼是這個順序"></section>
+    <section class="panel note-card" id="wait" aria-label="還在等的"></section>
   </div>
 
   <h2><span class="no">二</span>12 個功能各做了幾成</h2>
@@ -752,11 +781,12 @@ function bar(c) {
 }
 
 /* ── 上半 ── */
-const box = (b, bold) => (bold ? `<b>${esc(b.title)}</b>` : `<h3>${esc(b.title)}</h3>`) +
+// dot＝標題前圓點的顏色（next 紅／wait 琥珀／不給＝墨），樣式見 CSS .card-dot
+const box = (b, dot) => `<div class="card-header"><i class="card-dot ${dot || ''}"></i><h3>${esc(b.title)}</h3></div>` +
   `<ul>${b.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`;
-$('now').innerHTML = box(NOW, true);
+$('now').innerHTML = box(NOW, 'next');
 $('why').innerHTML = box(WHY);
-$('wait').innerHTML = box(WAIT);
+$('wait').innerHTML = box(WAIT, 'wait');
 
 function card(s) {
   const c = s.funcs.length ? sum(s.funcs) : null;
