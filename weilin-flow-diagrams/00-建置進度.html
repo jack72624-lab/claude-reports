@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.16.0">
-  <title>威琳內部系統・操作如何寫進資料庫</title>
+  <title>威琳內部系統・建置進度</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -4955,9 +4955,8 @@
            data-preset-badge-blueprint="藍圖 / 修訂 01"
            data-preset-badge-editorial="編輯風格 / 現場筆記">
         <div class="pulse-dot"></div>
-        <h1>威琳內部系統・操作如何寫進資料庫</h1>
+        <h1>威琳內部系統・建置進度</h1>
       </div>
-      <p class="subtitle">現況圖（2026-08-31 畫、10-02 照程式修正）：只畫程式已經寫好的三個操作；打卡、客戶頁、人員管理還沒寫、故不在圖上</p>
     </div>
 
     <script id="archify-guided-views-data" type="application/json">[]</script>
@@ -5005,9 +5004,9 @@
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / 圖版 04">
-      <svg viewBox="0 0 940 720" role="img" lang="zh-Hant" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
-        <title id="archify-diagram-title">威琳內部系統・操作如何寫進資料庫</title>
-        <desc id="archify-diagram-description">現況圖（2026-08-31 畫、10-02 照程式修正）：只畫程式已經寫好的三個操作；打卡、客戶頁、人員管理還沒寫、故不在圖上</desc>
+      <svg viewBox="0 0 1052 408" role="img" lang="zh-Hant" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="archify-diagram-title">威琳內部系統・建置進度</title>
+        <desc id="archify-diagram-description">由 Archify 生成的工作流圖。</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5030,207 +5029,201 @@
         <!-- Background Grid -->
         <rect width="100%" height="100%" fill="url(#grid)" />
 
-        <!-- Data Stages -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="0" x="16" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="100" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">01 / 畫面操作</text>
+        <!-- Swimlanes -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="996" height="106" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="74" class="t-dim" font-size="10" font-weight="600">01 / 系統這邊</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="1" x="231" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="315" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">02 / 業務資料表</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="178" width="996" height="106" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="200" class="t-dim" font-size="10" font-weight="600">02 / 要你做的</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="2" x="446" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="530" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">03 / 庫存流水帳</text>
+        <!-- Phase headers -->
+        <line x1="68" y1="35" x2="640" y2="35" class="a-emphasis" stroke-width="1.1"/>
+        <rect x="68" y="27" width="572" height="16" rx="4" class="c-mask"/>
+        <text x="354" y="39" class="t-backend" font-size="8" font-weight="600" text-anchor="middle">上線前・改 schema 免費</text>
+        <line x1="755.6" y1="35" x2="1007.6" y2="35" class="a-dashed" stroke-width="1.1"/>
+        <rect x="755.6" y="27" width="252" height="16" rx="4" class="c-mask"/>
+        <text x="881.6" y="39" class="t-messagebus" font-size="8" font-weight="600" text-anchor="middle">上線後・改 schema 要搬家</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="stage" data-composition-frame-id="3" x="661" y="46" width="168" height="600" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="745" y="68" class="t-dim" font-size="9" font-weight="600" text-anchor="middle">04 / 彙總讀取</text>
+        <!-- Workflow groups -->
 
-        <!-- Flow paths -->
-        <path data-edge-from="op_site" data-edge-to="tb_sites" data-edge-label="建案場" data-edge-key="0" data-edge-id="f_open" data-composition-points="156,157;259,157" d="M 156 157 L 259 157" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="op_purchase" data-edge-to="tb_receipts" data-edge-label="存進貨明細" data-edge-key="1" data-edge-id="f_receipt" data-composition-points="156,385;259,385" d="M 156 385 L 259 385" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="tb_receipts" data-edge-to="tb_moves" data-edge-label="入庫（in）" data-edge-key="2" data-edge-id="f_in" data-composition-points="371,385;422.5,385;422.5,492;474,492" d="M 371 385 L 422.5 385 L 422.5 492 L 474 492" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="op_work" data-edge-to="tb_work" data-edge-label="存每趟工" data-edge-key="3" data-edge-id="f_workwrite" data-composition-points="156,613;259,613" d="M 156 613 L 259 613" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="tb_work" data-edge-to="tb_moves" data-edge-label="領料出庫（out）" data-edge-key="4" data-edge-id="f_out" data-composition-points="371,606;422.5,606;422.5,506;474,506" d="M 371 606 L 422.5 606 L 422.5 506 L 474 506" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="tb_moves" data-edge-to="out_stock" data-edge-label="加總算現量" data-edge-key="5" data-edge-id="f_query" data-composition-points="586,492;637.5,492;637.5,271;689,271" d="M 586 492 L 637.5 492 L 637.5 271 L 689 271" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="tb_work" data-edge-to="out_cost" data-edge-label="工資工時" data-edge-key="6" data-edge-id="f_labor" data-composition-points="371,620;689,620" d="M 371 620 L 689 620" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="tb_moves" data-edge-to="out_cost" data-edge-label="用料成本" data-edge-key="7" data-edge-id="f_matcost" data-composition-points="586,506;637.5,506;637.5,606;689,606" d="M 586 506 L 637.5 506 L 637.5 606 L 689 606" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+
+        <!-- Edge paths -->
+        <path data-edge-from="s0" data-edge-to="s1" data-edge-key="0" data-edge-id="e01" data-composition-points="180,120;208,120" d="M 180 120 L 208 120" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="s1" data-edge-to="s2" data-edge-key="1" data-edge-id="e12" data-composition-points="340,120;368,120" d="M 340 120 L 368 120" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="s2" data-edge-to="s3" data-edge-key="2" data-edge-id="e23" data-composition-points="500,120;528,120" d="M 500 120 L 528 120" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="s3" data-edge-to="s4" data-edge-label="開始有真資料" data-edge-key="3" data-edge-id="e34" data-composition-points="660,120;735.6,120" d="M 660 120 L 735.6 120" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="s4" data-edge-to="s5" data-edge-key="4" data-edge-id="e45" data-composition-points="867.6,120;895.6,120" d="M 867.6 120 L 895.6 120" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="j1" data-edge-to="s1" data-edge-label="說對才改" data-edge-key="5" data-edge-id="j1s1" data-composition-points="274,220;274,154" d="M 274 220 L 274 154" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="j2" data-edge-to="s2" data-edge-key="6" data-edge-id="j2s2" data-composition-points="434,220;434,146" d="M 434 220 L 434 146" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="j3" data-edge-to="s3" data-edge-key="7" data-edge-id="j3s3" data-composition-points="594,220;594,146" d="M 594 220 L 594 146" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="j4" data-edge-to="s4" data-edge-key="8" data-edge-id="j4s4" data-composition-points="801.6,220;801.6,146" d="M 801.6 220 L 801.6 146" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Nodes -->
-        <g id="node-op_site" data-node-id="op_site" data-node-label="開案・案場資料" tabindex="0" role="button" aria-label="聚焦開案・案場資料，案場頁, 01 / 畫面操作" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="案場頁" data-node-context="01 / 畫面操作">
-          <title>開案・案場資料 · 案場頁 · 01 / 畫面操作</title>
-          <rect x="44" y="128" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="44" y="128" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(50 134) scale(0.6875)">
-            <rect x="2" y="3" width="12" height="10" rx="2"/>
-            <path d="M2 6.5h12"/>
-            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
-            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="100" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">開案・案場資料</text>
-          <text data-detail="context" x="100" y="165" class="t-muted" font-size="7" text-anchor="middle">案場頁</text>
-        </g>
-
-        <g id="node-op_purchase" data-node-id="op_purchase" data-node-label="進貨單" tabindex="0" role="button" aria-label="聚焦進貨單，進貨頁, 01 / 畫面操作" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="進貨頁" data-node-context="01 / 畫面操作">
-          <title>進貨單 · 進貨頁 · 01 / 畫面操作</title>
-          <rect x="44" y="356" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="44" y="356" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(50 362) scale(0.6875)">
-            <rect x="2" y="3" width="12" height="10" rx="2"/>
-            <path d="M2 6.5h12"/>
-            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
-            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="100" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">進貨單</text>
-          <text data-detail="context" x="100" y="393" class="t-muted" font-size="7" text-anchor="middle">進貨頁</text>
-        </g>
-
-        <g id="node-op_work" data-node-id="op_work" data-node-label="工作紀錄" tabindex="0" role="button" aria-label="聚焦工作紀錄，工作頁, 01 / 畫面操作" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="工作頁" data-node-context="01 / 畫面操作">
-          <title>工作紀錄 · 工作頁 · 01 / 畫面操作</title>
-          <rect x="44" y="584" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="44" y="584" width="112" height="58" rx="6" class="c-frontend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(50 590) scale(0.6875)">
-            <rect x="2" y="3" width="12" height="10" rx="2"/>
-            <path d="M2 6.5h12"/>
-            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
-            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="100" y="605" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">工作紀錄</text>
-          <text data-detail="context" x="100" y="621" class="t-muted" font-size="7" text-anchor="middle">工作頁</text>
-        </g>
-
-        <g id="node-tb_sites" data-node-id="tb_sites" data-node-label="sites" tabindex="0" role="button" aria-label="聚焦sites，（案場主檔）, 02 / 業務資料表" aria-pressed="false" data-node-kind="database" data-node-sublabel="（案場主檔）" data-node-context="02 / 業務資料表">
-          <title>sites · （案場主檔） · 02 / 業務資料表</title>
-          <rect x="259" y="128" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="259" y="128" width="112" height="58" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(265 134) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="315" y="149" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">sites</text>
-          <text data-detail="context" x="315" y="165" class="t-muted" font-size="7" text-anchor="middle">（案場主檔）</text>
-        </g>
-
-        <g id="node-tb_receipts" data-node-id="tb_receipts" data-node-label="receipts" tabindex="0" role="button" aria-label="聚焦receipts，（進貨單＋明細）, 02 / 業務資料表" aria-pressed="false" data-node-kind="database" data-node-sublabel="（進貨單＋明細）" data-node-context="02 / 業務資料表">
-          <title>receipts · （進貨單＋明細） · 02 / 業務資料表</title>
-          <rect x="259" y="356" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="259" y="356" width="112" height="58" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(265 362) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="315" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">receipts</text>
-          <text data-detail="context" x="315" y="393" class="t-muted" font-size="7" text-anchor="middle">（進貨單＋明細）</text>
-        </g>
-
-        <g id="node-tb_work" data-node-id="tb_work" data-node-label="work_records" tabindex="0" role="button" aria-label="聚焦work_records，（每趟工：出工・人員・用料）, 02 / 業務資料表" aria-pressed="false" data-node-kind="database" data-node-sublabel="（每趟工：出工・人員・用料）" data-node-context="02 / 業務資料表">
-          <title>work_records · （每趟工：出工・人員・用料） · 02 / 業務資料表</title>
-          <rect x="259" y="584" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="259" y="584" width="112" height="58" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(265 590) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="315" y="605" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">work_records</text>
-          <text data-detail="context" x="315" y="621" class="t-muted" font-size="6.1" text-anchor="middle">（每趟工：出工・人員・用料）</text>
-        </g>
-
-        <g id="node-tb_moves" data-node-id="tb_moves" data-node-label="stock_movements" tabindex="0" role="button" aria-label="聚焦stock_movements，（每筆進出流水）, 03 / 庫存流水帳" aria-pressed="false" data-node-kind="database" data-node-sublabel="（每筆進出流水）" data-node-tag="流水帳" data-node-context="03 / 庫存流水帳">
-          <title>stock_movements · （每筆進出流水） · 03 / 庫存流水帳 · 流水帳</title>
-          <rect x="474" y="470" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="474" y="470" width="112" height="58" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(480 476) scale(0.6875)">
-            <ellipse cx="8" cy="4" rx="5" ry="2"/>
-            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="530" y="491" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">stock_movements</text>
-          <text data-detail="context" x="530" y="507" class="t-muted" font-size="7" text-anchor="middle">（每筆進出流水）</text>
-        <text data-detail="fine" x="530" y="517" class="t-database" font-size="7" text-anchor="middle">流水帳</text>
-        </g>
-
-        <g id="node-out_stock" data-node-id="out_stock" data-node-label="庫存頁" tabindex="0" role="button" aria-label="聚焦庫存頁，查目前數量, 04 / 彙總讀取" aria-pressed="false" data-node-kind="backend" data-node-sublabel="查目前數量" data-node-context="04 / 彙總讀取">
-          <title>庫存頁 · 查目前數量 · 04 / 彙總讀取</title>
-          <rect x="689" y="242" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="689" y="242" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 248) scale(0.6875)">
+        <g id="node-s0" data-node-id="s0" data-node-label="定方向" tabindex="0" role="button" aria-label="聚焦定方向，在原系統上改, 系統這邊 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="backend" data-node-sublabel="在原系統上改" data-node-tag="已完成 10-02" data-node-context="系統這邊 › 上線前・改 schema 免費">
+          <title>定方向 · 在原系統上改 · 系統這邊 › 上線前・改 schema 免費 · 已完成 10-02</title>
+          <rect x="48" y="86" width="132" height="68" rx="6" class="c-mask"/>
+          <rect x="48" y="86" width="132" height="68" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(54 92) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="745" y="263" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">庫存頁</text>
-          <text data-detail="context" x="745" y="279" class="t-muted" font-size="7" text-anchor="middle">查目前數量</text>
+          <text data-node-label="" data-detail-anchor="" x="114" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">定方向</text>
+          <text data-detail="context" x="114" y="124" class="t-muted" font-size="8" text-anchor="middle">在原系統上改</text>
+        <text data-detail="fine" x="114" y="142" class="t-backend" font-size="7" text-anchor="middle">已完成 10-02</text>
         </g>
 
-        <g id="node-out_cost" data-node-id="out_cost" data-node-label="案場成本" tabindex="0" role="button" aria-label="聚焦案場成本，工資＋料＋外包, 04 / 彙總讀取" aria-pressed="false" data-node-kind="backend" data-node-sublabel="工資＋料＋外包" data-node-context="04 / 彙總讀取">
-          <title>案場成本 · 工資＋料＋外包 · 04 / 彙總讀取</title>
-          <rect x="689" y="584" width="112" height="58" rx="6" class="c-mask"/>
-          <rect x="689" y="584" width="112" height="58" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(695 590) scale(0.6875)">
-            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+        <g id="node-s1" data-node-id="s1" data-node-label="改脊椎" tabindex="0" role="button" aria-label="聚焦改脊椎，先畫資料地圖, 系統這邊 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="security" data-node-sublabel="先畫資料地圖" data-node-tag="下一步" data-node-context="系統這邊 › 上線前・改 schema 免費">
+          <title>改脊椎 · 先畫資料地圖 · 系統這邊 › 上線前・改 schema 免費 · 下一步</title>
+          <rect x="208" y="86" width="132" height="68" rx="6" class="c-mask"/>
+          <rect x="208" y="86" width="132" height="68" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(214 92) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="745" y="605" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">案場成本</text>
-          <text data-detail="context" x="745" y="621" class="t-muted" font-size="7" text-anchor="middle">工資＋料＋外包</text>
+          <text data-node-label="" data-detail-anchor="" x="274" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">改脊椎</text>
+          <text data-detail="context" x="274" y="124" class="t-muted" font-size="8" text-anchor="middle">先畫資料地圖</text>
+        <text data-detail="fine" x="274" y="142" class="t-security" font-size="7" text-anchor="middle">下一步</text>
         </g>
 
-        <!-- Flow labels -->
-        <g data-detail="context" data-edge-from="op_site" data-edge-to="tb_sites" data-edge-label="建案場" data-edge-key="0" data-edge-id="f_open">
-          <rect x="186.8" y="136" width="41.4" height="27" rx="4" class="c-mask"/>
-          <text x="207.5" y="147" class="t-muted" font-size="8" text-anchor="middle">建案場</text>
-        <text data-detail="fine" x="207.5" y="158" class="t-dim" font-size="7" text-anchor="middle">主檔</text>
+        <g id="node-s2" data-node-id="s2" data-node-label="資料字典" tabindex="0" role="button" aria-label="聚焦資料字典，約 15 個名詞, 系統這邊 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="external" data-node-sublabel="約 15 個名詞" data-node-context="系統這邊 › 上線前・改 schema 免費">
+          <title>資料字典 · 約 15 個名詞 · 系統這邊 › 上線前・改 schema 免費</title>
+          <rect x="368" y="94" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="368" y="94" width="132" height="52" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(374 100) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="434" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">資料字典</text>
+          <text data-detail="context" x="434" y="132" class="t-muted" font-size="8" text-anchor="middle">約 15 個名詞</text>
         </g>
-        <g data-detail="context" data-edge-from="op_purchase" data-edge-to="tb_receipts" data-edge-label="存進貨明細" data-edge-key="1" data-edge-id="f_receipt">
-          <rect x="177" y="364" width="61" height="27" rx="4" class="c-mask"/>
-          <text x="207.5" y="375" class="t-muted" font-size="8" text-anchor="middle">存進貨明細</text>
-        <text data-detail="fine" x="207.5" y="386" class="t-dim" font-size="7" text-anchor="middle">寫入</text>
+
+        <g id="node-s3" data-node-id="s3" data-node-label="上線前底線" tabindex="0" role="button" aria-label="聚焦上線前底線，主機・備份・帳號, 系統這邊 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="external" data-node-sublabel="主機・備份・帳號" data-node-context="系統這邊 › 上線前・改 schema 免費">
+          <title>上線前底線 · 主機・備份・帳號 · 系統這邊 › 上線前・改 schema 免費</title>
+          <rect x="528" y="94" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="528" y="94" width="132" height="52" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(534 100) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="594" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">上線前底線</text>
+          <text data-detail="context" x="594" y="132" class="t-muted" font-size="8" text-anchor="middle">主機・備份・帳號</text>
         </g>
-        <g data-detail="context" data-edge-from="tb_receipts" data-edge-to="tb_moves" data-edge-label="入庫（in）" data-edge-key="2" data-edge-id="f_in">
-          <rect x="392" y="417.5" width="61" height="27" rx="4" class="c-mask"/>
-          <text x="422.5" y="428.5" class="t-backend" font-size="8" text-anchor="middle">入庫（in）</text>
-        <text data-detail="fine" x="422.5" y="439.5" class="t-dim" font-size="7" text-anchor="middle">自動產生</text>
+
+        <g id="node-s4" data-node-id="s4" data-node-label="庫存上線" tabindex="0" role="button" aria-label="聚焦庫存上線，主倉進出＋盤點, 系統這邊 › 上線後・改 schema 要搬家" aria-pressed="false" data-node-kind="external" data-node-sublabel="主倉進出＋盤點" data-node-context="系統這邊 › 上線後・改 schema 要搬家">
+          <title>庫存上線 · 主倉進出＋盤點 · 系統這邊 › 上線後・改 schema 要搬家</title>
+          <rect x="735.6" y="94" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="735.6" y="94" width="132" height="52" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(741.6 100) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="801.6" y="115" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">庫存上線</text>
+          <text data-detail="context" x="801.6" y="132" class="t-muted" font-size="8" text-anchor="middle">主倉進出＋盤點</text>
         </g>
-        <g data-detail="context" data-edge-from="op_work" data-edge-to="tb_work" data-edge-label="存每趟工" data-edge-key="3" data-edge-id="f_workwrite">
-          <rect x="181.9" y="592" width="51.2" height="27" rx="4" class="c-mask"/>
-          <text x="207.5" y="603" class="t-muted" font-size="8" text-anchor="middle">存每趟工</text>
-        <text data-detail="fine" x="207.5" y="614" class="t-dim" font-size="7" text-anchor="middle">寫入</text>
+
+        <g id="node-s5" data-node-id="s5" data-node-label="下一個功能" tabindex="0" role="button" aria-label="聚焦下一個功能，順序還沒排, 系統這邊 › 上線後・改 schema 要搬家" aria-pressed="false" data-node-kind="external" data-node-sublabel="順序還沒排" data-node-tag="一個一個來" data-node-context="系統這邊 › 上線後・改 schema 要搬家">
+          <title>下一個功能 · 順序還沒排 · 系統這邊 › 上線後・改 schema 要搬家 · 一個一個來</title>
+          <rect x="895.6" y="86" width="132" height="68" rx="6" class="c-mask"/>
+          <rect x="895.6" y="86" width="132" height="68" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(901.6 92) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="961.6" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">下一個功能</text>
+          <text data-detail="context" x="961.6" y="124" class="t-muted" font-size="8" text-anchor="middle">順序還沒排</text>
+        <text data-detail="fine" x="961.6" y="142" class="t-external" font-size="7" text-anchor="middle">一個一個來</text>
         </g>
-        <g data-detail="context" data-edge-from="tb_work" data-edge-to="tb_moves" data-edge-label="領料出庫（out）" data-edge-key="4" data-edge-id="f_out">
-          <rect x="379.75" y="535" width="85.5" height="27" rx="4" class="c-mask"/>
-          <text x="422.5" y="546" class="t-security" font-size="8" text-anchor="middle">領料出庫（out）</text>
-        <text data-detail="fine" x="422.5" y="557" class="t-dim" font-size="7" text-anchor="middle">含成本快照</text>
+
+        <g id="node-j1" data-node-id="j1" data-node-label="看資料地圖" tabindex="0" role="button" aria-label="聚焦看資料地圖，邏輯對不對, 要你做的 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="邏輯對不對" data-node-context="要你做的 › 上線前・改 schema 免費">
+          <title>看資料地圖 · 邏輯對不對 · 要你做的 › 上線前・改 schema 免費</title>
+          <rect x="208" y="220" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="208" y="220" width="132" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(214 226) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="274" y="241" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">看資料地圖</text>
+          <text data-detail="context" x="274" y="258" class="t-muted" font-size="8" text-anchor="middle">邏輯對不對</text>
         </g>
-        <g data-detail="context" data-edge-from="tb_moves" data-edge-to="out_stock" data-edge-label="加總算現量" data-edge-key="5" data-edge-id="f_query">
-          <rect x="602.1" y="360.5" width="70.8" height="27" rx="4" class="c-mask"/>
-          <text x="637.5" y="371.5" class="t-muted" font-size="8" text-anchor="middle">加總算現量</text>
-        <text data-detail="fine" x="637.5" y="382.5" class="t-dim" font-size="7" text-anchor="middle">唯讀（view）</text>
+
+        <g id="node-j2" data-node-id="j2" data-node-label="逐個點頭" tabindex="0" role="button" aria-label="聚焦逐個點頭，對／不對, 要你做的 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="對／不對" data-node-context="要你做的 › 上線前・改 schema 免費">
+          <title>逐個點頭 · 對／不對 · 要你做的 › 上線前・改 schema 免費</title>
+          <rect x="368" y="220" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="368" y="220" width="132" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(374 226) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="434" y="241" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">逐個點頭</text>
+          <text data-detail="context" x="434" y="258" class="t-muted" font-size="8" text-anchor="middle">對／不對</text>
         </g>
-        <g data-detail="context" data-edge-from="tb_work" data-edge-to="out_cost" data-edge-label="工資工時" data-edge-key="6" data-edge-id="f_labor">
-          <rect x="504.4" y="599" width="51.2" height="27" rx="4" class="c-mask"/>
-          <text x="530" y="610" class="t-messagebus" font-size="8" text-anchor="middle">工資工時</text>
-        <text data-detail="fine" x="530" y="621" class="t-dim" font-size="7" text-anchor="middle">唯讀</text>
+
+        <g id="node-j3" data-node-id="j3" data-node-label="定雲端主機" tabindex="0" role="button" aria-label="聚焦定雲端主機，用哪家, 要你做的 › 上線前・改 schema 免費" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="用哪家" data-node-context="要你做的 › 上線前・改 schema 免費">
+          <title>定雲端主機 · 用哪家 · 要你做的 › 上線前・改 schema 免費</title>
+          <rect x="528" y="220" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="528" y="220" width="132" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(534 226) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="594" y="241" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">定雲端主機</text>
+          <text data-detail="context" x="594" y="258" class="t-muted" font-size="8" text-anchor="middle">用哪家</text>
         </g>
-        <g data-detail="context" data-edge-from="tb_moves" data-edge-to="out_cost" data-edge-label="用料成本" data-edge-key="7" data-edge-id="f_matcost">
-          <rect x="611.9" y="535" width="51.2" height="27" rx="4" class="c-mask"/>
-          <text x="637.5" y="546" class="t-messagebus" font-size="8" text-anchor="middle">用料成本</text>
-        <text data-detail="fine" x="637.5" y="557" class="t-dim" font-size="7" text-anchor="middle">出庫快照</text>
+
+        <g id="node-j4" data-node-id="j4" data-node-label="用過說可以" tabindex="0" role="button" aria-label="聚焦用過說可以，才算上線, 要你做的 › 上線後・改 schema 要搬家" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="才算上線" data-node-context="要你做的 › 上線後・改 schema 要搬家">
+          <title>用過說可以 · 才算上線 · 要你做的 › 上線後・改 schema 要搬家</title>
+          <rect x="735.6" y="220" width="132" height="52" rx="6" class="c-mask"/>
+          <rect x="735.6" y="220" width="132" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(741.6 226) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="801.6" y="241" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">用過說可以</text>
+          <text data-detail="context" x="801.6" y="258" class="t-muted" font-size="8" text-anchor="middle">才算上線</text>
         </g>
+
+        <!-- Edge labels -->
+
+
+
+        <g data-detail="context" data-edge-from="s3" data-edge-to="s4" data-edge-label="開始有真資料" data-edge-key="3" data-edge-id="e34">
+          <rect x="664" y="100" width="67.6" height="14" rx="3" class="c-mask"/>
+          <text x="697.8" y="110" class="t-muted" font-size="8" text-anchor="middle">開始有真資料</text>
+        </g>
+
+        <g data-detail="context" data-edge-from="j1" data-edge-to="s1" data-edge-label="說對才改" data-edge-key="5" data-edge-id="j1s1">
+          <rect x="249.8" y="200" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="274" y="210" class="t-database" font-size="8" text-anchor="middle">說對才改</text>
+        </g>
+
+
+
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="40" y="664" class="t-primary" font-size="12" font-weight="650">圖例</text>
-          <g data-legend-semantic-kind="emphasis" data-legend-x="40" data-legend-baseline="684" data-legend-width="83">
-            <path d="M 40 681 L 74 681" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-            <text x="83" y="684" class="t-muted" font-size="10" font-weight="500">庫存主線</text>
+          <text x="20" y="308" class="t-primary" font-size="12" font-weight="650">圖例</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="要你做的" data-legend-x="20" data-legend-baseline="328" data-legend-width="78">
+            <rect x="20" y="320" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="328" class="t-muted" font-size="7.5" font-weight="500">要你做的</text>
           </g>
-          <g data-legend-semantic-kind="security" data-legend-x="145" data-legend-baseline="684" data-legend-width="93">
-            <path d="M 145 681 L 179 681" class="a-security" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-            <text x="188" y="684" class="t-muted" font-size="10" font-weight="500">含成本快照</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="已完成" data-legend-x="105" data-legend-baseline="328" data-legend-width="70">
+            <rect x="105" y="320" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="127" y="328" class="t-muted" font-size="7.5" font-weight="500">已完成</text>
           </g>
-          <g data-legend-semantic-kind="dashed" data-legend-x="260" data-legend-baseline="684" data-legend-width="83">
-            <path d="M 260 681 L 294 681" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-            <text x="303" y="684" class="t-muted" font-size="10" font-weight="500">彙總讀取</text>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="下一步" data-legend-x="182" data-legend-baseline="328" data-legend-width="70">
+            <rect x="182" y="320" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="204" y="328" class="t-muted" font-size="7.5" font-weight="500">下一步</text>
           </g>
-          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="資料表" data-legend-x="365" data-legend-baseline="684" data-legend-width="73">
-            <rect x="365" y="676" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-            <text x="387" y="684" class="t-muted" font-size="10" font-weight="500">資料表</text>
-          </g>
-          <g data-legend-semantic-kind="default" data-legend-x="460" data-legend-baseline="684" data-legend-width="83">
-            <path d="M 460 681 L 494 681" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-            <text x="503" y="684" class="t-muted" font-size="10" font-weight="500">一般寫入</text>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="還沒開始" data-legend-x="259" data-legend-baseline="328" data-legend-width="78">
+            <rect x="259" y="320" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+            <text x="281" y="328" class="t-muted" font-size="7.5" font-weight="500">還沒開始</text>
           </g>
         </g>
       </svg>
@@ -5422,36 +5415,38 @@
       <div class="card">
         <div class="card-header">
           <div class="card-dot emerald"></div>
-          <h3>庫存只有一本帳</h3>
+          <h3>現在在哪（2026-10-02）</h3>
         </div>
         <ul>
-          <li>&bull; stock_movements 記每一筆進出：in 進貨、out 出庫、transfer 調撥、adjust 盤點調整、scrap 報廢</li>
-          <li>&bull; 現在還剩多少＝把流水加總（三個 view），不另外存一份</li>
-          <li>&bull; inventory_balance 那張表是規劃中、0 列、沒有程式用，別拿它讀數字</li>
+          <li>&bull; 6 步走完第 1 步：決定在原系統上改、不重寫</li>
+          <li>&bull; 下一步先畫新脊椎的資料地圖給你看，你說對才改 schema</li>
+          <li>&bull; 程式與 schema 到今天都還沒動</li>
+          <li>&bull; 每個功能做了幾成：看隔壁「功能完全度」分頁</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>成本從哪裡來</h3>
+          <h3>為什麼是這個順序</h3>
         </div>
         <ul>
-          <li>&bull; 領料出庫的當下就把成本鎖進那筆流水（成本快照）</li>
-          <li>&bull; 之後進貨價變了，不會回頭改已出庫的成本</li>
-          <li>&bull; 案場成本＝工作紀錄的工資 ＋ 出庫快照的料錢 ＋ 外包</li>
+          <li>&bull; 現在沒有真資料，改 schema 不用搬任何東西</li>
+          <li>&bull; 公司一開始用，每改一次就要寫一支搬家程式（migration）</li>
+          <li>&bull; 所以脊椎跟名詞定義都要趕在庫存上線前定好</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot rose"></div>
-          <h3>出問題往哪查</h3>
+          <h3>還在等的</h3>
         </div>
         <ul>
-          <li>&bull; 畫面存了但資料不見 → 存一次再打開，看哪個欄位沒送到</li>
-          <li>&bull; 庫存對不上 → 查異動紀錄，看是哪一筆流水缺了或記錯</li>
-          <li>&bull; 成本怪 → 查那筆出庫當下的快照價，不是現在的進貨價</li>
+          <li>&bull; 雲端用哪家：你定</li>
+          <li>&bull; 出庫到案場：要先有建案件的畫面</li>
+          <li>&bull; 打卡：等 LINE 官方帳號、公司對外 IP 固不固定</li>
+          <li>&bull; 收款比例：老闆之後定，不擋前面幾步</li>
         </ul>
       </div>
     </div>

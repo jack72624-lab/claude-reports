@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>威琳內部系統・功能完全度</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<!--
+  這頁是什麼：12 個功能各做了幾成。2026-10-02 照九站流程重列，取代 架構/系統架構圖.html 的進度條。
+  跟 00-建置進度 的分工：那張講「六大步走到第幾步」，這頁講「每個功能裡的待辦做了幾項」。
+
+  ★ 正本就是這個檔最下面 <script> 裡的 FUNCS（不是 archify 產的圖，rebuild.py 不會碰它）。
+    改狀態＝改那一項的第一個字（ok／part／todo／wait），存檔就好，數字和進度條是頁面自己算的。
+    改完要重推公開站（推法在專案 CLAUDE.md〈冷開場要知道的〉）。
+
+  外觀照 00-建置進度（archify「經典」主題）：色票是從那張圖的 CSS 抄來的，
+  狀態顏色也對到那張圖的圖例——綠＝已完成、灰＝還沒開始、青＝要人決定。
+
+  這頁會推上公開站：原始碼看得到這段註解，所以這裡也不點名哪些錢的名目要避開
+  （清單在專案 CLAUDE.md 的共通三條）；真實密碼、本機路徑也不寫。
+-->
+<style>
+  /* 淺色＝archify 經典主題的 [data-theme="light"]；深色＝同主題的 dark */
+  :root {
+    --bg: #f8fafc;
+    --grid: #e2e8f0;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --dim: #94a3b8;
+    --panel: #ffffff;
+    --border: #e2e8f0;
+    --ok: #059669;
+    --ok-fill: rgba(52, 211, 153, 0.18);
+    --part: #6ee7b7;           /* 做了一部分：同一個綠，調淡，放在實心綠後面 */
+    --todo: #cbd5e1;
+    --todo-ink: #64748b;
+    --wait: #0891b2;
+    --wait-fill: rgba(34, 211, 238, 0.15);
+    --tag-bg: #f1f5f9;
+    --accent: #0891b2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #020617;
+      --grid: #1e293b;
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --panel: #0b1222;
+      --border: #1e293b;
+      --ok: #34d399;
+      --ok-fill: rgba(6, 78, 59, 0.4);
+      --part: #065f46;
+      --todo: #334155;
+      --todo-ink: #94a3b8;
+      --wait: #22d3ee;
+      --wait-fill: rgba(8, 51, 68, 0.4);
+      --tag-bg: #111a2e;
+      --accent: #22d3ee;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #020617; --grid: #1e293b; --ink: #f8fafc; --muted: #94a3b8; --dim: #64748b;
+    --panel: #0b1222; --border: #1e293b; --ok: #34d399; --ok-fill: rgba(6, 78, 59, 0.4);
+    --part: #065f46; --todo: #334155; --todo-ink: #94a3b8; --wait: #22d3ee;
+    --wait-fill: rgba(8, 51, 68, 0.4); --tag-bg: #111a2e; --accent: #22d3ee;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, "PingFang TC", "Noto Sans TC", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 20px 16px 48px; }
+
+  h1 {
+    font-size: 22px; margin: 0 0 4px; font-weight: 700;
+    display: flex; align-items: center; gap: 12px;
+  }
+  h1::before {
+    content: ""; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); flex: none;
+  }
+  .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 18px 24px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+
+  /* ── 頂端總數 ── */
+  .total { padding: 18px 20px; margin-bottom: 16px; }
+  .total-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .big { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
+  .big small { font-size: 15px; color: var(--muted); font-weight: 500; margin-left: 6px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .rule { margin: 12px 0 0; font-size: 12.5px; color: var(--muted); }
+
+  /* 進度條：實心綠＝做好了、淡綠＝做了一部分、青＝等決定、灰＝還沒做 */
+  .bar {
+    display: flex; height: 10px; border-radius: 99px; overflow: hidden;
+    background: var(--todo); margin-top: 12px;
+  }
+  .bar i { display: block; height: 100%; }
+  .bar .ok { background: var(--ok); }
+  .bar .part { background: var(--part); }
+  .bar .wait { background: var(--wait); opacity: .55; }
+  .sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex: none; }
+  .sw.ok { background: var(--ok); }
+  .sw.part { background: var(--part); }
+  .sw.wait { background: var(--wait); opacity: .55; }
+  .sw.todo { background: var(--todo); }
+
+  /* ── 12 列 ── */
+  .rows { display: grid; gap: 10px; }
+  details.row { padding: 0; }
+  details.row > summary {
+    list-style: none; cursor: pointer;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 12px;
+    align-items: baseline;
+  }
+  details.row > summary::-webkit-details-marker { display: none; }
+  details.row > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 14px; }
+  .name { font-weight: 700; font-size: 15.5px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .num { color: var(--dim); font-weight: 500; font-size: 13px; }
+  .step {
+    font-size: 11.5px; font-weight: 500; color: var(--wait);
+    background: var(--wait-fill); border-radius: 6px; padding: 1px 8px;
+  }
+  .score { text-align: right; white-space: nowrap; font-weight: 700; }
+  .score small { color: var(--muted); font-weight: 500; margin-left: 6px; }
+  .row .bar { grid-column: 1 / -1; margin-top: 8px; height: 8px; }
+  .note { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+  .note::after { content: "  點開看細項"; color: var(--dim); }
+  details[open] .note::after { content: ""; }
+
+  .body { border-top: 1px dashed var(--border); padding: 6px 18px 16px; }
+  .grp { margin: 12px 0 4px; font-size: 12px; color: var(--dim); font-weight: 600; letter-spacing: .5px; }
+  ul.items { list-style: none; margin: 0; padding: 0; }
+  ul.items li {
+    display: grid; grid-template-columns: 10px 1fr auto; gap: 10px;
+    align-items: baseline; padding: 5px 0; font-size: 13.5px;
+  }
+  ul.items li .sw { transform: translateY(1px); }
+  ul.items li.todo { color: var(--muted); }
+  .src {
+    font-size: 11px; color: var(--dim); background: var(--tag-bg);
+    border-radius: 5px; padding: 0 6px; white-space: nowrap;
+  }
+  .side { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: var(--tag-bg); }
+  .side h3 { margin: 0 0 4px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+  .side ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+  .side li { margin: 3px 0; }
+  .side li em { font-style: normal; color: var(--dim); }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  @media (max-width: 560px) {
+    .big { font-size: 28px; }
+    details.row > summary { padding: 12px 14px; }
+    .body { padding: 4px 14px 14px; }
+    ul.items li { grid-template-columns: 10px 1fr; }
+    ul.items li .src { grid-column: 2; justify-self: start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>威琳內部系統・功能完全度</h1>
+  <p class="sub">照 2026-09-20 定的九站流程重列（2026-10-02）｜狀態是 2026-09-19 對程式實測的結果，10-02 再抽查過；程式 9/20 之後沒改過</p>
+
+  <section class="panel total" aria-label="總數">
+    <div class="total-head">
+      <div class="big" id="bigPct"></div>
+      <div id="bigCount" style="color:var(--muted)"></div>
+    </div>
+    <div class="bar" id="bigBar" role="img"></div>
+    <div class="legend" id="legend"></div>
+    <p class="rule">% ＝ 做好了 ÷ 全部。做了一部分的只畫淺綠，不算進 %。被推翻的、還沒決定要不要做的，列在各功能最下面，不算分。<br>
+    舊版照九站之前的計畫列了 108 項，算出 48%。九站加了很多新東西要做，所以重列之後項目變多、分數往下掉，做好的那些一項都沒少。</p>
+  </section>
+
+  <div class="rows" id="rows"></div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   正本：12 個功能（對到 功能/00-地基 … 功能/11-LINE窗口 資料夾）
+   每項 [狀態, 文字, 出處]
+     狀態：ok 做好了｜part 做了一部分｜todo 還沒做｜wait 等人決定
+     出處：舊頁編號（01-1 這種＝2026-09-14 儀表板的段-項）、「九站 NN」、日期（那天定的）
+   ['h', '小標'] 只是分組標題，不算分。
+   step：這個功能在 00-建置進度 的哪一步會被動到（沒有就不寫）
+   dropped：被九站推翻、或搬到別列的舊項目 [文字, 為什麼, 出處]，不算分
+   ideas：還沒決定要不要做 [文字, 出處]，不算分
+   ═══════════════════════════════════════════════════════════════════ */
+const FUNCS = [
+  { n: '00', t: '地基', step: '第 4 步「上線前底線」',
+    note: '登入、權限、備份、資安。上線前要補齊的大多在這一列。',
+    items: [
+      ['h', '登入與權限'],
+      ['ok', '帳號密碼登入', '01-1'],
+      ['ok', '登入憑證只存指紋、不存原文', '13-3'],
+      ['ok', '權限逐項可調，改一列資料就生效', '01-2'],
+      ['ok', '身分種類對齊公司實際的五種職位', '01-3'],
+      ['ok', '金額與薪資的過濾寫在資料存取層', '01-4'],
+      ['ok', '不寫 middleware.ts', '01-5'],
+      ['ok', '權限自我檢查程式', '01-6'],
+      ['ok', '可見範圍的單一入口', '04-1'],
+      ['ok', '檢查器加驗資料範圍', '04-2'],
+      ['ok', '開發模式：免登入、右上角切身分', '01-7'],
+      ['ok', '體驗用假資料', '07-11'],
+      ['h', '首頁與設定'],
+      ['ok', '首頁：這週／錢／進行中的案場／要我動手的', '05-8'],
+      ['ok', '用詞規則', '02-5'],
+      ['wait', '導覽只有五項', '02-6'],
+      ['ok', '設定頁分區', '15-1'],
+      ['ok', '看得到系統現在佔了多少硬碟', '15-2'],
+      ['todo', '每個職位看得到什麼（權限表格）', '15-3'],
+      ['todo', '多久沒動就自動登出，改成可以設定', '15-4'],
+      ['todo', '四張只能改資料庫的清單搬進設定頁', '15-9'],
+      ['todo', '備份多久跑一次、留幾份', '15-10'],
+      ['part', '這幾樣刻意不放進設定頁', '15-12'],
+      ['h', '備份與存活'],
+      ['ok', '誤刪要救得回來', '12-8'],
+      ['part', '操作紀錄：21 個會寫資料的地方，10 個有記、11 個還沒', '12-6・10-02 抽查'],
+      ['todo', '每天一份完整備份', '12-1'],
+      ['todo', '備份加密後才離開主機', '12-2'],
+      ['todo', '至少一份備份放在主機以外的地方', '12-4'],
+      ['todo', '每個月真的還原一次', '12-5'],
+      ['todo', '改資料庫結構要有升級機制', '12-3'],
+      ['wait', '資料留多久、什麼時候清', '12-7'],
+      ['h', '資安'],
+      ['part', '對外只走通道，主機上不開任何埠', '13-1'],
+      ['todo', '在通道前面再加一道驗證', '13-2'],
+      ['ok', '登入試太多次就擋', '13-5'],
+      ['todo', '登入失敗要留紀錄', '13-6'],
+      ['part', '密碼規則與離職當天停用', '13-8'],
+      ['ok', '相依套件定期更新', '13-9'],
+      ['todo', '錯誤訊息不吐細節出去', '13-10'],
+      ['ok', '門禁與 Wi-Fi 密碼：照常存、畫面遮起來、誰看過留紀錄', '13-4'],
+      ['todo', '對外開放前先自己打一次', '13-7'],
+      ['h', '第一次上線'],
+      ['wait', '租雲端主機（用哪家還沒定）', '10-02'],
+      ['part', '建全新空庫', '10-1'],
+      ['todo', '刪掉開發帳號', '10-2'],
+      ['todo', '通道設成主機重開機自己起來', '10-4'],
+      ['todo', '搬雲端前確認時區', '10-5'],
+    ],
+    dropped: [
+      ['備份加密（第一次上線那段）', '跟「備份加密後才離開主機」是同一件，併掉', '10-3'],
+    ],
+    ideas: [
+      ['敏感操作二次驗證，先留位置', '舊頁'],
+    ] },
+
+  { n: '01', t: '客戶資料', step: '第 2 步「改脊椎」會動到',
+    note: '客戶與案場主檔都有了。九站在案場上多加來源、規劃書、iCloud 連結。',
+    items: [
+      ['ok', '客戶主檔：一個客戶一份檔', '02-1'],
+      ['ok', '設計公司另有名單，不跟客戶混', '舊頁'],
+      ['ok', '案場主檔：地址、區域、安裝位置', '02-2'],
+      ['ok', '一個客戶可以有很多個案場', '舊頁'],
+      ['todo', '案場多一個「來源」：舊客戶推薦／設計公司推薦／客戶自己找來', '九站 01'],
+      ['todo', '案場上一個「規劃書做了沒」的勾', '九站 01'],
+      ['todo', '案場存 iCloud 資料夾的連結（圖面留在 iCloud，系統只存連結）', '10-02'],
+      ['todo', '跟設計公司的約定，簽約那刻凍結', '08-2'],
+    ],
+    dropped: [],
+    ideas: [
+      ['接案前先看這個客戶：收款天數、過去的案子', 'D3-3'],
+    ] },
+
+  { n: '02', t: '報價單', step: '第 2 步「改脊椎」會動到',
+    note: '九站改最多的一列：報價單變成脊椎、掛在案場上，兩套報價系統重做進來。智能、燈具兩套舊報價系統現在照常在用。',
+    items: [
+      ['todo', '智能報價重做進系統（畫面照舊，價格從設定檔搬進資料表）', '九站 02'],
+      ['todo', '燈具報價重做進系統（照房間列）', '九站 02'],
+      ['todo', '影音、弱電報價單（跟智能同一種版面）', '九站 02'],
+      ['todo', '報價單掛案場，同一類可以有很多版', '九站 02・03'],
+      ['todo', '哪一類簽了，就刪那一類的舊版', '九站 02'],
+      ['part', '簽約那刻單價凍結（資料表已有快照欄位，畫面沒接）', '九站 02'],
+      ['todo', '同一個案子的網路設備只會在一張報價單上（系統擋）', '九站 02'],
+      ['todo', '報價後台：售價、分類、顯示名、折讓、工資、固定文字、公司資料', '九站 02'],
+      ['todo', '給設計公司看：匯出 PDF', '九站 02'],
+    ],
+    dropped: [
+      ['成交單從兩套報價系統單向匯入', '九站改成重做進系統', '舊頁'],
+      ['不做統一料號表，對應在匯入層做', '九站改成報價品項就是料號', '舊頁'],
+      ['每一版報價存快照', '併進「同一類可以有很多版」', '舊頁'],
+      ['成交轉工程：報價快照跟工程編號一起產生', '搬到「工程」：簽任一張報價單，案件就誕生', '08-1'],
+      ['材料清單確認頁', '由「工程」的備料清單取代', '08-3'],
+    ],
+    ideas: [
+      ['設計中心：起案精靈、平面圖放設備、分享頁一條網址', '舊頁'],
+      ['案場規劃書：直接在平面圖上標設備位置', 'D5-1'],
+      ['燈具迴路圖：在平面圖上自己畫迴路', 'D5-2'],
+      ['丈量紀錄：量到的線長數字有地方放', '舊頁'],
+    ] },
+
+  { n: '03', t: '工程', step: '第 2 步「改脊椎」會動到',
+    note: '案場頁、安裝位置、交接都做好了。九站改的是案件要簽約才有、狀態改成里程碑，另外加備料清單、施工階段、驗收。',
+    items: [
+      ['h', '案場頁'],
+      ['ok', '案場頁：找某一個案場', '05-9'],
+      ['ok', '概況分頁', '05-1'],
+      ['ok', '三種身分看同一頁，看到的東西不一樣', '05-6'],
+      ['ok', '智能安裝／燈具安裝分頁', '05-2'],
+      ['h', '案件與里程碑'],
+      ['todo', '簽任一張報價單，案件就誕生、發 WL 編號（不做「成交」鈕）', '九站 04'],
+      ['todo', '簽了沒付訂金標「沒做」，不刪', '九站 04'],
+      ['todo', '案件改成里程碑清單：已簽約、已收訂金、施工中…結案，每格一個日期＋誰', '九站'],
+      ['todo', '施工階段＋每階段注意事項＋每階段可以叫哪幾類料（名單放設定區）', '09-24'],
+      ['h', '備料'],
+      ['ok', '案場箱：這個案場的料放哪', '舊頁'],
+      ['part', '缺料與不夠的提示', '07-8'],
+      ['todo', '照工程類別一類一張備料清單：需要／庫存有／要叫貨', '九站 05'],
+      ['todo', '備料清單多一欄「別案也要」', '九站 05'],
+      ['todo', '總備貨區：所有案場同一個料號加總，能併的併成一張叫貨單', '九站 05'],
+      ['h', '施工與交接'],
+      ['ok', '安裝位置從報價自動帶入，逐位打勾＋拍照', '03-10'],
+      ['ok', '現場照片掛在案場底下', '03-9'],
+      ['ok', '交接事項多列、可指派給人', '03-8'],
+      ['ok', '交接事項／基本資料分頁', '05-7'],
+      ['h', '驗收'],
+      ['todo', '驗收清單照設備類別自動列出，每項兩個勾：已驗收、已教學', '九站 07'],
+      ['todo', '某一類的位置全部裝好，那一項就亮「可驗收」', '九站 06'],
+      ['todo', '驗收簽字就凍結，跟著報價單走（燈具可以先驗先收）', '九站 07'],
+    ],
+    dropped: [
+      ['工程編號是脊椎，所有資料掛它底下', '九站改成報價單是脊椎、案件是容器', '舊頁'],
+      ['六種狀態一條直線：報價中→成交→備料→施工→完工→結案', '改成里程碑清單', '舊頁'],
+      ['維修保固分頁和三項保固', '搬到「送修與保固」', '05-5・15-5～15-7'],
+    ],
+    ideas: [
+      ['出場前檢查表', 'D2-2'],
+      ['只有某些設備要填位置（嵌燈 43 顆沒人要一顆一顆拍）', '舊頁'],
+    ] },
+
+  { n: '04', t: '庫存', step: '第 5 步「庫存上線」',
+    note: '目前最完整的一塊。上線前要補的是盤點、對鼎新 A1 開帳、兩層分類。',
+    items: [
+      ['h', '進貨與現量'],
+      ['ok', '料號主檔', '02-3'],
+      ['ok', '進貨登錄：到貨當下庫存加上去、那批成本寫死', '07-1'],
+      ['part', '進貨單的廠商欄位改成用選的', '07-2'],
+      ['part', '廠商名單', '14-4'],
+      ['ok', '進貨單的廠商名對回名單', '14-5'],
+      ['ok', '現量查詢頁', '07-4'],
+      ['ok', '調撥：公司庫 ↔ 案場箱', '07-5'],
+      ['ok', '進出庫紀錄', '07-6'],
+      ['ok', '庫存只有一本帳（進出流水），現量由流水加總算出來', '10-02 更正'],
+      ['ok', '安全庫存到了就提示：叫貨頁上方「這些該叫了」', 'D2-4'],
+      ['h', '出庫與歸位'],
+      ['ok', '備貨打勾才出庫', '03-3'],
+      ['ok', '出庫當下記單價快照，之後料價漲不影響舊案場', '舊頁'],
+      ['ok', '跟別的案場借料', '03-5'],
+      ['todo', '借料未還清單', '07-12'],
+      ['todo', '修改軌跡標出「這筆有沒有動到錢」', '07-13'],
+      ['ok', '剩料歸位：預設回案場箱，可逐列改回公司庫', '舊頁'],
+      ['ok', '退回廠商', '07-14'],
+      ['ok', '維修庫：拆回來的東西有地方放', '07-9'],
+      ['h', '上線前要補'],
+      ['todo', '鼎新 A1 期初匯入（開帳）', '07-3'],
+      ['wait', '更新版 A1 庫存資料什麼時候拿得到', 'C-4'],
+      ['todo', '盤點單：逐料實數對帳面數，差額寫成調整（「調整」這種異動已經有）', '07-7・09-24'],
+      ['todo', '兩層分類：工程類別（6 個）→ 設備類別，料號只填設備類別', '九站'],
+      ['h', '之後'],
+      ['todo', '散客訂單：設備單獨賣給客戶或小安裝廠商', '09-24'],
+      ['todo', '拍照進出庫：AI 只預填，人按確認才入帳', '09-21'],
+    ],
+    dropped: [],
+    ideas: [
+      ['呆滯料提醒：庫存頁多一個篩選', 'D2-3'],
+      ['料對不起來的當天就處理', 'D2-5'],
+    ] },
+
+  { n: '05', t: '打卡與工作紀錄', step: '',
+    note: '工作紀錄大致做好了，九站要再接幾個小改。打卡卡在公司的 LINE 官方帳號和對外 IP。',
+    items: [
+      ['h', '工作紀錄'],
+      ['ok', '一張紀錄＝一趟工程（日期區間），不是一天一張', '03-1'],
+      ['ok', '人員逐日出勤：誰哪幾天來', '03-2'],
+      ['ok', '人員主檔（含費率歷史）', '02-4'],
+      ['ok', '工作目標多條，現場勾', '舊頁'],
+      ['ok', '事後可修改，留軌跡', '03-7'],
+      ['ok', '工作紀錄畫面不出現任何金額', '03-6'],
+      ['ok', '收工結清：剩料、借料、交接一次結掉', '03-4'],
+      ['h', '九站要接的'],
+      ['todo', '「今天要裝什麼」改照工程類別分組、可折疊', '九站 06'],
+      ['todo', '同案場開下一趟，上一趟的人預設打勾', '九站 06'],
+      ['todo', '位置點「完成」一定要拍完成照，在系統裡畫圈；另一顆鈕拍紀錄照', '九站 06'],
+      ['todo', '工作紀錄列表顯示是安裝還是維修', '九站 06'],
+      ['todo', '安裝教學：每條料旁邊「怎麼裝」直接打開（掛料號，內容放設定區）', '九站之外'],
+      ['h', '打卡'],
+      ['wait', 'LINE 打卡（等公司的 LINE 官方帳號）', '06-1'],
+      ['wait', '公司對外 IP 固不固定（打卡不能靠 IP 驗證）', 'C-3'],
+      ['todo', '出勤月報', '06-2'],
+      ['h', '手機'],
+      ['todo', '手機版另開一趟從零設計（還沒開始）', '03-11'],
+    ],
+    dropped: [],
+    ideas: [
+      ['丈量紀錄：量到的數字誰之後會來拿', '舊頁'],
+    ] },
+
+  { n: '06', t: '成本', step: '',
+    note: '成本的算法只有一份，已經做好。缺收款那一頭、廠商主頁；零用金排最後。',
+    items: [
+      ['h', '每趟工'],
+      ['ok', '成本只在一處算，不存第二份', '舊頁'],
+      ['ok', '工資＝出勤天數 × 當時費率，費率有歷史', '舊頁'],
+      ['ok', '用料＝出庫數量 × 出庫時的單價快照', '舊頁'],
+      ['ok', '包案計費', '06-3'],
+      ['part', '成本參數八項', '15-8'],
+      ['part', '雇主負擔率', 'C-1'],
+      ['part', '燈具安裝師傅的計算方式', 'C-2'],
+      ['h', '案場彙總與欠款'],
+      ['part', '成本與收款分頁（等收款做好）', '05-4'],
+      ['ok', '外包師傅主頁', '14-3'],
+      ['part', '記下欠外包師傅多少', '14-2'],
+      ['ok', '應付款的地基：一張通用事件表', '14-8'],
+      ['ok', '記下欠廠商多少', '14-6'],
+      ['part', '廠商跟外包兩種欠錢用同一套記法', '14-1'],
+      ['todo', '廠商主頁', '14-7'],
+      ['todo', '缺料回報連到廠商主頁', '14-9'],
+      ['h', '排最後'],
+      ['todo', '零用金／簡易記帳（現在用 104 企業大師）', '09-24'],
+    ],
+    dropped: [],
+    ideas: [
+      ['間接成本怎麼分攤到單一案場（舊頁就寫先別做，這次不算分）', '14-10'],
+      ['報價估的跟實際做完的對一次（要先有「估成本」這一步）', 'D1-5'],
+      ['做到一半就知道這趟賺不賺', 'D1-1'],
+      ['案場負責人抽成（後期）', 'D5-3'],
+    ] },
+
+  { n: '07', t: '增減單', step: '第 2 步「改脊椎」會動到',
+    note: '草稿自動產生、客戶簽了才算數，這兩件都有了。九站要它驗收後還能再開一張。',
+    items: [
+      ['ok', '安裝比報價多或少，自動變成增減單草稿', '05-3'],
+      ['ok', '客戶簽認了才算數', '舊頁'],
+      ['ok', '收款金額＝原報價＋簽認過的增減單', '舊頁'],
+      ['part', '增減單已經掛在報價單上；驗收簽字後要能再開一張（現在一張報價單只能有一張）', '九站 07・10-02 抽查'],
+      ['todo', '草稿顯示在案件頁和客戶頁', '九站 06'],
+    ],
+    dropped: [],
+    ideas: [
+      ['追加的工動工前先拿到客戶同意', 'D1-3'],
+      ['增減單卡在誰那邊、卡幾天了', 'D1-4'],
+      ['線上簽認：客戶手機點簽，不用紙本', '舊頁'],
+    ] },
+
+  { n: '08', t: '收款', step: '第 2 步「改脊椎」會動到',
+    note: '資料表有了，畫面一個都還沒做。比例老闆之後定，先做三段。',
+    items: [
+      ['todo', '每張報價單自己的收款計畫：訂金／工程款／尾款', '09-1・九站 08'],
+      ['wait', '預設比例的數字（每種工程一組，老闆之後定）', '10-02'],
+      ['todo', '收款登錄：登記訂金後，「已收訂金」自動亮', '09-2'],
+      ['todo', '老闆看每個案子：三格實心空心＋金額小字', '九站 08'],
+      ['todo', '增減的錢併進尾款帳單；減得比尾款多就標紅', '九站 08'],
+      ['todo', '付給廠商、外包的登錄', '舊頁'],
+      ['todo', '公司抬頭與銀行帳號放設定頁', '15-11'],
+    ],
+    dropped: [],
+    ideas: [
+      ['手上還有多少沒做完的錢：案場清單頂端一個數字', 'D1-2'],
+      ['平均幾天收到錢，按客戶分', 'D1-6'],
+    ] },
+
+  { n: '09', t: '送修與保固', step: '',
+    note: '送修流程和保固計算都做好了。九站要把客戶報修接進來。',
+    items: [
+      ['ok', '送修流程：拆回來的東西走到哪一步，看得到', '07-10'],
+      ['ok', '案場頁的維修保固／圖檔分頁', '05-5'],
+      ['ok', '保固從同一個料號在這個案場第一次安裝那天起算', '08-18'],
+      ['part', '增減單上寫的保固要跟系統算的對得起來', '15-5'],
+      ['todo', '快到期提前幾天提醒', '15-6'],
+      ['todo', '新增料號時的預設保固月數', '15-7'],
+      ['part', '報修排一趟維修：「今天要裝什麼」換成這個案場還沒處理的報修單（維修類的工作紀錄已經有）', '九站 06'],
+      ['todo', '行政首頁「今天新報修 N 件」，自動標保固內／已過保', '九站 09'],
+    ],
+    dropped: [],
+    ideas: [
+      ['回修率按設備型號統計', 'D2-1'],
+      ['完工三個月後主動回訪一次', 'D3-1'],
+    ] },
+
+  { n: '10', t: '客戶登入', step: '',
+    note: '還沒開始。九站定了：用網頁登入，不給密碼，點 LINE 收到的連結就登入。',
+    items: [
+      ['todo', '用連結登入：一次有效 30 分鐘、這支手機記 90 天，不給密碼', '九站 09'],
+      ['todo', '第一版：行政按「複製連結」，貼進原本的 LINE 群', '九站 09'],
+      ['todo', '簽約就開客戶帳號，客戶頁跟著案子長', '11-2・九站 09'],
+      ['part', '外部權限另開一套命名', '04-3'],
+      ['ok', '客戶永遠看不到內部金額，過濾寫在資料層', '舊頁'],
+      ['todo', '設備教學：每個設備類別一頁，影片連結＋排除問答', '11-3'],
+      ['todo', '每台設備的保固到期日', '舊頁'],
+      ['todo', '報修：選設備類別、寫狀況、附照片', '11-5'],
+      ['todo', '客戶在系統裡簽約（後期）', '九站 04'],
+    ],
+    dropped: [
+      ['結案資料包', '改成客戶頁跟著案子長，驗收後自己多出設備清單和保固', '11-4'],
+    ],
+    ideas: [
+      ['設計中心分享頁：一條網址，金額、型號可開關', '舊頁'],
+      ['客戶在圖上留言標點', '舊頁'],
+      ['第二版：AI 客服（只幫忙查，最後一律導到報修）', '九站 09'],
+    ] },
+
+  { n: '11', t: 'LINE 窗口', step: '',
+    note: '還沒開始。群組小幫手的第一步「只收不發」不用等老闆，其他都要等公司的官方帳號。',
+    items: [
+      ['part', '一個 LINE 帳號對到系統裡的哪個人，只認一次（綁定表已建）', '舊頁'],
+      ['todo', '群組小幫手第一步：只收、不發（先在測試群組）', '10-01'],
+      ['wait', '群組小幫手第二步：通知負責的人（要老闆同意、要公司的官方帳號）', '10-01'],
+      ['wait', '公司有沒有 LINE 官方帳號', '10-01'],
+      ['todo', '官方帳號自動發客戶登入連結（第二步）', '九站 09'],
+      ['todo', '報修的入口也走 LINE', '九站 09'],
+    ],
+    dropped: [
+      ['LINE 打卡', '搬到「打卡與工作紀錄」', '06-1'],
+      ['客戶用 LINE 登入', '九站改成網頁登入，LINE 只送連結', '11-1'],
+      ['結案資料包從 LINE 送', '結案資料包取消了', '舊頁'],
+    ],
+    ideas: [
+      ['系統裡放一個 AI：回客人、幫老闆整理、找 bug，三件拆開評', '舊頁'],
+    ] },
+];
+
+/* ── 以下是畫面，改狀態不用動 ── */
+const LABEL = { ok: '做好了', part: '做了一部分', todo: '還沒做', wait: '等人決定' };
+const ORDER = ['ok', 'part', 'wait', 'todo'];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// 數一列：只數有狀態的項目，小標不算
+function count(items) {
+  const c = { ok: 0, part: 0, todo: 0, wait: 0, all: 0 };
+  for (const it of items) if (it[0] !== 'h') { c[it[0]]++; c.all++; }
+  return c;
+}
+const pct = c => c.all ? Math.round(c.ok / c.all * 100) : 0;
+
+// 進度條：照 ORDER 疊色塊，寬度是各狀態佔全部的比例；灰底就是「還沒做」
+function bar(c) {
+  const segs = ['ok', 'part', 'wait'].map(k =>
+    c[k] ? `<i class="${k}" style="width:${(c[k] / c.all * 100).toFixed(2)}%"></i>` : '').join('');
+  const label = ORDER.map(k => `${LABEL[k]} ${c[k]}`).join('、');
+  return `<div class="bar" role="img" aria-label="${label}">${segs}</div>`;
+}
+
+// 總數
+const total = { ok: 0, part: 0, todo: 0, wait: 0, all: 0 };
+for (const f of FUNCS) { const c = count(f.items); for (const k in total) total[k] += c[k]; }
+document.getElementById('bigPct').innerHTML = `${pct(total)}%<small>完成</small>`;
+document.getElementById('bigCount').textContent = `${total.all} 項裡做好 ${total.ok} 項`;
+document.getElementById('bigBar').outerHTML = bar(total);
+document.getElementById('legend').innerHTML = ORDER.map(k =>
+  `<span><i class="sw ${k}"></i>${LABEL[k]} ${total[k]}</span>`).join('');
+
+// 12 列
+document.getElementById('rows').innerHTML = FUNCS.map(f => {
+  const c = count(f.items);
+  const list = [];
+  let open = false;
+  for (const it of f.items) {
+    if (it[0] === 'h') {
+      if (open) list.push('</ul>');
+      list.push(`<div class="grp">${esc(it[1])}</div><ul class="items">`);
+      open = true;
+      continue;
+    }
+    if (!open) { list.push('<ul class="items">'); open = true; }
+    list.push(`<li class="${it[0]}"><i class="sw ${it[0]}"></i><span><span class="sr">${LABEL[it[0]]}：</span>${esc(it[1])}</span><span class="src">${esc(it[2] || '')}</span></li>`);
+  }
+  if (open) list.push('</ul>');
+
+  const side = (title, arr, fmt) => arr && arr.length
+    ? `<div class="side"><h3>${title}</h3><ul>${arr.map(fmt).join('')}</ul></div>` : '';
+
+  return `<details class="row panel">
+    <summary>
+      <div class="name"><span class="num">${f.n}</span>${esc(f.t)}${f.step ? `<span class="step">${esc(f.step)}</span>` : ''}</div>
+      <div class="score">${pct(c)}%<small>${c.ok}／${c.all}</small></div>
+      ${bar(c)}
+      <div class="note">${esc(f.note)}</div>
+    </summary>
+    <div class="body">
+      ${list.join('')}
+      ${side('被推翻或搬走的（不算分）', f.dropped, d => `<li>${esc(d[0])}<em>　→ ${esc(d[1])}（${esc(d[2])}）</em></li>`)}
+      ${side('還沒決定要不要做（不算分）', f.ideas, d => `<li>${esc(d[0])}<em>　${esc(d[1])}</em></li>`)}
+    </div>
+  </details>`;
+}).join('');
+</script>
+</body>
+</html>
