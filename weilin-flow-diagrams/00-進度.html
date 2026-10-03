@@ -62,6 +62,12 @@
     公司真的開始用了，才在那條補第三格日期、亮綠燈。
     FUNCS 的字改了、連不到了，頁面最上面會跳一條警告列，推站前看得到。
     10-02 Jack 說進度不要綠色；10-03 他要「上線亮綠燈」，所以綠只用在「已上線」，其他照進度的墨／灰。
+    同一天晚上：第一版做成一個功能一張卡，Jack 說不要，要跟 01 部署架構一樣的方框、點開往右展開細節；
+    他選「分組」（虛線框圈住相關功能、不畫箭頭）。分哪幾組在 script 的 GROUPS；卡片版在
+    data/.bak/威琳-功能方塊圖-20261003/。
+    接著 Jack：進度頁「跟功能頁的風格再靠近一點，但不用這樣展開」。所以進度頁也換成格線底、虛線框，
+    下半 12 列照同一份 GROUPS 分框（同樣的組、顏色、順序），點一列還是在原地往下打開，不用右邊滑出來那個。
+    改之前那版是同資料夾的 00-進度-進度頁改樣子前.html。
 
   這頁會推上公開站：原始碼看得到這段註解，所以這裡也不點名哪些錢的名目要避開
   （清單在專案 CLAUDE.md 的共通三條）；真實密碼、本機路徑也不寫。
@@ -92,6 +98,9 @@
     --next: #c0392b;           /* 下一步：紅 */
     --next-fill: #fbeae8;
     --live: #15803d;           /* 功能頁「已上線」：綠，只用在這一個意思（10-03） */
+    /* 功能頁方框圖的群組色：照 01 部署架構的 archify 色票，淺色版各往深一階（標籤字要在白底讀得清楚）。
+       沒有綠：綠在這頁只代表「已上線」。 */
+    --g-cyan: #0e7490; --g-amber: #b45309; --g-violet: #7c3aed; --g-rose: #be123c; --g-slate: #475569;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -113,6 +122,7 @@
       --next: #ff6b5e;
       --next-fill: #3f1f1b;
       --live: #4ade80;
+      --g-cyan: #22d3ee; --g-amber: #fbbf24; --g-violet: #a78bfa; --g-rose: #fb7185; --g-slate: #94a3b8;
     }
   }
   :root[data-theme="dark"] {
@@ -120,6 +130,7 @@
     --border: #1e293b; --tag-bg: #131d31; --todo-ink: #94a3b8; --accent: #ffffff;
     --ok: #f5f5f7; --ok-fill: #2c2c2f; --part: #6e6e73; --todo: #3a3a3d; --wait: #e0a04a;
     --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b; --live: #4ade80;
+    --g-cyan: #22d3ee; --g-amber: #fbbf24; --g-violet: #a78bfa; --g-rose: #fb7185; --g-slate: #94a3b8;
   }
 
   * { box-sizing: border-box; }
@@ -174,19 +185,19 @@
   /* ── 上半：6 步 ── */
   .now { margin-bottom: 14px; }
 
-  /* 兩段：上線前 4 步、上線後 2 步；比例 2:1 讓每張卡一樣寬 */
-  .phases { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
-  /* 標籤一列、卡片吃掉剩下的高，左右兩段的卡片才會一樣高 */
-  .phase { display: grid; grid-template-rows: auto 1fr; }
-  .phase-label { font-size: 12px; color: var(--dim); margin: 0 0 6px 2px; }
-  .phase-label::before { content: "— "; }
-  .cards { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 10px; }
+  /* 兩段：上線前 4 步、上線後 2 步，各一個虛線框（10-03 晚 Jack：進度頁跟功能頁的樣子靠近一點）。
+     格線底、虛線框共用功能頁的 .board／.grp-frame／.nodes。
+     桌機 6 欄（4＋2，六張卡一樣寬、兩框同一列）；平板 4 欄（上線後那框佔左半，卡片跟上面對齊）；手機見 .board 的手機版。
+     框撐滿同一列的高，卡片再吃掉框裡剩下的高，兩框的卡片才會一樣高。 */
+  .board.steps { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .board.steps .grp-frame { display: flex; flex-direction: column; }
+  .board.steps .nodes { flex: 1; }
 
   button.stepc {
     appearance: none; font: inherit; color: inherit; text-align: left;
     background: var(--panel);
-    border: 1px solid var(--border);   /* 四邊同粗；狀態靠整圈框色，不再加粗頂邊（Jack 10-02） */
-    border-radius: 12px;
+    border: 1.5px solid var(--border);   /* 四邊同粗；狀態靠整圈框色，不再加粗頂邊（Jack 10-02）。1.5px 跟功能頁的方框一樣 */
+    border-radius: 6px;
     padding: 12px;
     cursor: pointer;
     display: flex; flex-direction: column; gap: 3px;
@@ -198,8 +209,9 @@
   button.stepc[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
   button.stepc.done { border-color: var(--ok); }
   button.stepc.next { border-color: var(--next); background: var(--next-fill); }
-  .stepc .top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
-  .stepc .k { font-size: 12px; color: var(--dim); }
+  /* 放進虛線框後卡片窄了一點（桌機約 145px）：擠不下時狀態標籤換到下一行，「第 N 步」不拆開 */
+  .stepc .top { display: flex; justify-content: space-between; align-items: center; gap: 2px 6px; flex-wrap: wrap; }
+  .stepc .k { font-size: 12px; color: var(--dim); white-space: nowrap; }
   .stepc .t { font-weight: 700; font-size: 15px; }
   .stepc .s { font-size: 12px; color: var(--muted); }
   .stepc .you { font-size: 12px; color: var(--wait); display: flex; gap: 6px; align-items: baseline; }
@@ -254,11 +266,19 @@
     border-radius: 99px; padding: 2px 12px;
   }
 
-  /* ── 12 列 ── */
+  /* ── 12 列 ──
+     10-03 晚：跟功能頁同一套分組框（GROUPS）、同樣的顏色和順序；框裡還是一列一列、點了在原地往下打開
+     （Jack：「不用這樣展開」＝不要功能頁那種右邊滑出來的）。列的框線用群組色、底色淡淡帶一點，跟功能頁的方框一樣。 */
+  .board.rows-board { grid-template-columns: 1fr; }
   .rows { display: grid; gap: 10px; }
-  details.row { padding: 0; transition: opacity .2s ease; }
+  details.row {
+    padding: 0; transition: opacity .2s ease, box-shadow .15s;
+    border: 1.5px solid var(--gc); border-radius: 6px;
+    background: color-mix(in srgb, var(--gc) 5%, var(--panel));
+  }
+  details.row .num { color: var(--gc); font-weight: 700; }
   details.row.dim { opacity: .35; }
-  details.row.hit { border-color: var(--accent); }
+  details.row.hit { box-shadow: 0 0 0 3px var(--gc); }
   details.row > summary {
     list-style: none; cursor: pointer;
     padding: 14px 18px;
@@ -315,14 +335,102 @@
     background: var(--next-fill); color: var(--next); font-size: 13px;
   }
   .feat-warn ul { margin: 4px 0 0; padding-left: 18px; }
-  /* 手機一欄、寬一點兩欄；卡片高低不一，靠上對齊就好 */
-  .feat-grid { display: grid; grid-template-columns: 1fr; gap: 12px; align-items: start; }
-  @media (min-width: 760px) { .feat-grid { grid-template-columns: 1fr 1fr; } }
-  .fcard { padding: 16px 18px; }
-  .fcard-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-  .fcard h3 { margin: 0; font-size: 15.5px; font-weight: 700; display: flex; align-items: baseline; gap: 10px; }
-  .fcount { font-size: 12px; color: var(--muted); white-space: nowrap; }
-  .fcard .lead { margin: 4px 0 10px; font-size: 12.5px; color: var(--muted); }
+  /* ── 功能頁的方框圖（10-03 晚改）──
+     Jack 看了卡片版：「我要每個功能都是這樣的方塊，點開來就會往右展開細節」，指的是 01 部署架構那種圖。
+     照它的樣子：40px 格線底、虛線群組框（標籤在左上、用群組色）、有色框線＋淡色填底的方框、左上角小編號。
+     Jack 選「分組」：不畫箭頭，用虛線框把相關的功能圈在一起。分哪幾組在 script 的 GROUPS。
+     桌機 4 欄：群組佔幾欄＝裡面有幾個方框，所以每個方框差不多一樣寬；手機一組一列、方框兩個一排。 */
+  .g-cyan { --gc: var(--g-cyan); }
+  .g-amber { --gc: var(--g-amber); }
+  .g-violet { --gc: var(--g-violet); }
+  .g-rose { --gc: var(--g-rose); }
+  .g-slate { --gc: var(--g-slate); }
+
+  .board {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;
+    padding: 18px; border: 1px solid var(--border); border-radius: 12px;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .grp-frame {
+    grid-column: span var(--span);
+    padding: 10px 12px 12px; border: 1.5px dashed var(--gc); border-radius: 12px;
+    background: color-mix(in srgb, var(--gc) 4%, transparent);
+  }
+  .grp-label { font-size: 12px; font-weight: 700; color: var(--gc); margin: 0 0 8px; }
+  .nodes { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; }
+
+  /* 方框本身是按鈕：底色疊在 --panel 上是實色，蓋住後面的格線（01 用一層 mask 做同一件事） */
+  button.node {
+    appearance: none; font: inherit; color: var(--ink); cursor: pointer;
+    position: relative; min-height: 96px; padding: 22px 10px 12px; border-radius: 6px;
+    border: 1.5px solid var(--gc); background: color-mix(in srgb, var(--gc) 10%, var(--panel));
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    text-align: center; transition: box-shadow .15s;
+  }
+  button.node:hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--gc) 22%, transparent); }
+  button.node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.node[aria-expanded="true"] { box-shadow: 0 0 0 3px var(--gc); }
+  .node .no { position: absolute; top: 5px; left: 8px; font-size: 11px; font-weight: 700; color: var(--gc); }
+  /* 右上角小箭頭：告訴人這格點得開、會往右邊開 */
+  .node .chev { position: absolute; top: 7px; right: 7px; width: 12px; height: 12px; color: var(--gc); }
+  .node .nt { font-size: 14px; font-weight: 700; line-height: 1.35; }
+  .node .nc { font-size: 12px; color: var(--muted); }
+  /* 一條一顆小燈，排在框底；燈的意思跟上面的說明一樣 */
+  .node .dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; margin-top: 3px; max-width: 150px; }
+  .node .dots .lamp { width: 7px; height: 7px; }
+  .node .dots .lamp.live { box-shadow: 0 0 0 2px color-mix(in srgb, var(--live) 25%, transparent); }
+
+  /* 右邊展開的細項。桌機夠寬（≥1180）時整頁往左讓位，點的那格不會被蓋住；
+     中等寬度直接疊在上面；手機改成從下面滑上來（見下面 max-width: 759px）。 */
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 20; width: min(400px, 92vw);
+    background: var(--panel); border-left: 3px solid var(--gc);
+    box-shadow: -12px 0 32px rgba(15, 23, 42, .14);
+    padding: 20px 20px 32px; overflow-y: auto; overscroll-behavior: contain;
+    transform: translateX(100%); visibility: hidden;
+    transition: transform .24s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .24s;
+  }
+  .drawer.open { transform: none; visibility: visible; transition: transform .24s cubic-bezier(.2, .8, .2, 1), visibility 0s; }
+  .d-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .d-grp { font-size: 12px; font-weight: 700; color: var(--gc); }
+  .drawer h2 { margin: 2px 0 0; font-size: 18px; display: flex; align-items: baseline; gap: 10px; }
+  .drawer h2:focus { outline: none; }
+  .d-close {
+    appearance: none; flex: none; width: 32px; height: 32px; display: grid; place-items: center;
+    border: 1px solid var(--border); border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer;
+  }
+  .d-close:hover { color: var(--ink); border-color: var(--dim); }
+  .d-close svg { width: 14px; height: 14px; }
+  .drawer .lead { margin: 10px 0 4px; font-size: 13px; color: var(--muted); }
+  .d-count { font-size: 12.5px; color: var(--muted); margin: 0 0 12px; }
+  .scrim { display: none; }
+  body { transition: padding-right .24s cubic-bezier(.2, .8, .2, 1); }
+  @media (min-width: 1180px) { body.d-open { padding-right: 400px; } }
+
+  @media (max-width: 759px) {
+    .board { grid-template-columns: 1fr; padding: 12px; gap: 12px; }
+    .grp-frame { grid-column: auto; }
+    .nodes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .drawer {
+      top: auto; left: 0; width: auto; max-height: 80vh;
+      border-left: 0; border-top: 3px solid var(--gc); border-radius: 16px 16px 0 0;
+      box-shadow: 0 -12px 32px rgba(15, 23, 42, .18);
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+      transform: translateY(100%);
+    }
+    /* 手機才有遮罩：底下那半頁變暗，點一下就關 */
+    .scrim { display: block; position: fixed; inset: 0; z-index: 19; background: rgba(15, 23, 42, .35);
+      opacity: 0; visibility: hidden; transition: opacity .2s, visibility 0s linear .2s; }
+    .scrim.open { opacity: 1; visibility: visible; transition: opacity .2s, visibility 0s; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .drawer, .drawer.open, .scrim, .scrim.open, body, button.node { transition: none; }
+  }
+
   ul.uses { list-style: none; margin: 0; padding: 8px 0 0; border-top: 1px dashed var(--border); }
   ul.uses li {
     display: grid; grid-template-columns: 10px 1fr; gap: 10px;
@@ -335,12 +443,14 @@
 
   /* 平板：兩段上下疊，卡片維持 4 欄（上線後那段的 2 張只佔左半，寬度跟上面對齊） */
   @media (max-width: 900px) {
-    .phases { grid-template-columns: 1fr; }
-    .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .board.steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
-  /* 手機：卡片 2 欄 */
+  /* 手機：兩框上下疊、框裡卡片 2 欄（卡片 2 欄是 .nodes 的手機版）。
+     要寫在上面 900px 那段後面：兩段都是 .board.steps，後寫的才蓋得過 */
+  @media (max-width: 759px) {
+    .board.steps { grid-template-columns: 1fr; }
+  }
   @media (max-width: 600px) {
-    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .ctx { grid-template-columns: 1fr; }
   }
   @media (max-width: 560px) {
@@ -361,7 +471,7 @@
 <!-- 功能頁（?view=功能 才露出來；內容全由下面 script 的 USES 算出來） -->
 <div id="featView" hidden>
   <h1>威琳內部系統・功能</h1>
-  <p class="sub">系統裡有哪些功能、每個功能大家會用到什麼。燈號：<span class="nw"><span class="lamp live"></span> 已上線、公司在用</span>　<span class="nw"><span class="lamp built"></span> 做好了、還沒開始用</span>　<span class="nw"><span class="lamp notyet"></span> 還沒好</span></p>
+  <p class="sub">系統裡有哪些功能。點任一個方框，會展開它底下大家會用到什麼。燈號：<span class="nw"><span class="lamp live"></span> 已上線、公司在用</span>　<span class="nw"><span class="lamp built"></span> 做好了、還沒開始用</span>　<span class="nw"><span class="lamp notyet"></span> 還沒好</span></p>
 
   <section class="panel total" aria-label="總數">
     <div class="total-head">
@@ -372,8 +482,25 @@
     <div class="legend" id="featLegend"></div>
   </section>
 
-  <div class="feat-grid" id="featGrid"></div>
+  <div class="board" id="featBoard"></div>
   <p class="rule">燈號是從「進度」分頁的清單算出來的：一條連到的細項全部做好了，就亮「做好了」；公司真的開始用，才亮綠燈。還沒列進進度清單的，先算還沒好。</p>
+
+  <!-- 點方框才滑出來；內容由 script 的 openDrawer() 填 -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-labelledby="dTitle">
+    <div class="d-head">
+      <div>
+        <div class="d-grp" id="dGrp"></div>
+        <h2 id="dTitle" tabindex="-1"></h2>
+      </div>
+      <button type="button" class="d-close" id="dClose" aria-label="關閉">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>
+      </button>
+    </div>
+    <p class="lead" id="dLead"></p>
+    <div class="d-count" id="dCount"></div>
+    <ul class="uses" id="dList"></ul>
+  </aside>
 </div>
 
 <div id="progView">
@@ -382,7 +509,7 @@
 
   <h2><span class="no">一</span>走到哪一步</h2>
   <section class="panel note-card now" id="now" aria-label="現在在哪"></section>
-  <div class="phases" id="phases"></div>
+  <div class="board steps" id="phases"></div>
   <div class="ctx">
     <section class="panel note-card" id="why" aria-label="為什麼是這個順序"></section>
     <section class="panel note-card" id="wait" aria-label="還在等的"></section>
@@ -405,7 +532,7 @@
   </section>
 
   <div class="focus" id="focus" role="status"><span></span><button type="button" id="focusOff">看全部</button></div>
-  <div class="rows" id="rows"></div>
+  <div class="board rows-board" id="rows"></div>
 </div>
 </div>
 
@@ -835,8 +962,9 @@ const FUNCS = [
                  空陣列＝進度清單裡還沒有這一項，先算還沒好。
      上線日期：公司真的開始用了才補第三格（例 '2026-11-15'），補了亮綠燈。
    燈怎麼算只寫在 lampOf()：有上線日期→綠｜連到的全部 ok→墨｜其他→空心圈。
-   t：卡片標題跟 FUNCS 不一樣時才寫（00 的「地基」對公司的人太抽象）。
-   顯示順序＝這個陣列的順序；00 放最後，大家天天碰的功能先看。
+   t：方框標題跟 FUNCS 不一樣時才寫（00 的「地基」對公司的人太抽象）。
+   lead：點開方框後，細項上面那一句。
+   畫在哪一框、框裡的順序看 GROUPS（在下面畫面那段），不看這個陣列的順序。
    字照頁面規則：白話、還沒定的寫「待決定」、不寫錢的名目。
    ═══════════════════════════════════════════════════════════════════ */
 const USES = [
@@ -970,7 +1098,24 @@ const USES = [
     ] },
 ];
 
+/* 12 個功能怎麼分組（Jack 10-03 選「分組」、不畫箭頭）。功能頁的方框圖、進度頁下半的 12 列都照這份畫。
+   c＝群組色（CSS 的 .g-*，沒有綠）；ns＝框裡放哪幾個功能、照這個順序排。
+   每個功能要剛好放在一組；漏放或放兩組，頁面最上面的警告列會講。 */
+const GROUPS = [
+  { label: '接案到完工', c: 'cyan', ns: ['01', '02', '03', '07'] },
+  { label: '倉庫與現場', c: 'amber', ns: ['04', '05'] },
+  { label: '錢', c: 'violet', ns: ['06', '08'] },
+  { label: '售後與客戶', c: 'rose', ns: ['09', '10', '11'] },
+  { label: '整套系統共用', c: 'slate', ns: ['00'] },
+];
+
 /* ── 以下是畫面，改狀態不用動 ── */
+const warns = [];   // 資料對不上的地方都收在這，最後一起顯示在頁面最上面（兩種看法都看得到）
+for (const f of FUNCS) {
+  const k = GROUPS.filter(g => g.ns.includes(f.n)).length;
+  if (k !== 1) warns.push(`功能 ${f.n} ${k ? `放進了 ${k} 組` : '沒放進任何一組'}，進度頁和功能頁會${k ? '重複' : '少一個'}（改 GROUPS）`);
+}
+for (const g of GROUPS) for (const n of g.ns) if (!FUNCS.some(f => f.n === n)) warns.push(`「${g.label}」組裡的 ${n} 在進度清單找不到`);
 const LABEL = { ok: '做好了', part: '做了一部分', todo: '還沒做', wait: '等人決定' };
 const ORDER = ['ok', 'part', 'wait', 'todo'];
 const ST_LABEL = { done: '完成', next: '下一步', todo: '還沒開始' };
@@ -1019,10 +1164,11 @@ function card(s) {
     <span class="fn">${c ? `功能 ${s.funcs.join('・')}｜做好 ${c.ok}／${c.all}` : esc(s.fnNote || '')}</span>
   </button>`;
 }
-$('phases').innerHTML = PHASES.map(p => `<div class="phase">
-  <div class="phase-label">${esc(p.label)}</div>
-  <div class="cards" style="--n:${p.steps.length}">${p.steps.map(k => card(STEPS.find(s => s.k === k))).join('')}</div>
-</div>`).join('');
+// 一段一個虛線框（灰），--span＝這框佔幾欄＝裡面幾步
+$('phases').innerHTML = PHASES.map(p => `<section class="grp-frame g-slate" style="--span:${p.steps.length};--n:${p.steps.length}" aria-label="${esc(p.label)}">
+  <div class="grp-label">${esc(p.label)}</div>
+  <div class="nodes">${p.steps.map(k => card(STEPS.find(s => s.k === k))).join('')}</div>
+</section>`).join('');
 
 /* ── 下半：總數 ── */
 const total = sum();
@@ -1032,8 +1178,8 @@ $('bigBar').outerHTML = bar(total);
 $('legend').innerHTML = ORDER.map(k =>
   `<span><i class="sw ${k}"></i>${LABEL[k]} ${total[k]}</span>`).join('');
 
-/* ── 下半：12 列 ── */
-$('rows').innerHTML = FUNCS.map(f => {
+/* ── 下半：12 列，照 GROUPS 分框（跟功能頁同樣的組、顏色、順序） ── */
+function rowHtml(f) {
   const c = count(f.items);
   const st = stepOf(f.n);
   const list = [];
@@ -1067,7 +1213,11 @@ $('rows').innerHTML = FUNCS.map(f => {
       ${side('還沒決定要不要做（不算分）', f.ideas, d => `<li>${esc(d[0])}</li>`)}
     </div>
   </details>`;
-}).join('');
+}
+$('rows').innerHTML = GROUPS.map(g => `<section class="grp-frame g-${g.c}" style="--span:1" aria-label="${esc(g.label)}">
+  <div class="grp-label">${esc(g.label)}</div>
+  <div class="rows">${g.ns.map(n => FUNCS.find(f => f.n === n)).filter(Boolean).map(rowHtml).join('')}</div>
+</section>`).join('');
 
 /* ── 點一步 → 下半亮出那一步的功能，其他變淡；再點一次或按「看全部」恢復 ── */
 let cur = null;
@@ -1102,7 +1252,6 @@ $('focusOff').addEventListener('click', () => { cur = null; update(); });
 
 /* ── 功能頁（?view=功能）── 兩種看法都會算一次，連不到的警告列在進度頁也看得到 */
 const LAMP_LABEL = { live: '已上線', built: '做好了', notyet: '還沒好' };
-const warns = [];
 
 // 一條「大家會用到的」亮哪個燈。唯一入口：卡片、總數、警告都走這裡。
 // 先逐條對連結（就算已上線也對，FUNCS 改字之後才抓得到），再決定燈。
@@ -1124,22 +1273,83 @@ function lampOf(n, use) {
   return allOk ? 'built' : 'notyet';
 }
 
+// 方框圖照 GROUPS 分組（定義在 USES 下面，進度頁下半也用同一份）。
+// 先把每個功能每一條的燈算好，方框、總數、右邊細項都讀這一份
 const tally = { live: 0, built: 0, notyet: 0, all: 0 };
-$('featGrid').innerHTML = USES.map(u => {
+const feat = new Map();
+for (const u of USES) {
   const f = FUNCS.find(x => x.n === u.n);
   if (!f) warns.push(`USES 的 ${u.n} 在進度清單裡找不到這個功能`);
   const rows = u.items.map(it => ({ it, st: lampOf(u.n, it) }));
   for (const r of rows) { tally[r.st]++; tally.all++; }
-  const done = rows.filter(r => r.st !== 'notyet').length;
-  return `<section class="panel fcard" aria-label="${esc(u.t || (f && f.t) || u.n)}">
-    <div class="fcard-head">
-      <h3><span class="num">${u.n}</span>${esc(u.t || (f && f.t) || '')}</h3>
-      <span class="fcount">做好 ${done}／${rows.length}</span>
-    </div>
-    <p class="lead">${esc(u.lead)}</p>
-    <ul class="uses">${rows.map(r => `<li class="${r.st}"><i class="lamp ${r.st}"></i><span><span class="sr">${LAMP_LABEL[r.st]}：</span>${esc(r.it[0])}${r.it[2] ? `<span class="since">${esc(r.it[2])} 上線</span>` : ''}</span></li>`).join('')}</ul>
+  feat.set(u.n, { u, rows, title: u.t || (f && f.t) || u.n, done: rows.filter(r => r.st !== 'notyet').length });
+}
+// 每個功能有沒有剛好放在一組，上面畫面一開頭已經對 FUNCS 查過；這裡只補查 USES 漏列的（漏了方框圖會少一格）
+for (const g of GROUPS) for (const n of g.ns) if (FUNCS.some(f => f.n === n) && !feat.has(n)) warns.push(`「${g.label}」組裡的 ${n} 在 USES 找不到，功能頁會少一格`);
+
+const node = n => {
+  const { rows, title, done } = feat.get(n);
+  return `<button type="button" class="node" data-n="${n}" aria-expanded="false" aria-controls="drawer">
+    <span class="no">${n}</span>
+    <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5l4.5 4.5L6 12.5"/></svg>
+    <span class="nt">${esc(title)}</span>
+    <span class="nc">做好 ${done}／${rows.length}</span>
+    <span class="dots" aria-hidden="true">${rows.map(r => `<i class="lamp ${r.st}"></i>`).join('')}</span>
+  </button>`;
+};
+// --span＝這組在桌機 4 欄裡佔幾欄（＝方框數，最多 4）；--n＝框裡排幾欄
+$('featBoard').innerHTML = GROUPS.map(g => {
+  const ns = g.ns.filter(n => feat.has(n));
+  return `<section class="grp-frame g-${g.c}" style="--span:${Math.min(4, ns.length || 1)};--n:${ns.length || 1}" aria-label="${esc(g.label)}">
+    <div class="grp-label">${esc(g.label)}</div>
+    <div class="nodes">${ns.map(node).join('')}</div>
   </section>`;
 }).join('');
+
+/* ── 點方框 → 右邊（手機是下面）滑出細項 ──
+   再點同一格、按關閉、按 Esc、點外面都會關；關了焦點回到原本那格（用鍵盤的人不會迷路）。 */
+const drawer = $('drawer'), scrim = $('scrim');
+let openBtn = null;
+const useRow = r => `<li class="${r.st}"><i class="lamp ${r.st}"></i><span><span class="sr">${LAMP_LABEL[r.st]}：</span>${esc(r.it[0])}${r.it[2] ? `<span class="since">${esc(r.it[2])} 上線</span>` : ''}</span></li>`;
+function openDrawer(btn) {
+  const n = btn.dataset.n;
+  const g = GROUPS.find(x => x.ns.includes(n));
+  const { u, rows, title, done } = feat.get(n);
+  drawer.style.setProperty('--gc', `var(--g-${g.c})`);
+  $('dGrp').textContent = g.label;
+  $('dTitle').innerHTML = `<span class="num">${n}</span>${esc(title)}`;
+  $('dLead').textContent = u.lead;
+  $('dCount').textContent = `做好 ${done}／${rows.length}`;
+  $('dList').innerHTML = rows.map(useRow).join('');
+  drawer.scrollTop = 0;
+  if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+  openBtn = btn;
+  btn.setAttribute('aria-expanded', 'true');
+  drawer.classList.add('open');
+  scrim.classList.add('open');
+  document.body.classList.add('d-open');
+  $('dTitle').focus({ preventScroll: true });
+}
+function closeDrawer() {
+  if (!openBtn) return;
+  drawer.classList.remove('open');
+  scrim.classList.remove('open');
+  document.body.classList.remove('d-open');
+  openBtn.setAttribute('aria-expanded', 'false');
+  openBtn.focus({ preventScroll: true });
+  openBtn = null;
+}
+$('featBoard').addEventListener('click', e => {
+  const b = e.target.closest('button.node');
+  if (b) b === openBtn ? closeDrawer() : openDrawer(b);
+});
+$('dClose').addEventListener('click', closeDrawer);
+scrim.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+// 桌機沒有遮罩：點細項和方框以外的地方也關
+document.addEventListener('click', e => {
+  if (openBtn && !drawer.contains(e.target) && !e.target.closest('button.node')) closeDrawer();
+});
 
 // 總數：做好＝已上線＋做好了；條上綠在前、墨接著，剩下的灰底就是還沒好
 const featDone = tally.live + tally.built;
