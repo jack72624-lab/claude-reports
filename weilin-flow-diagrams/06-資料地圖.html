@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>威琳內部系統・資料地圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap">
+<script>
+  // 深淺色跟 00–05 同一套：那幾頁右上角存進 localStorage 的 archify-theme，沒存過就跟系統走。
+  // 照抄 00-進度.html 開頭那段，改一邊記得改另一邊。
+  (function () {
+    function apply() {
+      var t = null;
+      try { t = localStorage.getItem('archify-theme'); } catch (_) {}
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      else document.documentElement.removeAttribute('data-theme');
+    }
+    apply();
+    addEventListener('storage', function (e) { if (e.key === 'archify-theme') apply(); });
+  })();
+</script>
+<!--
+  這頁是什麼：新流程定下來之後，系統裡最重要的 15 張表＋里程碑要怎麼串（2026-10-02 起）。
+    畫的是「改完應該長的樣子」。2026-10-02 改脊椎第一輪照圖改了 8 條線，同一天第二輪把里程碑做成
+    「從紀錄當場算」（v_project_milestones，不是一張表），頁面第二段那幾件也做完了；哪些改好了是從 t 算的，見下面。
+    還沒做的只剩里程碑裡的三格（已收訂金、已收尾款、增減單已簽）和「備料中」算哪個動作，都是待決定，寫在頁面的卡片上。
+  手寫頁，跟 00-進度.html 一樣 rebuild.py 不碰它。2026-10-03 加進 總覽.html 當最後一個分頁（Jack 回「加」）。
+  加進總覽時把頁面上的「表」都改成「紀錄」「種」：公司的人聽到「表」會想成 Excel 或表單（Jack 10-03 同意改）。
+  程式和註解裡照舊叫表，只有畫到頁面上的字這樣寫。
+  ★ 2026-10-02 深夜 Jack 看過，回「看起來沒問題！」：原本 kind 是 guess 的三條照 Claude 選的定案了
+    （專案 CLAUDE.md 現況快照 10-02 深夜），第一輪改完資料庫時換成定案的 kind（moved／rule）。
+    guess 這個 kind 已經拿掉：頁面上不寫「等誰確認」，還沒定的事一律寫「待決定」（Jack 10-02）。
+
+  ★ 正本是最下面 <script> 裡的兩樣東西：
+    NODES  每張表一筆。x、y 是方框中心點（SVG 座標，整張 930×720）。
+           st：same＝不動、new＝新表、changed＝表本身也要改。
+           t：資料庫裡的表名；還沒建的表寫 null。頁面上「改好幾條」就是數兩端 t 都不是 null 的線。
+           view: true：這格不是表，是從別的紀錄當場算的 view（t 寫 view 的名字）。方框畫虛線。
+                 從它出去的線不是外鍵，檢查腳本改查「view 的 SQL 有讀那張表」。
+    LINKS  每條線一筆，方向一律「子 → 它掛在誰底下」。
+           kind：same＝不動、new＝新增、moved＝搬家（was 寫原本掛誰）、rule＝線不動、規則改。
+           ref：那條連線在 schema.sql 第幾行（表還沒建的線沒有 ref，寫 col＝打算加在哪一欄）。
+           src：這條改動的決定寫在專案 CLAUDE.md 第幾行。
+           ask：（可省）還沒定的線放「另一種做法」，頁面上會標待決定。定了就拿掉。
+           p：線怎麼走，一串轉折點，第一點在子表的邊上、最後一點在母表的邊上（箭頭畫在最後一點）。
+  ★ 檢查腳本：專案根目錄跑 node scripts/check-data-map.mjs（已接進 npm run check）。
+    兩端都建好的線，schema 裡一定要有那條外鍵；圖上表之間的外鍵也一定要有線；對不上就報錯。
+    ref 行號位移只提醒、不擋（schema 上面加一行就全部位移），它會印正確的行號，順手改。
+
+  ★ 線怎麼排的：16 個方框（15 張表＋里程碑）放成 5 欄 × 6 列的格子，線全部走直角、轉角圓一點。
+    報價單底下 5 條線各自從不同的點進去（間隔 17），從表跟表之間 32 寬的縫往上鑽，彼此不交叉。
+    改座標之後要重新驗一次「零交叉」（驗法寫在專案 CLAUDE.md〈架構圖要跟著系統一起改〉第七張那段）。
+
+  ★ 讀這頁的之後會有老闆、行政、師傅（放進總覽之後），所以頁面上的字照 00-進度.html 的規矩：
+    白話、公司本來就講的詞照用、不寫工程用語、稱呼 Jack 寫「Jack」。出處行號只留在資料裡、不畫出來。
+    這頁會推上公開站：沒畫進來的表只寫類別和張數、不列表名；也不點名哪些錢的名目要避開。
+
+  顏色跟 00-進度.html 同一套（Jack 2026-10-02 說不要綠色）：
+    灰細線＝不動、墨粗線＝新增、紅粗線＝搬家、墨虛線＝線不動、規則改。
+    （琥珀留給「待決定」：只有帶 ask 的線會用到，2026-10-02 第一輪之後一條都沒有。）
+-->
+<style>
+  /* 色票整組照抄 00-進度.html，多加四個線的顏色（指到同一組狀態色，不另外調色） */
+  :root {
+    --bg: #f8fafc;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --dim: #7d8da1;
+    --panel: #ffffff;
+    --border: #e2e8f0;
+    --tag-bg: #f1f5f9;
+    --accent: #0f172a;
+    --ok: #1d1d1f;
+    --ok-fill: #ececf0;
+    --part: #a1a1a6;
+    --wait: #b25e09;
+    --wait-fill: #fbf0e0;
+    --next: #c0392b;
+    --next-fill: #fbeae8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #020617; --ink: #ffffff; --muted: #94a3b8; --dim: #7d8da1; --panel: #090f21;
+      --border: #1e293b; --tag-bg: #131d31; --accent: #ffffff;
+      --ok: #f5f5f7; --ok-fill: #2c2c2f; --part: #6e6e73;
+      --wait: #e0a04a; --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #020617; --ink: #ffffff; --muted: #94a3b8; --dim: #7d8da1; --panel: #090f21;
+    --border: #1e293b; --tag-bg: #131d31; --accent: #ffffff;
+    --ok: #f5f5f7; --ok-fill: #2c2c2f; --part: #6e6e73;
+    --wait: #e0a04a; --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b;
+  }
+  :root {
+    --l-same: var(--part);
+    --l-new: var(--ok);
+    --l-moved: var(--next);
+    --l-rule: var(--ok);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, "PingFang TC", "Noto Sans TC", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 20px 16px 48px; }
+
+  /* 標題、副標、卡片照 00-進度.html */
+  h1 {
+    font-size: 24px; margin: 0 0 4px; font-weight: 700; letter-spacing: -0.025em;
+    display: flex; align-items: center; gap: 12px;
+  }
+  h1::before {
+    content: ""; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); flex: none;
+  }
+  .sub { color: var(--muted); font-size: 12.5px; margin: 0 0 18px 24px; }
+  h2 {
+    font-size: 15px; margin: 28px 0 4px; font-weight: 700;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  h2 .no { color: var(--dim); font-weight: 500; font-size: 13px; }
+  h2 + .sub { margin-left: 0; }
+
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; }
+  .note-card { padding: 20px; }
+  .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .card-header h3 { margin: 0; font-size: 14px; font-weight: 600; }
+  .card-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--ok); }
+  .card-dot.wait { background: var(--wait); }
+  .card-dot.next { background: var(--next); }
+  .note-card ul { list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--muted); }
+  .note-card li { display: grid; grid-template-columns: 1.4em 1fr; margin-bottom: 6px; }
+  .note-card li:last-child { margin-bottom: 0; }
+  .note-card li::before { content: "•"; }
+  .note-card b { color: var(--ink); font-weight: 600; }
+
+  .ctx { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ── 圖例 ── */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 6px 18px;
+    margin: 14px 0 10px; font-size: 12.5px; color: var(--muted);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend svg { flex: none; overflow: visible; }
+
+  /* ── 地圖 ── */
+  /* 窄螢幕整張縮太小字會讀不到，所以設最小寬、外框自己橫捲（頁面本體不橫捲）。
+     position: relative 留著：裡面有東西絕對定位時才不會逃出捲動範圍（lessons_design_visual 10-02 那條）。 */
+  .mapwrap { position: relative; overflow-x: auto; padding: 8px; }
+  .mapwrap svg { display: block; width: 100%; min-width: 760px; height: auto; }
+  .swipe { display: none; font-size: 12px; color: var(--dim); margin: 6px 0 0; text-align: center; }
+  @media (max-width: 800px) { .swipe { display: block; } }
+
+  svg .node rect.box { fill: var(--panel); stroke: var(--border); stroke-width: 1.2; }
+  svg .node.new rect.box { stroke: var(--l-new); stroke-width: 2; }
+  svg .node.changed rect.box { stroke: var(--l-moved); stroke-width: 2; }
+  /* 不是表、從紀錄當場算的那格（目前只有里程碑）：框改虛線，跟「存下來的表」分開 */
+  svg .node.view rect.box { stroke-dasharray: 6 4; }
+  svg .node .nm { font-size: 15px; font-weight: 700; fill: var(--ink); }
+  svg .node .sb { font-size: 12px; fill: var(--muted); }
+  svg .node .chip-bg { fill: var(--ok); }
+  svg .node.changed .chip-bg { fill: var(--next); }
+  svg .node .chip-tx { font-size: 11px; font-weight: 700; fill: var(--panel); }
+  svg .node { cursor: pointer; }
+  svg .node:focus { outline: none; }
+  svg .node:focus-visible rect.box { stroke: var(--accent); stroke-width: 2.5; }
+
+  svg .ln { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  svg .ln.same  { stroke: var(--l-same);  stroke-width: 1.5; }
+  svg .ln.new   { stroke: var(--l-new);   stroke-width: 2.5; }
+  svg .ln.moved { stroke: var(--l-moved); stroke-width: 2.5; }
+  svg .ln.rule  { stroke: var(--l-rule);  stroke-width: 2.5; stroke-dasharray: 7 5; }
+  svg .hit { fill: none; stroke: transparent; stroke-width: 14; cursor: pointer; }
+  svg marker path.same  { fill: var(--l-same); }
+  svg marker path.new   { fill: var(--l-new); }
+  svg marker path.moved { fill: var(--l-moved); }
+  svg marker path.rule  { fill: var(--l-rule); }
+  svg .lbl { font-size: 12px; fill: var(--l-rule); font-weight: 600; }
+  svg .lbl-bg { fill: var(--panel); }
+
+  /* 選了某條線或某張表：其他東西淡下去 */
+  svg .node, svg .ln, svg .lbl, svg .lbl-bg { transition: opacity .2s ease; }
+  svg.focus .node:not(.on), svg.focus .ln:not(.on), svg.focus .lbl:not(.on), svg.focus .lbl-bg:not(.on) { opacity: .16; }
+  svg .ln.on { stroke-width: 3.5; }
+  svg .ln.same.on { stroke: var(--ink); stroke-width: 2.5; }
+
+  /* ── 點了之後的說明 ── */
+  .detail { margin-top: 12px; padding: 16px 20px; min-height: 64px; }
+  .detail .hint { margin: 0; color: var(--dim); font-size: 13px; }
+  .detail h3 { margin: 0 0 6px; font-size: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .detail p { margin: 4px 0 0; font-size: 13.5px; }
+  .detail .ask {
+    margin-top: 10px; padding: 10px 12px; border-radius: 10px;
+    background: var(--wait-fill); font-size: 13px;
+  }
+  .detail .ask b { color: var(--wait); }
+  .detail ul { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: var(--muted); }
+  .detail button {
+    appearance: none; font: inherit; font-size: 12px; cursor: pointer;
+    color: var(--accent); background: var(--panel); border: 1px solid var(--border);
+    border-radius: 99px; padding: 2px 12px; margin-left: auto;
+  }
+
+  .tag { font-size: 11.5px; font-weight: 600; border-radius: 6px; padding: 1px 8px; white-space: nowrap; }
+  .tag.same  { color: var(--muted); background: var(--tag-bg); }
+  .tag.new   { color: var(--panel); background: var(--l-new); }
+  .tag.moved { color: var(--l-moved); background: var(--next-fill); }
+  .tag.rule  { color: var(--l-rule); background: var(--tag-bg); }
+  .tag.changed { color: var(--l-moved); background: var(--next-fill); }
+
+  /* ── 會變的線：清單 ── */
+  .grp { margin: 16px 0 6px; font-size: 12.5px; color: var(--dim); font-weight: 600; }
+  .changes { display: grid; gap: 8px; }
+  button.chg {
+    appearance: none; font: inherit; color: inherit; text-align: left; width: 100%;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 16px; cursor: pointer;
+    display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: baseline;
+  }
+  button.chg:hover { box-shadow: 0 2px 10px rgba(15, 23, 42, .08); }
+  button.chg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.chg[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button.chg .t { font-weight: 700; font-size: 14.5px; }
+  button.chg .w { grid-column: 2; font-size: 13px; color: var(--muted); }
+
+  .plain { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .plain li { padding: 12px 16px; font-size: 13.5px; }
+  .plain li small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  @media (max-width: 700px) {
+    .ctx { grid-template-columns: 1fr; }
+    button.chg { grid-template-columns: 1fr; }
+    button.chg .w { grid-column: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    svg .node, svg .ln, svg .lbl, svg .lbl-bg { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>威琳內部系統・資料地圖</h1>
+  <p class="sub" id="lead"></p>
+
+  <div class="ctx">
+    <section class="panel note-card" aria-label="一句話">
+      <div class="card-header"><span class="card-dot next"></span><h3>改了什麼</h3></div>
+      <ul>
+        <li><span>報價單變成主角：收款、增減單、驗收都掛在報價單上。燈具先完工就先收燈具的尾款。</span></li>
+        <li><span>報價單改掛案場。案件要等簽了任一張報價單才出現，只負責加總和里程碑。</span></li>
+        <li><span>料號的分類變兩層：工程類別（粗）底下是設備類別（細）。</span></li>
+      </ul>
+    </section>
+    <section class="panel note-card" aria-label="還沒做的">
+      <div class="card-header"><span class="card-dot wait"></span><h3>還沒做的</h3></div>
+      <ul>
+        <li><span>里程碑裡的已收訂金、已收尾款、增減單已簽這三格還沒算。要用的紀錄都有了，規則待決定，等第一個要顯示它們的畫面再加。</span></li>
+        <li><span>「備料中」要算哪個動作做了才亮，待決定。做備料那一站的時候一起定，在那之前，簽了約、還沒開工的案件畫面上都顯示「已成交」。</span></li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="legend" id="legend" aria-label="圖例"></div>
+
+  <section class="panel mapwrap" aria-label="資料地圖">
+    <svg id="map" viewBox="0 0 930 720" role="img" aria-labelledby="mapTitle">
+      <title id="mapTitle">15 種紀錄和里程碑怎麼串：箭頭指向它掛在誰底下</title>
+      <defs id="defs"></defs>
+      <g id="lines"></g>
+      <g id="hits"></g>
+      <g id="labels"></g>
+      <g id="nodes"></g>
+    </svg>
+  </section>
+  <p class="swipe">左右滑可以看整張</p>
+
+  <section class="panel detail" id="detail" aria-live="polite"></section>
+
+  <h2><span class="no">一</span>改過的線</h2>
+  <p class="sub">點一條，上面的圖會亮出那條線。</p>
+  <div id="changes"></div>
+
+  <h2><span class="no">二</span>不是線、但也改了的</h2>
+  <ul class="plain" id="other"></ul>
+
+  <h2><span class="no">三</span>這張圖沒畫的</h2>
+  <p class="sub" id="skipLead"></p>
+  <ul class="plain" id="skipped"></ul>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   正本：NODES 和 LINKS。改圖只改這兩個，畫面全部由下面的程式長出來。
+   ════════════════════════════════════════════════════════════ */
+
+// 方框大小：寬 148、高 58。格子 5 欄（x＝90／270／450／630／810）× 6 列（y＝44／154／274／404／514／634）
+const W = 148, H = 58;
+
+const NODES = [
+  { id: 'customers', t: 'customers', x: 450, y: 44, st: 'same', name: '客戶', sub: '付錢的人',
+    desc: '付錢的人。一個客戶可以有好幾個案場。' },
+  { id: 'sites', t: 'sites', x: 450, y: 154, st: 'same', name: '案場', sub: '一個施工地點',
+    desc: '一個施工地點。報價單和案件都掛在這裡。' },
+  { id: 'quote_categories', t: 'quote_categories', x: 90, y: 274, st: 'same', name: '報價單種類', sub: '智能、影音、弱電、燈具',
+    desc: '智能、影音、弱電、燈具四種。前三種照類別列，燈具照房間列，所以只有兩種版面。' },
+  { id: 'quotes', t: 'quotes', x: 270, y: 274, st: 'changed', name: '報價單', sub: '同一類可以有好幾版',
+    desc: '改掛案場（原本掛案件）。同一類可以出好幾版；哪一類簽了，就刪掉那一類的舊版，別類還在猶豫的留著。報價單直接在系統裡做，不再從兩套舊的報價系統匯進來。' },
+  { id: 'projects', t: 'projects', x: 810, y: 274, st: 'changed', name: '案件', sub: '簽約才出現',
+    desc: '簽了任一張報價單才出現（原本一報價就開）。狀態從六段直線改成里程碑清單。只做加總：「已驗收」「已收尾款」要全部報價單都到了才亮。' },
+  { id: 'quote_items', t: 'quote_items', x: 90, y: 404, st: 'same', name: '報價品項', sub: '報了哪些料、幾個',
+    desc: '報價單上的每一行，對到料號。簽約那刻單價就凍住。' },
+  { id: 'payment_plans', t: 'payment_plans', x: 270, y: 404, st: 'same', name: '收款計畫', sub: '訂金、工程款、尾款',
+    desc: '每張報價單自己一套訂金、工程款、尾款。預設比例照報價單種類各一組，數字之後再定。' },
+  { id: 'variation_orders', t: 'variation_orders', x: 450, y: 404, st: 'same', name: '增減單', sub: '多做少做的差額',
+    desc: '施工中自動長草稿，客戶簽了才算數。尾款實收＝尾款＋增減。' },
+  { id: 'milestones', t: 'v_project_milestones', view: true, x: 630, y: 404, st: 'new', name: '里程碑', sub: '從紀錄當場算',
+    desc: '新的，而且不另外存一份：每一格的日期和誰，打開的時候從原本的紀錄當場算。已簽約看報價單、施工中看第一趟已經去過的安裝、已驗收看驗收清單（每張報價單都驗完才亮）、結案看案件。已收訂金、已收尾款、增減單已簽這三格還沒算（待決定）。沒有「成交」鈕，做了對應的事就自動亮。' },
+  { id: 'work_records', t: 'work_records', x: 810, y: 404, st: 'same', name: '工作紀錄', sub: '一張＝一趟工程',
+    desc: '一張＝一趟工程。這次不動。' },
+  { id: 'payments', t: 'payments', x: 270, y: 514, st: 'same', name: '收款紀錄', sub: '實際收到的錢',
+    desc: '實際收到的錢，對到收款計畫的哪一期。' },
+  { id: 'acceptance', t: 'acceptance_checks', x: 450, y: 514, st: 'new', name: '驗收', sub: '每類勾驗收、教學',
+    desc: '新的。每張報價單照設備類別列一張清單，每類兩個勾：已驗收、已教學。勾完的結果就是客戶家的設備清單，保固和教學都從這裡來。' },
+  { id: 'stock_movements', t: 'stock_movements', x: 810, y: 514, st: 'same', name: '庫存帳本', sub: '進出庫唯一的帳',
+    desc: '庫存進出唯一的一本帳，現有量從這裡加總。這次不動。' },
+  { id: 'work_types', t: 'work_types', x: 270, y: 634, st: 'new', name: '工程類別', sub: '粗的 6 類，備料用',
+    desc: '新的。粗的那層，6 類：網路、監控/門禁、智能、影音、燈具、線材與耗材。備料照這層分清單。' },
+  { id: 'item_categories', t: 'item_categories', x: 450, y: 634, st: 'same', name: '設備類別', sub: '細的，料號填這層',
+    desc: '細的那層（網路設備、監控、門禁、燈光控制…），料號只填這層。驗收和教學照這層列。' },
+  { id: 'items', t: 'items', x: 630, y: 634, st: 'same', name: '料號', sub: '報價、庫存共用一份',
+    desc: '只有一份，報價和庫存共用。' },
+];
+
+// 方向一律「子 → 母」。p 的轉折點照上面格子算：方框上緣＝y−29、下緣＝y+29、左緣＝x−74、右緣＝x+74
+const LINKS = [
+  { id: 'site-cust', from: 'sites', to: 'customers', kind: 'same', ref: 'schema.sql:125',
+    p: [[450,125],[450,73]] },
+  { id: 'quote-site', from: 'quotes', to: 'sites', kind: 'new', ref: 'schema.sql:730', src: 'CLAUDE.md:609,717',
+    why: '報價單改掛案場。報價的時候還沒有案件，案件要等簽約才出現。',
+    p: [[270,245],[270,214],[420,214],[420,183]] },
+  { id: 'proj-site', from: 'projects', to: 'sites', kind: 'same', ref: 'schema.sql:494',
+    p: [[810,245],[810,214],[480,214],[480,183]] },
+  { id: 'quote-proj', from: 'quotes', to: 'projects', kind: 'rule', ref: 'schema.sql:731', src: 'CLAUDE.md:622,717',
+    label: '簽約那刻才連上',
+    why: '原本每張報價單一開就要掛案件。改成先只掛案場，簽約那刻才連上案件，案件才加總得到。',
+    p: [[344,274],[736,274]] },
+  { id: 'quote-cat', from: 'quotes', to: 'quote_categories', kind: 'same', ref: 'schema.sql:732',
+    p: [[196,274],[164,274]] },
+  { id: 'qitem-quote', from: 'quote_items', to: 'quotes', kind: 'same', ref: 'schema.sql:780',
+    p: [[90,375],[90,330],[236,330],[236,303]] },
+  { id: 'pay-quote', from: 'payments', to: 'quotes', kind: 'moved', was: '案件', ref: 'schema.sql:1729', src: 'CLAUDE.md:593,659',
+    why: '收到的錢原本記在案件上。改掛報價單，燈具先收尾款的時候，才分得出這筆錢是哪一張的。',
+    p: [[196,514],[180,514],[180,348],[253,348],[253,303]] },
+  { id: 'plan-quote', from: 'payment_plans', to: 'quotes', kind: 'moved', was: '案件', ref: 'schema.sql:1707', src: 'CLAUDE.md:593,626,659',
+    why: '訂金、工程款、尾款原本整個案件一套。改成每張報價單各一套：燈具先完工就先收燈具尾款，影音晚簽就晚起算。',
+    p: [[270,375],[270,303]] },
+  { id: 'accept-quote', from: 'acceptance', to: 'quotes', kind: 'new', ref: 'schema.sql:1591', src: 'CLAUDE.md:655',
+    why: '驗收跟著報價單走：燈具先驗、先凍結、先收尾款。',
+    p: [[376,514],[360,514],[360,348],[287,348],[287,303]] },
+  { id: 'vo-quote', from: 'variation_orders', to: 'quotes', kind: 'rule', ref: 'schema.sql:1544', src: 'CLAUDE.md:655,661',
+    why: '增減單本來就掛報價單，線不動。會變的是「一張報價單只能有一張增減單」這個限制：驗收簽完之後再有變動，新流程寫的是開新的增減單，所以一張報價單可能有好幾張。',
+    p: [[450,375],[450,330],[304,330],[304,303]] },
+  { id: 'pay-plan', from: 'payments', to: 'payment_plans', kind: 'same', ref: 'schema.sql:1730',
+    p: [[270,485],[270,433]] },
+  { id: 'accept-icat', from: 'acceptance', to: 'item_categories', kind: 'new', ref: 'schema.sql:1592', src: 'CLAUDE.md:654',
+    why: '驗收清單照設備類別列，每一類兩個勾：已驗收、已教學。',
+    p: [[450,543],[450,605]] },
+  { id: 'ms-proj', from: 'milestones', to: 'projects', kind: 'new', ref: 'schema.sql:1925', src: 'CLAUDE.md:500,648',
+    why: '案件走到哪，原本存在一個六段直線的欄位裡，要有人去改。現在那個欄位拿掉了，改成一張里程碑清單，每格的日期和誰都從原本的紀錄當場算，同一個日期只放一個地方。',
+    p: [[630,375],[630,330],[780,330],[780,303]] },
+  { id: 'wr-proj', from: 'work_records', to: 'projects', kind: 'same', ref: 'schema.sql:945',
+    p: [[810,375],[810,303]] },
+  { id: 'sm-proj', from: 'stock_movements', to: 'projects', kind: 'same', ref: 'schema.sql:1395',
+    p: [[884,514],[906,514],[906,348],[840,348],[840,303]] },
+  { id: 'sm-wr', from: 'stock_movements', to: 'work_records', kind: 'same', ref: 'schema.sql:1396',
+    p: [[810,485],[810,433]] },
+  { id: 'sm-item', from: 'stock_movements', to: 'items', kind: 'same', ref: 'schema.sql:1371',
+    p: [[810,543],[810,634],[704,634]] },
+  { id: 'qitem-item', from: 'quote_items', to: 'items', kind: 'same', ref: 'schema.sql:781',
+    p: [[90,433],[90,694],[630,694],[630,663]] },
+  { id: 'item-icat', from: 'items', to: 'item_categories', kind: 'same', ref: 'schema.sql:626',
+    p: [[556,634],[524,634]] },
+  { id: 'icat-wtype', from: 'item_categories', to: 'work_types', kind: 'new', ref: 'schema.sql:80', src: 'CLAUDE.md:588-589',
+    why: '分類變兩層：工程類別（粗，6 類，備料用）底下是設備類別（細，料號只填這層，驗收和教學用）。',
+    p: [[376,634],[344,634]] },
+];
+
+// 不是線、但也會變的（出處：schema.sql 那一欄現在的位置／CLAUDE.md 的決定）
+// 三件都在 2026-10-02 第二輪做完；拿掉的欄位已經不在 schema 裡，ref 指的是寫「為什麼拿掉」的那段註解
+const OTHER = [
+  { t: '案件的六段狀態拿掉', w: '已經拿掉。案件走到哪改看上面的里程碑，從紀錄當場算。', ref: 'schema.sql:483', src: 'CLAUDE.md:500' },
+  { t: '報價單「從哪套系統匯入」拿掉', w: '已經拿掉。要分智能還是燈具，改看報價單種類。之後報價單直接在系統裡做，不再從兩套舊的報價系統匯進來。', ref: 'schema.sql:720', src: 'CLAUDE.md:606,716' },
+  { t: '簽約、增減單、結案多記「誰」', w: '已經加了。這三件原本只記日期，里程碑每格要寫誰，所以報價單、增減單、案件各多記一個人。', ref: 'schema.sql:750,1553,501', src: 'CLAUDE.md:500' },
+];
+
+// 沒畫的表：只寫類別和張數（這頁會上公開站，不列表名）。張數加起來＝schema 的 49 張表減掉圖上的 15 張＝34（里程碑是 view、不算表）
+const SKIPPED = [
+  { t: '人、帳號、出勤、外包', n: 11, w: '跟報價單、案件怎麼串無關。' },
+  { t: '叫貨、到貨、倉位、廠商、付出去的錢', n: 7, w: '庫存那條線，這次不改。「庫存一條線」那張圖有畫。' },
+  { t: '工作紀錄底下的細項', n: 6, w: '帶料、人、目標、交接事項這些，都掛在工作紀錄底下，不動。' },
+  { t: '安裝位置、安裝區域、報修單', n: 3, w: '掛在案場底下，這次沒有線要改。' },
+  { t: '其他', n: 7, w: '系統設定、操作紀錄、附件、設計公司、增減單的品項、安裝教學等，這次不動。' },
+];
+const SKIP_NEW = '九站之外要加的新功能（施工階段、散客訂單、盤點、零用金）細節還沒談，談完再加進來。';
+
+/* ════════════════════════════════════════════════════════════
+   以下是畫圖的程式，改圖不用動
+   ════════════════════════════════════════════════════════════ */
+const NS = 'http://www.w3.org/2000/svg';
+const KIND = {
+  same:  { name: '不動',              tag: '不動' },
+  new:   { name: '新增',              tag: '新增' },
+  moved: { name: '搬家',              tag: '搬家' },
+  rule:  { name: '線不動、規則改',    tag: '規則改' },
+};
+const byId = Object.fromEntries(NODES.map(n => [n.id, n]));
+const $ = s => document.querySelector(s);
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+
+// 轉折點 → 圓角直角線。每個轉角用二次曲線收 8px（線段太短就縮小半徑，不會畫出鉤子）
+function pathD(pts, r = 8) {
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [px, py] = pts[i - 1], [cx, cy] = pts[i], [nx, ny] = pts[i + 1];
+    const l1 = Math.hypot(cx - px, cy - py), l2 = Math.hypot(nx - cx, ny - cy);
+    const rr = Math.min(r, l1 / 2, l2 / 2);
+    const ax = cx - (cx - px) / l1 * rr, ay = cy - (cy - py) / l1 * rr;
+    const bx = cx + (nx - cx) / l2 * rr, by = cy + (ny - cy) / l2 * rr;
+    d += ` L${ax},${ay} Q${cx},${cy} ${bx},${by}`;
+  }
+  const last = pts[pts.length - 1];
+  return d + ` L${last[0]},${last[1]}`;
+}
+
+const svg = $('#map');
+
+// 四種箭頭：markerUnits=userSpaceOnUse，箭頭大小不跟線粗走，四種一樣大
+for (const k of Object.keys(KIND)) {
+  const m = el('marker', { id: 'ah-' + k, viewBox: '0 0 10 10', refX: 9, refY: 5,
+    markerWidth: 9, markerHeight: 9, markerUnits: 'userSpaceOnUse', orient: 'auto' }, $('#defs'));
+  el('path', { d: 'M0,0 L10,5 L0,10 z', class: k }, m);
+}
+
+// 線：先畫看得到的線，再疊一條透明的粗線當點擊範圍
+const lineEls = {};
+for (const L of LINKS) {
+  const d = pathD(L.p);
+  const v = el('path', { d, class: `ln ${L.kind}`, 'marker-end': `url(#ah-${L.kind})`, 'data-id': L.id }, $('#lines'));
+  const h = el('path', { d, class: 'hit', 'data-id': L.id }, $('#hits'));
+  el('title', {}, h).textContent = `${byId[L.from].name} 掛在 ${byId[L.to].name} 底下（${KIND[L.kind].name}）`;
+  h.addEventListener('click', e => { e.stopPropagation(); select('link', L.id); });
+  lineEls[L.id] = [v];
+  // 線上的小字（目前只有「簽約那刻才連上」那條）：放在線段中點上方，底下墊一塊底色免得被線穿過
+  if (L.label) {
+    const a = L.p[0], b = L.p[L.p.length - 1];
+    const mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 9;
+    const bg = el('rect', { class: 'lbl-bg', x: mx - 52, y: my - 13, width: 104, height: 17, rx: 4, 'data-id': L.id }, $('#labels'));
+    const tx = el('text', { class: 'lbl', x: mx, y: my, 'text-anchor': 'middle', 'data-id': L.id }, $('#labels'));
+    tx.textContent = L.label;
+    lineEls[L.id].push(bg, tx);
+  }
+}
+
+// 方框
+const nodeEls = {};
+for (const n of NODES) {
+  const g = el('g', { class: `node ${n.st}${n.view ? ' view' : ''}`, tabindex: 0, role: 'button', 'data-id': n.id,
+    'aria-label': `${n.name}：${n.sub}` }, $('#nodes'));
+  el('rect', { class: 'box', x: n.x - W / 2, y: n.y - H / 2, width: W, height: H, rx: 12 }, g);
+  el('text', { class: 'nm', x: n.x, y: n.y - 4, 'text-anchor': 'middle' }, g).textContent = n.name;
+  el('text', { class: 'sb', x: n.x, y: n.y + 15, 'text-anchor': 'middle' }, g).textContent = n.sub;
+  if (n.st !== 'same') {
+    // 右上角小章：新＝新表、改＝表本身也要改
+    el('rect', { class: 'chip-bg', x: n.x + W / 2 - 30, y: n.y - H / 2 + 6, width: 24, height: 16, rx: 4 }, g);
+    el('text', { class: 'chip-tx', x: n.x + W / 2 - 18, y: n.y - H / 2 + 18, 'text-anchor': 'middle' }, g)
+      .textContent = n.st === 'new' ? '新' : '改';
+  }
+  g.addEventListener('click', e => { e.stopPropagation(); select('node', n.id); });
+  g.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select('node', n.id); }
+  });
+  nodeEls[n.id] = g;
+}
+svg.addEventListener('click', () => select(null));
+
+// 圖例
+const legendSvg = k => `<svg width="34" height="10" aria-hidden="true"><path class="ln ${k}" d="M1,5 L33,5" style="fill:none;stroke:var(--l-${k});stroke-width:${k === 'same' ? 1.5 : 2.5};${k === 'rule' ? 'stroke-dasharray:7 5' : ''}"/></svg>`;
+$('#legend').innerHTML =
+  ['same', 'new', 'moved', 'rule'].map(k => `<span>${legendSvg(k)}${KIND[k].name}</span>`).join('') +
+  `<span><svg width="22" height="14" aria-hidden="true"><rect x="1" y="1" width="20" height="12" rx="3" style="fill:var(--panel);stroke:var(--l-new);stroke-width:2"/></svg>新加的</span>` +
+  `<span><svg width="22" height="14" aria-hidden="true"><rect x="1" y="1" width="20" height="12" rx="3" style="fill:var(--panel);stroke:var(--l-moved);stroke-width:2"/></svg>本身也改了</span>` +
+  `<span><svg width="22" height="14" aria-hidden="true"><rect x="1" y="1" width="20" height="12" rx="3" style="fill:var(--panel);stroke:var(--l-new);stroke-width:2;stroke-dasharray:4 3"/></svg>不另外存、從紀錄當場算</span>` +
+  `<span>箭頭指向「掛在誰底下」</span>`;
+
+// 選取：亮出選的東西，其他淡掉，底下說明換掉
+let current = null;
+function select(type, id) {
+  const key = type ? type + ':' + id : null;
+  if (key === current) { type = null; }          // 再點一次＝取消
+  current = type ? key : null;
+  svg.querySelectorAll('.on').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('button.chg').forEach(b => b.setAttribute('aria-pressed', 'false'));
+  if (!type) { svg.classList.remove('focus'); renderDetail(); return; }
+  svg.classList.add('focus');
+  if (type === 'link') {
+    const L = LINKS.find(x => x.id === id);
+    lineEls[id].forEach(e => e.classList.add('on'));
+    nodeEls[L.from].classList.add('on'); nodeEls[L.to].classList.add('on');
+    const b = document.querySelector(`button.chg[data-id="${id}"]`);
+    if (b) b.setAttribute('aria-pressed', 'true');
+    renderDetail(L);
+  } else {
+    nodeEls[id].classList.add('on');
+    for (const L of LINKS) if (L.from === id || L.to === id) {
+      lineEls[L.id].forEach(e => e.classList.add('on'));
+      nodeEls[L.from].classList.add('on'); nodeEls[L.to].classList.add('on');
+    }
+    renderDetail(null, byId[id]);
+  }
+}
+
+function linkTitle(L) { return `${byId[L.from].name} → ${byId[L.to].name}`; }
+
+function renderDetail(L, n) {
+  const box = $('#detail');
+  if (!L && !n) {
+    box.innerHTML = '<p class="hint">點圖上任何一條線或一個方框，這裡會說明它在講什麼。再點一次或點空白處就取消。</p>';
+    return;
+  }
+  const close = '<button type="button" onclick="select(null)">取消</button>';
+  if (L) {
+    let h = `<h3>${linkTitle(L)} <span class="tag ${L.kind}">${KIND[L.kind].tag}</span>${close}</h3>`;
+    if (L.was) h += `<p>原本掛在：${L.was}</p>`;
+    h += `<p>${L.why || `${byId[L.from].name}掛在${byId[L.to].name}底下。這條這次不動。`}</p>`;
+    if (L.ask) h += `<div class="ask"><b>待決定・另一種做法：</b>${L.ask}</div>`;
+    box.innerHTML = h;
+  } else {
+    const tag = n.view ? '<span class="tag new">從紀錄當場算</span>' : n.st === 'new' ? '<span class="tag new">新加的</span>' : n.st === 'changed' ? '<span class="tag changed">本身也改了</span>' : '';
+    const rel = LINKS.filter(x => x.from === n.id || x.to === n.id)
+      .map(x => `<li>${linkTitle(x)}（${KIND[x.kind].name}）</li>`).join('');
+    box.innerHTML = `<h3>${n.name} ${tag}${close}</h3><p>${n.desc}</p><ul>${rel}</ul>`;
+  }
+}
+
+// 「會變的線」清單：照新增 → 搬家 → 規則改分組
+const groups = [['new', '新增的線'], ['moved', '搬家的線'], ['rule', '線不動、規則改的']];
+let html = '';
+for (const [k, title] of groups) {
+  const list = LINKS.filter(L => L.kind === k);
+  if (!list.length) continue;
+  html += `<div class="grp">${title}・${list.length} 條</div><div class="changes">`;
+  for (const L of list) {
+    html += `<button type="button" class="chg" data-id="${L.id}" aria-pressed="false">
+      <span class="tag ${k}">${KIND[k].tag}</span><span class="t">${linkTitle(L)}</span>
+      <span class="w">${L.why}</span></button>`;
+  }
+  html += '</div>';
+}
+$('#changes').innerHTML = html;
+document.querySelectorAll('button.chg').forEach(b => b.addEventListener('click', () => {
+  select('link', b.dataset.id);
+  if (current) $('#map').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+}));
+
+$('#other').innerHTML = OTHER.map(o => `<li class="panel">${o.t}<small>${o.w}</small></li>`).join('');
+
+const nSkip = SKIPPED.reduce((s, x) => s + x.n, 0);
+// 表＝不是 view 的方框；view（里程碑）不算張數，免得「系統有幾張表」多算一張
+const tableNodes = NODES.filter(n => !n.view);
+const nOld = tableNodes.filter(n => n.t).length;
+const nMissing = tableNodes.length - nOld;
+$('#skipLead').textContent = `系統裡一共有 ${nOld + nSkip} 種紀錄，圖上畫了 ${nOld} 種` +
+  (nMissing ? `（另外 ${nMissing} 種還沒做）` : '') + `，沒畫的 ${nSkip} 種留到下一步「統一用詞」一起整理。`;
+$('#skipped').innerHTML = SKIPPED.map(s => `<li class="panel">${s.t}・${s.n} 種<small>${s.w}</small></li>`).join('') +
+  `<li class="panel">還沒做的新功能<small>${SKIP_NEW}</small></li>`;
+
+// 開頭那句的數字從資料算，改了 NODES／LINKS 不用回來改字。
+// 「改好了」＝兩端的表都有 t（已經建了）；scripts/check-data-map.mjs 會擋「有 t 但 schema 裡沒那條外鍵」，所以這個數字不會說謊
+const nChange = LINKS.filter(L => L.kind !== 'same').length;
+const nDone = LINKS.filter(L => L.kind !== 'same' && byId[L.from].t && byId[L.to].t).length;
+const nView = NODES.length - tableNodes.length;
+$('#lead').textContent = `系統裡最重要的 ${tableNodes.length} 種紀錄` +
+  (nView ? '和里程碑' : '') + `怎麼串在一起。${LINKS.length} 條線裡有 ${nChange} 條照新流程改` +
+  (nDone < nChange ? `，已經改進系統 ${nDone} 條，還差 ${nChange - nDone} 條。` : '，都已經改進系統。');
+
+renderDetail();
+</script>
+</body>
+</html>
