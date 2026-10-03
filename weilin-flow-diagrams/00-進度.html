@@ -50,6 +50,19 @@
   底色／框線／字的灰、標題大小、說明卡的樣子改成跟 01–05 一樣，深淺色也跟那幾頁的切換鈕走。
   改之前那版在 data/.bak/威琳-進度合併-20261002/00-進度-統一風格前.html。
 
+  ★ 同一個檔有兩種看法（2026-10-03 加）：
+    平常＝進度（上面講的）；網址帶 ?view=功能 ＝「功能」頁，總覽第一個分頁就是開這個。
+    Jack 10-03 要的：公司的人一上來就看到系統有哪些功能、每個功能底下大家會用到什麼，
+    做好的亮燈。燈三種（Jack 選三種、不是兩種）：
+      綠＝已上線、公司在用｜墨＝做好了、還沒開始用｜空心圈＝還沒好
+    為什麼不另開一個檔：燈要從 FUNCS 算，兩個檔各記一份一定會走散（防腐原則一）；
+    推站程式只推 html，也沒辦法另放一個共用的 .js。
+    正本三＝下面的 USES：每個功能列「大家會用到的」，每條連到 FUNCS 那個功能裡的項目
+    （寫項目文字裡的一小段，要剛好對到一項）。燈是算出來的，不用手改；
+    公司真的開始用了，才在那條補第三格日期、亮綠燈。
+    FUNCS 的字改了、連不到了，頁面最上面會跳一條警告列，推站前看得到。
+    10-02 Jack 說進度不要綠色；10-03 他要「上線亮綠燈」，所以綠只用在「已上線」，其他照進度的墨／灰。
+
   這頁會推上公開站：原始碼看得到這段註解，所以這裡也不點名哪些錢的名目要避開
   （清單在專案 CLAUDE.md 的共通三條）；真實密碼、本機路徑也不寫。
 -->
@@ -78,6 +91,7 @@
     --wait-fill: #fbf0e0;
     --next: #c0392b;           /* 下一步：紅 */
     --next-fill: #fbeae8;
+    --live: #15803d;           /* 功能頁「已上線」：綠，只用在這一個意思（10-03） */
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -98,13 +112,14 @@
       --wait-fill: #3a2c14;
       --next: #ff6b5e;
       --next-fill: #3f1f1b;
+      --live: #4ade80;
     }
   }
   :root[data-theme="dark"] {
     --bg: #020617; --ink: #ffffff; --muted: #94a3b8; --dim: #7d8da1; --panel: #090f21;
     --border: #1e293b; --tag-bg: #131d31; --todo-ink: #94a3b8; --accent: #ffffff;
     --ok: #f5f5f7; --ok-fill: #2c2c2f; --part: #6e6e73; --todo: #3a3a3d; --wait: #e0a04a;
-    --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b;
+    --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b; --live: #4ade80;
   }
 
   * { box-sizing: border-box; }
@@ -283,6 +298,40 @@
   .side li em { font-style: normal; color: var(--dim); }
 
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  [hidden] { display: none !important; }
+
+  /* ── 功能頁（?view=功能）──
+     燈三種：綠實心帶一圈光暈＝已上線｜墨實心＝做好了、還沒開始用｜空心圈＝還沒好。
+     空心圈用 --dim 描邊（白底 3.4:1），淺灰實心在白底幾乎看不見。 */
+  .lamp { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; box-sizing: border-box; }
+  .lamp.live { background: var(--live); box-shadow: 0 0 0 3px color-mix(in srgb, var(--live) 25%, transparent); }
+  .lamp.built { background: var(--ok); }
+  .lamp.notyet { border: 1.5px solid var(--dim); }
+  .bar .live { background: var(--live); }
+  .bar .built { background: var(--ok); }
+
+  .feat-warn {
+    padding: 10px 14px; margin: 0 0 14px; border-radius: 10px;
+    background: var(--next-fill); color: var(--next); font-size: 13px;
+  }
+  .feat-warn ul { margin: 4px 0 0; padding-left: 18px; }
+  /* 手機一欄、寬一點兩欄；卡片高低不一，靠上對齊就好 */
+  .feat-grid { display: grid; grid-template-columns: 1fr; gap: 12px; align-items: start; }
+  @media (min-width: 760px) { .feat-grid { grid-template-columns: 1fr 1fr; } }
+  .fcard { padding: 16px 18px; }
+  .fcard-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .fcard h3 { margin: 0; font-size: 15.5px; font-weight: 700; display: flex; align-items: baseline; gap: 10px; }
+  .fcount { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .fcard .lead { margin: 4px 0 10px; font-size: 12.5px; color: var(--muted); }
+  ul.uses { list-style: none; margin: 0; padding: 8px 0 0; border-top: 1px dashed var(--border); }
+  ul.uses li {
+    display: grid; grid-template-columns: 10px 1fr; gap: 10px;
+    align-items: baseline; padding: 4px 0; font-size: 13.5px;
+  }
+  ul.uses li .lamp { transform: translateY(1px); }
+  ul.uses li.notyet { color: var(--muted); }
+  .nw { white-space: nowrap; }   /* 燈號說明：燈跟它的字不拆到兩行 */
+  .since { margin-left: 6px; font-size: 12px; color: var(--live); white-space: nowrap; }
 
   /* 平板：兩段上下疊，卡片維持 4 欄（上線後那段的 2 張只佔左半，寬度跟上面對齊） */
   @media (max-width: 900px) {
@@ -306,6 +355,28 @@
 </head>
 <body>
 <div class="wrap">
+<!-- 功能頁的條目連不到進度清單時才出現；放在兩種看法外面，改進度清單的人在進度頁也看得到 -->
+<div class="feat-warn" id="featWarn" hidden></div>
+
+<!-- 功能頁（?view=功能 才露出來；內容全由下面 script 的 USES 算出來） -->
+<div id="featView" hidden>
+  <h1>威琳內部系統・功能</h1>
+  <p class="sub">系統裡有哪些功能、每個功能大家會用到什麼。燈號：<span class="nw"><span class="lamp live"></span> 已上線、公司在用</span>　<span class="nw"><span class="lamp built"></span> 做好了、還沒開始用</span>　<span class="nw"><span class="lamp notyet"></span> 還沒好</span></p>
+
+  <section class="panel total" aria-label="總數">
+    <div class="total-head">
+      <div class="big" id="featBig"></div>
+      <div id="featCount" style="color:var(--muted)"></div>
+    </div>
+    <div class="bar" id="featBar" role="img"></div>
+    <div class="legend" id="featLegend"></div>
+  </section>
+
+  <div class="feat-grid" id="featGrid"></div>
+  <p class="rule">燈號是從「進度」分頁的清單算出來的：一條連到的細項全部做好了，就亮「做好了」；公司真的開始用，才亮綠燈。還沒列進進度清單的，先算還沒好。</p>
+</div>
+
+<div id="progView">
   <h1>威琳內部系統・進度</h1>
   <p class="sub">上面是系統一步一步蓋到哪了，下面是 12 個功能各做了幾成。點上面任一步，下面會亮出那一步會動到的功能。</p>
 
@@ -336,12 +407,14 @@
   <div class="focus" id="focus" role="status"><span></span><button type="button" id="focusOff">看全部</button></div>
   <div class="rows" id="rows"></div>
 </div>
+</div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════
    正本一：6 步（原本 00-建置進度.json 的內容，2026-10-02 搬進來）
      st：done 完成｜next 下一步（同時只有一個）｜todo 還沒開始
-     you：這一步要 Jack 做的事（沒有就留空）
+     you：這一步怎樣算完成（沒有就留空）。頁面上前面固定加「怎樣算完成：」，
+          不寫是誰（Jack 10-03：別在頁面上寫「Jack：」）
      funcs：這一步要推哪幾個功能，對到下面 FUNCS 的 n。
             一個功能只寫在一步裡；下半每列的「第 N 步」標籤從這裡算。
      fnNote：funcs 是空的時候，卡片底下那行寫什麼
@@ -358,13 +431,13 @@ const STEPS = [
     you: '', funcs: ['01', '02', '03', '07', '08'],
     why: '報價單改掛在案場底下，案件改成一格一格打勾的里程碑。亮起來的這幾個功能，資料都串在這條線上。' },
   { k: '3', t: '統一用詞', sub: '約 15 個大家都會用到的詞', st: 'next',
-    you: '一個一個看，點「對／不對」', funcs: [], fnNote: '每個功能都會用到這些詞',
+    you: '每個詞的說明都確認過', funcs: [], fnNote: '每個功能都會用到這些詞',
     why: '不改功能，是先把大家都會用到的詞講清楚：每個詞指的是什麼、誰建的、誰看得到，免得同一個詞各講各的。' },
   { k: '4', t: '上線前準備', sub: '主機・備份・帳號', st: 'todo',
     you: '', funcs: ['00'],
     why: '租主機、每天備份、刪掉測試帳號，都在「地基」這一列。另外要把鼎新 A1 現在的庫存搬進來當起點，那一項記在「庫存」那一列。' },
   { k: '5', t: '庫存上線', sub: '主倉進出貨＋盤點', st: 'todo',
-    you: '實際用過、說可以，才算上線', funcs: ['04'],
+    you: '公司實際用過、說可以', funcs: ['04'],
     why: '公司第一個真的開始用的功能。' },
   { k: '6', t: '下一個功能', sub: '一個一個來，順序還沒排', st: 'todo',
     you: '', funcs: ['05', '06', '09', '10', '11'],
@@ -614,9 +687,13 @@ const FUNCS = [
       ['todo', '位置點「完成」一定要拍完成照，在系統裡畫圈；另一顆鈕拍紀錄照', '九站 06'],
       ['todo', '工作紀錄列表看得出是安裝還是維修', '九站 06'],
       ['todo', '安裝教學：每項料旁邊按「怎麼裝」直接打開（照料號放，內容在設定頁改）', '九站之外'],
-      ['h', '打卡'],
+      ['h', '打卡與請假'],
       ['wait', 'LINE 打卡（等公司的 LINE 官方帳號）', '06-1'],
       ['todo', '公司網路設一個固定網址（之後再補，先用定位）', 'C-3'],
+      // 下面三項 10-03 補進來：打卡與請假計畫.md 早就寫了，這份清單漏列（Jack 10-03「加」）
+      ['todo', '線上請假：14 種假別，主管或行政也能代請', '打卡請假計畫 :23・:109'],
+      ['todo', '「我的出勤」頁：自己的出勤、剩幾天假、補休剩幾小時和哪天到期，不出現金額', '打卡請假計畫 :73-85'],
+      ['todo', '加班費算進那個案場的成本', '打卡請假計畫 :21・:188'],
       ['todo', '出勤月報', '06-2'],
       ['h', '手機'],
       ['todo', '手機版另外從頭設計（還沒開始）', '03-11'],
@@ -750,6 +827,149 @@ const FUNCS = [
     ] },
 ];
 
+/* ═══════════════════════════════════════════════════════════════════
+   正本三：功能頁（?view=功能）每個功能「大家會用到的」，2026-10-03 加
+   每條 [白話描述, [連到的細項], 上線日期]
+     連到的細項：寫 FUNCS 同一個功能裡某一項文字中的一小段，要剛好對到一項。
+                 對不到、或對到好幾項 → 頁面最上面跳警告列（兩種看法都看得到）。
+                 空陣列＝進度清單裡還沒有這一項，先算還沒好。
+     上線日期：公司真的開始用了才補第三格（例 '2026-11-15'），補了亮綠燈。
+   燈怎麼算只寫在 lampOf()：有上線日期→綠｜連到的全部 ok→墨｜其他→空心圈。
+   t：卡片標題跟 FUNCS 不一樣時才寫（00 的「地基」對公司的人太抽象）。
+   顯示順序＝這個陣列的順序；00 放最後，大家天天碰的功能先看。
+   字照頁面規則：白話、還沒定的寫「待決定」、不寫錢的名目。
+   ═══════════════════════════════════════════════════════════════════ */
+const USES = [
+  { n: '01', lead: '客戶是誰、案場在哪，一個地方查得到。',
+    items: [
+      ['客戶資料：一個客戶一份，底下可以有好幾個案場', ['客戶基本資料', '一個客戶可以有很多個案場']],
+      ['案場資料：地址、區域、裝在哪些位置', ['案場基本資料']],
+      ['設計公司有自己的名單，不跟客戶混在一起', ['設計公司另有名單']],
+      ['案場記下客戶怎麼來的：舊客戶推薦、設計公司推薦、自己找來', ['多記「來源」']],
+      ['案場上一個勾：規劃書做了沒', ['規劃書做了沒']],
+      ['案場記下 iCloud 資料夾的連結，圖面不用另外上傳', ['iCloud 資料夾的連結']],
+      ['跟設計公司的約定，簽約那一刻鎖住', ['跟設計公司的約定']],
+    ] },
+  { n: '02', lead: '智能、燈具、影音弱電的報價單都在這裡開。做好之前，照常用現在兩套報價系統。',
+    items: [
+      ['開報價單：智能、燈具、影音弱電，畫面跟現在用的一樣', ['智能報價重做', '燈具報價重做', '影音、弱電']],
+      ['報價單掛在案場底下，同一類可以有好幾版；簽了哪一類，就刪那一類的舊版', ['同一類可以有好幾版', '哪一類簽了']],
+      ['簽約那一刻單價鎖住，之後改價不影響這張', ['單價鎖住']],
+      ['同一個案子的網路設備只會出現在一張報價單上', ['網路設備只會在一張']],
+      ['報價後台：售價、分類、工資、固定文字自己改，不用找人改程式', ['報價後台']],
+      ['匯出 PDF 給設計公司看', ['匯出 PDF']],
+    ] },
+  { n: '03', lead: '一個案場從簽約到驗收，大家看同一頁、在同一頁做。',
+    items: [
+      ['案場頁：老闆、負責人、師傅看同一頁，各自只看到該看的', ['找某一個案場', '看到的東西不一樣']],
+      ['簽了任一張報價單就開案件，進度一格一格打勾：已簽約、已收訂金、施工中…結案', ['簽了任一張報價單就開案件', '里程碑清單']],
+      ['備料清單：需要多少、庫存有多少、要叫多少，一類一張', ['一類一張備料清單']],
+      ['總備貨區：所有案場同一個料號加起來，能併的併成一張叫貨單，也看得到「別案也要」', ['總備貨區', '別案也要']],
+      ['施工分階段，每個階段有注意事項', ['施工階段']],
+      ['安裝位置從報價自動帶進來，裝好一個打勾、拍照', ['自動帶入', '現場照片']],
+      ['交接事項列成清單，可以指定給誰', ['交接事項可以列很多條']],
+      ['驗收：照設備類別自動列清單，簽完字就鎖住', ['驗收清單照設備類別', '驗收簽完字']],
+      ['案場箱：這個案場的料放在哪裡', ['案場箱']],
+    ] },
+  { n: '04', lead: '料從進貨、放在哪、出到案場，到剩料回來，一本帳記到底。',
+    items: [
+      ['料號清單，隨時查現在還有多少', ['料號清單', '查現在還有多少']],
+      ['進貨登記：到貨就加進庫存', ['進貨登記']],
+      ['進貨時廠商用選的，不用每次打字', ['用選的']],
+      ['低於安全庫存會提醒「這些該叫了」', ['安全庫存']],
+      ['公司庫和案場箱之間調來調去，每一筆進出都有紀錄', ['調撥', '進出庫紀錄']],
+      ['備貨打勾才出庫；收工剩的料歸位', ['備貨打勾才出庫', '剩料歸位']],
+      ['跟別的案場借料', ['跟別的案場借料']],
+      ['借了還沒還的，列成一張清單', ['借料未還清單']],
+      ['退回廠商；拆回來的東西放維修庫', ['退回廠商', '維修庫']],
+      ['盤點：一項一項點實際數量，差多少記一筆', ['盤點單']],
+      ['鼎新 A1 現在的庫存搬進來當起點', ['鼎新 A1 現在的庫存']],
+      ['散客訂單：設備單獨賣給客戶或小安裝廠商', ['散客訂單']],
+      ['拍照進出庫：AI 先幫忙填，人按確認才算', ['拍照進出庫']],
+    ] },
+  { n: '05', lead: '誰哪天去哪個案場、做了什麼，記在工作紀錄裡；打卡、請假從 LINE 進來。',
+    items: [
+      ['工作紀錄：一趟工程一張，記下誰哪幾天去', ['一張紀錄＝一趟工程', '每個人每天的出勤']],
+      ['一趟可以有好幾個工作目標，在現場打勾', ['好幾個工作目標']],
+      ['收工一次結清：剩料、借料、交接', ['收工結清']],
+      ['事後可以改，改過會留紀錄', ['事後可以改']],
+      ['工作紀錄上不出現任何金額', ['不出現任何金額']],
+      ['今天要裝什麼，照工程類別分組列出來', ['照工程類別分組']],
+      ['裝好一個位置要拍完成照', ['一定要拍完成照']],
+      ['每項料旁邊按「怎麼裝」，直接看安裝教學', ['安裝教學']],
+      ['在 LINE 按「上班」「下班」打卡', ['LINE 打卡']],
+      ['打卡時確認人在哪：先用手機定位，辦公室之後再加認公司網路', ['固定網址']],
+      ['線上請假，14 種假別都有', ['線上請假']],
+      ['在 LINE 按「我的出勤」，看自己的出勤、剩幾天假、補休剩幾小時和哪天到期', ['「我的出勤」頁']],
+      ['加班費自動算進那個案場的成本', ['加班費算進']],
+      ['出勤月報', ['出勤月報']],
+    ] },
+  { n: '06', lead: '每個案場花了多少、欠誰多少，只在一個地方算。',
+    items: [
+      ['每趟工的成本自動算：工資照出勤天數和當時的費率，用料照出庫當下的單價', ['工資＝出勤天數', '用料＝出庫數量']],
+      ['包案的算法', ['包案計費']],
+      ['算成本要用的設定：一個月算幾天、勞健保比例這些', ['八個數字', '勞健保']],
+      ['燈具安裝師傅照天算或照件算', ['燈具安裝師傅']],
+      ['欠廠商、欠外包師傅的錢記在同一個地方，看得出付了沒', ['欠誰多少']],
+      ['外包師傅有自己的頁面', ['外包師傅的個人頁']],
+      ['廠商也有自己的頁面，師傅回報缺料直接連過去', ['廠商的個別頁面', '師傅回報缺料']],
+      ['案場頁上的「成本與收款」分頁', ['成本與收款分頁']],
+      ['零用金、簡易記帳', ['零用金']],
+    ] },
+  { n: '07', lead: '裝的比報價多或少，系統自動算出差多少，客戶簽了才算數。',
+    items: [
+      ['裝的跟報價不一樣，自動變成增減單草稿', ['自動變成增減單草稿']],
+      ['客戶簽了才算數，要收的錢自動跟著加減', ['客戶簽認了才算數', '收款金額＝']],
+      ['驗收之後還能再開一張', ['驗收簽字後要能再開一張']],
+      ['草稿會出現在案件頁和客戶頁', ['草稿顯示在案件頁']],
+    ] },
+  { n: '08', lead: '每張報價單的訂金、工程款、尾款，收到了沒一眼看得到。',
+    items: [
+      ['每張報價單有自己的收款計畫：訂金、工程款、尾款', ['收款計畫']],
+      ['收到錢就登記，「已收訂金」那格自動亮', ['收款登記']],
+      ['老闆看每個案子三格，收到的塗滿', ['老闆看每個案子']],
+      ['增減的錢自動併進尾款', ['併進尾款']],
+      ['付給廠商、外包師傅的錢也登記在這裡', ['付給廠商、外包']],
+    ] },
+  { n: '09', lead: '東西壞了拆回來送修、還在不在保固內，系統幫忙算。',
+    items: [
+      ['送修：拆回來的東西走到哪一步，看得到', ['送修流程']],
+      ['保固從這個案場第一次裝那天起算，案場頁就看得到', ['第一次安裝那天起算', '維修保固／圖檔分頁']],
+      ['保固快到期提前提醒', ['快到期']],
+      ['客戶報修，直接排一趟維修', ['報修排一趟維修']],
+      ['行政首頁看到「今天新報修 N 件」，自動標保固內還是過保', ['今天新報修']],
+    ] },
+  { n: '10', lead: '屋主用手機網頁登入，看自己家的設備和保固，也能直接報修。',
+    items: [
+      ['點 LINE 收到的連結就登入，不用記密碼', ['用連結登入']],
+      ['簽約就開好帳號，客戶頁跟著案子長', ['簽約就開客戶帳號']],
+      ['每台設備的保固到期日', ['保固到期日']],
+      ['設備教學：影片和常見問題', ['設備教學']],
+      ['線上報修：選設備、寫狀況、附照片', ['報修：選設備類別']],
+      ['客戶永遠看不到公司內部的金額', ['永遠看不到公司內部的金額']],
+    ] },
+  { n: '11', lead: '公司的 LINE 群組和官方帳號，接進系統。',
+    items: [
+      ['群組小幫手：先只收訊息、不發', ['只收、不發']],
+      ['群組裡的事，通知負責的人', ['通知負責的人']],
+      ['官方帳號自動發客戶的登入連結', ['自動發客戶登入連結']],
+      ['客戶報修也走 LINE', ['報修的入口']],
+      ['每個人的 LINE 帳號只要跟系統認一次', ['只要認一次']],
+    ] },
+  { n: '00', t: '首頁、帳號與安全', lead: '每個人用自己的帳號登入，看得到什麼照職位走；資料每天備份。',
+    items: [
+      ['首頁分四塊：這週誰去哪、錢、進行中的案場、輪到我做的事', ['首頁分四塊']],
+      ['每個人用自己的帳號密碼登入，試太多次就擋', ['自己的帳號密碼登入', '試太多次']],
+      ['每個職位能看什麼、能做什麼，可以一項一項調', ['每個職位能做什麼']],
+      ['看不看得到金額、看得到哪些案場，照職位分開', ['沒權限看錢', '看得到哪些案場']],
+      ['誤刪救得回來', ['誤刪']],
+      ['誰在什麼時候改了什麼，都留紀錄', ['誰在什麼時候改了什麼']],
+      ['有人離職，當天就能停用帳號', ['當天就能停用帳號']],
+      ['每天備份，先上鎖，至少一份放在主機以外的地方', ['每天一份完整備份', '備份先上鎖', '主機以外']],
+      ['門禁、Wi-Fi 密碼在畫面上遮起來，誰看過留紀錄', ['門禁與 Wi-Fi 密碼']],
+    ] },
+];
+
 /* ── 以下是畫面，改狀態不用動 ── */
 const LABEL = { ok: '做好了', part: '做了一部分', todo: '還沒做', wait: '等人決定' };
 const ORDER = ['ok', 'part', 'wait', 'todo'];
@@ -795,7 +1015,7 @@ function card(s) {
     <span class="top"><span class="k">第 ${s.k} 步</span><span class="chip ${s.st}">${ST_LABEL[s.st]}${s.date ? ' ' + esc(s.date) : ''}</span></span>
     <span class="t">${esc(s.t)}</span>
     <span class="s">${esc(s.sub)}</span>
-    ${s.you ? `<span class="you">Jack：${esc(s.you)}</span>` : ''}
+    ${s.you ? `<span class="you">怎樣算完成：${esc(s.you)}</span>` : ''}
     <span class="fn">${c ? `功能 ${s.funcs.join('・')}｜做好 ${c.ok}／${c.all}` : esc(s.fnNote || '')}</span>
   </button>`;
 }
@@ -879,6 +1099,68 @@ $('phases').addEventListener('click', e => {
   update();
 });
 $('focusOff').addEventListener('click', () => { cur = null; update(); });
+
+/* ── 功能頁（?view=功能）── 兩種看法都會算一次，連不到的警告列在進度頁也看得到 */
+const LAMP_LABEL = { live: '已上線', built: '做好了', notyet: '還沒好' };
+const warns = [];
+
+// 一條「大家會用到的」亮哪個燈。唯一入口：卡片、總數、警告都走這裡。
+// 先逐條對連結（就算已上線也對，FUNCS 改字之後才抓得到），再決定燈。
+function lampOf(n, use) {
+  const [text, links, since] = use;
+  const f = FUNCS.find(x => x.n === n);
+  const items = f ? f.items.filter(it => it[0] !== 'h') : [];
+  let allOk = links.length > 0;          // 空陣列＝進度清單裡還沒這一項，算還沒好
+  for (const frag of links) {
+    const hits = items.filter(it => it[1].includes(frag));
+    if (hits.length !== 1) {
+      warns.push(`${n}「${text}」找「${frag}」：${hits.length ? `對到 ${hits.length} 項，寫長一點` : '對不到，進度清單的字可能改了'}`);
+      allOk = false;
+    } else if (hits[0][0] !== 'ok') {
+      allOk = false;
+    }
+  }
+  if (since) return 'live';
+  return allOk ? 'built' : 'notyet';
+}
+
+const tally = { live: 0, built: 0, notyet: 0, all: 0 };
+$('featGrid').innerHTML = USES.map(u => {
+  const f = FUNCS.find(x => x.n === u.n);
+  if (!f) warns.push(`USES 的 ${u.n} 在進度清單裡找不到這個功能`);
+  const rows = u.items.map(it => ({ it, st: lampOf(u.n, it) }));
+  for (const r of rows) { tally[r.st]++; tally.all++; }
+  const done = rows.filter(r => r.st !== 'notyet').length;
+  return `<section class="panel fcard" aria-label="${esc(u.t || (f && f.t) || u.n)}">
+    <div class="fcard-head">
+      <h3><span class="num">${u.n}</span>${esc(u.t || (f && f.t) || '')}</h3>
+      <span class="fcount">做好 ${done}／${rows.length}</span>
+    </div>
+    <p class="lead">${esc(u.lead)}</p>
+    <ul class="uses">${rows.map(r => `<li class="${r.st}"><i class="lamp ${r.st}"></i><span><span class="sr">${LAMP_LABEL[r.st]}：</span>${esc(r.it[0])}${r.it[2] ? `<span class="since">${esc(r.it[2])} 上線</span>` : ''}</span></li>`).join('')}</ul>
+  </section>`;
+}).join('');
+
+// 總數：做好＝已上線＋做好了；條上綠在前、墨接著，剩下的灰底就是還沒好
+const featDone = tally.live + tally.built;
+$('featBig').innerHTML = `${featDone}<small>／${tally.all} 項做好了</small>`;
+$('featCount').textContent = tally.live ? `其中 ${tally.live} 項已上線、公司在用` : '還沒有功能正式上線';
+$('featBar').outerHTML = `<div class="bar" role="img" aria-label="已上線 ${tally.live}、做好了 ${tally.built}、還沒好 ${tally.notyet}">` +
+  ['live', 'built'].map(k => tally[k] ? `<i class="${k}" style="width:${(tally[k] / tally.all * 100).toFixed(2)}%"></i>` : '').join('') + '</div>';
+$('featLegend').innerHTML = ['live', 'built', 'notyet'].map(k =>
+  `<span><i class="lamp ${k}"></i>${LAMP_LABEL[k]} ${tally[k]}</span>`).join('');
+
+if (warns.length) {
+  $('featWarn').innerHTML = `功能頁有 ${warns.length} 條連不到進度清單，燈號可能不準：<ul>${warns.map(w => `<li>${esc(w)}</li>`).join('')}</ul>`;
+  $('featWarn').hidden = false;
+}
+
+// 網址帶 ?view=功能 才換成功能頁（總覽第一個分頁就是這樣開的）
+if (new URLSearchParams(location.search).get('view') === '功能') {
+  $('progView').hidden = true;
+  $('featView').hidden = false;
+  document.title = '威琳內部系統・功能';
+}
 </script>
 </body>
 </html>

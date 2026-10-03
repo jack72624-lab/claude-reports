@@ -82,12 +82,15 @@
 <header>
   <div class="title-row">
     <h1>威琳內部系統・架構總覽</h1>
-    <span class="hint">圖內按 / 可搜尋、點線可追整條路徑｜系統仍是 demo，尚無正式資料｜「進度」上面是做到哪一步、下面是每個功能做了幾成｜「部署架構」「案場一條線」「案件里程碑」「庫存一條線」畫的是 2026-09 定的目標，程式還沒照它改；只有「操作與資料庫」是現況</span>
+    <span class="hint">圖內按 / 可搜尋、點線可追整條路徑｜系統仍是 demo，尚無正式資料｜「功能」是系統有哪些功能、各做好了沒｜「進度」上面是做到哪一步、下面是每個功能做了幾成｜「部署架構」「案場一條線」「案件里程碑」「庫存一條線」畫的是 2026-09 定的目標，程式還沒照它改；只有「操作與資料庫」是現況</span>
   </div>
   <nav id="tabs">
     <!-- 00 是進度（2026-10-02 加，取代 架構/系統架構圖.html），放第一個。
-         同日把「建置進度」「功能完全度」兩個分頁合成這一頁；手寫頁，正本在檔內 STEPS／FUNCS，不經 rebuild.py -->
-    <button data-src="00-進度.html" class="active">進度</button>
+         同日把「建置進度」「功能完全度」兩個分頁合成這一頁；手寫頁，正本在檔內 STEPS／FUNCS，不經 rebuild.py
+         「功能」（2026-10-03 加）跟「進度」是同一個檔，data-view 帶到網址 ?view=功能 換一種看法；
+         燈號要從 FUNCS 算，所以不另開檔。publish.py 會把重複的 data-src 併成一個 -->
+    <button data-src="00-進度.html" data-view="功能" class="active">功能</button>
+    <button data-src="00-進度.html">進度</button>
     <button data-src="01-部署架構.html">部署架構</button>
     <button data-src="02-案件脊椎.html">案場一條線</button>
     <button data-src="03-操作與資料.html">操作與資料庫</button>
@@ -102,28 +105,34 @@
   const panes = document.getElementById('panes');
   const frames = new Map();
 
+  // 一顆按鈕＝檔名＋看法（「功能」「進度」是同一個檔，只差 ?view=）
+  const keyOf = b => b.dataset.src + '|' + (b.dataset.view || '');
+  // 2026-10-03 換新名字：舊名字記著「00-進度.html」，不換的話看過的人會跳過新加的「功能」
+  const TAB_KEY = 'weilin-arch-tab-v2';
+
   function show(btn) {
     tabs.forEach(b => b.classList.toggle('active', b === btn));
-    const src = btn.dataset.src;
-    if (!frames.has(src)) {
+    const key = keyOf(btn);
+    if (!frames.has(key)) {
       const f = document.createElement('iframe');
       // 網址後面帶一個當下時間，逼瀏覽器每次都重新抓檔、不用快取
       //（2026-09-25 Jack 重建 04 後在 Arc 看到的還是舊圖，就是快取害的）
-      f.src = encodeURI(src) + '?v=' + Date.now();
+      f.src = encodeURI(btn.dataset.src) + '?v=' + Date.now() +
+        (btn.dataset.view ? '&view=' + encodeURIComponent(btn.dataset.view) : '');
       f.title = btn.textContent;
       panes.appendChild(f);
-      frames.set(src, f);
+      frames.set(key, f);
     }
-    frames.forEach((f, key) => f.classList.toggle('show', key === src));
-    try { localStorage.setItem('weilin-arch-tab', src); } catch (e) {}
+    frames.forEach((f, k) => f.classList.toggle('show', k === key));
+    try { localStorage.setItem(TAB_KEY, key); } catch (e) {}
   }
 
   tabs.forEach(b => b.addEventListener('click', () => show(b)));
 
   // 記住上次看的分頁；讀不到就開第一張
   let last = null;
-  try { last = localStorage.getItem('weilin-arch-tab'); } catch (e) {}
-  const initial = [...tabs].find(b => b.dataset.src === last) || tabs[0];
+  try { last = localStorage.getItem(TAB_KEY); } catch (e) {}
+  const initial = [...tabs].find(b => keyOf(b) === last) || tabs[0];
   show(initial);
 </script>
 </body>
