@@ -96,7 +96,7 @@
     <button data-src="03-操作與資料.html">操作與資料庫</button>
     <button data-src="04-案件狀態.html">案件里程碑</button>
     <button data-src="05-庫存一條線.html">庫存一條線</button>
-    <!-- 06 資料地圖（2026-10-03 Jack 回「加」）：手寫頁，正本在檔內 NODES／LINKS，npm run check 會拿它對 schema -->
+    <!-- 06 資料地圖（2026-10-03 系統負責人回「加」）：手寫頁，正本在檔內 NODES／LINKS，npm run check 會拿它對 schema -->
     <button data-src="06-資料地圖.html">資料地圖</button>
   </nav>
 </header>
@@ -118,7 +118,7 @@
     if (!frames.has(key)) {
       const f = document.createElement('iframe');
       // 網址後面帶一個當下時間，逼瀏覽器每次都重新抓檔、不用快取
-      //（2026-09-25 Jack 重建 04 後在 Arc 看到的還是舊圖，就是快取害的）
+      //（2026-09-25 系統負責人重建 04 後在 Arc 看到的還是舊圖，就是快取害的）
       f.src = encodeURI(btn.dataset.src) + '?v=' + Date.now() +
         (btn.dataset.view ? '&view=' + encodeURIComponent(btn.dataset.view) : '');
       f.title = btn.textContent;
