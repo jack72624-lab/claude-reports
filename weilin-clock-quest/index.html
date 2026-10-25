@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>手機打卡闖關</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  [hidden] { display: none !important; }
+  /* ── 色票：照原頁 :root 抄的，深色模式也照原頁 ── */
+  :root {
+    --ink: #111; --soft: rgba(35,35,40,.67); --faint: rgba(20,20,24,.38);
+    --paper: #fff; --surface: #f5f5f4; --surface-2: #fbfbfa;
+    --line: rgba(0,0,0,.11); --line-strong: rgba(0,0,0,.2);
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 18px 50px rgba(0,0,0,.08);
+    --shadow-lift: 0 2px 4px rgba(0,0,0,.05), 0 20px 46px rgba(0,0,0,.12);
+    --tip: #202020;
+    --bad: #c0392b;
+    --font-display: "Newsreader", "Noto Serif TC", "Songti TC", Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Segoe UI", sans-serif;
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #eee; --soft: rgba(240,240,244,.66); --faint: rgba(240,240,244,.4);
+      --paper: #121211; --surface: #1c1c1a; --surface-2: #171716;
+      --line: rgba(255,255,255,.13); --line-strong: rgba(255,255,255,.22);
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 20px 54px rgba(0,0,0,.42);
+      --shadow-lift: 0 2px 6px rgba(0,0,0,.45), 0 26px 56px rgba(0,0,0,.62);
+      --tip: #2c2c2c;
+      --bad: #e0705f;
+    }
+  }
+
+  /* 10-25 第二版：整頁照手機設計（員工從 LINE 點開）。桌機打開就是置中的一條手機寬，不另外排版 */
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; padding: 0 16px 130px; overflow-x: hidden;
+    background: var(--paper); color: var(--ink);
+    font: 16px/1.65 var(--font-body); text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* 整頁內容的寬：手機滿版，桌機也只開到這麼寬 */
+  .column { max-width: 440px; margin: 0 auto; }
+
+  /* ── 「重新開始」：只在頁首右上角，不跟著捲（固定的話在窄畫面會一路蓋住標題） ── */
+  .tools { position: absolute; z-index: 40; top: 14px; right: 14px; }
+  .tool-btn {
+    height: 32px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--paper); color: var(--faint); font: 500 12px/1 var(--font-body); cursor: pointer;
+  }
+  .tool-btn:active { color: var(--soft); }
+
+  /* ═════════ 進度軌：畫面底部一條橫的膠囊 ═════════ */
+  .group-dots {
+    position: fixed; z-index: 30; bottom: max(14px, env(safe-area-inset-bottom)); left: 50%; translate: -50% 0;
+    display: flex; align-items: center; gap: 11px; max-width: calc(100vw - 32px); padding: 10px 16px;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(12px);
+    box-shadow: 0 6px 24px rgba(0,0,0,.1);
+  }
+  .dot-nav-item { position: relative; display: grid; place-items: center; }
+  /* 沒做的：10px 空心細圈 */
+  .task-dot {
+    position: relative; display: grid; place-items: center; width: 10px; height: 10px; padding: 0;
+    border: 1px solid var(--line-strong); border-radius: 50%; background: transparent;
+    color: var(--paper); opacity: .62; cursor: pointer;
+    transition: opacity .25s, scale .35s var(--ease-out), width .25s, height .25s, background .25s, border-color .25s;
+  }
+  /* 圓點只有 10px，手指點不到；用看不見的外圈把能點的範圍撐到 30px */
+  .task-dot::after { content: ""; position: absolute; inset: -10px; }
+  /* 做完的：14px 實心黑圓＋白勾 */
+  .task-dot.completed { width: 14px; height: 14px; border-color: var(--ink); background: var(--ink); opacity: .92; }
+  .task-dot.completed svg { width: 8px; height: 8px; }
+  .task-dot svg { width: 0; height: 0; }
+  .task-dot svg path { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  /* 目前捲到的那一格放大 1.4 倍 */
+  .task-dot.active { opacity: 1; scale: 1.4; }
+  .task-dot.active:not(.completed) { border-width: 2.5px; border-color: var(--line-strong); }
+  .task-dot.pop { animation: dot-pop .5s var(--ease-out); }
+  @keyframes dot-pop { 40% { scale: 1.9; } }
+  /* 關與關之間的短直線 */
+  .dot-divider { width: 1px; height: 14px; margin: 0 2px; background: var(--line); }
+  /* 下一關的鎖 */
+  .nav-lock {
+    display: grid; place-items: center; width: 24px; height: 24px; padding: 0;
+    border: 0; border-radius: 50%; background: var(--surface); color: var(--faint); cursor: pointer;
+  }
+  .nav-lock svg { width: 12px; height: 12px; }
+  .nav-lock path { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  /* 新解鎖的格子一顆顆從下面冒出來 */
+  .dot-nav-item.enter { animation: dot-enter .45s var(--ease-out) both; animation-delay: calc(var(--i) * 60ms); }
+  @keyframes dot-enter { from { opacity: 0; translate: 0 8px; } }
+  /* 提示框：只有用滑鼠的（電腦）滑過才出現，在圓點正上方；手機沒有「滑過」，不出 */
+  .nav-tooltip { display: none; }
+  @media (hover: hover) {
+    .nav-tooltip {
+      display: block; position: absolute; z-index: 2; bottom: calc(100% + 16px); left: 50%;
+      width: max-content; padding: 6px 10px; border-radius: 7px;
+      background: var(--tip); color: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.18);
+      font: 400 13px/1.25 var(--font-body); white-space: nowrap; pointer-events: none;
+      opacity: 0; visibility: hidden; translate: -50% 4px;
+      transition: opacity .14s, translate .14s, visibility .14s;
+    }
+    .dot-nav-item:hover .nav-tooltip,
+    .dot-nav-item:focus-within .nav-tooltip { opacity: 1; visibility: visible; translate: -50% 0; }
+  }
+
+  /* ═════════ 頁首：標題在上，一支手機從底下探出半截 ═════════ */
+  .masthead { position: relative; text-align: center; }
+  .masthead-inner { padding: 72px 4px 0; }
+  .eyebrow { margin: 0 0 16px; color: var(--faint); font-size: 12px; letter-spacing: .12em; }
+  h1 { margin: 0; font: 600 40px/1.15 var(--font-display); letter-spacing: -.01em; }
+  /* 第二行：中文不斜，改用細一點的字重和淡一階的顏色 */
+  h1 .second { display: block; font-weight: 400; color: var(--soft); }
+  .lede { margin: 20px auto 0; color: var(--soft); font-size: 16px; }
+  /* 頁首那支手機只露上半截，底部用漸層淡進頁面底色 */
+  .hero-phone { position: relative; width: 250px; height: 300px; margin: 44px auto 0; overflow: hidden; }
+  .hero-phone::after { content: ""; position: absolute; inset: auto 0 0; height: 110px; background: linear-gradient(transparent, var(--paper)); }
+
+  /* 段落之間那條彎彎的虛線 */
+  .squiggle { display: block; width: 70px; height: 100px; margin: 18px auto; color: var(--line-strong); overflow: visible; }
+  .squiggle path { fill: none; stroke: currentColor; stroke-width: 1.3; stroke-dasharray: 4 6; stroke-linecap: round; }
+
+  /* ═════════ 關卡 ═════════ */
+  .group { position: relative; }
+  .group[hidden] { display: none; }
+  .group.entering { animation: group-in .9s var(--ease-out) both; }
+  @keyframes group-in { from { opacity: 0; translate: 0 40px; } }
+  .chapter { position: relative; display: grid; place-items: center; width: 100%; height: 54px; margin: 0 auto 48px; color: var(--faint); }
+  .chapter-label { position: relative; z-index: 1; margin: 0; padding: 0 10px; font: 500 14px/1.3 var(--font-body); white-space: nowrap; }
+  .chapter-label strong { color: var(--soft); font: 600 16px/1.3 "Noto Serif TC", serif; }
+  .chapter-ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; color: var(--ink); pointer-events: none; }
+  .chapter-ring ellipse { fill: none; stroke: currentColor; stroke-width: .7; opacity: .34; }
+
+  /* ═════════ 每一項 ═════════ */
+  /* 印章蓋下來前是放大 1.8 倍的透明狀態，會把頁面右邊撐寬；左右裁掉、上下照常露出 */
+  .task-section { position: relative; text-align: center; scroll-margin-top: 24px; overflow-x: clip; }
+  .task-section.reveal { opacity: 0; translate: 0 40px; transition: opacity .9s var(--ease-out), translate .9s var(--ease-out); }
+  .task-section.reveal.in { opacity: 1; translate: 0 0; }
+  .task-head { margin: 0 auto 24px; }
+  h3 {
+    position: relative; display: inline; margin: 0;
+    font: 500 30px/1.25 "Noto Serif TC", var(--font-display);
+    /* 做完後的刪除線：用背景漸層畫，才能做「從左畫到右」的動畫 */
+    background: linear-gradient(currentColor, currentColor) 0 58% / 0% 2px no-repeat;
+    transition: background-size .6s var(--ease-out) .15s, color .4s;
+  }
+  h3 em { font-style: normal; font-weight: 700; }
+  .task-description { margin: 8px auto 0; color: var(--soft); font-size: 15px; transition: opacity .4s; }
+
+  /* 手機在上、步驟卡在下；卡片往上蓋住手機底部一點，兩塊看起來是一組 */
+  .task-body { text-align: left; }
+  .illustration-wrap { position: relative; width: min(290px, 80vw); margin: 0 auto; }
+  /* 手機外框：深色邊框＋圓角，裡面放 390×753 比例的截圖 */
+  .phone-frame {
+    position: relative; padding: 8px; border-radius: 44px; background: #1a1a1a;
+    box-shadow: var(--shadow), inset 0 0 0 1.5px #3a3a3a;
+    transition: opacity .5s, filter .5s;
+  }
+  .phone-screen { position: relative; aspect-ratio: 390 / 753; border-radius: 36px; overflow: hidden; background: #f4f4f3; }
+  .task-art { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  /* 第一項沒有打卡頁截圖：畫一個 LINE 聊天室，底下放圖文選單 */
+  .line-mock { display: flex; flex-direction: column; height: 100%; background: #8ea4c4; }
+  .line-bar { padding: 44px 0 12px; background: #fff; color: #111; font: 600 15px/1 var(--font-body); text-align: center; }
+  .line-chat { flex: 1; }
+  .line-menu { display: block; width: 100%; }
+
+  /* 手機左上角的黑底白勾＋右上角的印章：平常藏著，做完才「蓋」上去 */
+  .completion-check {
+    position: absolute; z-index: 5; top: 16px; left: 16px; display: grid; place-items: center;
+    width: 38px; height: 38px; border-radius: 50%; background: var(--ink); color: var(--paper);
+    box-shadow: 0 5px 15px rgba(0,0,0,.13); opacity: 0; scale: .65; pointer-events: none;
+  }
+  .completion-check svg { width: 17px; height: 17px; }
+  .completion-check path { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .completion-stamp {
+    position: absolute; z-index: 5; right: -30px; top: -38px; width: 92px; height: 92px;
+    color: var(--stamp-color); opacity: 0; rotate: var(--stamp-rotation, -7deg); scale: 1.8; pointer-events: none;
+  }
+  .completion-stamp svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  /* 步驟卡 */
+  .action-wrap { position: relative; z-index: 6; margin-top: -56px; }
+  .action-card { position: relative; padding: 22px 18px 18px; border-radius: 22px; background: var(--paper); box-shadow: var(--shadow-lift); }
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: step; }
+  .steps li { position: relative; padding: 0 0 13px 34px; counter-increment: step; font-size: 15.5px; line-height: 1.6; }
+  .steps li::before {
+    content: counter(step); position: absolute; left: 0; top: 1px;
+    display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--surface); color: var(--soft); font: 600 12px/1 var(--font-body);
+  }
+  /* 步驟底下的小框。改照威琳系統的規則：彩色不鋪成底色
+     小提醒＝淺灰底墨字；注意＝白底、左邊一條紅線、「注意」兩個字紅色（紅用系統的 --bad #c0392b） */
+  .note { display: block; margin-top: 7px; padding: 8px 12px; border-radius: 10px; font-size: 14px; line-height: 1.55; }
+  .note b { margin-right: 6px; font-weight: 600; }
+  .note.tip { background: var(--surface); color: var(--ink); }
+  .note.tip b { color: var(--soft); }
+  .note.warn { border-radius: 0 10px 10px 0; border-left: 3px solid var(--bad); color: var(--ink); background: transparent; }
+  .note.warn b { color: var(--bad); }
+  /* 按鈕區：做完後「這一步看過了」那行疊在同一格 */
+  .action-zone { position: relative; margin-top: 6px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .action-control { display: grid; gap: 9px; justify-items: center; transition: opacity .3s, translate .3s; }
+  .cta-hint { margin: 0; color: var(--faint); font-size: 12.5px; }
+  .action-complete {
+    position: absolute; inset: 16px 0 0; display: flex; align-items: center; justify-content: center; gap: 10px;
+    color: var(--soft); font-size: 15px; opacity: 0; translate: 0 10px; pointer-events: none;
+    transition: opacity .35s .1s, translate .35s .1s;
+  }
+  .action-complete svg { width: 16px; height: 16px; color: var(--ink); }
+  .action-complete path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* 按鈕：手機上整條寬，跟打卡頁上那顆大按鈕一樣好按 */
+  .cta-button {
+    display: flex; align-items: center; justify-content: center; width: 100%; height: 50px; padding: 0 20px;
+    border: 0; border-radius: 999px; background: var(--ink); color: var(--paper);
+    font: 600 16px/1 var(--font-body); cursor: pointer; transition: scale .15s, opacity .2s;
+  }
+  .cta-button:active { scale: .97; opacity: .88; }
+
+  /* ── 做完的狀態 ── */
+  .task-section.done h3 { color: var(--faint); background-size: 100% 2px; }
+  .task-section.done .task-description { opacity: .55; }
+  /* 做完也要能回頭看，所以手機只淡一點點、步驟不淡 */
+  .task-section.done .phone-frame { opacity: .82; filter: saturate(.8); }
+  .task-section.done .action-control { opacity: 0; translate: 0 -8px; pointer-events: none; }
+  .task-section.done .action-complete { opacity: 1; translate: 0 0; }
+  .task-section.done .completion-check { animation: check-land .48s cubic-bezier(.22,1.45,.36,1) .08s both; }
+  .task-section.done .completion-stamp { animation: stamp-land .55s cubic-bezier(.3,1.5,.45,1) .4s both; }
+  /* 重新載入時已經做完的不重播動畫，直接停在最後一格 */
+  .task-section.done.static .completion-check, .task-section.done.static .completion-stamp { animation-duration: 0s; animation-delay: 0s; }
+  @keyframes check-land { to { opacity: 1; scale: 1; } }
+  @keyframes stamp-land { to { opacity: .9; scale: 1; } }
+
+  /* ═════════ 上鎖的閘門 ═════════ */
+  .gate {
+    /* 閘門在 .column（最寬 440）裡，用 50% - 50vw 撐回整個視窗寬 */
+    margin: 72px calc(50% - 50vw) 0; padding: 72px 24px 90px; text-align: center;
+    background: var(--surface-2); border-top: 1px solid var(--line);
+    transition: opacity .5s;
+  }
+  .gate[hidden] { display: none; }
+  .gate.leaving { opacity: 0; }
+  .gate-lock { width: 16px; height: 16px; color: var(--faint); }
+  .gate-lock path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .gate h2 { margin: 12px 0 20px; font: 600 28px/1.3 "Noto Serif TC", serif; color: var(--faint); }
+  .unlock-track { width: 152px; height: 4px; margin: 0 auto; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .unlock-fill { display: block; width: var(--unlock-progress, 0%); height: 100%; border-radius: inherit; background: var(--ink); transition: width .55s var(--ease-out); }
+  .unlock-progress { margin-top: 12px; color: var(--faint); font-size: 12px; letter-spacing: .08em; }
+
+  /* 最後一關打開後出現的重點回顧（影片最後那張卡） */
+  .finale { padding: 48px 0 0; text-align: center; }
+  .finale[hidden] { display: none; }
+  .finale h2 { margin: 0 0 22px; font: 600 28px/1.3 "Noto Serif TC", serif; }
+  .recap { margin: 0; padding: 0; list-style: none; text-align: left; }
+  .recap li { padding: 14px 2px; border-top: 1px solid var(--line); }
+  .recap li:last-child { border-bottom: 1px solid var(--line); }
+  .recap strong { display: block; font-size: 16px; font-weight: 600; }
+  .recap span { color: var(--soft); font-size: 14.5px; }
+  .finale-foot { margin-top: 22px; color: var(--soft); font-size: 14.5px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="tools"><button class="tool-btn" id="reset" type="button">重新開始</button></div>
+
+  <nav class="group-dots" id="group-dots" aria-label="任務進度"></nav>
+
+  <div class="column">
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">威琳科技 · 員工教學</p>
+      <h1>手機打卡<span class="second">照著做一遍就會</span></h1>
+      <p class="lede">一關一關看畫面，每一項看懂了就按一下跟畫面上一樣的按鈕。做完兩項，下一關就打開。這頁的按鈕都是練習用的，按了不會真的打卡。</p>
+    </div>
+    <div class="hero-phone" aria-hidden="true">
+      <div class="phone-frame"><div class="phone-screen"><img class="task-art" src="images/2-done.webp" alt=""></div></div>
+    </div>
+  </header>
+
+  <main id="journey"></main>
+
+  <section class="gate" id="gate" hidden>
+    <svg class="gate-lock" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 7V5.2a3.5 3.5 0 0 1 7 0V7M3.5 7h9v6.5h-9z"/></svg>
+    <h2>完成任意兩項<br>就能繼續</h2>
+    <div class="unlock-track"><span class="unlock-fill" id="unlock-fill"></span></div>
+    <p class="unlock-progress" id="unlock-progress"></p>
+  </section>
+
+  <section class="finale" id="finale" hidden>
+    <h2>重點回顧</h2>
+    <ul class="recap" id="recap"></ul>
+    <p class="finale-foot">之後忘了，回來這頁再看一次就好。</p>
+  </section>
+  </div>
+
+<script>
+/* ───────── 內容：章節與任務 ─────────
+   全部 cta 型：按鈕上的字照截圖上那顆真按鈕抄（2026-10-25 對過截圖）
+   title：[前半, 強調的後半]；強調那段用粗體
+   art：images/<art>.webp 的檔名；'line' 是特例，畫 LINE 聊天室＋圖文選單
+   steps：一步一個；要帶小框就寫 [步驟, 小框的字, 'tip' 或 'warn']
+          步驟和小框的字照 教學影片腳本 的 step／note 抄，不自己改寫（影片和這頁要講一樣的話）
+   desc 是這頁自己寫的一句開場，教學影片腳本 沒有 */
+const CHAPTERS = [
+  { name: '第一次打開', tasks: [
+    { id: 'open', type: 'cta', title: ['打開', '打卡頁'], desc: '從 LINE 的「威琳打卡」聊天室進去。', art: 'line', btn: '打卡', stamp: '#e83748', rot: -8,
+      steps: [
+        ['在 LINE「威琳打卡」聊天室，點下面的「打卡」', '下面三格直接開「我的出勤」「請假」「補登」', 'tip'],
+        '第一次會先跟 LINE 確認你是誰',
+      ] },
+    { id: 'bind', type: 'cta', title: ['對上', '你的名字'], desc: '第一次打開才要做這一步。', art: '1-unbound', btn: '複製', stamp: '#2f65d5', rot: 6,
+      steps: [
+        '看到「還沒對上你的名字」，按「複製」',
+        ['把這串字傳給系統負責人', '他在系統綁好以後，把這頁關掉、再開一次', 'tip'],
+        '左上角出現你的名字，就可以打卡了',
+      ] },
+  ]},
+  { name: '上班打卡', tasks: [
+    { id: 'clockin', type: 'cta', title: ['連著公司 Wi-Fi，', '上班打卡'], desc: '每天最常做的就是這一步。', art: '2-home', btn: '上班打卡', stamp: 'var(--ink)', rot: 6,
+      steps: [
+        ['連著公司 Wi-Fi，按「上班打卡」', '連著公司 Wi-Fi 就算在公司，不用定位', 'tip'],
+        ['比上班時間早打，會問你是哪一種', '「早到」工時從 09:00 算；「提早上班」從打卡那刻算', 'tip'],
+        ['打好了，下面的時間軸會記下來', '還沒下班的時候，時間軸上會有一道光往下跑', 'tip'],
+      ] },
+    { id: 'nowifi', type: 'cta', title: ['沒連 Wi-Fi，', '人在公司'], desc: '左上角寫「沒連公司 Wi-Fi」的時候看這裡。', art: '3-connect', btn: '連好了，打上班卡', stamp: '#c2621a', rot: -6,
+      steps: [
+        '左上角寫「沒連公司 Wi-Fi」，一樣按「上班打卡」',
+        '會先問：「你現在在公司嗎？」',
+        '在公司：先去手機設定連公司 Wi-Fi，再按「連好了，打上班卡」',
+        '連了還是不行，按「連著還是不行，用定位打」',
+        ['抓到位置，先跳地圖問「你在這裡，對嗎？」', '對就按「對，打上班卡」；位置不對按「不對，重抓」', 'tip'],
+        '用定位打的卡，會給老闆看一下',
+      ] },
+    { id: 'outside', type: 'cta', title: ['人在', '外面工作'], desc: '不在公司、在外面上班的時候。', art: '3-outside-map', btn: '對，打上班卡', stamp: '#6f45b8', rot: 5,
+      steps: [
+        ['在外面工作，按「不在，在外面」', '這時候才抓一次定位，平常不會追蹤你在哪', 'tip'],
+        '一樣先看地圖，對了就按「對，打上班卡」',
+        '打好了，卡上記的就是地圖上那個點',
+        ['手機沒讓 LINE 用定位，會打不到', '到手機設定把 LINE 的「位置」打開（iPhone：設定 > LINE > 位置）', 'warn'],
+      ] },
+  ]},
+  { name: '下班和出狀況', tasks: [
+    { id: 'clockout', type: 'cta', title: ['下班', '打卡'], desc: '下班按的是同一顆大按鈕。', art: '4-home', btn: '下班打卡', stamp: '#2f65d5', rot: -7,
+      steps: [
+        '下班一樣按大按鈕「下班打卡」',
+        '做滿工時才走，會問你「算加班嗎？」',
+        ['加班跨過晚餐時間，會問有沒有吃晚餐', '有的話，從加班扣 30 分鐘', 'tip'],
+        '上班、晚餐、下班，都記在時間軸上',
+        ['有些天下班時會問：「中午有休息嗎？」', '有休息就選「有」，扣 1 小時，不算工時', 'tip'],
+      ] },
+    { id: 'fix', type: 'cta', title: ['打錯了', '怎麼辦'], desc: '點時間軸上打錯的那一列。', art: '5-sheet-out', btn: '改答案（現在是「加班」）', stamp: '#e83748', rot: 6,
+      steps: [
+        '打錯了？點時間軸上那一列',
+        ['下班卡可以「重打下班卡」，或只改答案', '只是選錯了，按「改答案」就好', 'tip'],
+        '不用改，就按「先不要」',
+        '點上班那一列看看',
+        ['上班卡不能重打了', '打錯的話，先跟主管講', 'warn'],
+      ] },
+    { id: 'forgot', type: 'cta', title: ['忘了', '打卡'], desc: '收件匣會提醒你，在期限內補登。', art: '6-form', btn: '送給老闆', stamp: 'var(--ink)', rot: -4,
+      steps: [
+        '忘了打卡，右上角收件匣會出現紅點',
+        '收件匣寫「下班卡沒打」，還剩幾天可以補',
+        ['填下班時間和原因，按「送給老闆」', '過了午夜才下班，記得勾「過了午夜才下班」', 'tip'],
+        '送出去了，等老闆看',
+        '被退回的話，看老闆寫的原因，改好再送',
+      ] },
+  ]},
+  { name: '出勤和請假', tasks: [
+    { id: 'me', type: 'cta', title: ['看', '我的出勤'], desc: '假還剩多少、哪天幾點上下班，都在這裡。', art: '7-me', btn: '我的出勤', stamp: '#c2621a', rot: 7,
+      steps: [
+        '下面點「我的出勤」',
+        '最上面是特休、補休還剩幾小時',
+        ['月曆上一天一個點，點一下看那天', '點的顏色：有上班、疑點或補登、少打卡', 'tip'],
+        '那天幾點上班、幾點下班就出來了',
+        ['再往下：這個月的加班，每天自己選「加班費」或「換補休」', '只能改這個月的', 'tip'],
+      ] },
+    { id: 'leave', type: 'cta', title: ['在手機上', '請假'], desc: '填好送出，等老闆核准。', art: '8-filled', btn: '送出補休', stamp: '#2f65d5', rot: -6,
+      steps: [
+        '下面點「請假」',
+        '先選假別',
+        ['每種假旁邊都寫還剩多少', '只列你能請的假：生理假、產假這幾種只有女同仁看得到', 'tip'],
+        ['選從哪天、幾點開始', '請假以整點算，最少 1 小時', 'tip'],
+        ['下面會算好「這張共 4 小時」，填原因、送出', '補休、事假要老闆核准，准了才算請好', 'warn'],
+        '送出了，等老闆核准',
+        '請過的假在「我的出勤」最下面',
+        '往左滑，就能撤回',
+        '假被退回，收件匣會出現紅點',
+        '看老闆寫的原因，按「重新請」',
+        '改好再送，上一張就算不請了',
+      ] },
+    { id: 'other', type: 'cta', title: ['其他', '狀況'], desc: '畫面跳出這幾句話的時候。', art: '9-overnight', btn: '下班打卡', stamp: '#6f45b8', rot: 5,
+      steps: [
+        '「這頁開太久了」：把這頁關掉，從 LINE 再開一次',
+        '「現在連不到 LINE」：等一下再按一次',
+        ['過了半夜還沒打下班：按「下班打卡」算昨天的', '要打今天的上班，按「打今天的上班卡」', 'tip'],
+        ['不是平日打卡，整天算加班', '從打卡時間進位到半點開始算（8:20 打卡從 8:30 算）', 'tip'],
+      ] },
+  ]},
+];
+// 重點回顧：照 教學影片腳本 的 RECAP 抄，[大字, 小字]
+const RECAP = [
+  ['連著公司 Wi-Fi，按「上班打卡」', '不用定位'],
+  ['沒連 Wi-Fi，先回答在不在公司', '在外面才用一次定位'],
+  ['打錯了，點時間軸那一列', '上班卡不能重打，跟主管講'],
+  ['忘了打卡，看右上角收件匣', '補登送給老闆'],
+  ['補休、事假要老闆核准', '准了才算請好'],
+];
+const NEED_TO_UNLOCK = 2;            // 上一關做完幾項才開下一關；第一關剛好兩項，等於兩項都要做
+// 進度存在瀏覽器裡用的名字，每份闖關頁都要不一樣（本機 file:// 打開的頁共用同一塊儲存空間）
+const STORE_KEY = 'weilin-clock-quest-v1';
+
+/* ───────── 小圖示（SVG 字串，重複用） ───────── */
+const ICON = {
+  check: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4l2.9 2.9 6.1-6.6"/></svg>',
+  lock:  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 7V5.2a3.5 3.5 0 0 1 7 0V7M3.5 7h9v6.5h-9z"/></svg>',
+  up:    '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3.5M3.8 7.6L8 3.4l4.2 4.2"/></svg>',
+  link:  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5 9.5l3-3M7 4.6l1-1a2.8 2.8 0 0 1 4 4l-1 1M9 11.4l-1 1a2.8 2.8 0 0 1-4-4l1-1"/></svg>',
+};
+// 段落間的虛線：每次稍微換個彎法，看起來比較像手畫
+const SQUIGGLES = [
+  'M40 0 C 62 26, 14 52, 34 80 S 60 128, 30 150',
+  'M30 0 C 6 30, 58 56, 38 84 S 10 126, 40 150',
+  'M36 0 C 60 34, 8 50, 30 92 S 56 130, 34 150',
+];
+const squiggle = i => `<svg class="squiggle" viewBox="0 0 70 150" aria-hidden="true"><path d="${SQUIGGLES[i % SQUIGGLES.length]}"/></svg>`;
+
+/* 印章：外圈雙線＋上緣弧形字＋中間日期；feTurbulence 讓邊緣有一點蓋印的粗糙感 */
+function stampSVG(id) {
+  const d = new Date();
+  const mon = d.toLocaleString('en', { month: 'short' }).toUpperCase();
+  return `<svg viewBox="0 0 120 120" aria-hidden="true">
+    <defs>
+      <filter id="rough-${id}"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${id.length}"/><feDisplacementMap in="SourceGraphic" scale="1.3"/></filter>
+      <path id="arc-top-${id}" d="M20 60 a40 40 0 0 1 80 0"/>
+      <path id="arc-bot-${id}" d="M22 60 a38 38 0 0 0 76 0"/>
+    </defs>
+    <g filter="url(#rough-${id})" fill="none" stroke="currentColor">
+      <circle cx="60" cy="60" r="56" stroke-width="2.4"/>
+      <circle cx="60" cy="60" r="49" stroke-width="1"/>
+      <text font-family="Newsreader, Georgia, serif" font-size="12.5" font-weight="600" letter-spacing="3" fill="currentColor" stroke="none">
+        <textPath href="#arc-top-${id}" startOffset="50%" text-anchor="middle">COMPLETED</textPath>
+      </text>
+      <text font-family="Newsreader, Georgia, serif" font-size="11" font-weight="600" letter-spacing="2.5" fill="currentColor" stroke="none">
+        <textPath href="#arc-bot-${id}" startOffset="50%" text-anchor="middle" dominant-baseline="hanging">WELL DONE</textPath>
+      </text>
+      <line x1="30" y1="52" x2="90" y2="52" stroke-width=".8"/>
+      <line x1="30" y1="72" x2="90" y2="72" stroke-width=".8"/>
+      <text x="60" y="67" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" font-weight="700" letter-spacing="1.5" fill="currentColor" stroke="none">${mon} ${d.getDate()}</text>
+    </g>
+  </svg>`;
+}
+
+/* ───────── 狀態：做完了哪些（存在瀏覽器，重整還在） ───────── */
+const ALL = CHAPTERS.flatMap((c, ci) => c.tasks.map(t => ({ ...t, ci })));
+let done = new Set();
+try { done = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) { /* 私密視窗讀不到就從零開始 */ }
+const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify([...done])); } catch (e) {} };
+ALL.filter(t => t.type === 'auto').forEach(t => done.add(t.id));   // auto 型開頁就算完成（原頁「建立帳號」就是這樣）
+
+const doneIn = ci => CHAPTERS[ci].tasks.filter(t => done.has(t.id)).length;
+// 開到第幾章：第 0 章永遠開；之後每章要上一章做完 NEED_TO_UNLOCK 項
+function unlockedCount() {
+  let n = 1;
+  while (n < CHAPTERS.length && doneIn(n - 1) >= NEED_TO_UNLOCK) n++;
+  return n;
+}
+
+/* ───────── 畫任務區 ───────── */
+function controlHTML(t) {
+  if (t.type === 'slider') return `
+    <div class="slider-shell" style="--p:0">
+      <span class="slider-text">滑動來連結 →</span>
+      <span class="slider-handle">${ICON.link}<span>${t.label}</span></span>
+      <input class="connect-slider" type="range" min="0" max="100" value="0" aria-label="滑動來${t.label}" data-slider="${t.id}">
+    </div>`;
+  if (t.type === 'prompt') return `
+    <div class="prompt-copy">${t.prompt}</div>
+    <div class="prompt-foot"><span class="prompt-hint">${t.hint}</span>
+      <button class="send-button" type="button" data-send="${t.id}">${t.btn}<span class="send-arrow">${ICON.up}</span></button>
+    </div>`;
+  return `<button class="cta-button" type="button" data-complete="${t.id}">${t.btn}</button>
+    <p class="cta-hint">看懂了就按一下，練習用、不會真的打卡</p>`;
+}
+
+// 手機螢幕裡放什麼：一般是截圖；'line' 畫一個 LINE 聊天室，底下是圖文選單
+function screenHTML(t) {
+  if (t.art === 'line') return `
+    <div class="line-mock">
+      <div class="line-bar">威琳打卡</div>
+      <div class="line-chat"></div>
+      <img class="line-menu" src="images/richmenu.webp" alt="LINE 圖文選單：上面一大格「打卡」，下面三格「我的出勤」「請假」「補登」">
+    </div>`;
+  return `<img class="task-art" src="images/${t.art}.webp" alt="打卡頁畫面：${t.title.join('')}" loading="lazy">`;
+}
+
+// 一步一行；陣列的話第二格是小框的字、第三格是 tip／warn
+const NOTE_LABEL = { tip: '小提醒', warn: '注意' };
+const stepsHTML = steps => `<ol class="steps">${steps.map(s => {
+  if (typeof s === 'string') return `<li>${s}</li>`;
+  const [text, note, kind] = s;
+  return `<li>${text}<span class="note ${kind}"><b>${NOTE_LABEL[kind]}</b>${note}</span></li>`;
+}).join('')}</ol>`;
+
+function taskHTML(t) {
+  return `
+  <article class="task-section reveal" id="task-${t.id}" data-task="${t.id}">
+    <header class="task-head">
+      <h3>${t.title[0]}<em>${t.title[1]}</em></h3>
+      <p class="task-description">${t.desc}</p>
+    </header>
+    <div class="task-body">
+      <div class="illustration-wrap">
+        <div class="phone-frame"><div class="phone-screen">${screenHTML(t)}</div></div>
+        <span class="completion-check" aria-hidden="true">${ICON.check}</span>
+        <span class="completion-stamp" style="--stamp-color:${t.stamp};--stamp-rotation:${t.rot}deg" aria-hidden="true">${stampSVG(t.id)}</span>
+      </div>
+      <div class="action-wrap"><div class="action-card">
+        ${stepsHTML(t.steps)}
+        <div class="action-zone">
+          <div class="action-control">${controlHTML(t)}</div>
+          <div class="action-complete">${ICON.check}<span>這一步看過了</span></div>
+        </div>
+      </div></div>
+    </div>
+  </article>`;
+}
+
+const journey = document.getElementById('journey');
+journey.innerHTML = CHAPTERS.map((c, ci) => `
+  <section class="group" id="group-${ci}" hidden>
+    ${squiggle(ci)}
+    <header class="chapter">
+      <p class="chapter-label">第 ${ci + 1} 關，共 ${CHAPTERS.length} 關 · <strong>${c.name}</strong></p>
+      <svg class="chapter-ring" viewBox="0 0 516 61" preserveAspectRatio="none" aria-hidden="true">
+        <ellipse cx="258" cy="30.5" rx="256" ry="29"/>
+        <ellipse cx="259" cy="31" rx="254" ry="28.4" transform="rotate(-.6 258 30)"/>
+      </svg>
+    </header>
+    ${c.tasks.map((t, ti) => (ti ? squiggle(ti + ci) : '') + taskHTML(t)).join('')}
+  </section>`).join('');
+
+/* ───────── 左側進度軌 ───────── */
+const nav = document.getElementById('group-dots');
+let shownChapters = 0;   // 進度軌目前畫到第幾章，用來判斷哪些格是「新冒出來的」
+
+function renderNav() {
+  const open = unlockedCount();
+  let html = '', i = 0;
+  for (let ci = 0; ci < open; ci++) {
+    if (ci) html += '<span class="dot-divider" aria-hidden="true"></span>';
+    for (const t of CHAPTERS[ci].tasks) {
+      const isNew = ci >= shownChapters && shownChapters > 0;
+      const label = t.title.join('') + '。';
+      html += `<span class="dot-nav-item${isNew ? ' enter' : ''}" style="--i:${i++}">
+        <button type="button" class="task-dot${done.has(t.id) ? ' completed' : ''}" data-jump="${t.id}"
+          aria-label="${label}${done.has(t.id) ? '（已完成）' : ''}">${ICON.check}</button>
+        <span class="nav-tooltip" role="tooltip">${label}</span>
+      </span>`;
+    }
+  }
+  if (open < CHAPTERS.length) {
+    const left = NEED_TO_UNLOCK - doneIn(open - 1);
+    html += `<span class="dot-nav-item">
+      <button type="button" class="nav-lock" data-jump-gate aria-label="再完成 ${left} 項解鎖下一章">${ICON.lock}</button>
+      <span class="nav-tooltip" role="tooltip">再完成 ${left} 項，解鎖下一章</span>
+    </span>`;
+  }
+  nav.innerHTML = html;
+  shownChapters = open;
+  updateActive();
+}
+
+/* 目前捲到哪一項：離畫面中線最近的那一個 */
+let activeId = null;
+function updateActive() {
+  const mid = innerHeight / 2;
+  let best = null, bestDist = Infinity;
+  document.querySelectorAll('.group:not([hidden]) .task-section').forEach(el => {
+    const r = el.getBoundingClientRect();
+    const d = Math.abs(r.top + r.height / 2 - mid);
+    if (d < bestDist) { bestDist = d; best = el.dataset.task; }
+  });
+  // 還在頁首（第一項離中線很遠）時不標任何一格
+  activeId = bestDist < innerHeight * .8 ? best : null;
+  nav.querySelectorAll('.task-dot').forEach(b => {
+    const on = b.dataset.jump === activeId;
+    b.classList.toggle('active', on);
+    on ? b.setAttribute('aria-current', 'step') : b.removeAttribute('aria-current');
+  });
+}
+
+nav.addEventListener('click', e => {
+  const dot = e.target.closest('[data-jump]');
+  if (dot) document.getElementById('task-' + dot.dataset.jump).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (e.target.closest('[data-jump-gate]')) document.getElementById('gate').scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+/* ───────── 章節開關＋閘門 ───────── */
+const gate = document.getElementById('gate');
+function renderChapters(animateNew) {
+  const open = unlockedCount();
+  CHAPTERS.forEach((c, ci) => {
+    const g = document.getElementById('group-' + ci);
+    const wasHidden = g.hidden;
+    g.hidden = ci >= open;
+    if (animateNew && wasHidden && !g.hidden) {
+      g.classList.add('entering');
+      g.querySelectorAll('.task-section').forEach(observeReveal);
+    }
+  });
+  // 閘門擺在最後一個開著的章節後面；全開了就收起來
+  if (open < CHAPTERS.length) {
+    document.getElementById('group-' + (open - 1)).after(gate);
+    gate.hidden = false;
+    const n = Math.min(doneIn(open - 1), NEED_TO_UNLOCK);
+    document.getElementById('unlock-fill').style.setProperty('--unlock-progress', (n / NEED_TO_UNLOCK * 100) + '%');
+    document.getElementById('unlock-progress').textContent = `已完成 ${n} / ${NEED_TO_UNLOCK}`;
+  } else {
+    gate.hidden = true;
+  }
+  // 最後一關打開了，頁尾才出重點回顧
+  document.getElementById('finale').hidden = open < CHAPTERS.length;
+}
+document.getElementById('recap').innerHTML = RECAP.map(([a, b]) => `<li><strong>${a}</strong><span>${b}</span></li>`).join('');
+
+/* ───────── 完成一項 ───────── */
+function complete(id) {
+  if (done.has(id)) return;
+  const before = unlockedCount();
+  done.add(id); save();
+  document.getElementById('task-' + id).classList.add('done');
+  const after = unlockedCount();
+  if (after > before) {
+    // 解鎖：閘門留在原位、進度條先跑滿，停一下讓人看到，再淡出、下一章滑進來。
+    // 這段時間不能呼叫 renderChapters／renderNav，不然閘門會直接跳到下一章後面、新格子提早冒出來
+    document.getElementById('unlock-fill').style.setProperty('--unlock-progress', '100%');
+    document.getElementById('unlock-progress').textContent = `已完成 ${NEED_TO_UNLOCK} / ${NEED_TO_UNLOCK}`;
+    setTimeout(() => {
+      gate.classList.add('leaving');
+      setTimeout(() => { gate.classList.remove('leaving'); renderChapters(true); renderNav(); }, 500);
+    }, 900);
+  } else {
+    renderChapters(false);
+    renderNav();
+  }
+  // 進度軌上這一格馬上變實心、彈一下（解鎖那種情況也是，不用等動畫）
+  const dot = nav.querySelector(`[data-jump="${id}"]`);
+  if (dot) dot.classList.add('completed', 'pop');
+}
+
+// 按鈕型
+journey.addEventListener('click', e => {
+  const b = e.target.closest('[data-complete]');
+  if (b) complete(b.dataset.complete);
+  // 提問型：箭頭轉一下（假裝在送出），0.7 秒後完成
+  const s = e.target.closest('[data-send]');
+  if (s && !s.classList.contains('busy')) {
+    s.classList.add('busy');
+    setTimeout(() => { s.classList.remove('busy'); complete(s.dataset.send); }, 700);
+  }
+});
+
+// 滑動型：拖到 92% 以上算完成，沒拖到底就彈回原位
+journey.addEventListener('input', e => {
+  const r = e.target.closest('.connect-slider'); if (!r) return;
+  const shell = r.parentElement;
+  shell.classList.remove('snap');
+  shell.style.setProperty('--p', r.value / 100);
+  shell.style.setProperty('--slide', r.value + '%');
+});
+journey.addEventListener('change', e => {
+  const r = e.target.closest('.connect-slider'); if (!r) return;
+  const shell = r.parentElement;
+  shell.classList.add('snap');
+  if (+r.value >= 92) { shell.style.setProperty('--p', 1); complete(r.dataset.slider); }
+  else { r.value = 0; shell.style.setProperty('--p', 0); shell.style.setProperty('--slide', '0%'); }
+});
+
+/* ───────── 捲到才淡入 ───────── */
+const io = new IntersectionObserver(entries => entries.forEach(en => {
+  if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+}), { rootMargin: '0px 0px -12% 0px' });
+const observeReveal = el => io.observe(el);
+
+/* ───────── 捲動時更新進度軌上「目前這一格」（範本這裡還有頁首油畫的視差，這份沒有油畫所以拿掉） ───────── */
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => { updateActive(); ticking = false; });
+}, { passive: true });
+addEventListener('resize', updateActive);
+
+document.getElementById('reset').addEventListener('click', () => {
+  try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+  location.reload();
+});
+
+/* ───────── 開頁 ───────── */
+done.forEach(id => { const el = document.getElementById('task-' + id); if (el) el.classList.add('done', 'static'); });
+renderChapters(false);
+renderNav();
+document.querySelectorAll('.group:not([hidden]) .task-section').forEach(observeReveal);
+// 開頁時已完成的項目拿掉 static，之後重做（重新開始）時動畫照常
+setTimeout(() => document.querySelectorAll('.task-section.static').forEach(el => el.classList.remove('static')), 50);
+</script>
+</body>
+</html>
