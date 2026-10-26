@@ -7,23 +7,24 @@
 <title>威琳內部系統・架構總覽</title>
 <style>
   /* 這頁只是外殼：上方一排分頁，下方整面 iframe 顯示選中的那張圖。
-     八張圖本體各自獨立（00~06-*.html；00 有兩張），重新 deliver 任何一張，這頁不用改就會顯示新版。 */
+     九張圖本體各自獨立（00~07-*.html；00 有兩張），重新 deliver 任何一張，這頁不用改就會顯示新版。 */
   :root {
-    --bg: #f5f4f1;
-    --bar: #ffffff;
-    --line: #d9d6cf;
-    --ink: #1d1d1f;
-    --muted: #6e6a63;
-    --active: #0f4c5c;
+    /* 2026-10-26 改成 archify editorial（暖紙感），跟裡面每張圖同一套色；選中的分頁用它的朱紅 */
+    --bg: #f2eee5;
+    --bar: #fbf8f1;
+    --line: #d8d0c2;
+    --ink: #242018;
+    --muted: #6f6658;
+    --active: #bb4c23;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #16181b;
-      --bar: #1f2226;
-      --line: #33373d;
-      --ink: #e8e6e1;
-      --muted: #9a968e;
-      --active: #7fd0e0;
+      --bg: #181611;
+      --bar: #231f18;
+      --line: #39342a;
+      --ink: #f4eddf;
+      --muted: #b9ae9b;
+      --active: #dd6b3d;
     }
   }
   * { box-sizing: border-box; }
@@ -82,7 +83,7 @@
 <header>
   <div class="title-row">
     <h1>威琳內部系統・架構總覽</h1>
-    <span class="hint">圖內按 / 可搜尋、點線可追整條路徑｜系統仍是 demo，尚無正式資料｜「功能」是系統有哪些功能、各做好了沒｜「進度」上面是做到哪一步、下面是每個功能做了幾成｜「部署架構」「案場一條線」「案件里程碑」「庫存一條線」畫的是 2026-09 定的目標，程式還沒照它改；只有「操作與資料庫」是現況｜「資料地圖」是系統裡各種紀錄怎麼串在一起，已經照它改進系統</span>
+    <span class="hint">圖內按 / 可搜尋、點線可追整條路徑｜打卡已放上正式版，其他功能還沒有正式資料｜「功能」是系統有哪些功能、各做好了沒｜「進度」上面是做到哪一步、下面是每個功能做了幾成｜「部署架構」「案場一條線」「案件里程碑」「庫存一條線」畫的是 2026-09 定的目標，程式還沒照它改；只有「操作與資料庫」是現況｜「資料地圖」是系統裡各種紀錄怎麼串在一起，已經照它改進系統｜「打卡一條線」是員工從 LINE 打卡到老闆看出勤整條怎麼走，照現在的程式畫</span>
   </div>
   <nav id="tabs">
     <!-- 00 是進度（2026-10-02 加，取代 架構/系統架構圖.html），放第一個。
@@ -96,6 +97,8 @@
     <button data-src="03-操作與資料.html">操作與資料庫</button>
     <button data-src="04-案件狀態.html">案件里程碑</button>
     <button data-src="05-庫存一條線.html">庫存一條線</button>
+    <!-- 07 打卡一條線（2026-10-26 加）：手寫頁、沒有 JSON，規則照 功能/05-打卡與工作紀錄/守則.md 和 schema.sql 的預設值 -->
+    <button data-src="07-打卡一條線.html">打卡一條線</button>
     <!-- 06 資料地圖（2026-10-03 系統負責人回「加」）：手寫頁，正本在檔內 NODES／LINKS，npm run check 會拿它對 schema -->
     <button data-src="06-資料地圖.html">資料地圖</button>
   </nav>

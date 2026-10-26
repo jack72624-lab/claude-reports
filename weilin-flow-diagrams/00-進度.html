@@ -76,19 +76,21 @@
   /* 兩組顏色分開看（2026-10-02 系統負責人：「顏色可以，風格跟後面再統一一點點」）：
      ①狀態色照威琳系統本體（src/app/globals.css :root）：墨＝做好了、中灰＝做了一部分、淺灰＝還沒做、
        琥珀＝等人、紅＝下一步。不用綠（系統負責人 2026-10-02）。完成跟一部分靠深淺分，不靠色相。這組別動。
-     ②底色、框線、字的灰照 01–05 那幾張 archify 圖的冷灰（01-部署架構.html 的 [data-theme] 那兩組），
-       切分頁才不會像換了一個網站。01–05 重產換了色，這組跟著改。
-       dim 沒照抄 01 的 #94a3b8：那個在白底只有 2.6:1，這頁拿它寫字，改用 01 介面字用的 #7d8da1（3.4:1）。 */
+     ②底色、框線、字的灰照 01–05 那幾張 archify 圖，切分頁才不會像換了一個網站。01–05 重產換了色，這組跟著改。
+       2026-10-26 系統負責人喜歡設計參考庫 agent-arch 卡的淺色，01–05 改用 archify 的 editorial（暖紙感），
+       這組從冷灰換成 editorial 那兩組（01-部署架構.html 的 [data-preset="editorial"][data-theme] 那兩組）。
+       dim 沒照抄 editorial 的 #a09788：那個在紙色底上太淡，這頁拿它寫字，改用它箭頭的 #8a806f。 */
   :root {
-    --bg: #f8fafc;
-    --ink: #0f172a;
-    --muted: #64748b;
-    --dim: #7d8da1;
-    --panel: #ffffff;
-    --border: #e2e8f0;
-    --tag-bg: #f1f5f9;
-    --todo-ink: #64748b;
-    --accent: #0f172a;         /* 選中、滑過的外框：跟字同一個色 */
+    /* 2026-10-26 底色、字色、框線改成 archify editorial 淺色（暖紙感），跟 01–05 一起換，切分頁不會像換了一個網站 */
+    --bg: #f2eee5;
+    --ink: #242018;
+    --muted: #6f6658;
+    --dim: #8a806f;
+    --panel: #fbf8f1;
+    --border: #d8d0c2;
+    --tag-bg: #ebe5d8;
+    --todo-ink: #6f6658;
+    --accent: #242018;         /* 選中、滑過的外框：跟字同一個色 */
     --ok: #1d1d1f;             /* 做好了：墨色實心 */
     --ok-fill: #ececf0;
     --part: #a1a1a6;           /* 做了一部分：中灰，夾在墨跟淺灰中間 */
@@ -104,15 +106,15 @@
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #020617;
-      --ink: #ffffff;
-      --muted: #94a3b8;
-      --dim: #7d8da1;
-      --panel: #090f21;        /* 01 的 rgba(15,23,42,.5) 疊在 #020617 上算出來的實色 */
-      --border: #1e293b;
-      --tag-bg: #131d31;
-      --todo-ink: #94a3b8;
-      --accent: #ffffff;
+      --bg: #181611;           /* archify editorial 深色 */
+      --ink: #f4eddf;
+      --muted: #b9ae9b;
+      --dim: #8f8574;
+      --panel: #231f18;
+      --border: #39342a;
+      --tag-bg: #2c271f;
+      --todo-ink: #b9ae9b;
+      --accent: #f4eddf;
       --ok: #f5f5f7;
       --ok-fill: #2c2c2f;
       --part: #6e6e73;
@@ -126,8 +128,8 @@
     }
   }
   :root[data-theme="dark"] {
-    --bg: #020617; --ink: #ffffff; --muted: #94a3b8; --dim: #7d8da1; --panel: #090f21;
-    --border: #1e293b; --tag-bg: #131d31; --todo-ink: #94a3b8; --accent: #ffffff;
+    --bg: #181611; --ink: #f4eddf; --muted: #b9ae9b; --dim: #8f8574; --panel: #231f18;
+    --border: #39342a; --tag-bg: #2c271f; --todo-ink: #b9ae9b; --accent: #f4eddf;
     --ok: #f5f5f7; --ok-fill: #2c2c2f; --part: #6e6e73; --todo: #3a3a3d; --wait: #e0a04a;
     --wait-fill: #3a2c14; --next: #ff6b5e; --next-fill: #3f1f1b; --live: #4ade80;
     --g-cyan: #22d3ee; --g-amber: #fbbf24; --g-violet: #a78bfa; --g-rose: #fb7185; --g-slate: #94a3b8;
@@ -251,6 +253,9 @@
   .sw.part { background: var(--part); }
   .sw.wait { background: var(--wait); opacity: .55; }
   .sw.todo { background: var(--todo); }
+  /* test＝做好了、等驗（10-26 加）：左半墨、右半空，跟「做了一部分」的灰分得開 */
+  .sw.test { background: linear-gradient(90deg, var(--ok) 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px var(--ok); }
+  .bar .test { background: repeating-linear-gradient(-45deg, var(--ok) 0 3px, transparent 3px 6px); }
 
   /* 點了某一步之後的提示列 */
   .focus {
@@ -327,6 +332,7 @@
   .lamp.live { background: var(--live); box-shadow: 0 0 0 3px color-mix(in srgb, var(--live) 25%, transparent); }
   .lamp.built { background: var(--ok); }
   .lamp.notyet { border: 1.5px solid var(--dim); }
+  .lamp.test { border: 1.5px solid var(--ok); background: linear-gradient(90deg, var(--ok) 50%, transparent 50%); }
   .bar .live { background: var(--live); }
   .bar .built { background: var(--ok); }
 
@@ -471,7 +477,7 @@
 <!-- 功能頁（?view=功能 才露出來；內容全由下面 script 的 USES 算出來） -->
 <div id="featView" hidden>
   <h1>威琳內部系統・功能</h1>
-  <p class="sub">系統裡有哪些功能。點任一個方框，會展開它底下大家會用到什麼。燈號：<span class="nw"><span class="lamp live"></span> 已上線、公司在用</span>　<span class="nw"><span class="lamp built"></span> 做好了、還沒開始用</span>　<span class="nw"><span class="lamp notyet"></span> 還沒好</span></p>
+  <p class="sub">系統裡有哪些功能。點任一個方框，會展開它底下大家會用到什麼。燈號：<span class="nw"><span class="lamp live"></span> 已上線、公司在用</span>　<span class="nw"><span class="lamp built"></span> 做好了、還沒開始用</span>　<span class="nw"><span class="lamp test"></span> 做好了、等驗</span>　<span class="nw"><span class="lamp notyet"></span> 還沒好</span></p>
 
   <section class="panel total" aria-label="總數">
     <div class="total-head">
@@ -565,7 +571,7 @@ const STEPS = [
     why: '租主機、每天備份、刪掉測試帳號，都在「地基」這一列。另外要把鼎新 A1 現在的庫存搬進來當起點，那一項記在「庫存」那一列。' },
   { k: '5', t: '打卡上線', sub: 'LINE 上班・下班打卡', st: 'todo',
     you: '公司實際用過、說可以', funcs: ['05'],
-    why: '公司第一個真的開始用的功能。員工在 LINE 按「上班」「下班」，按下那一下抓一次定位，不用登入。要等「威琳打卡」這個 LINE 官方帳號開好才上得了線。' },
+    why: '公司第一個真的開始用的功能。員工在 LINE 按「上班」「下班」，不用登入。「威琳打卡」LINE 官方帳號開好了、接到正式版，也用真手機在正式版打過卡了，先給行政試用，目標 11 月公司開始用。整條怎麼走看「打卡一條線」那個分頁。' },
   { k: '6', t: '庫存上線', sub: '進貨・出庫・回庫・盤點', st: 'todo',
     you: '公司實際用過、說可以', funcs: ['04'],
     why: '跟工作紀錄一起上線：出庫給案場就是備貨，下班回庫就是收工結算。' },
@@ -582,15 +588,15 @@ const PHASES = [
 
 // 上半三塊說明（日期改了記得一起改）
 const NOW = {
-  title: '現在走到哪（2026-10-20）',
+  title: '現在走到哪（2026-10-26）',
   items: [
-    '7 步走完前 3 步。第 4 步不用等主機的都做好了：備份、上鎖、每月還原、操作紀錄、離職停帳號',
+    '7 步走完前 3 步。第 4 步：正式版放上網了（只開人員和設定）；老闆和行政自己開帳號、每個人自己換密碼、這台裝置保持登入、離職停帳號都做好了。備份做了一部分：每天備份和還原練習有了，上鎖、放一份在主機以外還沒做；主機還在 30 天試用',
+    '打卡排到庫存前面先上線。「威琳打卡」LINE 帳號開好了、接到正式版；測試版用另一個「打卡測試」帳號',
+    '打卡、請假、補登、加班、出勤頁都在測試版和正式版上了。這週新加：定位打卡先在地圖上確認「你在這裡，對嗎？」、老闆和行政看得到打卡位置、週末一律放假（有來整天算加班）、加班零頭超過 15 分鐘補一格',
+    '正式版已經用真手機從 LINE 打過卡；請假還沒在真手機試，先算做好。給行政試用前，要先把老闆和系統維護者設成「不用打卡」',
+    '人員的任職紀錄（在職、留職停薪可以好幾段，離職日到了帳號自己停）和特休照年資自動算，本機做好了、還沒推上去',
     '庫存做好了開帳工具、盤點單、備貨時選不夠從哪補、匯出 Excel；上線前還要補 2 樣：備貨和收工結算在手機上好用、常用的每週盤和不常用的每月盤',
-    '打卡排到庫存前面先上線，直接做 LINE 版。打卡、按錯重打、早到晚走、老闆看全部人的出勤、加班自動算，都放上測試版了',
-    '週六、週日、國定假日的加班分段、午休自動扣、忘了打卡補登、加班 46 小時亮燈、線上請假，都放上測試版了，真手機照清單大致測過了',
-    '行政也能處理出勤（自己的要給老闆）、事假和補休要老闆核准、LINE 打卡頁換成新的畫面，都放上測試版了，還沒照清單測',
-    '測試版放上網了，手機打得開，裡面是假資料',
-    '下一次：手機測出有問題的先修；接著重新設計桌機出勤頁的畫面，目標 11 月開始讓公司用',
+    '下一次：行政先試用打卡，有問題先修；目標 11 月公司開始用',
   ],
 };
 const WHY = {
@@ -605,9 +611,10 @@ const WAIT = {
   title: '還在等的',
   items: [
     '雲端主機：公司帳號開好了，先用 30 天試用。試用到期先買 Hobby（10-19 定），照片上線前一定要 Pro',
-    '打卡上線：另開一個「威琳打卡」LINE 官方帳號（10-19 定），開好才上得了線（開發先用測試帳號）',
+    '加班亮黃燈要幾小時：等老闆',
     '在公司連 Wi-Fi 就算打卡過：公司 IP 不固定，公司網路要先設好固定網址',
     '請假：只剩全勤的金額和條件等老闆',
+    '離職後回來，資遣的年資要不要接著算：等老闆',
     '網路線成本算不算進案場：等公司確認',
     '收款比例：待決定，不影響前面幾步',
   ],
@@ -616,7 +623,7 @@ const WAIT = {
 /* ═══════════════════════════════════════════════════════════════════
    正本二：12 個功能（對到 功能/00-地基 … 功能/11-LINE窗口 資料夾）
    每項 [狀態, 文字, 出處]
-     狀態：ok 做好了｜part 做了一部分｜todo 還沒做｜wait 等人決定
+     狀態：ok 做好了｜test 做好了、等驗（放上去了、還沒用真手機或公司實際用過，10-26 加）｜part 做了一部分｜todo 還沒做｜wait 等人決定
      出處：舊頁編號（01-1 這種＝2026-09-14 儀表板的段-項）、「九站 NN」、日期（那天定的）
            只給我們對照用，頁面上不顯示（10-02 起，公司的人看了只會一頭霧水）
    ['h', '小標'] 只是分組標題，不算分。
@@ -667,16 +674,23 @@ const FUNCS = [
       ['ok', '登入試太多次就擋', '13-5'],
       ['ok', '登入失敗要留紀錄', '13-6'],
       ['ok', '有人離職，當天就能停用帳號；密碼最少 8 個字（前面還有一道 email 驗證碼）', '13-8'],
+      // 10-23～10-25 補：020、021、保持登入，原本清單沒列
+      ['ok', '老闆、行政在人員頁自己開帳號、綁 LINE；臨時密碼第一次登入一定要換', '020'],
+      ['ok', '每個人自己換密碼', '10-23'],
+      ['ok', '權限可以給某一個人多開，不碰錢的六把可以個人加', '021'],
+      ['ok', '這台裝置保持登入：手機不用每次都重登', '10-25'],
       ['ok', '系統用到的外部元件，定期檢查有沒有漏洞，有就更新', '13-9'],
       ['ok', '出錯時畫面只說出錯，不露出系統內部的細節', '13-10'],
       ['ok', '門禁與 Wi-Fi 密碼：照常存、畫面遮起來、誰看過留紀錄', '13-4'],
-      ['todo', '開放給外面用之前，自己先扮駭客試一次，確認擋得住', '13-7'],
+      // 10-23 正式版放上網前，從外面打過正式站、整份程式掃過一次預設值漏洞；照片、庫存開放前要再試一次
+      ['part', '開放給外面用之前，自己先扮駭客試一次，確認擋得住（正式版放上網前試過一次，之後開新功能要再試）', '13-7'],
       ['h', '第一次上線'],
-      ['part', '租雲端主機：公司帳號開好、系統負責人加進專案了，先用試用。測試版已經放上去', '10-02'],
-      ['part', '正式上線用一個全新、乾淨的資料庫，不帶測試資料過去', '10-1'],
-      ['todo', '刪掉做系統時用的測試帳號', '10-2'],
-      ['todo', '主機重開機後，連線通道自己接回來（不然停電後外面連不進來）', '10-4'],
-      ['todo', '搬上雲端前把主機時區設成台北（不然單據日期可能差一天）', '10-5'],
+      // 10-23 正式版建好（CHANGELOG 那天）：全新資料庫、時區台北、重開機驗過
+      ['part', '租雲端主機：公司帳號開好、系統負責人加進專案了。測試版、正式版都放上去了，主機還在試用（約到 11/11）', '10-02'],
+      ['ok', '正式上線用一個全新、乾淨的資料庫，不帶測試資料過去', '10-1'],
+      ['ok', '刪掉做系統時用的測試帳號（正式版從頭開，測試帳號沒帶過去）', '10-2'],
+      ['ok', '主機重開機後，連線自己接回來（不然停電後外面連不進來）', '10-4'],
+      ['ok', '搬上雲端前把主機時區設成台北（不然單據日期可能差一天）', '10-5'],
     ],
     dropped: [
       ['備份加密（第一次上線那段）', '跟「備份先上鎖才傳出去」是同一件，併掉', '10-3'],
@@ -816,12 +830,16 @@ const FUNCS = [
     ] },
 
   { n: '05', t: '打卡與工作紀錄',
-    note: '工作紀錄大致做好了，新流程要再接幾個小改。打卡直接做 LINE 版、排在庫存前面先上線：打卡、老闆看出勤、加班自動算、補登、46 小時亮燈、線上請假和「我的出勤」、行政處理出勤、LINE 打卡新畫面都放上測試版了，等 LINE 帳號開好就能用。全勤的金額和條件還在等老闆。',
+    note: '工作紀錄大致做好了，新流程要再接幾個小改。打卡直接做 LINE 版、排在庫存前面先上線：打卡、老闆看出勤、加班自動算、補登、46 小時亮燈、線上請假和「我的出勤」、行政處理出勤都放上測試版和正式版了，「威琳打卡」LINE 帳號也接好了，正式版用真手機打過卡。午休、補登、亮燈、女同仁假別放上去了、真手機還沒驗；人員任職紀錄本機做好、還沒推。全勤的金額和條件還在等老闆。',
     items: [
       ['h', '工作紀錄'],
       ['ok', '一張紀錄＝一趟工程（可以跨好幾天），不是一天一張', '03-1'],
       ['ok', '每個人每天的出勤：誰哪幾天來', '03-2'],
       ['ok', '人員資料（含費率歷史）', '02-4'],
+      // 10-25～10-26：021・022 推上兩邊；028 本機做好、還沒推
+      ['ok', '人員分「內部」「外包工班」兩格；「稱呼」和「本名」分開記', '021・022'],
+      ['test', '任職紀錄：在職、留職停薪可以好幾段，離職日到了帳號自己停；名卡、緊急聯絡人只有老闆、行政、系統維護者看得到（本機做好、還沒推）', '028'],
+      ['test', '特休照年資自動算：留停不算年資、離職不滿 3 個月回來接著算（本機做好、還沒推）', '028'],
       ['ok', '一趟可以有好幾個工作目標，在現場打勾', '舊頁'],
       ['ok', '事後可以改，改過會留紀錄', '03-7'],
       ['ok', '工作紀錄畫面不出現任何金額', '03-6'],
@@ -834,25 +852,29 @@ const FUNCS = [
       ['todo', '安裝教學：每項料旁邊按「怎麼裝」直接打開（照料號放，內容在設定頁改）', '九站之外'],
       ['h', '打卡與請假'],
       // 10-12 兩項併回一項：打卡直接做 LINE 版（10-09 曾拆成網頁版＋LINE 入口）。保留「LINE 打卡」四個字，功能頁 USES 靠它對到這項
-      ['part', 'LINE 打卡：從 LINE 按上班、下班，不用登入，按下那一下抓一次定位', '06-1'],
+      ['ok', 'LINE 打卡：從 LINE 按上班、下班，不用登入，按下那一下抓一次定位（「威琳打卡」帳號接到正式版，真手機打過）', '06-1'],
+      // 10-24 推上兩邊；10-26 系統負責人說正式版真手機打過卡，改 ok
+      ['ok', '不在公司打卡：先在地圖上確認「你在這裡，對嗎？」；老闆和行政在出勤頁看得到打卡位置', '10-24'],
       ['part', '公司網路設一個固定網址：在公司連 Wi-Fi 就算過，上線前要做（10-16 程式做好，還差公司開 DDNS，公司 IP 不固定，10-19 確認）', 'C-3'],
       // 下面三項 10-03 補進來：打卡與請假計畫.md 早就寫了，這份清單漏列（系統負責人 10-03「加」）
-      // 10-19 晚：請假、我的出勤放上測試版（遷移 016）；真手機看過再改 ok
-      ['part', '線上請假：18 種假別（產假、喪假拆開算），事假和補休要老闆核准、其他送出就算；老闆和行政可以代請、銷假，手動加減特休補休只有老闆（放上測試版了，核准那段還沒用手機測）', '016'],
-      ['part', '「我的出勤」：LINE 打卡頁的第二個分頁，看自己的出勤、特休補休剩多少和哪天到期、請假、加班選領錢或換補休，不出現金額（放上測試版了，真手機大致測過）', '016'],
+      // 10-19 晚：請假、我的出勤放上測試版（遷移 016）；10-26 系統負責人：「請假還沒，但先算做好」→ ok
+      ['part', '線上請假：18 種假別（產假、喪假拆開算），事假和補休要老闆核准、其他送出就算；老闆和行政可以代請、銷假，手動加減特休補休只有老闆（測試版、正式版都放上了）', '016'],
+      ['ok', '「我的出勤」：LINE 打卡頁的第二個分頁，看自己的出勤、特休補休剩多少和哪天到期、請假、加班選領錢或換補休，不出現金額（測試版、正式版都放上了）', '016'],
       ['todo', '加班費算進那個案場的成本（延到第 14 階段，成本集中的那一支做好才接）', '打卡請假計畫 :21・:188'],
       ['ok', '出勤月報：每月匯出 Excel，每天誰幾點上下班、加班幾小時，另一張是每人整月的加班加總（只有時數）', '06-2'],
     // 10-19 補：009～012 做的，原本清單沒列
     ['ok', '老闆看全部人的出勤：每天誰有來、誰沒打卡，有疑點的列出來看；可以設定誰不用打卡', '009'],
     ['ok', '按錯可以重打：第二次按先問「要重打嗎？」', '10-19'],
     ['ok', '早到晚走：提早到問算不算上班，晚走問算不算加班（照每個人自己做滿 8 小時的時間問）', '008・10-19'],
-    ['ok', '加班自動算：做滿 8 小時起算、30 分鐘一格，有吃晚餐照扣（沒吃／半小時／一小時）', '010'],
+    ['ok', '加班自動算：做滿 8 小時起算、30 分鐘一格，零頭超過 15 分鐘補一格，有吃晚餐照扣', '010・026'],
     ['ok', '上班時間、午休、工時改了，只影響改的那天以後', '011'],
-    ['ok', '週六休息日、週日例假、國定假日來上班，加班照勞基法分段；週末很多人來的，老闆選補班還是加班', '012'],
-    // 10-19 晚：013～015 放上測試版；真手機看過再改 ok
-    ['part', '午休正常來自動扣、晚 1 小時以上才問；晚餐一步扣 30 分鐘（放上測試版了）', '013'],
-    ['part', '忘了打卡可以補登，老闆或行政准了才算；過期了直接補（放上測試版了，真手機大致測過）', '015'],
-    ['part', '一個月加班到 40 小時亮黃燈、超過 46 小時亮紅燈（放上測試版了）', '014'],
+    // 10-26 遷移 027：拿掉週末補班，老闆不用再選
+    ['ok', '週六休息日、週日例假、國定假日來上班，加班照勞基法分段；週末一律放假，有來整天算加班，週日來會標「例假出勤」', '012・027'],
+    // 10-26：023、013～015 兩邊都放上了、真手機還沒驗 → test（做好了、等驗）；真手機看過再改 ok
+    ['test', '請假只列這個人能請的：生理假、產假、流產假、產檢假只給女同仁（測試版、正式版都放上了，真手機還沒驗）', '023'],
+    ['test', '午休正常來自動扣、晚 1 小時以上才問；晚餐一步扣 30 分鐘（測試版、正式版都放上了，真手機還沒驗）', '013'],
+    ['test', '忘了打卡可以補登，老闆或行政准了才算；過期了直接補（測試版、正式版都放上了，真手機還沒驗）', '015'],
+    ['test', '一個月加班到 40 小時亮黃燈、超過 46 小時亮紅燈（測試版、正式版都放上了，真手機還沒驗）', '014'],
       ['h', '手機'],
       ['todo', '手機版另外從頭設計（還沒開始）', '03-11'],
     ],
@@ -1049,6 +1071,8 @@ const USES = [
   { n: '05', lead: '誰哪天去哪個案場、做了什麼，記在工作紀錄裡；打卡、請假從 LINE 直接打開，不用登入。',
     items: [
       ['工作紀錄：一趟工程一張，記下誰哪幾天去', ['一張紀錄＝一趟工程', '每個人每天的出勤']],
+      // 10-26 加：028 本機做好、還沒推
+      ['人員的任職紀錄：在職、留職停薪、離職都記下來，特休照年資自動算', ['任職紀錄：在職', '特休照年資自動算']],
       ['一趟可以有好幾個工作目標，在現場打勾', ['好幾個工作目標']],
       ['收工一次結清：剩料、交接', ['收工結清']],
       ['事後可以改，改過會留紀錄', ['事後可以改']],
@@ -1059,6 +1083,7 @@ const USES = [
       // 10-12 併回一行：打卡直接做 LINE 版，連到「LINE 打卡」那一項
       ['從 LINE 按「上班」「下班」打卡，不用登入', ['LINE 打卡：從 LINE']],
       ['打卡時確認人在哪：在公司看有沒有連公司 Wi-Fi，不在公司用手機定位', ['固定網址']],
+      ['不在公司打卡，先在地圖上確認人在哪；老闆看得到每張卡在哪打的', ['你在這裡，對嗎？']],
       ['線上請假，18 種假別都有', ['線上請假']],
       ['「我的出勤」：看自己的出勤、剩幾天假、補休剩幾小時和哪天到期', ['「我的出勤」：LINE']],
       ['加班費自動算進那個案場的成本', ['加班費算進']],
@@ -1151,31 +1176,33 @@ for (const f of FUNCS) {
   if (k !== 1) warns.push(`功能 ${f.n} ${k ? `放進了 ${k} 組` : '沒放進任何一組'}，進度頁和功能頁會${k ? '重複' : '少一個'}（改 GROUPS）`);
 }
 for (const g of GROUPS) for (const n of g.ns) if (!FUNCS.some(f => f.n === n)) warns.push(`「${g.label}」組裡的 ${n} 在進度清單找不到`);
-const LABEL = { ok: '做好了', part: '做了一部分', todo: '還沒做', wait: '等人決定' };
-const ORDER = ['ok', 'part', 'wait', 'todo'];
+// test＝做好了、等驗（10-26 系統負責人要的第四種燈）：程式做好、放上去了，還沒在真手機或公司實際用過。算進「做好」
+const LABEL = { ok: '做好了', test: '做好了、等驗', part: '做了一部分', todo: '還沒做', wait: '等人決定' };
+const ORDER = ['ok', 'test', 'part', 'wait', 'todo'];
 const ST_LABEL = { done: '完成', next: '下一步', todo: '還沒開始' };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const $ = id => document.getElementById(id);
 
 // 數一列：只數有狀態的項目，小標不算
 function count(items) {
-  const c = { ok: 0, part: 0, todo: 0, wait: 0, all: 0 };
+  const c = { ok: 0, test: 0, part: 0, todo: 0, wait: 0, all: 0 };
   for (const it of items) if (it[0] !== 'h') { c[it[0]]++; c.all++; }
   return c;
 }
 // 把幾個功能的數字加起來（總數＝全部 12 個；某一步＝那一步的 funcs）
 function sum(ns) {
-  const t = { ok: 0, part: 0, todo: 0, wait: 0, all: 0 };
+  const t = { ok: 0, test: 0, part: 0, todo: 0, wait: 0, all: 0 };
   for (const f of FUNCS) if (!ns || ns.includes(f.n)) { const c = count(f.items); for (const k in t) t[k] += c[k]; }
   return t;
 }
-const pct = c => c.all ? Math.round(c.ok / c.all * 100) : 0;
+const done = c => c.ok + c.test;   // 「做好」＝做好了＋做好了、等驗（唯一入口）
+const pct = c => c.all ? Math.round(done(c) / c.all * 100) : 0;
 // 這個功能屬於哪一步（唯一入口：下半的標籤、上半的亮燈都走這裡的 STEPS.funcs）
 const stepOf = n => STEPS.find(s => s.funcs.includes(n));
 
 // 進度條：照 ORDER 疊色塊，寬度是各狀態佔全部的比例；灰底就是「還沒做」
 function bar(c) {
-  const segs = ['ok', 'part', 'wait'].map(k =>
+  const segs = ['ok', 'test', 'part', 'wait'].map(k =>
     c[k] ? `<i class="${k}" style="width:${(c[k] / c.all * 100).toFixed(2)}%"></i>` : '').join('');
   const label = ORDER.map(k => `${LABEL[k]} ${c[k]}`).join('、');
   return `<div class="bar" role="img" aria-label="${label}">${segs}</div>`;
@@ -1196,7 +1223,7 @@ function card(s) {
     <span class="t">${esc(s.t)}</span>
     <span class="s">${esc(s.sub)}</span>
     ${s.you ? `<span class="you">怎樣算完成：${esc(s.you)}</span>` : ''}
-    <span class="fn">${c ? `功能 ${s.funcs.join('・')}｜做好 ${c.ok}／${c.all}` : esc(s.fnNote || '')}</span>
+    <span class="fn">${c ? `功能 ${s.funcs.join('・')}｜做好 ${done(c)}／${c.all}` : esc(s.fnNote || '')}</span>
   </button>`;
 }
 // 一段一個虛線框（灰），--span＝這框佔幾欄＝裡面幾步
@@ -1208,7 +1235,7 @@ $('phases').innerHTML = PHASES.map(p => `<section class="grp-frame g-slate" styl
 /* ── 下半：總數 ── */
 const total = sum();
 $('bigPct').innerHTML = `${pct(total)}%<small>完成</small>`;
-$('bigCount').textContent = `${total.all} 項裡做好 ${total.ok} 項`;
+$('bigCount').textContent = `${total.all} 項裡做好 ${done(total)} 項`;
 $('bigBar').outerHTML = bar(total);
 $('legend').innerHTML = ORDER.map(k =>
   `<span><i class="sw ${k}"></i>${LABEL[k]} ${total[k]}</span>`).join('');
@@ -1238,7 +1265,7 @@ function rowHtml(f) {
   return `<details class="row panel" data-n="${f.n}">
     <summary>
       <div class="name"><span class="num">${f.n}</span>${esc(f.t)}${st ? `<span class="step">第 ${st.k} 步「${esc(st.t)}」</span>` : ''}</div>
-      <div class="score">${pct(c)}%<small>${c.ok}／${c.all}</small></div>
+      <div class="score">${pct(c)}%<small>${done(c)}／${c.all}</small></div>
       ${bar(c)}
       <div class="note">${esc(f.note)}</div>
     </summary>
@@ -1268,7 +1295,7 @@ function update() {
   if (!s) { focus.classList.remove('show'); return; }
   const c = s.funcs.length ? sum(s.funcs) : null;
   focus.querySelector('span').textContent = `第 ${s.k} 步「${s.t}」：${s.why}` +
-    (c ? `（這 ${s.funcs.length} 個功能合起來做好 ${c.ok}／${c.all}）` : '');
+    (c ? `（這 ${s.funcs.length} 個功能合起來做好 ${done(c)}／${c.all}）` : '');
   focus.classList.add('show');
   // 提示列不在畫面裡（手機上常常在很下面）才捲過去，桌機看得到就不動
   const r = focus.getBoundingClientRect();
@@ -1286,7 +1313,7 @@ $('phases').addEventListener('click', e => {
 $('focusOff').addEventListener('click', () => { cur = null; update(); });
 
 /* ── 功能頁（?view=功能）── 兩種看法都會算一次，連不到的警告列在進度頁也看得到 */
-const LAMP_LABEL = { live: '已上線', built: '做好了', notyet: '還沒好' };
+const LAMP_LABEL = { live: '已上線', built: '做好了', test: '做好了、等驗', notyet: '還沒好' };
 
 // 一條「大家會用到的」亮哪個燈。唯一入口：卡片、總數、警告都走這裡。
 // 先逐條對連結（就算已上線也對，FUNCS 改字之後才抓得到），再決定燈。
@@ -1295,22 +1322,25 @@ function lampOf(n, use) {
   const f = FUNCS.find(x => x.n === n);
   const items = f ? f.items.filter(it => it[0] !== 'h') : [];
   let allOk = links.length > 0;          // 空陣列＝進度清單裡還沒這一項，算還沒好
+  let anyTest = false;                   // 連到的有一項是「做好了、等驗」→ 半實心燈
   for (const frag of links) {
     const hits = items.filter(it => it[1].includes(frag));
     if (hits.length !== 1) {
       warns.push(`${n}「${text}」找「${frag}」：${hits.length ? `對到 ${hits.length} 項，寫長一點` : '對不到，進度清單的字可能改了'}`);
       allOk = false;
+    } else if (hits[0][0] === 'test') {
+      anyTest = true;
     } else if (hits[0][0] !== 'ok') {
       allOk = false;
     }
   }
   if (since) return 'live';
-  return allOk ? 'built' : 'notyet';
+  return allOk ? (anyTest ? 'test' : 'built') : 'notyet';
 }
 
 // 方框圖照 GROUPS 分組（定義在 USES 下面，進度頁下半也用同一份）。
 // 先把每個功能每一條的燈算好，方框、總數、右邊細項都讀這一份
-const tally = { live: 0, built: 0, notyet: 0, all: 0 };
+const tally = { live: 0, built: 0, test: 0, notyet: 0, all: 0 };
 const feat = new Map();
 for (const u of USES) {
   const f = FUNCS.find(x => x.n === u.n);
@@ -1386,13 +1416,13 @@ document.addEventListener('click', e => {
   if (openBtn && !drawer.contains(e.target) && !e.target.closest('button.node')) closeDrawer();
 });
 
-// 總數：做好＝已上線＋做好了；條上綠在前、墨接著，剩下的灰底就是還沒好
-const featDone = tally.live + tally.built;
+// 總數：做好＝已上線＋做好了＋做好了、等驗；條上綠在前、墨、斜線接著，剩下的灰底就是還沒好
+const featDone = tally.live + tally.built + tally.test;
 $('featBig').innerHTML = `${featDone}<small>／${tally.all} 項做好了</small>`;
 $('featCount').textContent = tally.live ? `其中 ${tally.live} 項已上線、公司在用` : '還沒有功能正式上線';
-$('featBar').outerHTML = `<div class="bar" role="img" aria-label="已上線 ${tally.live}、做好了 ${tally.built}、還沒好 ${tally.notyet}">` +
-  ['live', 'built'].map(k => tally[k] ? `<i class="${k}" style="width:${(tally[k] / tally.all * 100).toFixed(2)}%"></i>` : '').join('') + '</div>';
-$('featLegend').innerHTML = ['live', 'built', 'notyet'].map(k =>
+$('featBar').outerHTML = `<div class="bar" role="img" aria-label="已上線 ${tally.live}、做好了 ${tally.built}、做好了等驗 ${tally.test}、還沒好 ${tally.notyet}">` +
+  ['live', 'built', 'test'].map(k => tally[k] ? `<i class="${k}" style="width:${(tally[k] / tally.all * 100).toFixed(2)}%"></i>` : '').join('') + '</div>';
+$('featLegend').innerHTML = ['live', 'built', 'test', 'notyet'].map(k =>
   `<span><i class="lamp ${k}"></i>${LAMP_LABEL[k]} ${tally[k]}</span>`).join('');
 
 if (warns.length) {

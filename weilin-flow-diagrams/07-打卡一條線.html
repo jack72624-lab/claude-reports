@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>威琳內部系統・打卡一條線</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<script>
+  // 深淺色跟 00–06 同一套：那幾頁右上角存進 localStorage 的 archify-theme，沒存過就跟系統走。
+  (function () {
+    function apply() {
+      var t = null;
+      try { t = localStorage.getItem('archify-theme'); } catch (_) {}
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      else document.documentElement.removeAttribute('data-theme');
+    }
+    apply();
+    addEventListener('storage', function (e) { if (e.key === 'archify-theme') apply(); });
+  })();
+</script>
+<!--
+  這頁是什麼：員工從 LINE 打卡，到老闆、行政在電腦出勤頁看到，整條怎麼走（2026-10-26 加）。
+  樣子參考 個人/設計參考庫 的 agent-arch 卡（三條泳道、一顆點沿路走、旁邊一張單子跟著填），
+  顏色照 archify editorial 淺色，跟 00–06 同一套。
+
+  ★ 正本是最下面 <script> 的 NODES（方框）和 STORIES（五個情境，每步一句話＋單子上填什麼）。
+    手寫頁、沒有 JSON，rebuild.py 不會碰它（跟 06 資料地圖一樣）。
+  ★ 規則照系統現在的程式和預設設定，改規則時這頁要跟著改：
+    功能/05-打卡與工作紀錄/守則.md、src/lib/queries/attendance.ts（needsAsk、檔頭）、
+    src/lib/labels.ts（早到／早上班、例假這些字）、schema.sql 的 settings 預設值（上班 09:00、午休 1 小時、一天 8 小時、
+    晚餐 18:00–19:00、補登 7 天、加班 40／46 小時）。
+  ★ 讀這頁的是老闆和系統負責人：頁面上的字一律白話，不寫程式名詞。
+  這頁會推上公開站：原始碼看得到這段註解，所以不寫密碼、網址鑰匙、人名。
+-->
+<style>
+  :root {
+    --bg: #f2eee5;
+    --dot: rgba(36, 32, 24, .07);
+    --panel: #fbf8f1;
+    --lane: #ebe5d8;
+    --border: #d8d0c2;
+    --border-strong: #c4b9a6;
+    --ink: #242018;
+    --muted: #6f6658;
+    --dim: #8a806f;
+    --hot: #bb4c23;          /* 走到這一步、按鈕選中：editorial 的朱紅 */
+    --hot-fill: #f6e3d8;
+    --done-fill: #f1ece2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #181611; --dot: rgba(244, 237, 223, .06); --panel: #231f18; --lane: #1f1c16;
+      --border: #39342a; --border-strong: #625a4a; --ink: #f4eddf; --muted: #b9ae9b; --dim: #8f8574;
+      --hot: #dd6b3d; --hot-fill: #3a2219; --done-fill: #2a251d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #181611; --dot: rgba(244, 237, 223, .06); --panel: #231f18; --lane: #1f1c16;
+    --border: #39342a; --border-strong: #625a4a; --ink: #f4eddf; --muted: #b9ae9b; --dim: #8f8574;
+    --hot: #dd6b3d; --hot-fill: #3a2219; --done-fill: #2a251d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 22px 22px;
+    color: var(--ink);
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 28px 24px 40px; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+
+  header .kicker { font-size: 12px; letter-spacing: .12em; color: var(--hot); font-weight: 600; }
+  header h1 { margin: 4px 0 6px; font-size: 24px; font-weight: 700; letter-spacing: .01em; }
+  header p { margin: 0; color: var(--muted); font-size: 14px; max-width: 72ch; }
+
+  /* 情境按鈕 */
+  .stories { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 16px; }
+  .stories button {
+    appearance: none; font: inherit; font-size: 14px; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--panel); color: var(--ink);
+    padding: 7px 14px; border-radius: 999px;
+    transition: background-color .15s, border-color .15s, color .15s;
+  }
+  .stories button:hover { border-color: var(--hot); }
+  .stories button[aria-pressed="true"] { background: var(--hot); border-color: var(--hot); color: #fff; }
+  .stories button:focus-visible, .player button:focus-visible, .steps button:focus-visible {
+    outline: 2px solid var(--hot); outline-offset: 2px;
+  }
+
+  .stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+
+  /* 左邊：三條泳道 */
+  .chart {
+    margin: 0; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 8px;
+  }
+  .chart svg { display: block; width: 100%; height: auto; }
+  .lane-bg { fill: var(--lane); }
+  .lane-title { fill: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: .06em; }
+
+  .node rect { fill: var(--panel); stroke: var(--border-strong); stroke-width: 1.2; transition: fill .3s, stroke .3s, opacity .3s; }
+  .node .t { fill: var(--ink); font-size: 14.5px; font-weight: 700; }
+  .node .s { fill: var(--muted); font-size: 12px; }
+  .node { transition: opacity .3s; }
+  .node.off { opacity: .28; }                         /* 這個情境用不到的方框 */
+  .node.done rect { fill: var(--done-fill); stroke: var(--ink); }
+  .node.now rect { fill: var(--hot-fill); stroke: var(--hot); stroke-width: 2.2; }
+  .node.miss rect { stroke: var(--hot); stroke-dasharray: 5 4; fill: var(--panel); }
+  .node.miss .t { fill: var(--hot); }
+
+  .edge { fill: none; stroke: var(--border-strong); stroke-width: 1.6; stroke-dasharray: 4 5; }
+  .edge.done { stroke: var(--ink); stroke-dasharray: none; stroke-width: 1.8; }
+  .runner { fill: var(--hot); }
+  .runner-halo { fill: var(--hot); opacity: .22; }
+
+  /* 右邊：播放、步驟、單子 */
+  aside { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .card h2 { margin: 0 0 10px; font-size: 13px; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+
+  .player { display: flex; align-items: center; gap: 6px; }
+  .player button {
+    appearance: none; font: inherit; font-size: 13px; cursor: pointer;
+    border: 1px solid var(--border-strong); background: transparent; color: var(--ink);
+    padding: 5px 10px; border-radius: 8px;
+  }
+  .player button:hover { border-color: var(--hot); }
+  .player .count { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .say { margin: 12px 0 0; font-size: 15px; min-height: 4.65em; }
+
+  .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  .steps li { counter-increment: s; }
+  .steps button {
+    appearance: none; font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; width: 100%;
+    display: flex; gap: 10px; align-items: baseline;
+    border: 0; background: transparent; color: var(--dim); padding: 4px 6px; border-radius: 6px;
+  }
+  .steps button::before { content: counter(s); font-family: 'JetBrains Mono', monospace; font-size: 11px; min-width: 1.4em; }
+  .steps li.done button { color: var(--ink); }
+  .steps li.now button { color: var(--hot); font-weight: 700; background: var(--hot-fill); }
+
+  .ledger { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+  .ledger dt { color: var(--muted); }
+  .ledger dd { margin: 0; color: var(--dim); }
+  .ledger dd.set { color: var(--ink); font-weight: 600; }
+  .ledger dd.flash { animation: flash 1s ease-out; }
+  .ledger dd.bad { color: var(--hot); }
+  @keyframes flash { from { background: var(--hot-fill); } to { background: transparent; } }
+
+  footer { margin-top: 18px; color: var(--muted); font-size: 12.5px; max-width: 90ch; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .node rect, .node, .stories button { transition: none; }
+    .ledger dd.flash { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">打卡一條線</div>
+    <h1>員工在 LINE 按一下，到老闆在電腦上看到出勤</h1>
+    <p>挑一個情境，看一張出勤紀錄是怎麼一步一步填起來的。左邊三條：員工在手機上做的、系統自己判斷的、老闆和行政在電腦上做的。</p>
+  </header>
+
+  <div class="stories" id="stories" aria-label="情境"></div>
+
+  <div class="stage">
+    <figure class="chart">
+      <svg id="chart" viewBox="0 0 960 860" role="img" aria-labelledby="chartTitle">
+        <title id="chartTitle">打卡流程：員工、系統、老闆與行政三條線</title>
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--border-strong)"/>
+          </marker>
+          <marker id="arrowDone" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,1 L9,5 L0,9 z" fill="var(--ink)"/>
+          </marker>
+        </defs>
+        <g id="lanes"></g>
+        <g id="edges"></g>
+        <g id="nodes"></g>
+        <g id="runner" aria-hidden="true">
+          <circle class="runner-halo" r="13"/>
+          <circle class="runner" r="6"/>
+        </g>
+      </svg>
+    </figure>
+
+    <aside>
+      <div class="card">
+        <div class="player">
+          <button type="button" id="prev" aria-label="上一步">上一步</button>
+          <button type="button" id="play">暫停</button>
+          <button type="button" id="next" aria-label="下一步">下一步</button>
+          <span class="count mono" id="count"></span>
+        </div>
+        <p class="say" id="say" aria-live="polite"></p>
+      </div>
+      <div class="card">
+        <h2>這張出勤紀錄</h2>
+        <dl class="ledger" id="ledger"></dl>
+      </div>
+      <div class="card">
+        <h2>走過的步驟</h2>
+        <ol class="steps" id="steps"></ol>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    照系統 2026-10-26 的規則和預設設定畫：上班 09:00、一天做 8 小時、午休 12:00–13:00 扣 1 小時、晚餐 18:00–19:00 扣 30 分鐘、忘了打卡 7 天內可以自己補登。這幾個數字在系統的設定頁可以改，改了這頁的例子要跟著改。
+  </footer>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   正本一：方框。lane 0＝員工（LINE）、1＝系統自動判斷、2＝老闆・行政（電腦）；row 由上往下。
+   同一條泳道、同一列只能有一個方框；線怎麼繞是 route() 照位置算的，不用手畫。
+   ═══════════════════════════════════════════════════════════════════ */
+const NODES = {
+  in:      { lane: 0, row: 0, t: '按「上班」',            s: '從 LINE 打開，不用登入' },
+  wifi:    { lane: 1, row: 1, t: '連著公司 Wi-Fi？',      s: '連著＝在公司，不抓定位' },
+  where:   { lane: 0, row: 2, t: '「你現在在公司嗎？」',  s: '沒連 Wi-Fi 才問' },
+  map:     { lane: 0, row: 3, t: '「你在這裡，對嗎？」',  s: '不在公司才抓定位' },
+  early:   { lane: 1, row: 3, t: '早 30 分以上？',        s: '是就問：早到，還是早上班' },
+  out:     { lane: 0, row: 4, t: '按「下班」',            s: '凌晨 6 點前按，算前一天' },
+  lunch:   { lane: 1, row: 5, t: '扣午休',                s: '正常來自動扣，晚 1 小時以上才問' },
+  ot:      { lane: 1, row: 6, t: '做滿後又晚 15 分以上？', s: '平日才問；週末整天算加班' },
+  fix:     { lane: 0, row: 6, t: '送補登',                s: '忘了打卡，7 天內自己送' },
+  askot:   { lane: 0, row: 7, t: '「算加班嗎？」',        s: '選加班，再問有沒有吃晚餐' },
+  flag:    { lane: 2, row: 7, t: '要處理的',              s: '例假出勤、在公司卻用定位打' },
+  record:  { lane: 1, row: 8, t: '出勤紀錄',              s: '30 分一格，零頭過 15 分補一格' },
+  board:   { lane: 2, row: 8, t: '出勤頁',                s: '加班 40 小時黃燈、超過 46 紅燈' },
+  leave:   { lane: 0, row: 9, t: '請假',                  s: '只列這個人能請的假' },
+  needok:  { lane: 1, row: 9, t: '事假或補休？',          s: '要核准；其他假送出就算' },
+  approve: { lane: 2, row: 9, t: '准，或退回',            s: '行政自己的要給老闆' },
+};
+const LANES = ['員工・LINE 打卡頁', '系統自己判斷', '老闆・行政・電腦'];
+
+/* ═══════════════════════════════════════════════════════════════════
+   正本二：五個情境。每步 [方框, 這步講的話, 單子上要填的 {欄位: 值}]
+   ledger 列這個情境的單子有哪幾欄（照順序）；值前面加「!」＝用紅字（沒打、等核准這種）。
+   第四格 miss: true ＝這一步沒做（例：忘了按下班），方框畫成紅虛線。
+   ═══════════════════════════════════════════════════════════════════ */
+const STORIES = [
+  { id: 'office', label: '在公司的一天',
+    ledger: ['日子', '上班', '怎麼打的', '下班', '午休', '晚餐', '加班'],
+    steps: [
+      ['in', '09:00 在 LINE 按「上班」，不用登入。', { 日子: '平日', 上班: '09:00' }],
+      ['wifi', '手機連著公司 Wi-Fi，系統就認得人在公司，不用抓定位。', { 怎麼打的: '公司 Wi-Fi' }],
+      ['early', '跟上班時間 09:00 比，沒有早 30 分以上，不用問。'],
+      ['out', '19:20 按「下班」。', { 下班: '19:20' }],
+      ['lunch', '照正常時間來上班，午休自動扣 1 小時。', { 午休: '扣 1 小時' }],
+      ['ot', '做滿是 18:00（09:00 上班、做 8 小時、加午休 1 小時）。19:20 晚了 80 分，超過 15 分，要問。'],
+      ['askot', '問「算加班嗎？」答加班；接著問「有吃晚餐嗎？」答沒有。', { 晚餐: '沒吃，不扣' }],
+      ['record', '80 分是兩格 30 分，零頭 20 分超過 15 分再補一格，算加班 1.5 小時。', { 加班: '1.5 小時' }],
+      ['board', '老闆和行政在電腦的出勤頁看到這一天。這個月加班累積到 40 小時亮黃燈、超過 46 小時亮紅燈。'],
+    ] },
+  { id: 'outside', label: '在外面工作（定位）',
+    ledger: ['日子', '上班', '怎麼打的', '下班', '午休', '加班', '要看的'],
+    steps: [
+      ['in', '08:20 在案場按「上班」。', { 日子: '平日', 上班: '08:20' }],
+      ['wifi', '沒連公司 Wi-Fi。'],
+      ['where', '先問「你現在在公司嗎？」答不在。（答在的話，會請他先連公司 Wi-Fi。）'],
+      ['map', '這時才抓手機定位，跳地圖問「你在這裡，對嗎？」按「對」才算打好卡。', { 怎麼打的: '定位，地圖確認過' }],
+      ['early', '比 09:00 早了 40 分，超過 30 分，問「早到」還是「早上班」。選早上班，挑從 08:30 算。', { 上班: '08:20（從 08:30 算）' }],
+      ['out', '17:40 按「下班」，一樣在地圖上確認位置。', { 下班: '17:40' }],
+      ['lunch', '午休自動扣 1 小時。', { 午休: '扣 1 小時' }],
+      ['ot', '做滿是 17:30（08:30 起算）。17:40 只晚 10 分，不到 15 分，不問、不算加班。', { 加班: '沒有' }],
+      ['record', '在外面打的卡，那天要有工作紀錄；沒有的話會列進「要處理的」。', { 要看的: '要有工作紀錄' }],
+      ['board', '老闆和行政點開這一天，看得到上班、下班各是在哪裡打的。行政看不到自己的。'],
+    ] },
+  { id: 'forgot', label: '下班忘了打',
+    ledger: ['日子', '上班', '怎麼打的', '下班', '補登'],
+    steps: [
+      ['in', '09:00 按「上班」。', { 日子: '平日', 上班: '09:00' }],
+      ['wifi', '連著公司 Wi-Fi，認得在公司。', { 怎麼打的: '公司 Wi-Fi' }],
+      ['early', '沒有早 30 分以上，不用問。'],
+      ['out', '下班忘了按。', { 下班: '!沒打' }, true],
+      ['fix', '隔天打開 LINE 打卡頁，最上面會提醒忘了打。7 天內自己送補登：下班 18:00。', { 補登: '!18:00，等核准' }],
+      ['approve', '老闆或行政准了才算。退回一定要寫原因，員工改了再送。行政自己的補登要給老闆。', { 補登: '准了' }],
+      ['record', '准了才寫進出勤紀錄。', { 下班: '18:00（補登）' }],
+      ['board', '出勤頁看得到這張是補登的。過了 7 天員工就不能自己送，改由老闆或行政在出勤頁直接補。'],
+    ] },
+  { id: 'sunday', label: '星期日來上班',
+    ledger: ['日子', '上班', '怎麼打的', '下班', '午休', '加班', '要看的'],
+    steps: [
+      ['in', '星期日（例假）09:00 按「上班」。', { 日子: '例假（星期日）', 上班: '09:00' }],
+      ['wifi', '連著公司 Wi-Fi。', { 怎麼打的: '公司 Wi-Fi' }],
+      ['early', '週末早到一樣會問；這天沒有早 30 分以上，不用問。'],
+      ['out', '16:00 按「下班」。', { 下班: '16:00' }],
+      ['lunch', '午休自動扣 1 小時。', { 午休: '扣 1 小時' }],
+      ['ot', '週末一律放假，有來就整天算加班，所以不問「算加班嗎？」。'],
+      ['record', '整天照勞基法例假那一段的算法算加班。星期六（休息日）也是整天算加班，用休息日的分段。', { 加班: '整天，用例假的算法' }],
+      ['flag', '例假只有天災、事變、突發事件才能叫人來，所以星期日有打卡會列進「要處理的」：例假出勤。星期六不會列。', { 要看的: '!例假出勤' }],
+      ['board', '老闆在出勤頁看到這一天和這條提醒。'],
+    ] },
+  { id: 'leave', label: '請假',
+    ledger: ['假別', '要不要核准', '狀態'],
+    steps: [
+      ['leave', '在 LINE 打卡頁的「我的出勤」請事假。只列這個人能請的假：生理假、產假、流產假、產檢假只給女同仁。', { 假別: '事假' }],
+      ['needok', '事假和補休要核准；特休、病假這些送出就算，直接寫進紀錄。', { 要不要核准: '要', 狀態: '!等核准' }],
+      ['approve', '老闆或行政准，或退回（退回一定寫原因）。行政自己的假要給老闆。', { 狀態: '請好了' }],
+      ['record', '准了才算請假。'],
+      ['board', '老闆和行政在出勤頁看得到誰哪天請假。老闆、行政代請的假一律直接成立。'],
+    ] },
+];
+
+/* ═══════════════════════════════════════════════════════════════════
+   畫面
+   ═══════════════════════════════════════════════════════════════════ */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const LANE_X = [170, 480, 790];       // 三條泳道的中線
+const GUT = [325, 635];               // 泳道之間的走道：線要拐彎時走這裡，不穿過別的方框
+const W = 240, H = 58;
+const rowY = r => 104 + r * 78;
+const $ = id => document.getElementById(id);
+const el = (tag, attrs = {}, text) => {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  return e;
+};
+const occupied = (lane, row) => Object.values(NODES).some(n => n.lane === lane && n.row === row);
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// 泳道底和標題
+for (let i = 0; i < 3; i++) {
+  $('lanes').append(el('rect', { class: 'lane-bg', x: LANE_X[i] - 148, y: 16, width: 296, height: 828, rx: 12 }));
+  $('lanes').append(el('text', { class: 'lane-title', x: LANE_X[i], y: 46, 'text-anchor': 'middle' }, LANES[i]));
+}
+
+// 方框
+const nodeEl = {};
+for (const [id, n] of Object.entries(NODES)) {
+  const x = LANE_X[n.lane], y = rowY(n.row);
+  const g = el('g', { class: 'node', 'data-id': id });
+  g.append(el('rect', { x: x - W / 2, y: y - H / 2, width: W, height: H, rx: 10 }));
+  g.append(el('text', { class: 't', x, y: y - 4, 'text-anchor': 'middle' }, n.t));
+  g.append(el('text', { class: 's', x, y: y + 16, 'text-anchor': 'middle' }, n.s));
+  $('nodes').append(g);
+  nodeEl[id] = g;
+}
+
+/* 兩個方框之間的線怎麼走（只走直角）：
+   同一條泳道、中間沒擋著 → 直直上下；中間有別的方框 → 從旁邊出去，走泳道間的走道繞過去。
+   隔壁泳道 → 從面向對方那一側出去，在走道上轉到對方那一列再進去。
+   員工直接連到老闆（隔一條） → 找一列系統那條是空的，從那裡橫過去。 */
+function route(a, b) {
+  const A = NODES[a], B = NODES[b];
+  const ax = LANE_X[A.lane], ay = rowY(A.row), bx = LANE_X[B.lane], by = rowY(B.row);
+  const side = (x, g) => x + Math.sign(g - x) * W / 2;
+  // 走道裡往右走的線靠右 6px、往左走的靠左 6px；從側邊出去的線比中線低 7px、進來的高 7px。
+  // 不錯開的話，一來一回兩條線（例：補登送給老闆、老闆准了寫回紀錄）會疊成一條雙箭頭，看不出誰往哪走
+  const shift = Math.sign(B.lane - A.lane) * 6;
+  const g0 = GUT.map(g => g + shift);
+  let pts;
+  if (A.lane === B.lane) {
+    const dir = Math.sign(B.row - A.row);
+    let clear = true;
+    for (let r = A.row + dir; r !== B.row; r += dir) if (occupied(A.lane, r)) clear = false;
+    if (clear) pts = [[ax, ay + dir * H / 2], [bx, by - dir * H / 2]];
+    else {
+      const g = A.lane === 2 ? GUT[1] : GUT[0];
+      pts = [[side(ax, g), ay], [g, ay], [g, by], [side(bx, g), by]];
+    }
+  } else if (Math.abs(A.lane - B.lane) === 1) {
+    const g = g0[Math.min(A.lane, B.lane)];
+    pts = A.row === B.row
+      ? [[side(ax, g), ay], [side(bx, g), by]]
+      : [[side(ax, g), ay + 7], [g, ay + 7], [g, by - 7], [side(bx, g), by - 7]];
+  } else {
+    const dir = Math.sign(B.row - A.row) || 1;
+    let cr = A.row;
+    while (occupied(1, cr) && cr !== B.row) cr += dir;
+    const gA = g0[A.lane === 0 ? 0 : 1], gB = g0[B.lane === 0 ? 0 : 1];
+    pts = [[side(ax, gA), ay + 7], [gA, ay + 7], [gA, rowY(cr)], [gB, rowY(cr)], [gB, by - 7], [side(bx, gB), by - 7]];
+  }
+  // 拿掉重複的點（同一列時會有兩個點疊在一起）
+  pts = pts.filter((p, i) => i === 0 || p[0] !== pts[i - 1][0] || p[1] !== pts[i - 1][1]);
+  return 'M' + pts.map(p => p.join(',')).join(' L');
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   播放
+   ═══════════════════════════════════════════════════════════════════ */
+let story = STORIES[0], idx = 0, playing = !REDUCED, timer = null, anim = null;
+const STEP_MS = 3200, MOVE_MS = 700;
+let edgeEls = [];
+
+STORIES.forEach(s => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.textContent = s.label; b.dataset.id = s.id;
+  b.addEventListener('click', () => pick(s.id, true));
+  $('stories').append(b);
+});
+
+function pick(id, play) {
+  story = STORIES.find(s => s.id === id) || STORIES[0];
+  try { localStorage.setItem('weilin-clock-story', story.id); } catch (_) {}
+  document.querySelectorAll('#stories button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === story.id)));
+  const used = new Set(story.steps.map(s => s[0]));
+  for (const id in nodeEl) nodeEl[id].classList.toggle('off', !used.has(id));
+  // 這個情境的線
+  $('edges').replaceChildren();
+  edgeEls = story.steps.map((s, i) => {
+    if (i === 0) return null;
+    const p = el('path', { class: 'edge', d: route(story.steps[i - 1][0], s[0]), 'marker-end': 'url(#arrow)' });
+    $('edges').append(p);
+    return p;
+  });
+  // 步驟清單
+  $('steps').replaceChildren(...story.steps.map((s, i) => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = NODES[s[0]].t;
+    b.addEventListener('click', () => { stop(); go(i, false); });
+    li.append(b);
+    return li;
+  }));
+  playing = play && !REDUCED;
+  go(REDUCED ? story.steps.length - 1 : 0, false);
+}
+
+// 單子：從第 0 步填到第 i 步（往回跳也算得對）
+function ledgerAt(i) {
+  const vals = {};
+  for (let k = 0; k <= i; k++) Object.assign(vals, story.steps[k][2] || {});
+  return vals;
+}
+function drawLedger(i, changed) {
+  const vals = ledgerAt(i);
+  $('ledger').replaceChildren(...story.ledger.flatMap(key => {
+    const dt = document.createElement('dt'); dt.textContent = key;
+    const dd = document.createElement('dd');
+    const v = vals[key];
+    if (v == null) dd.textContent = '—';
+    else {
+      const bad = v.startsWith('!');
+      dd.textContent = bad ? v.slice(1) : v;
+      dd.className = 'set' + (bad ? ' bad' : '') + (changed.has(key) ? ' flash' : '');
+    }
+    return [dt, dd];
+  }));
+}
+
+function placeRunner(x, y) {
+  $('runner').setAttribute('transform', `translate(${x},${y})`);
+}
+
+function go(i, animate) {
+  const prev = idx;
+  idx = Math.max(0, Math.min(i, story.steps.length - 1));
+  const step = story.steps[idx];
+  // 方框狀態
+  const seen = new Set(story.steps.slice(0, idx).map(s => s[0]));
+  for (const id in nodeEl) {
+    nodeEl[id].classList.toggle('now', id === step[0]);
+    nodeEl[id].classList.toggle('done', id !== step[0] && seen.has(id));
+  }
+  for (const id in nodeEl) nodeEl[id].classList.remove('miss');
+  story.steps.forEach((s, k) => { if (s[3] && k <= idx) nodeEl[s[0]].classList.add('miss'); });
+  // 線
+  edgeEls.forEach((p, k) => {
+    if (!p) return;
+    const done = k <= idx;
+    p.classList.toggle('done', done);
+    p.setAttribute('marker-end', done ? 'url(#arrowDone)' : 'url(#arrow)');
+  });
+  // 字
+  $('say').textContent = step[1];
+  $('count').textContent = `${idx + 1} / ${story.steps.length}`;
+  document.querySelectorAll('#steps li').forEach((li, k) => {
+    li.classList.toggle('now', k === idx);
+    li.classList.toggle('done', k < idx);
+  });
+  drawLedger(idx, new Set(Object.keys(step[2] || {})));
+  // 點沿著線走過來（往前一步才走；跳步、往回直接放到位）
+  cancelAnimationFrame(anim);
+  const n = NODES[step[0]];
+  const path = edgeEls[idx];
+  if (animate && !REDUCED && path && idx === prev + 1) {
+    const len = path.getTotalLength(), t0 = performance.now();
+    const tick = now => {
+      const t = Math.min(1, (now - t0) / MOVE_MS);
+      const e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;   // 慢進慢出
+      const p = path.getPointAtLength(len * e);
+      placeRunner(p.x, p.y);
+      if (t < 1) anim = requestAnimationFrame(tick);
+    };
+    anim = requestAnimationFrame(tick);
+  } else if (path) {
+    // 停在進來那條線的箭頭尖（線可能從側邊進方框）
+    const p = path.getPointAtLength(path.getTotalLength());
+    placeRunner(p.x, p.y);
+  } else {
+    placeRunner(LANE_X[n.lane], rowY(n.row) - H / 2);
+  }
+  schedule();
+}
+
+function schedule() {
+  clearTimeout(timer);
+  $('play').textContent = playing ? '暫停' : (idx === story.steps.length - 1 ? '重播' : '播放');
+  if (!playing) return;
+  if (idx >= story.steps.length - 1) { playing = false; $('play').textContent = '重播'; return; }
+  timer = setTimeout(() => go(idx + 1, true), STEP_MS);
+}
+function stop() { playing = false; clearTimeout(timer); }
+
+$('play').addEventListener('click', () => {
+  if (playing) { stop(); schedule(); return; }
+  playing = true;
+  if (idx >= story.steps.length - 1) go(0, false); else go(idx + 1, true);
+});
+$('prev').addEventListener('click', () => { stop(); go(idx - 1, false); });
+$('next').addEventListener('click', () => { stop(); go(idx + 1, true); });
+addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea')) return;
+  if (e.key === 'ArrowRight') { stop(); go(idx + 1, true); }
+  if (e.key === 'ArrowLeft') { stop(); go(idx - 1, false); }
+});
+
+let first = null;
+try { first = localStorage.getItem('weilin-clock-story'); } catch (_) {}
+pick(first || STORIES[0].id, true);
+</script>
+</body>
+</html>
