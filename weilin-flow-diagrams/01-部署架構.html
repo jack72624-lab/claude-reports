@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 2.16.0">
-  <title>威琳內部系統・部署架構（雲端版）</title>
+  <title>威琳內部系統・部署架構</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -4956,7 +4956,7 @@
            data-preset-badge-blueprint="藍圖 / 修訂 01"
            data-preset-badge-editorial="編輯風格 / 現場筆記">
         <div class="pulse-dot"></div>
-        <h1>威琳內部系統・部署架構（雲端版）</h1>
+        <h1>威琳內部系統・部署架構</h1>
       </div>
     </div>
 
@@ -5005,8 +5005,8 @@
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / 圖版 04">
-      <svg viewBox="0 0 1332 690" role="img" lang="zh-Hant" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="editorial" data-quality-profile="showcase">
-        <title id="archify-diagram-title">威琳內部系統・部署架構（雲端版）</title>
+      <svg viewBox="0 0 1372 728" role="img" lang="zh-Hant" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="editorial" data-quality-profile="showcase">
+        <title id="archify-diagram-title">威琳內部系統・部署架構</title>
         <desc id="archify-diagram-description">由 Archify 生成的架構圖。</desc>
         <!-- Definitions -->
         <defs>
@@ -5031,203 +5031,192 @@
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="0" data-composition-frame-label="Cloudflare（雲端門口）" x="224" y="276" width="380" height="104" rx="8" class="c-security-group" stroke-width="1"/>
-
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="1" data-composition-frame-label="雲端主機（一台小 VM，時區 Asia/Taipei）" x="650" y="176" width="642" height="316" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="雲端主機（Railway，新加坡機房，時區設台灣）" x="460" y="226" width="662" height="326" rx="12" class="c-region" stroke-width="1"/>
 
         <!-- Connection paths (before components for correct z-order) -->
-        <path data-edge-from="staff" data-edge-to="cf_access" data-edge-label="HTTPS（加密連線）" data-edge-key="0" data-composition-points="164,330;240,330" d="M 164 330 L 240 330" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="cf_access" data-edge-to="cf_tunnel" data-edge-label="驗證通過" data-edge-key="1" data-composition-points="378,330;450,330" d="M 378 330 L 450 330" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="cf_tunnel" data-edge-to="next_app" data-edge-label="加密通道" data-edge-key="2" data-composition-points="588,324;670,324" d="M 588 324 L 670 324" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="next_app" data-edge-to="sqlite" data-edge-label="讀寫資料" data-edge-key="3" data-composition-points="808,324;849,324;849,231;890,231" d="M 808 324 L 841 324 Q 849 324 849 316 L 849 239 Q 849 231 857 231 L 890 231" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="next_app" data-edge-to="files" data-edge-label="附件存取" data-edge-key="4" data-composition-points="808,338;849,338;849,441;890,441" d="M 808 338 L 841 338 Q 849 338 849 346 L 849 433 Q 849 441 857 441 L 890 441" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="next_app" data-edge-to="icloud" data-edge-label="只存連結、不搬檔" data-edge-key="5" data-composition-points="670,338;629,338;629,571;588,571" d="M 670 338 L 637 338 Q 629 338 629 346 L 629 563 Q 629 571 621 571 L 588 571" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="sqlite" data-edge-to="backup_job" data-edge-label="VACUUM INTO 倒一份" data-edge-key="6" data-composition-points="1032,231;1081,231;1081,324;1130,324" d="M 1032 231 L 1073 231 Q 1081 231 1081 239 L 1081 316 Q 1081 324 1089 324 L 1130 324" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="files" data-edge-to="backup_job" data-edge-label="附件直接同步" data-edge-key="7" data-composition-points="1032,441;1081,441;1081,338;1130,338" d="M 1032 441 L 1073 441 Q 1081 441 1081 433 L 1081 346 Q 1081 338 1089 338 L 1130 338" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="backup_job" data-edge-to="backup_store" data-edge-label="加密後推上去" data-edge-key="8" data-composition-points="1201,362;1201,560" d="M 1201 362 L 1201 560" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="staff" data-edge-to="login" data-edge-label="HTTPS（加密連線）" data-edge-key="0" data-composition-points="164,280;250,280" d="M 164 280 L 250 280" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="login" data-edge-to="app" data-edge-label="登入通過" data-edge-key="1" data-composition-points="380,280;430,280;430,384;480,384" d="M 380 280 L 422 280 Q 430 280 430 288 L 430 376 Q 430 384 438 384 L 480 384" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="line" data-edge-to="app" data-edge-label="打卡（不用登入）" data-edge-key="2" data-composition-points="164,500;322,500;322,398;480,398" d="M 164 500 L 314 500 Q 322 500 322 492 L 322 406 Q 322 398 330 398 L 480 398" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="app" data-edge-to="sqlite" data-edge-label="讀寫資料" data-edge-key="3" data-composition-points="622,384;671,384;671,281;720,281" d="M 622 384 L 663 384 Q 671 384 671 376 L 671 289 Q 671 281 679 281 L 720 281" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="app" data-edge-to="files" data-edge-label="存取附件" data-edge-key="4" data-composition-points="622,398;671,398;671,501;720,501" d="M 622 398 L 663 398 Q 671 398 671 406 L 671 493 Q 671 501 679 501 L 720 501" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="app" data-edge-to="maps" data-edge-label="顯示打卡位置" data-edge-key="5" data-composition-points="551,422;551,600" d="M 551 422 L 551 600" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="sqlite" data-edge-to="local_bak" data-edge-label="倒一份完整檔" data-edge-key="6" data-composition-points="862,281;960,281" d="M 862 281 L 960 281" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="local_bak" data-edge-to="offsite" data-edge-label="傳出去、讀回確認" data-edge-key="7" data-composition-points="1102,281;1146,281;1146,384;1190,384" d="M 1102 281 L 1138 281 Q 1146 281 1146 289 L 1146 376 Q 1146 384 1154 384 L 1190 384" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="files" data-edge-to="offsite" data-edge-label="還沒做：照片沒備出去" data-edge-key="8" data-composition-points="862,501;1026,501;1026,398;1190,398" d="M 862 501 L 1018 501 Q 1026 501 1026 493 L 1026 406 Q 1026 398 1034 398 L 1190 398" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Components -->
-        <g id="node-staff" data-node-id="staff" data-node-label="內部員工" tabindex="0" role="button" aria-label="聚焦內部員工，手機／電腦瀏覽器, 架構元件" aria-pressed="false" data-node-kind="external" data-node-sublabel="手機／電腦瀏覽器" data-node-context="架構元件">
-          <title>內部員工 · 手機／電腦瀏覽器 · 架構元件</title>
-          <rect x="40" y="300" width="124" height="60" rx="6" class="c-mask"/>
-          <rect x="40" y="300" width="124" height="60" rx="6" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(46 306) scale(0.6875)">
+        <g id="node-staff" data-node-id="staff" data-node-label="員工" tabindex="0" role="button" aria-label="聚焦員工，手機／電腦瀏覽器, 架構元件" aria-pressed="false" data-node-kind="external" data-node-sublabel="手機／電腦瀏覽器" data-node-context="架構元件">
+          <title>員工 · 手機／電腦瀏覽器 · 架構元件</title>
+          <rect x="40" y="250" width="124" height="60" rx="6" class="c-mask"/>
+          <rect x="40" y="250" width="124" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(46 256) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="102" y="328" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">內部員工</text>
-        <text data-detail="context" x="102" y="344" class="t-muted" font-size="9" text-anchor="middle">手機／電腦瀏覽器</text>
+          <text data-node-label="" data-detail-anchor="" x="102" y="278" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">員工</text>
+        <text data-detail="context" x="102" y="294" class="t-muted" font-size="9" text-anchor="middle">手機／電腦瀏覽器</text>
         </g>
 
-        <g id="node-cf_access" data-node-id="cf_access" data-node-label="Cloudflare Access" tabindex="0" role="button" aria-label="聚焦Cloudflare Access，門禁（登入驗證）, Cloudflare（雲端門口）" aria-pressed="false" data-node-kind="security" data-node-sublabel="門禁（登入驗證）" data-node-context="Cloudflare（雲端門口）">
-          <title>Cloudflare Access · 門禁（登入驗證） · Cloudflare（雲端門口）</title>
-          <rect x="240" y="300" width="138" height="60" rx="6" class="c-mask"/>
-          <rect x="240" y="300" width="138" height="60" rx="6" class="c-security" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(246 306) scale(0.6875)">
+        <g id="node-line" data-node-id="line" data-node-label="LINE" tabindex="0" role="button" aria-label="聚焦LINE，打卡認人、推提醒, 架構元件" aria-pressed="false" data-node-kind="external" data-node-sublabel="打卡認人、推提醒" data-node-context="架構元件">
+          <title>LINE · 打卡認人、推提醒 · 架構元件</title>
+          <rect x="40" y="470" width="124" height="60" rx="6" class="c-mask"/>
+          <rect x="40" y="470" width="124" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(46 476) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="102" y="498" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">LINE</text>
+        <text data-detail="context" x="102" y="514" class="t-muted" font-size="9" text-anchor="middle">打卡認人、推提醒</text>
+        </g>
+
+        <g id="node-login" data-node-id="login" data-node-label="登入頁" tabindex="0" role="button" aria-label="聚焦登入頁，帳號＋密碼, 架構元件" aria-pressed="false" data-node-kind="security" data-node-sublabel="帳號＋密碼" data-node-tag="測試版多一道門" data-node-context="架構元件">
+          <title>登入頁 · 帳號＋密碼 · 架構元件 · 測試版多一道門</title>
+          <rect x="250" y="250" width="130" height="60" rx="6" class="c-mask"/>
+          <rect x="250" y="250" width="130" height="60" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(256 256) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="309" y="328" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Cloudflare Access</text>
-        <text data-detail="context" x="309" y="344" class="t-muted" font-size="9" text-anchor="middle">門禁（登入驗證）</text>
+          <text data-node-label="" data-detail-anchor="" x="315" y="278" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">登入頁</text>
+        <text data-detail="context" x="315" y="294" class="t-muted" font-size="9" text-anchor="middle">帳號＋密碼</text>
+        <text data-detail="fine" x="315" y="302" class="t-security" font-size="7" text-anchor="middle">測試版多一道門</text>
         </g>
 
-        <g id="node-cf_tunnel" data-node-id="cf_tunnel" data-node-label="Cloudflare Tunnel" tabindex="0" role="button" aria-label="聚焦Cloudflare Tunnel，加密通道, Cloudflare（雲端門口）" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="加密通道" data-node-context="Cloudflare（雲端門口）">
-          <title>Cloudflare Tunnel · 加密通道 · Cloudflare（雲端門口）</title>
-          <rect x="450" y="300" width="138" height="60" rx="6" class="c-mask"/>
-          <rect x="450" y="300" width="138" height="60" rx="6" class="c-cloud" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(456 306) scale(0.6875)">
-            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="519" y="328" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Cloudflare Tunnel</text>
-        <text data-detail="context" x="519" y="344" class="t-muted" font-size="9" text-anchor="middle">加密通道</text>
-        </g>
-
-        <g id="node-next_app" data-node-id="next_app" data-node-label="Next.js 應用" tabindex="0" role="button" aria-label="聚焦Next.js 應用，單一程式在跑, 雲端主機（一台小 VM，時區 Asia/Taipei）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="單一程式在跑" data-node-tag="自建登入驗證" data-node-context="雲端主機（一台小 VM，時區 Asia/Taipei）">
-          <title>Next.js 應用 · 單一程式在跑 · 雲端主機（一台小 VM，時區 Asia/Taipei） · 自建登入驗證</title>
-          <rect x="670" y="300" width="138" height="62" rx="6" class="c-mask"/>
-          <rect x="670" y="300" width="138" height="62" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(676 306) scale(0.6875)">
+        <g id="node-app" data-node-id="app" data-node-label="威琳系統" tabindex="0" role="button" aria-label="聚焦威琳系統，正式版＋測試版, 雲端主機（Railway，新加坡機房，時區設台灣）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="正式版＋測試版" data-node-tag="正式版只開人員、設定" data-node-context="雲端主機（Railway，新加坡機房，時區設台灣）">
+          <title>威琳系統 · 正式版＋測試版 · 雲端主機（Railway，新加坡機房，時區設台灣） · 正式版只開人員、設定</title>
+          <rect x="480" y="360" width="142" height="62" rx="6" class="c-mask"/>
+          <rect x="480" y="360" width="142" height="62" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(486 366) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="739" y="329" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Next.js 應用</text>
-        <text data-detail="context" x="739" y="345" class="t-muted" font-size="9" text-anchor="middle">單一程式在跑</text>
-        <text data-detail="fine" x="739" y="354" class="t-backend" font-size="7" text-anchor="middle">自建登入驗證</text>
+          <text data-node-label="" data-detail-anchor="" x="551" y="389" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">威琳系統</text>
+        <text data-detail="context" x="551" y="405" class="t-muted" font-size="9" text-anchor="middle">正式版＋測試版</text>
+        <text data-detail="fine" x="551" y="414" class="t-backend" font-size="7" text-anchor="middle">正式版只開人員、設定</text>
         </g>
 
-        <g id="node-sqlite" data-node-id="sqlite" data-node-label="SQLite 資料庫" tabindex="0" role="button" aria-label="聚焦SQLite 資料庫，單一資料檔, 雲端主機（一台小 VM，時區 Asia/Taipei）" aria-pressed="false" data-node-kind="database" data-node-sublabel="單一資料檔" data-node-context="雲端主機（一台小 VM，時區 Asia/Taipei）">
-          <title>SQLite 資料庫 · 單一資料檔 · 雲端主機（一台小 VM，時區 Asia/Taipei）</title>
-          <rect x="890" y="200" width="142" height="62" rx="6" class="c-mask"/>
-          <rect x="890" y="200" width="142" height="62" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(896 206) scale(0.6875)">
+        <g id="node-sqlite" data-node-id="sqlite" data-node-label="資料庫" tabindex="0" role="button" aria-label="聚焦資料庫，一個資料檔, 雲端主機（Railway，新加坡機房，時區設台灣）" aria-pressed="false" data-node-kind="database" data-node-sublabel="一個資料檔" data-node-context="雲端主機（Railway，新加坡機房，時區設台灣）">
+          <title>資料庫 · 一個資料檔 · 雲端主機（Railway，新加坡機房，時區設台灣）</title>
+          <rect x="720" y="250" width="142" height="62" rx="6" class="c-mask"/>
+          <rect x="720" y="250" width="142" height="62" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(726 256) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="961" y="229" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">SQLite 資料庫</text>
-        <text data-detail="context" x="961" y="245" class="t-muted" font-size="9" text-anchor="middle">單一資料檔</text>
+          <text data-node-label="" data-detail-anchor="" x="791" y="279" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">資料庫</text>
+        <text data-detail="context" x="791" y="295" class="t-muted" font-size="9" text-anchor="middle">一個資料檔</text>
         </g>
 
-        <g id="node-files" data-node-id="files" data-node-label="附件檔案" tabindex="0" role="button" aria-label="聚焦附件檔案，師傅傳的照片, 雲端主機（一台小 VM，時區 Asia/Taipei）" aria-pressed="false" data-node-kind="database" data-node-sublabel="師傅傳的照片" data-node-tag="同一台磁碟" data-node-context="雲端主機（一台小 VM，時區 Asia/Taipei）">
-          <title>附件檔案 · 師傅傳的照片 · 雲端主機（一台小 VM，時區 Asia/Taipei） · 同一台磁碟</title>
-          <rect x="890" y="410" width="142" height="62" rx="6" class="c-mask"/>
-          <rect x="890" y="410" width="142" height="62" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(896 416) scale(0.6875)">
+        <g id="node-files" data-node-id="files" data-node-label="檔案區" tabindex="0" role="button" aria-label="聚焦檔案區，照片、圖面、收據, 雲端主機（Railway，新加坡機房，時區設台灣）" aria-pressed="false" data-node-kind="database" data-node-sublabel="照片、圖面、收據" data-node-context="雲端主機（Railway，新加坡機房，時區設台灣）">
+          <title>檔案區 · 照片、圖面、收據 · 雲端主機（Railway，新加坡機房，時區設台灣）</title>
+          <rect x="720" y="470" width="142" height="62" rx="6" class="c-mask"/>
+          <rect x="720" y="470" width="142" height="62" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(726 476) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="961" y="439" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">附件檔案</text>
-        <text data-detail="context" x="961" y="455" class="t-muted" font-size="9" text-anchor="middle">師傅傳的照片</text>
-        <text data-detail="fine" x="961" y="464" class="t-database" font-size="7" text-anchor="middle">同一台磁碟</text>
+          <text data-node-label="" data-detail-anchor="" x="791" y="499" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">檔案區</text>
+        <text data-detail="context" x="791" y="515" class="t-muted" font-size="9" text-anchor="middle">照片、圖面、收據</text>
         </g>
 
-        <g id="node-backup_job" data-node-id="backup_job" data-node-label="每日備份" tabindex="0" role="button" aria-label="聚焦每日備份，凌晨 3 點自動跑, 雲端主機（一台小 VM，時區 Asia/Taipei）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="凌晨 3 點自動跑" data-node-tag="還沒做" data-node-context="雲端主機（一台小 VM，時區 Asia/Taipei）">
-          <title>每日備份 · 凌晨 3 點自動跑 · 雲端主機（一台小 VM，時區 Asia/Taipei） · 還沒做</title>
-          <rect x="1130" y="300" width="142" height="62" rx="6" class="c-mask"/>
-          <rect x="1130" y="300" width="142" height="62" rx="6" class="c-backend" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(1136 306) scale(0.6875)">
+        <g id="node-local_bak" data-node-id="local_bak" data-node-label="本機備份" tabindex="0" role="button" aria-label="聚焦本機備份，平日凌晨 3 點, 雲端主機（Railway，新加坡機房，時區設台灣）" aria-pressed="false" data-node-kind="backend" data-node-sublabel="平日凌晨 3 點" data-node-tag="先上鎖" data-node-context="雲端主機（Railway，新加坡機房，時區設台灣）">
+          <title>本機備份 · 平日凌晨 3 點 · 雲端主機（Railway，新加坡機房，時區設台灣） · 先上鎖</title>
+          <rect x="960" y="250" width="142" height="62" rx="6" class="c-mask"/>
+          <rect x="960" y="250" width="142" height="62" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(966 256) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="1201" y="329" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">每日備份</text>
-        <text data-detail="context" x="1201" y="345" class="t-muted" font-size="9" text-anchor="middle">凌晨 3 點自動跑</text>
-        <text data-detail="fine" x="1201" y="354" class="t-backend" font-size="7" text-anchor="middle">還沒做</text>
+          <text data-node-label="" data-detail-anchor="" x="1031" y="279" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">本機備份</text>
+        <text data-detail="context" x="1031" y="295" class="t-muted" font-size="9" text-anchor="middle">平日凌晨 3 點</text>
+        <text data-detail="fine" x="1031" y="304" class="t-backend" font-size="7" text-anchor="middle">先上鎖</text>
         </g>
 
-        <g id="node-backup_store" data-node-id="backup_store" data-node-label="備份倉" tabindex="0" role="button" aria-label="聚焦備份倉，另一家雲端儲存, 架構元件" aria-pressed="false" data-node-kind="database" data-node-sublabel="另一家雲端儲存" data-node-tag="加密、留 30 天" data-node-context="架構元件">
-          <title>備份倉 · 另一家雲端儲存 · 架構元件 · 加密、留 30 天</title>
-          <rect x="1130" y="560" width="142" height="62" rx="6" class="c-mask"/>
-          <rect x="1130" y="560" width="142" height="62" rx="6" class="c-database" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(1136 566) scale(0.6875)">
+        <g id="node-offsite" data-node-id="offsite" data-node-label="異地備份倉" tabindex="0" role="button" aria-label="聚焦異地備份倉，另一家雲端儲存, 架構元件" aria-pressed="false" data-node-kind="database" data-node-sublabel="另一家雲端儲存" data-node-tag="上鎖、不自動刪" data-node-context="架構元件">
+          <title>異地備份倉 · 另一家雲端儲存 · 架構元件 · 上鎖、不自動刪</title>
+          <rect x="1190" y="360" width="142" height="62" rx="6" class="c-mask"/>
+          <rect x="1190" y="360" width="142" height="62" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(1196 366) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="1201" y="589" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">備份倉</text>
-        <text data-detail="context" x="1201" y="605" class="t-muted" font-size="9" text-anchor="middle">另一家雲端儲存</text>
-        <text data-detail="fine" x="1201" y="614" class="t-database" font-size="7" text-anchor="middle">加密、留 30 天</text>
+          <text data-node-label="" data-detail-anchor="" x="1261" y="389" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">異地備份倉</text>
+        <text data-detail="context" x="1261" y="405" class="t-muted" font-size="9" text-anchor="middle">另一家雲端儲存</text>
+        <text data-detail="fine" x="1261" y="414" class="t-database" font-size="7" text-anchor="middle">上鎖、不自動刪</text>
         </g>
 
-        <g id="node-icloud" data-node-id="icloud" data-node-label="公司 iCloud" tabindex="0" role="button" aria-label="聚焦公司 iCloud，設計圖面、原檔, 架構元件" aria-pressed="false" data-node-kind="external" data-node-sublabel="設計圖面、原檔" data-node-tag="系統只存連結" data-node-context="架構元件">
-          <title>公司 iCloud · 設計圖面、原檔 · 架構元件 · 系統只存連結</title>
-          <rect x="450" y="540" width="138" height="62" rx="6" class="c-mask"/>
-          <rect x="450" y="540" width="138" height="62" rx="6" class="c-external" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(456 546) scale(0.6875)">
+        <g id="node-maps" data-node-id="maps" data-node-label="Google 地圖" tabindex="0" role="button" aria-label="聚焦Google 地圖，打卡位置確認, 架構元件" aria-pressed="false" data-node-kind="external" data-node-sublabel="打卡位置確認" data-node-context="架構元件">
+          <title>Google 地圖 · 打卡位置確認 · 架構元件</title>
+          <rect x="480" y="600" width="142" height="60" rx="6" class="c-mask"/>
+          <rect x="480" y="600" width="142" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(486 606) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="519" y="569" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">公司 iCloud</text>
-        <text data-detail="context" x="519" y="585" class="t-muted" font-size="9" text-anchor="middle">設計圖面、原檔</text>
-        <text data-detail="fine" x="519" y="594" class="t-external" font-size="7" text-anchor="middle">系統只存連結</text>
+          <text data-node-label="" data-detail-anchor="" x="551" y="628" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Google 地圖</text>
+        <text data-detail="context" x="551" y="644" class="t-muted" font-size="9" text-anchor="middle">打卡位置確認</text>
         </g>
 
         <!-- Connection labels -->
-        <g data-detail="context" data-edge-from="staff" data-edge-to="cf_access" data-edge-label="HTTPS（加密連線）" data-edge-key="0">
-          <rect x="156.2" y="364" width="91.6" height="14" rx="3" class="c-mask"/>
-          <text x="202" y="374" class="t-backend" font-size="8" text-anchor="middle">HTTPS（加密連線）</text>
+        <g data-detail="context" data-edge-from="staff" data-edge-to="login" data-edge-label="HTTPS（加密連線）" data-edge-key="0">
+          <rect x="161.2" y="226" width="91.6" height="14" rx="3" class="c-mask"/>
+          <text x="207" y="236" class="t-backend" font-size="8" text-anchor="middle">HTTPS（加密連線）</text>
         </g>
-        <g data-detail="context" data-edge-from="cf_access" data-edge-to="cf_tunnel" data-edge-label="驗證通過" data-edge-key="1">
-          <rect x="389.8" y="310" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="414" y="320" class="t-security" font-size="8" text-anchor="middle">驗證通過</text>
+        <g data-detail="context" data-edge-from="login" data-edge-to="app" data-edge-label="登入通過" data-edge-key="1">
+          <rect x="405.8" y="312" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="430" y="322" class="t-security" font-size="8" text-anchor="middle">登入通過</text>
         </g>
-        <g data-detail="context" data-edge-from="cf_tunnel" data-edge-to="next_app" data-edge-label="加密通道" data-edge-key="2">
-          <rect x="604.8" y="304" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="629" y="314" class="t-backend" font-size="8" text-anchor="middle">加密通道</text>
+        <g data-detail="context" data-edge-from="line" data-edge-to="app" data-edge-label="打卡（不用登入）" data-edge-key="2">
+          <rect x="278.6" y="429" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="322" y="439" class="t-backend" font-size="8" text-anchor="middle">打卡（不用登入）</text>
         </g>
-        <g data-detail="context" data-edge-from="next_app" data-edge-to="sqlite" data-edge-label="讀寫資料" data-edge-key="3">
-          <rect x="824.8" y="257.5" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="849" y="267.5" class="t-backend" font-size="8" text-anchor="middle">讀寫資料</text>
+        <g data-detail="context" data-edge-from="app" data-edge-to="sqlite" data-edge-label="讀寫資料" data-edge-key="3">
+          <rect x="646.8" y="312.5" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="671" y="322.5" class="t-backend" font-size="8" text-anchor="middle">讀寫資料</text>
         </g>
-        <g data-detail="context" data-edge-from="next_app" data-edge-to="files" data-edge-label="附件存取" data-edge-key="4">
-          <rect x="824.8" y="369.5" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="849" y="379.5" class="t-muted" font-size="8" text-anchor="middle">附件存取</text>
+        <g data-detail="context" data-edge-from="app" data-edge-to="files" data-edge-label="存取附件" data-edge-key="4">
+          <rect x="646.8" y="429.5" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="671" y="439.5" class="t-muted" font-size="8" text-anchor="middle">存取附件</text>
         </g>
-        <g data-detail="context" data-edge-from="next_app" data-edge-to="icloud" data-edge-label="只存連結、不搬檔" data-edge-key="5">
-          <rect x="585.6" y="434.5" width="86.8" height="14" rx="3" class="c-mask"/>
-          <text x="629" y="444.5" class="t-messagebus" font-size="8" text-anchor="middle">只存連結、不搬檔</text>
+        <g data-detail="context" data-edge-from="app" data-edge-to="maps" data-edge-label="顯示打卡位置" data-edge-key="5">
+          <rect x="517.2" y="510" width="67.6" height="14" rx="3" class="c-mask"/>
+          <text x="551" y="520" class="t-messagebus" font-size="8" text-anchor="middle">顯示打卡位置</text>
         </g>
-        <g data-detail="context" data-edge-from="sqlite" data-edge-to="backup_job" data-edge-label="VACUUM INTO 倒一份" data-edge-key="6">
-          <rect x="1032.8" y="257.5" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
-          <text x="1081" y="267.5" class="t-messagebus" font-size="8" text-anchor="middle">VACUUM INTO 倒一份</text>
+        <g data-detail="context" data-edge-from="sqlite" data-edge-to="local_bak" data-edge-label="倒一份完整檔" data-edge-key="6">
+          <rect x="877.2" y="261" width="67.6" height="14" rx="3" class="c-mask"/>
+          <text x="911" y="271" class="t-messagebus" font-size="8" text-anchor="middle">倒一份完整檔</text>
         </g>
-        <g data-detail="context" data-edge-from="files" data-edge-to="backup_job" data-edge-label="附件直接同步" data-edge-key="7">
-          <rect x="1047.2" y="369.5" width="67.6" height="14" rx="3" class="c-mask"/>
-          <text x="1081" y="379.5" class="t-messagebus" font-size="8" text-anchor="middle">附件直接同步</text>
+        <g data-detail="context" data-edge-from="local_bak" data-edge-to="offsite" data-edge-label="傳出去、讀回確認" data-edge-key="7">
+          <rect x="1102.6" y="312.5" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="1146" y="322.5" class="t-security" font-size="8" text-anchor="middle">傳出去、讀回確認</text>
         </g>
-        <g data-detail="context" data-edge-from="backup_job" data-edge-to="backup_store" data-edge-label="加密後推上去" data-edge-key="8">
-          <rect x="1167.2" y="460" width="67.6" height="14" rx="3" class="c-mask"/>
-          <text x="1201" y="470" class="t-security" font-size="8" text-anchor="middle">加密後推上去</text>
+        <g data-detail="context" data-edge-from="files" data-edge-to="offsite" data-edge-label="還沒做：照片沒備出去" data-edge-key="8">
+          <rect x="973" y="429.5" width="106" height="14" rx="3" class="c-mask"/>
+          <text x="1026" y="439.5" class="t-messagebus" font-size="8" text-anchor="middle">還沒做：照片沒備出去</text>
         </g>
 
         <!-- Boundary labels (foreground masks keep routes out of titles) -->
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="security-group" data-composition-frame-label="Cloudflare（雲端門口）">
-          <rect data-graph-role="structural-frame-label-mask" x="228" y="280" width="128.8" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="232" y="293" class="t-security" font-size="9" font-weight="600">Cloudflare（雲端門口）</text>
-        </g>
-
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="1" data-composition-frame-kind="region" data-composition-frame-label="雲端主機（一台小 VM，時區 Asia/Taipei）">
-          <rect data-graph-role="structural-frame-label-mask" x="654" y="180" width="220.6" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="658" y="193" class="t-cloud" font-size="9" font-weight="600">雲端主機（一台小 VM，時區 Asia/Taipei）</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="region" data-composition-frame-label="雲端主機（Railway，新加坡機房，時區設台灣）">
+          <rect data-graph-role="structural-frame-label-mask" x="464" y="230" width="242.2" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="468" y="243" class="t-cloud" font-size="9" font-weight="600">雲端主機（Railway，新加坡機房，時區設台灣）</text>
         </g>
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="40" y="654" class="t-primary" font-size="12" font-weight="650">圖例</text>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="後端" data-legend-x="40" data-legend-baseline="674" data-legend-width="63">
-            <rect x="40" y="665" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
-            <text x="62" y="674" class="t-muted" font-size="10" font-weight="500">後端</text>
+          <text x="40" y="692" class="t-primary" font-size="12" font-weight="650">圖例</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="後端" data-legend-x="40" data-legend-baseline="712" data-legend-width="63">
+            <rect x="40" y="703" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="62" y="712" class="t-muted" font-size="10" font-weight="500">後端</text>
           </g>
-          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="資料庫" data-legend-x="125" data-legend-baseline="674" data-legend-width="73">
-            <rect x="125" y="665" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
-            <text x="147" y="674" class="t-muted" font-size="10" font-weight="500">資料庫</text>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="資料庫" data-legend-x="125" data-legend-baseline="712" data-legend-width="73">
+            <rect x="125" y="703" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="147" y="712" class="t-muted" font-size="10" font-weight="500">資料庫</text>
           </g>
-          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="雲服務" data-legend-x="220" data-legend-baseline="674" data-legend-width="73">
-            <rect x="220" y="665" width="16" height="10" rx="2.5" class="c-cloud" stroke-width="1"/>
-            <text x="242" y="674" class="t-muted" font-size="10" font-weight="500">雲服務</text>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="安全" data-legend-x="220" data-legend-baseline="712" data-legend-width="63">
+            <rect x="220" y="703" width="16" height="10" rx="2.5" class="c-security" stroke-width="1"/>
+            <text x="242" y="712" class="t-muted" font-size="10" font-weight="500">安全</text>
           </g>
-          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="安全" data-legend-x="315" data-legend-baseline="674" data-legend-width="63">
-            <rect x="315" y="665" width="16" height="10" rx="2.5" class="c-security" stroke-width="1"/>
-            <text x="337" y="674" class="t-muted" font-size="10" font-weight="500">安全</text>
-          </g>
-          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="外部系統" data-legend-x="400" data-legend-baseline="674" data-legend-width="83">
-            <rect x="400" y="665" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
-            <text x="422" y="674" class="t-muted" font-size="10" font-weight="500">外部系統</text>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="外部系統" data-legend-x="305" data-legend-baseline="712" data-legend-width="83">
+            <rect x="305" y="703" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="327" y="712" class="t-muted" font-size="10" font-weight="500">外部系統</text>
           </g>
         </g>
       </svg>
@@ -5422,9 +5411,10 @@
           <h3>誰能進來</h3>
         </div>
         <ul>
-          <li>&bull; 對外只開 Cloudflare Access 這一道門，通過驗證才碰得到系統</li>
-          <li>&bull; 進來之後系統再用自建帳號（users／sessions 表）認第二次</li>
-          <li>&bull; 雲端主機不直接對外開任何連接埠，一樣走 Tunnel 出去</li>
+          <li>&bull; 正式版只有登入頁這一道門：帳號＋密碼，猜錯太多次就擋</li>
+          <li>&bull; 閒置 30 分鐘自動登出；勾「保持登入」的最多 30 天</li>
+          <li>&bull; 測試版放假資料、頂端標 BETA，登入前多一道共用密碼</li>
+          <li>&bull; LINE 打卡不用登入：LINE 認出是誰，只能打自己的卡</li>
         </ul>
       </div>
 
@@ -5434,33 +5424,35 @@
           <h3>資料放哪</h3>
         </div>
         <ul>
-          <li>&bull; 業務資料在同一顆 SQLite 檔，跟程式同一台主機</li>
-          <li>&bull; 師傅從系統傳的照片存主機磁碟；設計公司給的圖面留公司 iCloud，系統只存連結</li>
-          <li>&bull; 主機時區一定設 Asia/Taipei，不然跨日單據會差一天而且不報錯</li>
+          <li>&bull; 資料庫、照片、圖面、收據都放在系統自己的硬碟</li>
+          <li>&bull; 正式版、測試版各一顆硬碟，資料不互通</li>
+          <li>&bull; 主機時區設台灣，不然跨日的單據會差一天</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot amber"></div>
-          <h3>備份怎麼做（還沒做）</h3>
+          <h3>備份怎麼做</h3>
         </div>
         <ul>
-          <li>&bull; 資料庫不能直接複製（WAL 模式會少資料，8/7 實測）：每天凌晨用 VACUUM INTO 倒一份完整檔</li>
-          <li>&bull; 倒出來的檔先加密再推到另一家雲端儲存（裡面有薪資），留 30 天</li>
-          <li>&bull; 每月自己開一次備份檔確認打得開，不然備份只是心安</li>
+          <li>&bull; 資料庫不能直接複製檔案（會少資料），改成倒一份完整檔</li>
+          <li>&bull; 週一到週五凌晨 3 點自動備份、先上鎖，再傳到另一家雲端儲存、讀回來比對</li>
+          <li>&bull; 只備正式版；舊備份先不刪</li>
+          <li>&bull; 照片、附件還沒備到外面（還沒做）</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot rose"></div>
-          <h3>還沒定的</h3>
+          <h3>還沒做／待決定</h3>
         </div>
         <ul>
-          <li>&bull; 雲端主機用哪一家、一個月多少錢</li>
-          <li>&bull; 官網放哪、要不要跟系統同一個帳號管</li>
-          <li>&bull; 跑雲端就做不到「案場開了自動建 iCloud 資料夾」，改成手動建＋貼連結</li>
+          <li>&bull; 照片、附件的異地備份：還沒做</li>
+          <li>&bull; 公司自己的網址：公司還沒有官網，現在用雲端平台給的網址（待決定）</li>
+          <li>&bull; 照片功能上線前要換大一點的主機方案</li>
+          <li>&bull; 正式版其他功能區照進度一區一區開</li>
         </ul>
       </div>
     </div>
