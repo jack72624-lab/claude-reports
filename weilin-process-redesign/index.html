@@ -3,25 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="robots" content="noindex">
 <title>流程重新設計</title>
 <!--
   威琳內部系統・流程重新設計（2026-09-20）：對細節用的白話版。內容正本在同資料夾 CLAUDE.md〈流程重新設計・九站的決定〉，
   討論過程與否決掉的選項在 CHANGELOG.md〈2026-09-20〉。程式與資料結構尚未依此修改。
-  版型：照 _global/templates/report-slides（Jack 2026-09-20 定的報告預設版型），CSS 與捲動 JS 整段照
+  版型：照 _global/templates/report-slides（系統負責人 2026-09-20 定的報告預設版型），CSS 與捲動 JS 整段照
   工作/為愛前行社會福利基金會/生命教育學習資料/index.html（同一套的最新版：一頁一屏吸附、頁內階段用點的、← → 切階段、↑ ↓ 逐格走、
-  清單旁同一顆點在滑、角標淡出換字）。圖一律 SVG 線圖、「編號＋細線列」不畫方框（Jack 2026-09-20 下午定）。
+  清單旁同一顆點在滑、角標淡出換字）。圖一律 SVG 線圖、「編號＋細線列」不畫方框（系統負責人 2026-09-20 下午定）。
   這個檔是手寫的，要改直接改這裡。第一版（2026-09-20 中午）照錯了 smart-home-onboarding 舊版型，備份在 data/.bak/。
 
-  2026-09-22 照 v2 新規重做皮膚與動法（Jack：骨架可以固定，色調、字體、動畫要照內容設計）：
+  2026-09-22 照 v2 新規重做皮膚與動法（系統負責人：骨架可以固定，色調、字體、動畫要照內容設計）：
     霧藍拿掉了——它跟它自己在描述的那套系統剛好相反（DESIGN.md 2026-09-18 已經「藍換墨」、公司 logo 也是純黑）。
     改成冷灰白紙底、純墨、琥珀燈色當重點；中文從宋體換黑體（這份講的是一套軟體怎麼運作，那套系統自己全用無襯線）。
     錢與日期改走等寬 SF Mono，收款那三欄才對得齊。理由寫在下面 <style> 開頭的「設計讀法」。
     動法只用三種、每種對應一種內容：in-left 編號順序列、in-drop 往下分支或往下走的流程、in-grow 狀態圓圈那排。
     同時補上版型 v2 的手機手勢：滑一下走一小格（這份原本沒有）。
-  同日再加：五張「介面示意」（Jack：「讓他們知道系統內這部分的功能大概會長怎樣」）——五頁各多一個階段，
+  同日再加：五張「介面示意」（系統負責人：「讓他們知道系統內這部分的功能大概會長怎樣」）——五頁各多一個階段，
     照系統自己的設計語言畫成螢幕的樣子。內容全是舉例、不是規格；畫法見 <style> 裡 .ui* 那組的註解。改前備份 data/.bak/威琳-流程重新設計-20260922-pre-skin.html。
-  2026-09-23 Jack 看完提九點，全改進頁（備份 data/.bak/威琳-流程重新設計-20260923-pre-9items.html）：
+  2026-09-23 系統負責人看完提九點，全改進頁（備份 data/.bak/威琳-流程重新設計-20260923-pre-9items.html）：
     標題與說明拿掉「給老闆」字樣；「要拍板的三件」從第 2 屏搬到最後（一開始什麼都還沒看就要拍板很怪），
     導覽連結跟著搬（JS 靠 nav 順序 == 文件順序算章節高亮）；重點色琥珀 #965c14 換深紅 #9b1c2c；
     拿掉「長相跟現在一樣」；「老闆一眼看收到哪」改「快速知道款項收到哪」；工程類別「音響」改「影音」
@@ -30,6 +29,17 @@
     2026-09-23 再改兩處：工程類別「監控」→「監控/門禁」（只改粗那層）；設備類別多加一項「門禁」。
     分類樹 SVG 因此重排：右欄改 10 項、固定間距 30，左欄父項對齊自己那組子項的中線。
     另加一件新的：備料清單加第五欄「別案也要」＋新增一屏 #s05b 總備貨區（跨案場看同一種料要多少）。
+
+  ⚠️ 2026-09-23 傍晚 分家：這個檔原叫「流程重新設計-白話版.html」，從 `流程重新設計-給老闆.html` 複製出來改的；2026-09-24 晚兩版合一、只留這份、改名 `流程重新設計.html`（術語版歸檔在 data/.bak/威琳-清理-20260924/內部管理系統/架構/）。
+    系統負責人的原話：「現在的文字內容，如果沒聊過系統的人會看不懂」。讀者＝**公司裡沒參加 9/20 討論的人**
+    （行政、師傅、業務）：他們懂工程詞（料號、報價單、增減單、驗收），不懂的是這套系統的設計詞。
+    **只改文字，版型、SVG 座標、CSS、JS 一律沒動**，所以兩份的結構仍然一模一樣。
+    翻掉的詞：里程碑→加註「＝案子的進度燈」｜報價單是脊椎／案件只是容器→「錢跟驗收跟著報價單走」｜
+    凍價／凍結→鎖住／簽字後不能再改｜案件誕生→案子成立｜增減單草稿自己長→系統自己記成草稿｜
+    審核閘→審核關卡（要主管核准才算數）｜現量→還剩幾個｜設定區→補一句「系統裡一個可以自己改的地方」｜
+    「現在：」→「現在是這樣做：」｜「八月就定了」「06 按的那個勾」這種沒在場就接不上的交叉引用，全部改寫成自足的句子。
+    ⚠️ **兩份要一起維護**：之後內容有變動（例如老闆拍板了三件事），兩個檔都要改，不然會漂移。
+    正本（給老闆那份）也已推上公開站 /weilin-process-redesign/，這份還沒推。
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +53,7 @@
        報告跟它描述的系統穿同一件衣服；冷灰也是「辦公室、規格、照著做」的情緒，不是讀物的情緒。
      · 純墨 #1d1d1f 當字——公司 logo（public/company-logo.png）取樣出來是純黑，沒有品牌色；
        而系統自己 2026-09-18 已經把主色「藍換回墨」。所以這份原本的霧藍 #6e8199 是跟它自己矛盾的，拿掉。
-     · 深紅 #9b1c2c 當重點（2026-09-23 Jack 換掉原本的琥珀 #965c14）——琥珀的原理是「燈亮起來的顏色」，
+     · 深紅 #9b1c2c 當重點（2026-09-23 系統負責人換掉原本的琥珀 #965c14）——琥珀的原理是「燈亮起來的顏色」，
        但實際在冷灰紙上偏土、對比只有 4.94:1；深紅在同一個底上是 7.3:1（WCAG 公式算的），
        重點字一眼就跳出來。輪到哪一站、哪一格收了錢，就那一處亮。
        ⚠️ 這份另有一個 --red #b8362a 專門給負向的東西（「不做的」那頁的 ×、.dg .bad、.band.warn）。
@@ -62,7 +72,7 @@
      · in-drop  從上落下：往下分支或往下走的流程（四個詞的兩層分類樹、報修的往下箭頭、里程碑往下長）。
      · in-grow  從中心長大：一次整塊出現的「成品」——收款的狀態圓圈那排，以及六張介面示意畫面。
 
-   介面示意（2026-09-22 Jack 要的：「讓他們知道系統內這部分的功能大概會長怎樣」）：
+   介面示意（2026-09-22 系統負責人要的：「讓他們知道系統內這部分的功能大概會長怎樣」）：
      六張，各是那一頁的最後一個階段；前面的概念圖用 data-until 退場，不疊在一起。
      05 備料清單 ／ 05 總備貨區（2026-09-23 加）／ 07 驗收清單 ／ 08 案場列表一排掃過去 ／
      09 客戶手機上那一頁 ／ 九站之外 安裝教學在工地。
@@ -169,7 +179,7 @@ body.inslide .corner.fade{opacity:0;transition-duration:.15s}
 .dg .soft{fill:var(--paper);stroke:none}
 .dg .dash{stroke-dasharray:4 4}
 .dg .dot{fill:var(--acc);stroke:none}
-/* 2026-09-20 下午：方框卡片全部改成「編號＋細線」的列（Jack 不要方格）。編號淡灰、輪到它時跟標題一起變霧藍；每列底線用 .draw 逐階段描出來 */
+/* 2026-09-20 下午：方框卡片全部改成「編號＋細線」的列（系統負責人不要方格）。編號淡灰、輪到它時跟標題一起變霧藍；每列底線用 .draw 逐階段描出來 */
 .dg text.no{font-family:var(--latin);font-size:28px;font-weight:300;fill:var(--grey-2);letter-spacing:-.02em;font-variant-numeric:tabular-nums;transition:fill .35s}
 .dg .hi text.no{fill:var(--acc)}
 .dg .hi text.cap{fill:var(--acc)}
@@ -204,7 +214,7 @@ body.inslide .corner.fade{opacity:0;transition-duration:.15s}
    墨色膠囊鈕、綠＝好了／琥珀＝要處理），所以它擺在這份報告的冷灰紙上，看起來就像從系統上截下來的一塊。
    兩件事別誤會：
      ① 這是示意不是規格。畫面上的數字、料名、教學步驟全是舉例，真正長怎樣以做出來的為準。
-     ② 這裡有方框，跟「圖一律不畫方框」（Jack 2026-09-20 下午定）不衝突——那條管的是概念圖，
+     ② 這裡有方框，跟「圖一律不畫方框」（系統負責人 2026-09-20 下午定）不衝突——那條管的是概念圖，
         不准拿方框去框一個想法；這裡方框本身就是要畫的東西（螢幕上的卡片跟手機外框）。
    顏色刻意寫死、不吃 :root：它們是「系統的顏色」不是「這份報告的顏色」，報告換皮膚時不該跟著變。 */
 .dg .uibg{fill:#f5f5f7}
@@ -510,8 +520,8 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">威琳 · 內部系統 · 2026-09-20 討論結果</span>
 <h1>流程重新設計</h1>
-<div class="typed"><span id="typed" data-text="九站沒有變，變的是每一站系統接手多少。"></span><span class="dot" id="tdot"></span></div>
-<p class="sub rise" style="--t:.66">把公司從「需求進來」到「售後」九站順了一遍，定下系統以後怎麼接。這份是對細節用的，程式一行都還沒改。要拍板的三件在最後面。</p>
+<div class="typed"><span id="typed" data-text="九站沒有變，變的是每一站系統幫你做多少。"></span><span class="dot" id="tdot"></span></div>
+<p class="sub rise" style="--t:.66">公司做事的順序不會變，變的是哪幾件事從「靠記、靠紙本、靠 LINE」改成在系統裡做。這份把九站走一遍，每站先講現在怎麼做、再講以後怎麼做。程式還沒開始寫，先把做法談定。</p>
 </div>
 <div class="hint">Scroll</div>
 </div>
@@ -526,29 +536,29 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <g class="in-left" data-s="0" data-hi="0"><text x="42" y="42" class="no" style="font-size:18px">01</text><text x="90" y="42" class="lb">需求進來</text><text x="230" y="42" class="sub">建客戶、建案場、記來源、規劃書勾一下</text><line x1="40" y1="52" x2="560" y2="52" class="thin draw"/></g>
 <g class="in-left" data-s="1" data-hi="1"><text x="42" y="82" class="no" style="font-size:18px">02</text><text x="90" y="82" class="lb">規劃、報價</text><text x="230" y="82" class="sub">報價單在系統裡做</text><line x1="40" y1="92" x2="560" y2="92" class="thin draw"/></g>
 <g class="in-left" data-s="2" data-hi="2"><text x="42" y="122" class="no" style="font-size:18px">03</text><text x="90" y="122" class="lb">討論調整</text><text x="230" y="122" class="sub">報價出新版，改幾版都行</text><line x1="40" y1="132" x2="560" y2="132" class="thin draw"/></g>
-<g class="in-left" data-s="3" data-hi="3"><text x="42" y="162" class="no" style="font-size:18px">04</text><text x="90" y="162" class="lb">簽約</text><text x="230" y="162" class="sub">客戶簽任一張，案件就誕生；收到訂金才往下</text><line x1="40" y1="172" x2="560" y2="172" class="thin draw"/></g>
+<g class="in-left" data-s="3" data-hi="3"><text x="42" y="162" class="no" style="font-size:18px">04</text><text x="90" y="162" class="lb">簽約</text><text x="230" y="162" class="sub">客戶簽任一張報價單，案子才成立</text><line x1="40" y1="172" x2="560" y2="172" class="thin draw"/></g>
 <g class="in-left" data-s="4" data-hi="4"><text x="42" y="202" class="no" style="font-size:18px">05</text><text x="90" y="202" class="lb">備料</text><text x="230" y="202" class="sub">照「工程類別」一類一張清單</text><line x1="40" y1="212" x2="560" y2="212" class="thin draw"/></g>
-<g class="in-left" data-s="5" data-hi="5"><text x="42" y="242" class="no" style="font-size:18px">06</text><text x="90" y="242" class="lb">施工</text><text x="230" y="242" class="sub">工作紀錄照舊；裝好拍完成照；增減單草稿自己長</text><line x1="40" y1="252" x2="560" y2="252" class="thin draw"/></g>
-<g class="in-left" data-s="6" data-hi="6"><text x="42" y="282" class="no" style="font-size:18px">07</text><text x="90" y="282" class="lb">驗收、教學</text><text x="230" y="282" class="sub">照「設備類別」打勾，簽字就凍結</text><line x1="40" y1="292" x2="560" y2="292" class="thin draw"/></g>
-<g class="in-left" data-s="7" data-hi="7"><text x="42" y="322" class="no" style="font-size:18px">08</text><text x="90" y="322" class="lb">收款</text><text x="230" y="322" class="sub">每張報價單自己的三期，快速知道款項收到哪</text><line x1="40" y1="332" x2="560" y2="332" class="thin draw"/></g>
+<g class="in-left" data-s="5" data-hi="5"><text x="42" y="242" class="no" style="font-size:18px">06</text><text x="90" y="242" class="lb">施工</text><text x="230" y="242" class="sub">工作紀錄照舊；裝好拍完成照；增減自動記</text><line x1="40" y1="252" x2="560" y2="252" class="thin draw"/></g>
+<g class="in-left" data-s="6" data-hi="6"><text x="42" y="282" class="no" style="font-size:18px">07</text><text x="90" y="282" class="lb">驗收、教學</text><text x="230" y="282" class="sub">照「設備類別」打勾，簽字後不能再改</text><line x1="40" y1="292" x2="560" y2="292" class="thin draw"/></g>
+<g class="in-left" data-s="7" data-hi="7"><text x="42" y="322" class="no" style="font-size:18px">08</text><text x="90" y="322" class="lb">收款</text><text x="230" y="322" class="sub">每張報價單自己分三期收，看得出收到哪</text><line x1="40" y1="332" x2="560" y2="332" class="thin draw"/></g>
 <g class="in-left" data-s="8" data-hi="8"><text x="42" y="362" class="no" style="font-size:18px">09</text><text x="90" y="362" class="lb">售後</text><text x="230" y="362" class="sub">客戶有自己的頁；行政每天看報修、通知人</text><line x1="40" y1="372" x2="560" y2="372" class="thin draw"/></g>
 </svg>
 </div>
 <div class="txt">
 <span class="tag">整條線 · 09 站</span>
 <h2>整條線長什麼樣</h2>
-<p class="lead">九站沒有變，變的是每一站系統接手多少。點左邊的站名，或按 → 一站一站看。</p>
+<p class="lead">九站沒有變，變的是每一站系統幫你做多少。點左邊的站名，或按 → 一站一站看。</p>
 <ol class="marks"><li>需求</li><li>報價</li><li>調整</li><li>簽約</li><li>備料</li><li>施工</li><li>驗收</li><li>收款</li><li>售後</li></ol>
 <div class="steps">
 <div class="step" data-k="0"><span class="k">01 · 需求進來</span>建客戶、建案場、記案子從哪來、規劃書做了勾一下。平面圖那些照舊放 iCloud。</div>
-<div class="step" data-k="1"><span class="k">02 · 規劃、報價</span>報價單做進內部系統。智能、燈具、影音、弱電各一張。</div>
-<div class="step" data-k="2"><span class="k">03 · 討論調整</span>報價出新版，改幾版都行。這一站併進 02，不另外做。</div>
-<div class="step" data-k="3"><span class="k">04 · 簽約</span>客戶簽任何一張報價單，案件就誕生、發編號。收到訂金才往下走。</div>
-<div class="step" data-k="4"><span class="k">05 · 備料</span>照「工程類別」一類一張清單。哪一類什麼時候備，負責人講一聲，系統不猜。</div>
-<div class="step" data-k="5"><span class="k">06 · 施工</span>工作紀錄照舊。位置裝好拍完成照；增減單草稿在施工中自己長出來。</div>
-<div class="step" data-k="6"><span class="k">07 · 驗收、教學</span>照「設備類別」一項一項打勾，簽字就凍結。燈具先驗、先收。</div>
-<div class="step" data-k="7"><span class="k">08 · 收款</span>每張報價單自己的訂金／工程款／尾款。快速知道款項收到哪一期。</div>
-<div class="step" data-k="8"><span class="k">09 · 售後</span>客戶有自己的頁：設備清單、保固、教學、排除、報修。行政每天看報修、通知人。</div>
+<div class="step" data-k="1"><span class="k">02 · 規劃、報價</span>報價單改成在公司自己的系統裡做。智能、燈具、影音、弱電各開一張。</div>
+<div class="step" data-k="2"><span class="k">03 · 討論調整</span>客戶要改，就出一個新版本，改幾版都行。這件事不另外算一站，就在報價那一站裡做。</div>
+<div class="step" data-k="3"><span class="k">04 · 簽約</span>客戶簽了任何一張報價單，系統就開一個案子、給一組編號。收到訂金才往下走。</div>
+<div class="step" data-k="4"><span class="k">05 · 備料</span>照「工程類別」一類一張備貨清單。哪一類什麼時候要備，負責人講一聲，系統不自己猜。</div>
+<div class="step" data-k="5"><span class="k">06 · 施工</span>工作紀錄的填法照舊。某個位置裝好就拍一張完成照；施工中跟原本報價不一樣的地方，系統自己記成一張增減單草稿。</div>
+<div class="step" data-k="6"><span class="k">07 · 驗收、教學</span>照「設備類別」一項一項打勾。客戶簽字後整張就不能再改。燈具做完可以先驗、先收錢。</div>
+<div class="step" data-k="7"><span class="k">08 · 收款</span>每張報價單各自分訂金／工程款／尾款三期。打開就知道每一案收到哪一期。</div>
+<div class="step" data-k="8"><span class="k">09 · 售後</span>客戶有一個自己的網頁：家裡裝了什麼、保固到什麼時候、怎麼用、壞了怎麼報修。行政每天看有沒有新報修、通知人去處理。</div>
 </div>
 </div>
 </div>
@@ -595,7 +605,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </g>
 <!-- 階段 2：報價單是脊椎 -->
 <g class="in-grow" data-s="2" data-until="3">
-<text x="60" y="34" class="cap">案件 · 只做加總</text>
+<text x="60" y="34" class="cap">案件 · 只把數字加起來</text>
 <line x1="60" y1="44" x2="560" y2="44" class="thin"/>
 <text x="330" y="74" class="cap">收款</text><text x="420" y="74" class="cap">增減單</text><text x="500" y="74" class="cap">驗收簽字</text>
 <text x="60" y="118" class="lb">智能報價單</text>
@@ -627,7 +637,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <line x1="330" y1="44" x2="560" y2="44" class="thin"/>
 <text x="330" y="76" class="lb">誰能按什麼</text>
 <text x="330" y="106" class="lb">金額什麼時候凍</text>
-<text x="330" y="136" class="lb">案件什麼時候誕生</text>
+<text x="330" y="136" class="lb">案子什麼時候成立</text>
 <text x="330" y="166" class="lb">保固怎麼起算</text>
 <line x1="60" y1="300" x2="560" y2="300" class="ln draw"/>
 <text x="60" y="330" class="lb">一年會改超過一次的名單，才放設定區。</text>
@@ -637,13 +647,13 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">四個詞</span>
 <h2>先懂四個詞，後面都在用</h2>
-<p class="lead">這四個詞是整套設計的骨架。以後講話就用它們：「備料用工程類別做清單」「驗收照設備類別打勾」。</p>
-<ol class="marks"><li>工程類別、設備類別</li><li>里程碑</li><li>報價單是脊椎</li><li>設定區</li></ol>
+<p class="lead">後面九站一直會用到這四個詞，先花一分鐘看懂，後面就順了。</p>
+<ol class="marks"><li>工程類別、設備類別</li><li>里程碑＝進度燈</li><li>錢跟著報價單走</li><li>設定區</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 工程類別、設備類別</span>每一個料號只填一個「設備類別」，它屬於哪個「工程類別」系統自己算。備料看粗的那層，驗收跟教學看細的那層。這棵樹放設定區，以後要搬一項改一行。</div>
-<div class="step" data-k="1"><span class="k">2 · 里程碑</span>一個案件不再只有一個狀態，是一串「做到哪、哪天做的、誰做的」。大部分會自動亮，不用人去按：收到訂金行政登記就亮，第一張工作紀錄一存「施工中」就亮。</div>
-<div class="step" data-k="2"><span class="k">3 · 報價單是脊椎，案件只是容器</span>收款、增減單、驗收簽字都掛在「那一張報價單」上，案件只做加總。所以燈具先完工就先驗收、先收燈具尾款；影音晚兩週才簽就晚兩週起算，互不干擾。</div>
-<div class="step" data-k="3"><span class="k">4 · 設定區</span>會變的名單（分類、驗收大項、案子來源、售價、工資費率、收款比例、排除問答）放設定區，可自己調整、不用等工程師。流程規則（誰能按什麼、金額怎麼凍）寫死在程式裡，改了要想過。一年會改超過一次的才放設定區。</div>
+<div class="step" data-k="0"><span class="k">1 · 工程類別、設備類別</span>分類分兩層。粗的叫「工程類別」，六個：網路、監控/門禁、智能、影音、燈具、線材與耗材。細的叫「設備類別」，是料號真正填的那一層。備料看粗的那層，驗收跟教學看細的那層。這張分類表放設定區，以後要搬一項改一行。</div>
+<div class="step" data-k="1"><span class="k">2 · 里程碑＝案子的進度燈</span>一個案子不再只有一個狀態，是一排燈：已簽約、已收訂金、施工中、已驗收、已收尾款……每盞燈記著哪天亮的、誰做的。大部分自己會亮，不用人特地去按：行政登記收到訂金就亮一盞，師傅存第一張工作紀錄就亮「施工中」。</div>
+<div class="step" data-k="2"><span class="k">3 · 錢跟驗收，跟著報價單走</span>一個案子常常有好幾張報價單（智能一張、燈具一張、影音一張）。收錢、增減單、驗收簽字都各自掛在「自己那一張」上，案件本身只負責把數字加起來。所以燈具先完工，就先驗收、先收燈具的尾款，不用等影音。</div>
+<div class="step" data-k="3"><span class="k">4 · 設定區</span>系統裡一個可以自己改的地方。會變的名單（分類、驗收大項、案子來源、售價、工資費率、收款比例、排除問答）放這裡，自己改、不用等工程師。至於規則（誰能按什麼、金額什麼時候就不能再改）是寫在程式裡的，要動得先想過。判準：一年會改超過一次的名單，才放設定區。</div>
 </div>
 </div>
 </div>
@@ -677,12 +687,12 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 01</span>
 <h2>需求進來</h2>
-<p class="lead">現在：案子來自設計公司、推薦、屋主自己找、來參觀；資料放 iCloud 公司資料夾，設計公司提供檔案；規劃書自己畫。</p>
+<p class="lead">現在是這樣做：案子來自設計公司、推薦、屋主自己找、來參觀；資料放 iCloud 公司資料夾，設計公司提供檔案；規劃書自己畫。</p>
 <ol class="marks"><li>建客戶</li><li>建案場、記來源</li><li>規劃書勾一下</li></ol>
 <div class="steps">
 <div class="step" data-k="0"><span class="k">1 · 建客戶</span>先建客戶，再建案場。一個客戶可以有好幾個家，資料不用重打。</div>
-<div class="step" data-k="1"><span class="k">2 · 建案場、記來源</span>案場記「來源」：舊客戶推薦／設計公司推薦／客戶自己找來。對工作流程不重要，但半年後就看得出哪條路帶最多案子。一個下拉、成本很低。</div>
-<div class="step" data-k="2"><span class="k">3 · 規劃書勾一下</span>規劃書做了勾一下就好。之後要進系統、或用 AI 做初步規劃，位置留好了。平面圖、迴路圖照舊放 iCloud，系統不重做檔案管理。</div>
+<div class="step" data-k="1"><span class="k">2 · 建案場、記來源</span>建案場的時候順手記一下這個案子是怎麼來的：舊客戶推薦／設計公司推薦／客戶自己找來。對做事沒差，但半年後就看得出哪條路帶進最多案子。就是一個下拉選單，花不了什麼力氣。</div>
+<div class="step" data-k="2"><span class="k">3 · 規劃書勾一下</span>規劃書還是照現在的方式做，只是做完在系統裡勾一下。以後想把規劃書也做進系統、或讓 AI 先畫一版，位子先留著。平面圖、迴路圖照舊放 iCloud，系統不再另外做一套檔案管理。</div>
 </div>
 </div>
 </div>
@@ -707,14 +717,14 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </g>
 <g class="in-left" data-s="2" data-hi="2">
 <text x="42" y="242" class="no">3</text>
-<text x="90" y="218" class="cap">簽約那刻凍價</text>
+<text x="90" y="218" class="cap">簽約那刻鎖住價格</text>
 <text x="90" y="242" class="lb">舊案子不再跟著今天的價跑</text>
 <line x1="40" y1="260" x2="560" y2="260" class="thin draw"/>
 </g>
 <g class="in-left" data-s="3" data-hi="3">
 <text x="42" y="328" class="no">4</text>
 <text x="90" y="304" class="cap">料號只有一份</text>
-<text x="90" y="328" class="lb">報價後台改售價；庫存區看現量與成本</text>
+<text x="90" y="328" class="lb">報價的人改售價；點貨的人看庫存與成本</text>
 <line x1="40" y1="346" x2="560" y2="346" class="thin draw"/>
 </g>
 </svg>
@@ -722,13 +732,13 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 02 · 03 併入</span>
 <h2>規劃、報價</h2>
-<p class="lead">現在：兩套獨立的報價程式，智能一套、燈具一套；價格每次開檔用今天的價現算，舊案子會跟著變；報價品項跟庫存料號是兩份名單。</p>
-<ol class="marks"><li>做進系統</li><li>四種報價單</li><li>簽約凍價</li><li>料號一份</li></ol>
+<p class="lead">現在是這樣做：兩套各自獨立的報價程式，智能一套、燈具一套；每次打開舊報價單，價格都會用今天的價重算，所以舊案子的金額會跟著變；而且報價上的品項跟庫存裡的料號是兩份不一樣的名單。</p>
+<ol class="marks"><li>做進系統</li><li>四種報價單</li><li>簽約鎖價</li><li>料號一份</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 做進內部系統</span>報價單做進內部系統，畫面長相照舊、只微調。報價改幾版都行；哪一類簽了，就把那一類的舊版清掉。設計公司看報價：給 PDF。</div>
+<div class="step" data-k="0"><span class="k">1 · 做進內部系統</span>報價單改成在公司自己的系統裡做，畫面長相跟現在差不多、只微調。報價改幾版都行；哪一類簽掉了，就把那一類的舊版清掉，不會留一堆分不清的版本。要給設計公司看的報價，匯出 PDF。</div>
 <div class="step" data-k="1"><span class="k">2 · 四種報價單</span>智能、影音、弱電照類別列；燈具照房間列。影音跟弱電學智能那張的長相。</div>
-<div class="step" data-k="2"><span class="k">3 · 簽約那刻凍價</span>單價在簽約那刻凍住，舊案子不再跟著今天的價跑。報價選的就是料號，簽約後才帶得出「要備哪些」。</div>
-<div class="step" data-k="3"><span class="k">4 · 料號只有一份，畫面跟權限分開</span>報價的人在報價後台改售價、折讓、工資費率；點貨的人在庫存區看現量跟成本。兩邊改的是同一個料號的不同面。</div>
+<div class="step" data-k="2"><span class="k">3 · 簽約那一刻，價格就鎖住</span>單價在客戶簽約那一刻存下來，之後公司調價也不會影響已經簽的案子——這是現在最容易出錯的地方。另外，報價上選的品項就是庫存裡的料號，所以簽完約系統才知道這個案子要備哪些料。</div>
+<div class="step" data-k="3"><span class="k">4 · 料號只有一份，兩邊各看各的</span>全公司只有一份料號名單。報價的人在報價那邊改售價、折讓、工資費率；點貨的人在庫存那邊看還剩幾個、進價多少。同一個料號，兩邊各看自己要的那一面，權限也分開。</div>
 </div>
 <p class="note"><b>一條公司本來就有的規則：</b>一個案子裡，網路設備只會出現在一張報價單——有弱電報價單就在弱電，沒有就在智能。系統會擋、平常不會遇到。</p>
 </div>
@@ -736,14 +746,14 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </section>
 
 <!-- ═══════════ 04 簽約 ═══════════ -->
-<section class="slide" id="s04" data-ch="04 簽約" data-sub="案件在這裡誕生" data-stages="4">
+<section class="slide" id="s04" data-ch="04 簽約" data-sub="案子在這裡成立" data-stages="4">
 <div class="stage">
 <div class="vis">
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
 <g class="in-left" data-s="0" data-hi="0">
 <text x="42" y="70" class="no">1</text>
 <text x="90" y="46" class="cap">簽任何一張</text>
-<text x="90" y="70" class="lb">案件就誕生、發編號；影音晚簽再加一張進來</text>
+<text x="90" y="70" class="lb">案子就成立、拿到編號；影音晚簽再加進來</text>
 <line x1="40" y1="88" x2="560" y2="88" class="thin draw"/>
 </g>
 <g class="in-left" data-s="1" data-hi="1">
@@ -769,15 +779,15 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 04</span>
 <h2>簽約</h2>
-<p class="lead">現在：報價完就先開案，沒做的案子留空號；簽約靠紙本或 LINE。</p>
+<p class="lead">現在是這樣做：報價完就先開一個案子，最後沒接到的就留一個空號在那裡；簽約靠紙本或 LINE。</p>
 <ol class="marks"><li>簽任一張就開案</li><li>簽名第一版</li><li>收到訂金</li><li>簽了沒付</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 簽任何一張，案件就誕生</span>客戶簽任何一張報價單，案件就誕生、發編號。影音晚幾週才簽，再加一張進同一個案件。</div>
-<div class="step" data-k="1"><span class="k">2 · 簽名第一版</span>第一版：內部按「客戶已簽」、附上簽好的檔案。之後客戶登入做好了，改成在系統裡簽。</div>
+<div class="step" data-k="0"><span class="k">1 · 簽任何一張，案子就成立</span>客戶簽了任何一張報價單，系統就把案子建起來、給一組編號。影音晚幾週才簽，那張再加進同一個案子，不用重開一個。</div>
+<div class="step" data-k="1"><span class="k">2 · 簽名第一版</span>第一階段用簡單的做法：客戶簽好的紙本掃進來，內部在系統裡按一下「客戶已簽」、把檔案附上去。等之後客戶能自己登入了，再改成直接在系統裡簽。</div>
 <div class="step" data-k="2"><span class="k">3 · 收到訂金</span>行政登記收到訂金，自動進「已收訂金」，就可以備料。</div>
-<div class="step" data-k="3"><span class="k">4 · 簽了沒付訂金</span>標「沒做」，不刪。列表預設只看進行中的；半年後要看哪家設計公司報幾次成幾次。</div>
+<div class="step" data-k="3"><span class="k">4 · 簽了沒付訂金</span>不要刪掉，改標成「沒做」。平常的列表只顯示進行中的案子，不會擋路；但半年後想看哪家設計公司報了幾次、成了幾次，資料還在。</div>
 </div>
-<p class="note"><b>不做「成交」鈕：</b>訂金要記在案件上，所以案件在客戶簽的那刻就得存在。多一顆「成交」鈕只是多一顆會忘記按的鈕。</p>
+<p class="note"><b>不另外做一顆「成交」鈕：</b>訂金要記在案子上，所以案子必須在客戶簽的那一刻就已經存在。多一顆鈕，只是多一件會忘記做的事。</p>
 </div>
 </div>
 </section>
@@ -845,12 +855,12 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 05 · 06</span>
 <h2>備料、施工</h2>
-<p class="lead">現在：整案一份料單；分階段進場（開場、封板前、封板後、細清前後）是大家的習慣；拍照要切到相簿畫圈再回來選。</p>
+<p class="lead">現在是這樣做：整案一份料單；分階段進場（開場、封板前、封板後、細清前後）是大家的習慣；拍照要切到相簿畫圈再回來選。</p>
 <ol class="marks"><li>備料</li><li>階段不設欄位</li><li>工作紀錄接七點</li><li>清單長這樣</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 備料照工程類別</span>一類一張清單，每張顯示：需要、庫存有、要叫貨。什麼時候備哪一類，負責人講一聲，系統不猜。</div>
-<div class="step" data-k="1"><span class="k">2 · 施工照舊記，「階段」不設欄位</span>師傅每趟做了什麼照舊記在工作紀錄。系統不會多一個「現在是開場／封板前／封板後／進場」的欄位要人選，那是習慣不是規則。做到哪，從工作紀錄跟位置狀態自然看得出來。</div>
-<div class="step" data-k="2"><span class="k">3 · 工作紀錄現有設計保留</span>表單四區（哪一天去哪裡／誰來哪幾天／今天要裝什麼／耗材與工具）跟位置三段點擊都不動，接七個小改，下一頁一條一條列。</div>
+<div class="step" data-k="0"><span class="k">1 · 備料照工程類別</span>一類一張備貨清單，每張上面三個數字：這個案子需要幾個、庫存還有幾個、要跟廠商叫幾個。什麼時候要備哪一類，負責人講一聲，系統不自己猜。</div>
+<div class="step" data-k="1"><span class="k">2 · 施工照舊記，不多做一個「階段」欄位</span>師傅每趟做了什麼，照舊記在工作紀錄。系統不會多一個「現在是開場／封板前／封板後／進場」的下拉要人選——那是大家的習慣，不是硬規則，多一個欄位只是多一件要填的事。做到哪一步，從工作紀錄跟每個位置裝好了沒，自然看得出來。</div>
+<div class="step" data-k="2"><span class="k">3 · 工作紀錄現有設計保留</span>工作紀錄現在的四個區塊（哪一天去哪裡／誰來哪幾天／今天要裝什麼／耗材與工具），還有每個位置點一下換一個狀態的做法，全部不動。只是在上面接七個小改，下一屏一條一條列。</div>
 <div class="step" data-k="3"><span class="k">4 · 備料清單長什麼樣</span>照系統現在的樣子畫的示意：上面三個數字（需要／庫存有／要叫貨），底下一條一條料，齊了的標綠、要叫的標琥珀。<b>最右邊多一欄「別案也要」</b>——別的案場同一個料還要幾個，叫貨當下就看得到，要不要多叫一次決定完。料名跟數字都是舉例，真正長怎樣以做出來的為準。</div>
 </div>
 </div>
@@ -915,7 +925,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 05 · 總備貨區</span>
 <h2>總備貨區</h2>
-<p class="lead">現在：每個案場各自看各自的料，要不要多叫一點憑印象；兩個案場前後兩週各叫一次同一種料，運費跟時間都多花。</p>
+<p class="lead">現在是這樣做：每個案場各自看各自的料，要不要多叫一點憑印象；兩個案場前後兩週各叫一次同一種料，運費跟時間都多花。</p>
 <ol class="marks"><li>一種料一條</li><li>兩個地方都看得到</li><li>長什麼樣</li></ol>
 <div class="steps">
 <div class="step" data-k="0"><span class="k">1 · 一種料一條，全部案場加起來</span>把所有正在備料的案場，同一個料號的需求加成一條：全部要多少、庫存有多少、要叫多少。旁邊直接寫是哪幾個案場、各要幾個。這是同一份資料換個角度看，不是另外一份要人維護的清單。</div>
@@ -931,22 +941,22 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="lbl">06 · 工作紀錄接的七點</div>
 <div>
 <h3>改什麼、為什麼</h3>
-<p>都是接在現有設計上的小改，不是重做。</p>
+<p>工作紀錄的填法不變，只是接七個小地方。每一條左邊是改什麼、右邊是為什麼要改。</p>
 <ul class="rule">
-<li><div class="h">1 · 分組</div><span>「今天要裝什麼」照工程類別分組、可折疊</span><span class="then">一趟通常只做一兩類，工地滑得少</span></li>
-<li><div class="h">2 · 帶人</div><span>下一趟預設帶上一趟的人</span><span class="then">省一排點擊</span></li>
-<li><div class="h">3 · 完成照</div><span>位置點「完成」必拍完成照，圈圈在系統裡畫；紀錄照另一顆鈕</span><span class="then">不用切三次 app</span></li>
-<li><div class="h">4 · 驗收清單</div><span>某類設備全部裝完，那項自己亮「可驗收」</span><span class="then">驗收清單自動長</span></li>
-<li><div class="h">5 · 增減單</div><span>增減單草稿施工中自動長</span><span class="then">驗收那天只確認，不用回想哪裡改了</span></li>
-<li><div class="h">6 · 維修</div><span>維修那趟從報修單直接排；帶料預設同料號一台當備品</span><span class="then">跟售後接起來</span></li>
-<li><div class="h">7 · 列表</div><span>列表看得出這趟是安裝還是維修</span><span class="then">現在看不出來</span></li>
+<li><div class="h">1 · 分組</div><span>「今天要裝什麼」那一區照工程類別分組，可以收起來</span><span class="then">一趟通常只做一兩類，在工地少滑很多</span></li>
+<li><div class="h">2 · 帶人</div><span>排下一趟時，預設帶上一趟的同一批人</span><span class="then">不用每次從頭點一遍</span></li>
+<li><div class="h">3 · 完成照</div><span>某個位置按「完成」一定要拍完成照，要圈重點直接在系統裡畫；內部用的紀錄照另一顆鈕</span><span class="then">不用切去相簿畫完再切回來</span></li>
+<li><div class="h">4 · 驗收清單</div><span>某一類設備的位置全部裝完，那一項自己亮「可驗收」</span><span class="then">驗收清單自己長出來，不用另外整理</span></li>
+<li><div class="h">5 · 增減單</div><span>施工中跟原本報價不一樣的地方，系統自己記成增減單草稿</span><span class="then">驗收那天只要確認，不用回想哪裡改過</span></li>
+<li><div class="h">6 · 維修</div><span>維修那一趟直接從客戶的報修單排；要帶的料預設同一個料號一台當備品</span><span class="then">跟售後接起來，不用重打一次</span></li>
+<li><div class="h">7 · 列表</div><span>列表上看得出這一趟是安裝還是維修</span><span class="then">現在兩種混在一起，看不出來</span></li>
 </ul>
 </div>
 </div>
 </section>
 
 <!-- ═══════════ 07 驗收、教學 ═══════════ -->
-<section class="slide" id="s07" data-ch="07 驗收、教學" data-sub="簽字就凍結" data-stages="5">
+<section class="slide" id="s07" data-ch="07 驗收、教學" data-sub="簽字後不能再改" data-stages="5">
 <div class="stage">
 <div class="vis">
 <svg class="dg" viewBox="0 0 600 400" aria-hidden="true">
@@ -964,7 +974,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 </g>
 <g class="in-left" data-s="2" data-until="4" data-hi="2">
 <text x="42" y="242" class="no">3</text>
-<text x="90" y="218" class="cap">簽字就凍結</text>
+<text x="90" y="218" class="cap">簽字後不能再改</text>
 <text x="90" y="242" class="lb">簽字前清單跟增減單草稿一直跟著實裝變</text>
 <line x1="40" y1="260" x2="560" y2="260" class="thin draw"/>
 </g>
@@ -1011,21 +1021,21 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <path d="M304 320 l4 5 l8 -10" class="uitick"/>
 <path d="M386 320 l4 5 l8 -10" class="uitick"/>
 <text x="430" y="320" class="uis">6 個位置全裝完</text>
-<text x="48" y="368" class="uim">示意畫面，內容是舉例。簽字那一刻整張凍結，之後的變動走新的增減單</text>
+<text x="48" y="368" class="uim">示意畫面，內容是舉例。簽字那一刻整張就固定，之後的變動要開新的增減單</text>
 </g>
 </svg>
 </div>
 <div class="txt">
 <span class="tag">Station 07</span>
 <h2>驗收、教學</h2>
-<p class="lead">現在：完工後點交驗收、教學；施工完才回想哪裡改了，做增減單；客戶手上沒有自己家的設備資料。</p>
-<ol class="marks"><li>照設備類別打勾</li><li>兩個勾分開</li><li>簽字就凍結</li><li>跟著報價單走</li><li>清單長這樣</li></ol>
+<p class="lead">現在是這樣做：完工後點交驗收、教學；施工完才回想哪裡改了，做增減單；客戶手上沒有自己家的設備資料。</p>
+<ol class="marks"><li>照設備類別打勾</li><li>兩個勾分開</li><li>簽字後不能再改</li><li>跟著報價單走</li><li>清單長這樣</li></ol>
 <div class="steps">
 <div class="step" data-k="0"><span class="k">1 · 照設備類別一項一項打勾</span>不是一台一台，是一項一項：網路設備、燈光控制、冷氣控制、感應器……每項旁邊「已驗收」「已教學」兩個勾。</div>
-<div class="step" data-k="1"><span class="k">2 · 兩個勾分開</span>師傅在 06 按的「裝好了」，跟客戶在 07 的「點收了」是兩回事，分開打、互不覆蓋。</div>
-<div class="step" data-k="2"><span class="k">3 · 簽字就凍結</span>簽字前，驗收清單跟增減單草稿一直跟著實際安裝變；客戶簽字那刻凍結。不另外做「鎖定」鈕。</div>
-<div class="step" data-k="3"><span class="k">4 · 跟著報價單走</span>驗收掛在報價單上：燈具先完工就先驗、先凍、先收燈具尾款。</div>
-<div class="step" data-k="4"><span class="k">5 · 驗收清單長什麼樣</span>一項一列、兩個勾，右邊順手告訴你這一項的位置裝完了沒（沒裝完的項目就還不能驗）。類別與數字是舉例。</div>
+<div class="step" data-k="1"><span class="k">2 · 兩個勾分開</span>師傅在施工那一站按的「裝好了」，跟客戶在驗收這一站按的「點收了」，是兩回事。兩個勾分開打，不會互相蓋掉。</div>
+<div class="step" data-k="2"><span class="k">3 · 客戶簽字後就不能再改</span>簽字之前，驗收清單跟增減單草稿會一直跟著現場實際裝的東西自動更新。客戶一簽字，整張就固定下來；之後還要改，得另外開一張增減單。所以系統不另外做一顆「鎖定」鈕——簽字本身就是鎖定。</div>
+<div class="step" data-k="3"><span class="k">4 · 跟著報價單走</span>驗收是掛在報價單上的，不是掛在整個案子上。燈具先完工，就先驗燈具那一張、先固定、先收燈具的尾款，不用等影音做完。</div>
+<div class="step" data-k="4"><span class="k">5 · 驗收清單長什麼樣</span>一項一列、兩個勾，右邊順手告訴你這一項的位置裝完了沒——還沒裝完的項目就還不能驗。類別與數字是舉例。</div>
 </div>
 <p class="note"><b>驗收打勾的結果就是客戶的設備清單</b>，直接變成售後那頁的保固表，不用再打一次。</p>
 </div>
@@ -1118,12 +1128,12 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 08</span>
 <h2>收款</h2>
-<p class="lead">現在：施工完先收工程款，驗收後做增減單、收尾款；錢收到哪靠老闆記。</p>
-<ol class="marks"><li>每張報價單三期</li><li>增減併尾款</li><li>老闆看三格</li><li>一排掃過去</li></ol>
+<p class="lead">現在是這樣做：施工完先收工程款，驗收後做增減單、收尾款；錢收到哪靠老闆記。</p>
+<ol class="marks"><li>每張報價單三期</li><li>增減併尾款</li><li>三格看收到哪</li><li>一排掃過去</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 每張報價單自己的三期</span>訂金／工程款／尾款，簽約時照公司預設比例算好。行政收到錢，在那一行按「收到了」。80% 的案子照預設，特殊的直接改那一案的金額。</div>
-<div class="step" data-k="1"><span class="k">2 · 增減單的錢跟尾款一起收</span>增減單記錄上分開存（合約不動），帳單跟尾款開同一張：尾款實收＝尾款＋增減。多就加上去，少就扣尾款；減得比尾款還多會變負數，系統標紅、人來處理。</div>
-<div class="step" data-k="2"><span class="k">3 · 老闆看到的樣子</span>不是三個數字，是三格。實心＝收了，空心＝還沒。智能、燈具、影音各一排，一個案子只有一張報價單就只顯示那一排。案子多的時候一排掃過去，就知道誰卡在哪一期。</div>
+<div class="step" data-k="0"><span class="k">1 · 每張報價單自己的三期</span>每張報價單各自分成訂金／工程款／尾款三期，簽約的時候照公司預設比例自動算好。行政收到錢，就在那一行按「收到了」。大部分案子照預設走，特殊的直接改那一案的金額就好。</div>
+<div class="step" data-k="1"><span class="k">2 · 增減單的錢跟尾款一起收</span>增減單在紀錄上是分開存的（原本的合約金額不動），但收錢的時候跟尾款開同一張單：實際要收的尾款＝原本尾款＋增減。加的就加上去，減的就從尾款扣。萬一減得比尾款還多、算出來變負數，系統會標紅提醒，交給人去處理。</div>
+<div class="step" data-k="2"><span class="k">3 · 打開會看到什麼</span>不是三個數字，是三個格子。實心＝收了，空心＝還沒。智能、燈具、影音各一排；一個案子只有一張報價單，就只顯示那一排。案子多的時候一排掃過去，就知道哪一案卡在哪一期。</div>
 <div class="step" data-k="3"><span class="k">4 · 案場列表長什麼樣</span>上一格是一個案子拆開看，這一格是全部案子擺在一起：一列一個案場、三格就是三期，右邊直接寫還差多少。案名與數字是舉例。</div>
 </div>
 </div>
@@ -1138,7 +1148,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <g class="in-left" data-s="0" data-until="4" data-hi="0">
 <text x="42" y="70" class="no">1</text>
 <text x="90" y="46" class="cap">客戶帳號簽約就開</text>
-<text x="90" y="70" class="lb">一頁隨案子長：合約、付款、里程碑、設備清單、報修</text>
+<text x="90" y="70" class="lb">一頁跟著案子長：合約、付款、進度、設備清單、報修</text>
 <line x1="40" y1="88" x2="560" y2="88" class="thin draw"/>
 </g>
 <g class="in-left" data-s="1" data-until="4" data-hi="1">
@@ -1201,14 +1211,14 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 09 · 客戶自己看的</span>
 <h2>售後：客戶的頁</h2>
-<p class="lead">現在最薄弱的一塊：幾乎靠老闆一個人回，客戶沒有教學也沒有資料。分「客戶自己看的」跟「內部怎麼處理」兩半，這頁是前半。</p>
+<p class="lead">這是現在最薄弱的一塊：客戶有問題幾乎都是找老闆，客戶手上沒有教學也沒有自己家的資料。售後拆成兩半講，這一屏是「客戶自己看得到的」，下一屏是「內部怎麼處理」。</p>
 <ol class="marks"><li>簽約就開</li><li>不給密碼</li><li>第一版怎麼發</li><li>教學與排除</li><li>客戶看到的樣子</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 客戶帳號簽約就開</span>一頁隨案子長：簽約後看合約與付款進度；施工中看里程碑跟增減單草稿（驗收前就先看過，不會被嚇到）；驗收後看設備清單、每台保固到期、教學、排除；之後報修。施工細節不全給：師傅的內部備註、領料、成本不開；照片開不開等老闆。</div>
-<div class="step" data-k="1"><span class="k">2 · 不給密碼</span>LINE 收到連結，點了就登入、這支手機記 90 天；換手機回 LINE 再點一次。客戶永遠不用記密碼，我們永遠不用處理「忘記密碼」。</div>
+<div class="step" data-k="0"><span class="k">1 · 客戶帳號簽約就開</span>客戶會拿到一個自己專屬的網頁，內容跟著案子的進度慢慢長出來：簽約後看得到合約與付款進度；施工中看得到進度燈跟增減單草稿（驗收前就先看過，不會到最後才被金額嚇到）；驗收後看得到設備清單、每台保固到什麼時候、怎麼用、怎麼排除；之後可以報修。施工細節不會全給：師傅的內部備註、領了什麼料、成本都不開；照片開不開還要等老闆決定。</div>
+<div class="step" data-k="1"><span class="k">2 · 不給密碼</span>客戶不用設密碼。從 LINE 收到一個連結，點下去就直接登入，這支手機會記住 90 天，期間再打開就直接進去；換手機的話回 LINE 再點一次連結就好。客戶永遠不用記密碼，我們也永遠不用處理「忘記密碼」。</div>
 <div class="step" data-k="2"><span class="k">3 · 第一版怎麼發</span>行政把連結貼進既有的 LINE 群，跟客戶本來就在那裡。官方帳號自動發是第二步。</div>
-<div class="step" data-k="3"><span class="k">4 · 教學與排除</span>教學影片先不拍。每個設備類別一頁：影片連結（可先空）＋文字版問題排除，排除問答行政自己加，沒影片也能上線。第二版加 AI 客服：讀我們寫的排除問答加這個客戶家的設備清單，一步一步帶他查；只帶查、不教改設定，查不出來就直接按報修。</div>
-<div class="step" data-k="4"><span class="k">5 · 客戶打開會看到什麼</span>客戶多半在手機上看，所以照手機畫。上面三列簽約後就有，設備清單跟保固要驗收打完勾才長出來，最底下那顆是報修。完成照那一列先留著但不開，等你拍板。內容是舉例。</div>
+<div class="step" data-k="3"><span class="k">4 · 教學與排除</span>教學影片先不拍。每個設備類別開一頁：一個影片連結（可以先空著）＋文字版的常見問題與排除方法，這些內容行政自己加，沒有影片也能先上線。第二階段再加 AI 客服：它讀我們寫的排除方法，加上這個客戶家裡實際裝了什麼，一步一步帶客戶自己查；只帶著查、不教他改設定，查不出來就直接按報修。</div>
+<div class="step" data-k="4"><span class="k">5 · 客戶打開會看到什麼</span>客戶多半用手機看，所以這張是照手機畫的。上面三列簽約後就有；設備清單跟保固要等驗收打完勾才長出來；最底下那顆是報修。完成照那一列先留著但不開放，等老闆決定。內容是舉例。</div>
 </div>
 </div>
 </div>
@@ -1251,15 +1261,15 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="txt">
 <span class="tag">Station 09 · 內部怎麼處理</span>
 <h2>售後：報修怎麼走</h2>
-<p class="lead">報修進來先由行政每天看，再通知專案人員或老闆處理。四步，客戶跟內部各看得到自己那半。</p>
+<p class="lead">客戶按了報修之後，內部是這樣接的：行政每天看一次，再通知專案人員或老闆去處理。總共四步，客戶跟內部各自看得到自己那一半。</p>
 <ol class="marks"><li>客戶按報修</li><li>行政首頁</li><li>通知處理</li><li>客戶看到狀態</li></ol>
 <div class="steps">
 <div class="step" data-k="0"><span class="k">1 · 客戶按報修</span>在自己的頁按「報修」：選設備類別、寫狀況、拍照。不用打電話、不用在群裡找人。</div>
 <div class="step" data-k="1"><span class="k">2 · 行政首頁</span>行政首頁每天看得到「今天新報修 N 件」。每件自動標<b>保固內／已過保</b>——系統從設備清單算的，決定要不要收費，行政不用翻。</div>
-<div class="step" data-k="2"><span class="k">3 · 通知處理</span>行政不指派，只幫忙注意有沒有新報修、然後告知專案人員或老闆；他們自己排一趟「維修」工作紀錄去處理，帶料預設同料號一台當備品。設備要送回廠商，接現在已經有的送修流程。</div>
+<div class="step" data-k="2"><span class="k">3 · 通知處理</span>行政不負責指派誰去，只負責注意有沒有新報修，然後告訴專案人員或老闆。他們自己排一趟「維修」的工作紀錄去處理，要帶的料預設同一個料號一台當備品。如果設備要送回廠商，就接現在已經有的送修流程。</div>
 <div class="step" data-k="3"><span class="k">4 · 客戶看到狀態</span>客戶頁看到：已收到 → 處理中 → 完成。不用再問「你們收到了嗎」。</div>
 </div>
-<p class="note"><b>保固怎麼算八月就定了：</b>每種設備自己的保固月數，從它在這個案場第一次安裝那天起算。</p>
+<p class="note"><b>保固怎麼算（先前已經定了）：</b>每種設備有自己的保固月數，從它在這個案場第一次安裝那天開始算。</p>
 </div>
 </div>
 </section>
@@ -1278,7 +1288,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <g class="in-left" data-s="1" data-until="3" data-hi="1">
 <text x="42" y="206" class="no">2</text>
 <text x="90" y="180" class="cap">庫存（加一件新的）</text>
-<text x="90" y="206" class="lb">現量、成本、廠商、叫貨、送修；拍照就進出庫</text>
+<text x="90" y="206" class="lb">還剩幾個、成本、廠商、叫貨、送修；拍照就進出庫</text>
 <line x1="40" y1="226" x2="560" y2="226" class="thin draw"/>
 </g>
 <g class="in-left" data-s="2" data-until="3" data-hi="2">
@@ -1334,9 +1344,9 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <p class="lead">這三塊不屬於哪一站，是整條線都會用到的。</p>
 <ol class="marks"><li>打卡</li><li>庫存</li><li>安裝教學</li><li>工地上長這樣</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 打卡</span>記的是「今天有沒有來上班」。跟工作紀錄裡「誰來這個案場」是兩件事，分開存、看的權限也不同。走 LINE 打卡；怎麼確認人真的在現場還沒定，因為公司對外網路的 IP 固不固定還沒查。資料表有了，畫面還沒寫。</div>
-<div class="step" data-k="1"><span class="k">2 · 庫存（加一件新的）</span>每個料號的現量、成本（移動加權）、廠商、叫貨、缺料、送修。料號跟報價單用同一份，05 備料清單的「庫存有」就是從這裡算的。這次不重做，只接上新的兩層分類，再加一件：<b>拍照就能進出庫</b>。貨到了拍廠商的送貨單、出貨時拍箱子，系統先讀出品名跟數量、對到料號、把表單填好；人看一眼、按確認才寫進帳。系統只幫忙填，最後那一下一定是人按的，看錯不會直接變成庫存數字。先做進貨那端：叫貨單已經在系統裡，系統只要對「還沒到的那幾行」，錯的機會小；出貨拍箱子是第二步。</div>
-<div class="step" data-k="2"><span class="k">3 · 安裝教學（新加的）</span>裝的東西多又複雜，把每種設備的安裝方法放進系統，施工的人在工地用手機隨時查。教學掛在料號上；工作紀錄「今天要裝什麼」每條料旁邊一顆「怎麼裝」，點開就是。內容是文字、照片、影片連結，放設定區，負責人自己加。跟 09 給客戶的教學是兩份：那份教客戶怎麼用，這份教師傅怎麼裝。</div>
+<div class="step" data-k="0"><span class="k">1 · 打卡</span>記的是「今天有沒有來上班」。跟工作紀錄裡「誰來這個案場」是兩件事，分開存、能看的人也不一樣。打卡走 LINE。怎麼確認人真的在現場還沒定——本來想用「有沒有連到公司網路」來判斷，但公司對外的網路位址固不固定還沒查。資料表有了，畫面還沒寫。</div>
+<div class="step" data-k="1"><span class="k">2 · 庫存（加一件新的）</span>每個料號還剩幾個、成本多少（用移動加權算，就是每次進貨後重新平均一次）、跟哪家廠商叫、缺料、送修。料號跟報價單用的是同一份，備料清單上那個「庫存有」就是從這裡算出來的。這次不重做，只接上新的兩層分類，再加一件：<b>拍照就能進出庫</b>。貨到了拍廠商的送貨單、出貨時拍箱子，系統先讀出品名跟數量、對到料號、把表單填好；人看一眼、按確認才寫進帳。系統只幫忙填，最後那一下一定是人按的，看錯不會直接變成庫存數字。先做進貨那端：叫貨單已經在系統裡，系統只要對「還沒到的那幾行」，錯的機會小；出貨拍箱子是第二步。</div>
+<div class="step" data-k="2"><span class="k">3 · 安裝教學（新加的）</span>裝的東西多又複雜，把每種設備的安裝方法放進系統，施工的人在工地用手機隨時查。教學掛在料號上；工作紀錄「今天要裝什麼」每條料旁邊一顆「怎麼裝」，點開就是。內容是文字、照片、影片連結，放設定區，負責人自己加。這跟售後給客戶看的教學是兩份不同的東西：那份教客戶怎麼用，這份教師傅怎麼裝。</div>
 <div class="step" data-k="3"><span class="k">4 · 在工地上長什麼樣</span>左邊是師傅手機上本來就有的「今天要裝什麼」，每條料右邊多一顆「怎麼裝」；點下去就是右邊那頁：照片、幾個步驟、有影片就放連結。步驟文字是舉例，真正內容負責人自己加。</div>
 </div>
 </div>
@@ -1349,17 +1359,17 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <div class="lbl">目前決定不做的</div>
 <div>
 <h3>不做的，跟為什麼</h3>
-<p>這是目前討論到的想法，還沒跟公司談過。要重開哪一條都可以。</p>
+<p>這些是討論當下決定先不做的，每條都寫了原因。不是關死的，要重開哪一條都可以。</p>
 <ul class="rule c2">
-<li><div class="h">「成交」鈕、「鎖定」鈕</div><span class="no">都是會忘記按的鈕。案件在簽約那刻誕生，驗收簽字就是凍結點</span></li>
-<li><div class="h">把施工階段做成欄位（開場、封板前後、進場）</div><span class="no">那是習慣不是規則，工作紀錄已經看得出做到哪</span></li>
-<li><div class="h">系統裡重做檔案管理</div><span class="no">設計公司或屋主給的檔我們自己丟進 iCloud，系統做等於重做一個 Finder</span></li>
+<li><div class="h">「成交」鈕、「鎖定」鈕</div><span class="no">都是會忘記按的鈕。案子在客戶簽約那刻就成立，驗收簽字本身就等於鎖定</span></li>
+<li><div class="h">把施工階段做成欄位（開場、封板前後、進場）</div><span class="no">那是大家的習慣、不是硬規則，工作紀錄已經看得出做到哪</span></li>
+<li><div class="h">系統裡重做檔案管理</div><span class="no">設計公司或屋主給的檔我們自己丟進 iCloud，再做一套等於把 Finder 重做一遍</span></li>
 <li><div class="h">刪掉沒做的案子</div><span class="no">改標「沒做」，半年後要看哪家設計公司報幾次成幾次</span></li>
-<li><div class="h">客戶密碼</div><span class="no">連結登入，兩邊都省事</span></li>
-<li><div class="h">AI 客服取代影片</div><span class="no">排除交給它，「怎麼用調光」還是影片</span></li>
-<li><div class="h">審核閘（師傅填完要人核准）</div><span class="no">八月就決定拿掉，五人公司沒人想每天按一顆鈕</span></li>
+<li><div class="h">客戶密碼</div><span class="no">改用連結登入，客戶不用記、我們不用處理忘記密碼</span></li>
+<li><div class="h">AI 客服取代教學影片</div><span class="no">壞掉怎麼排除可以交給它，但「調光怎麼用」這種還是要影片</span></li>
+<li><div class="h">審核關卡（師傅填完要主管核准才算數）</div><span class="no">先前就決定拿掉。公司人少，沒人想每天按一顆核准鈕</span></li>
 </ul>
-<div class="band"><span class="k">這份談的是什麼</span><p>是「怎麼做」的決定，程式一行都還沒改、資料結構也還是舊的。最後那三件定了，才排實作順序、更新系統架構圖，然後才動系統。</p></div>
+<div class="band"><span class="k">這份談的是什麼</span><p>這份談的是「以後怎麼做」，不是系統已經做好了。程式一行都還沒改、資料也還是舊的。等最後那三件定了，才會排實作順序、更新系統架構圖，然後才真的動系統。</p></div>
 </div>
 </div>
 </section>
@@ -1395,9 +1405,9 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
 <p class="lead">其他決定都定了。這三件牽涉公司怎麼運作，要一起定，每件都附了建議。</p>
 <ol class="marks"><li>系統跑在哪</li><li>完工照片</li><li>收款比例</li></ol>
 <div class="steps">
-<div class="step" data-k="0"><span class="k">1 · 系統跑在哪、iCloud 綁不綁</span><b>跑公司 Mac：</b>案場一成立，系統自動在 iCloud 建好資料夾（場刊資料／施工圖／規劃書／照片），師傅從系統拍的照片也存進去；設計公司或屋主給的圖跟資料，我們自己丟進同一個資料夾，一處存。代價是那台 Mac 要常開、要關掉「最佳化儲存」、資料夾名字系統取人不能改。<b>跑雲端：</b>系統自己存檔、iCloud 只留連結，檔案分兩處。<b>建議：</b>公司 Mac 加 iCloud 綁定。</div>
-<div class="step" data-k="1"><span class="k">2 · 完工照片要不要開給屋主</span>想法是：師傅知道客戶會看到照片，做工會不一樣。照片分兩種——<b>完成照</b>拍面板成品，驗收後才開給客戶；<b>紀錄照</b>拍天花板內、箱內線路，只給內部維修用、永遠不開。師傅要事先知道完成照客戶會看。施工中的進度回報照舊在 LINE 群。<b>建議：</b>開，但只開完成照、只在驗收後。</div>
-<div class="step" data-k="2"><span class="k">3 · 收款比例的數字</span>訂金、工程款、尾款各佔合約的幾 %，設一組公司預設。簽約那刻自動套進去，特殊案子直接改那一案的金額。<b>要給：</b>三個百分比。<b>建議：</b>照現在最常用的那組寫進去就好，改得回來。</div>
+<div class="step" data-k="0"><span class="k">1 · 系統跑在哪、iCloud 綁不綁</span><b>跑公司 Mac：</b>案場一成立，系統自動在 iCloud 建好資料夾（場刊資料／施工圖／規劃書／照片），師傅從系統拍的照片也存進去；設計公司或屋主給的圖跟資料，我們自己丟進同一個資料夾，全部集中在一處。代價是那台 Mac 要一直開著、要關掉 iCloud 的「最佳化儲存空間」（不然檔案會被搬上雲端、本機只留縮圖），而且資料夾名字由系統取、人不能自己改。<b>跑雲端：</b>系統自己存檔案，iCloud 那邊只放連結，同一個案子的東西會分在兩個地方。<b>建議：</b>公司 Mac 加 iCloud 綁定。</div>
+<div class="step" data-k="1"><span class="k">2 · 完工照片要不要開給屋主</span>想法是：師傅知道客戶會看到照片，做工會不一樣。照片分兩種——<b>完成照</b>拍面板成品，驗收後才開給客戶；<b>紀錄照</b>拍天花板裡面、箱內線路，只給內部維修用、永遠不開給客戶。如果要開，師傅要事先知道完成照客戶會看得到。施工中的進度回報照舊走 LINE 群。<b>建議：</b>開，但只開完成照、只在驗收後。</div>
+<div class="step" data-k="2"><span class="k">3 · 收款比例的數字</span>訂金、工程款、尾款各佔合約金額的幾 %，先設一組公司預設值。簽約那一刻自動套進去，特殊案子再直接改那一案的金額就好。<b>要給：</b>三個百分比。<b>建議：</b>照現在最常用的那組寫進去就好，改得回來。</div>
 </div>
 </div>
 </div>
@@ -1553,7 +1563,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
       li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setStage(s, i); } });
     });
   });
-  // 鍵盤兩套走法（Jack 2026-09-18）：
+  // 鍵盤兩套走法（系統負責人 2026-09-18）：
   //   ← →：只在幻燈頁之間走——先切這頁的階段，到頭了翻到下一張幻燈（跳過中間的表格／卡片段）。
   //   ↑ ↓：一小格一小格走完整份——先切階段；到頭了走到下一個吸附段（幻燈、表格段、頁尾都算）；
   //        比一屏高的段落每按一下捲 85% 屏、捲到底才進下一段。
@@ -1578,7 +1588,7 @@ footer{scroll-snap-align:end;padding:28px var(--gutter);border-top:1px solid var
     next.scrollIntoView({ behavior: bh, block: d < 0 && tall ? 'end' : 'start' });   // 往上進高段落：先看它的尾巴
     return true;
   }
-  // 手機／平板沒有方向鍵（Jack 2026-09-22 定，先在 CX-30 對 CX-5 那份實測）：手指往上滑一下＝按一次 ↓、往下滑＝↑，
+  // 手機／平板沒有方向鍵（系統負責人 2026-09-22 定，先在 CX-30 對 CX-5 那份實測）：手指往上滑一下＝按一次 ↓、往下滑＝↑，
   // 跟鍵盤一樣一小格一小格走（幻燈頁換階段、長段每次 85% 屏）。
   // iOS Safari 不理 body 的 touch-action（文件層的捲動它自己管），要在 touchmove 裡 preventDefault（passive:false）才擋得住原生捲動；
   // 只設 CSS 是不夠的，iPhone 上滑一下還是整頁翻、小標題不會走。**改捲動手感時別把 passive:false 那段拿掉。**
