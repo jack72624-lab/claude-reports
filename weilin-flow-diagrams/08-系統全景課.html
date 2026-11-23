@@ -1,0 +1,817 @@
+<!doctype html>
+<!--
+  這頁是什麼：給第一次用系統的同事看的「系統全景課」（2026-11-23 加，總覽最後一個分頁）。
+  用一個假的案子「林宅」從客戶走到收工，11 步。名字、數字全是編的，沒有截圖。
+  ★ 改字、改步驟：只改第一個 <script> 的 LESSON。內容照 架構/操作地圖.md，職位寫法照它。
+  ★ 動畫引擎（第二個 <script>）跟另一份 demo 共用，改引擎的規矩寫在 系統教學/系統全景課/CLAUDE.md。
+  ★ 讀這頁的是公司同仁：頁面上的字一律白話，不寫程式名詞。
+  這頁會推上公開站：原始碼看得到這段註解，所以不寫密碼、網址鑰匙、人名。
+-->
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>系統全景課・威琳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   互動課引擎（2026-11-23）
+   版面：上排數字卡 → 等角方塊圖（圓點在方塊之間流動）→ 步驟條 → 這一步的說明 → 底部上一步／下一步
+   內容全部在下面 <script> 的 LESSON 物件，引擎不寫死任何一堂課的字。
+   換一堂課：改 LESSON；換外觀：改這段 :root 的色票與字體，加上 LESSON.palette 的方塊顏色。
+   ============================================================ */
+:root{
+  --bg:#efe9dc;        /* 頁底：暖紙色 */
+  --card:#faf7f0;      /* 卡片 */
+  --stage:#f6f1e6;     /* 畫布底 */
+  --ink:#24221e;       /* 主墨色：外框、正文 */
+  --mut:#6d675b;       /* 次要字 */
+  --line:#d8d0bf;      /* 卡片邊線 */
+  --grid:#e4dccb;      /* 等角格線 */
+  --acc:#c9e3a0;       /* 下一步按鈕、目前那一步 */
+  --acc-ink:#24331a;
+  --good:#3d8a3a;
+  --bad:#c0412c;
+  --warn:#b4720c;
+  --chip:#fffdf8;
+  --font:"Noto Serif TC","Songti TC",serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Noto Serif TC","Songti TC",monospace;
+  --radius:14px;
+  --ring:var(--good);   /* 「現在看這裡」擴散圈 */
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px 120px}
+
+/* 頂列 */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:.02em}
+.brand mark{background:linear-gradient(transparent 58%,var(--acc) 58%);color:inherit;padding:0 2px}
+.top .sp{flex:1}
+.top .by{font-family:var(--mono);font-size:12px;color:var(--mut)}
+
+/* 課程標題 */
+.head{padding:34px 0 18px}
+.crumb{font-family:var(--mono);font-size:13px;color:var(--mut);letter-spacing:.02em}
+.title-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:8px}
+h1{font-size:44px;line-height:1.1;margin:0;font-weight:700;letter-spacing:.01em}
+.chips{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;border:1.5px solid var(--ink);border-radius:999px;padding:4px 12px;background:var(--chip);display:inline-flex;align-items:center;gap:6px}
+.chip.c1{background:#f6e7b8}.chip.c2{background:#d6ebc4}.chip.c3{background:#e2dcf3}
+.sub{color:var(--mut);margin:10px 0 0;font-size:16px}
+
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius)}
+
+/* 畫布卡 */
+.stage{margin-top:14px;overflow:hidden}
+.tiles{display:flex;gap:10px;padding:14px 14px 0;flex-wrap:wrap}
+.tile{position:relative;background:var(--chip);border:1.5px solid var(--line);border-radius:10px;padding:8px 14px 8px 16px;min-width:128px;overflow:hidden}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:transparent;transition:background .4s}
+.tile.bad::before{background:var(--bad)}.tile.good::before{background:var(--good)}.tile.warn::before{background:var(--warn)}
+.tile .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--mut);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.tile .v{font-family:var(--mono);font-size:19px;font-weight:600;margin-top:2px;transition:color .4s;white-space:nowrap}
+.tile.bad .v{color:var(--bad)}.tile.good .v{color:var(--good)}.tile.warn .v{color:var(--warn)}
+.canvas{position:relative;background:var(--stage)}
+.canvas svg{display:block;width:100%;height:auto}
+.note{position:absolute;right:16px;top:14px;width:300px;background:var(--chip);border:2px solid var(--ink);border-radius:10px;padding:10px 14px;font-size:13.5px;box-shadow:3px 3px 0 var(--ink);transition:opacity .35s,transform .35s}
+.note.left{right:auto;left:16px}
+.note.hide{opacity:0;transform:translateY(-6px);pointer-events:none}
+.note h4{margin:0 0 6px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mut);font-weight:500;text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:6px}
+.note .r{display:flex;gap:10px;padding:2px 0;line-height:1.45}
+.note .r b{min-width:62px;font-weight:600}
+.note .hi{background:var(--acc);border-radius:4px;padding:2px 6px;margin:4px -6px 0;font-weight:600}
+.note .ft{color:var(--mut);font-size:12px;margin-top:4px}
+.stage-foot{display:flex;align-items:center;gap:16px;padding:10px 14px 12px;border-top:1px solid var(--line)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid var(--ink);margin-right:6px;vertical-align:-1px}
+.legend i.sq{border-radius:2px}
+.legend i.ring{background:transparent!important;border-width:2.5px}
+.ctrls{margin-left:auto;display:flex;gap:8px}
+.ibtn{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--ink);background:var(--chip);display:grid;place-items:center;box-shadow:2px 2px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.ibtn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink)}
+.ibtn svg{width:17px;height:17px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 步驟條 */
+.steps{margin-top:14px;padding:14px 18px 16px}
+.steps-h{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.steps-h b{color:var(--ink);font-weight:600}
+.rail{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;margin-top:14px}
+.rail .bar{position:absolute;left:0;right:0;top:15px;height:2px;background:var(--line)}
+.rail .bar i{display:block;height:100%;background:var(--ink);width:0;transition:width .45s cubic-bezier(.2,.7,.2,1)}
+.st{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0}
+.st .n{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--ink);background:var(--chip);font-family:var(--mono);font-size:13px;font-weight:600;display:grid;place-items:center;transition:background .3s,transform .2s}
+.st.done .n{background:#e8eedf}
+.st.cur .n{background:var(--acc);transform:scale(1.12);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 45%,transparent)}
+.st .l{font-size:12.5px;color:var(--mut);text-align:center;line-height:1.3;max-width:96px}
+.st.cur .l{color:var(--ink);font-weight:700}
+.st:hover .n{transform:scale(1.08)}
+
+/* 這一步的說明 */
+.lesson{margin-top:14px;padding:20px 24px 22px;display:grid;grid-template-columns:1fr auto;gap:6px 24px}
+.lesson .tag{grid-column:2;grid-row:1;align-self:start;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;border:1.5px solid var(--ink);border-radius:999px;padding:3px 10px;background:#f6e7b8}
+.lesson .stepno{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--mut);grid-column:1}
+.lesson h2{grid-column:1/-1;margin:2px 0 4px;font-size:26px;font-weight:700}
+.lesson .body{grid-column:1/-1;font-size:16.5px;line-height:1.85;max-width:62em}
+.lesson .body p{margin:0 0 8px}
+.lesson .body b{background:linear-gradient(transparent 62%,var(--acc) 62%)}
+.meta{grid-column:1/-1;display:flex;gap:22px;flex-wrap:wrap;margin-top:8px;padding-top:12px;border-top:1px dashed var(--line);font-size:14px}
+.meta .mk{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mut);margin-right:8px;text-transform:uppercase}
+.meta .who span{display:inline-block;border:1.5px solid var(--ink);border-radius:999px;padding:1px 9px;margin-right:6px;font-size:13px;background:var(--chip)}
+.meta .where code{font-family:inherit;background:var(--chip);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+
+/* 底部 上一步／下一步 */
+.bar-bottom{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+.bar-in{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;gap:12px}
+.btn{height:50px;border-radius:12px;border:2px solid var(--ink);background:var(--chip);padding:0 22px;font-weight:600;font-size:16px;display:flex;align-items:center;gap:10px;box-shadow:3px 3px 0 var(--ink);transition:transform .12s,box-shadow .12s,opacity .2s}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.btn[disabled]{opacity:.38;cursor:default;box-shadow:none}
+.btn.next{flex:1;background:var(--acc);color:var(--acc-ink);justify-content:space-between}
+.btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* SVG 裡的東西 */
+.node{transition:opacity .45s ease}
+.node.off{opacity:0;pointer-events:none}
+.node.dim{opacity:.26}
+.node .face{transition:fill .45s ease}
+.link{transition:opacity .45s ease}
+.link.off{opacity:0}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.2s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.7);opacity:.75}100%{transform:scale(1.7);opacity:0}}
+.down-x{transition:opacity .3s}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:.35}*{transition-duration:.01ms!important}}
+:fullscreen.stage{background:var(--stage);display:flex;flex-direction:column;justify-content:center}
+</style>
+<style>
+/* ============================================================
+   架構總覽的外觀（覆寫上面那份互動課樣式）
+   色票跟 00–07 同一套 archify editorial 淺色（照 07-打卡一條線.html 檔頭）；選中的一步用朱紅
+   顏色只給狀態：綠＝料、琥珀＝缺。只有淺色（引擎的方塊顏色是程式算的，深色還沒做）
+   頁首那條「威琳 系統教學」藏起來：外面總覽已經有標題和「給誰看、最後對過系統」
+   ============================================================ */
+:root{
+  --bg:#f2eee5; --card:#fbf8f1; --stage:#f7f3ea; --ink:#242018; --mut:#6f6658; --line:#d8d0c2; --grid:#e6dfd1;
+  --acc:#242018; --acc-ink:#fbf8f1; --acc-lt:#ebe5d8; --chip:#fbf8f1;
+  --good:#1f8a4c; --bad:#bb4c23; --warn:#b25e09; --ring:#bb4c23;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Heiti TC",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"PingFang TC",monospace;
+  --radius:14px;
+}
+:root{color-scheme:light}
+.top{display:none}
+.brand{font-size:17px;font-weight:600;letter-spacing:.04em;gap:10px}
+.brand-sub{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.18em;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+.crumb,.steps-h,.tile .k,.note h4,.lesson .stepno,.meta .mk{font-size:10.5px;font-weight:500;letter-spacing:.18em}
+h1{font-size:30px;font-weight:600;letter-spacing:0}
+.sub{font-size:15px}
+.chip{border:1px solid var(--line);font-size:12px;background:var(--card)}
+.chip.c1,.chip.c2,.chip.c3{background:var(--card)}
+.card{border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.tile{border:1px solid var(--line)}
+.tile .v{font-family:var(--font);font-weight:300;font-size:22px;letter-spacing:-.01em}
+.note{border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.08);width:270px;font-size:13px}
+.note .hi{background:var(--acc-lt)}
+.note .r b{min-width:86px;font-weight:600}
+.ibtn{border:1px solid var(--line);box-shadow:none;border-radius:999px}
+.ibtn:active{transform:scale(.96);box-shadow:none}
+.st .n{border:1px solid var(--line);font-family:var(--font);font-weight:500}
+.st.done .n{background:var(--acc-lt);border-color:var(--acc-lt)}
+.st.cur .n{background:var(--ring);color:#fff;border-color:var(--ring);box-shadow:0 0 0 5px var(--acc-lt)}
+.lesson .tag{border:1px solid var(--line);background:var(--card);font-size:10.5px;letter-spacing:.18em}
+.lesson h2{font-size:22px;font-weight:600}
+.lesson .body{font-size:15.5px;line-height:1.8}
+.lesson .body b{background:none;font-weight:600}
+.meta .who span{border:1px solid var(--line);font-size:12.5px}
+.meta .where code{border:1px solid var(--line);background:var(--bg)}
+.btn{border:1px solid var(--line);box-shadow:none;font-size:15px;height:48px}
+.btn:active{transform:scale(.99);box-shadow:none}
+.btn.next{background:var(--ink);color:#fff;border-color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="top-in">
+  <div class="brand">威琳<span class="brand-sub">系統教學</span></div>
+  <div class="sp"></div>
+  <div class="by" id="by"></div>
+</div></header>
+
+<main class="wrap">
+  <section class="head">
+    <div class="crumb" id="crumb"></div>
+    <div class="title-row"><h1 id="h1"></h1><div class="chips" id="chips"></div></div>
+    <p class="sub" id="sub"></p>
+  </section>
+
+  <section class="card stage" id="stage">
+    <div class="tiles" id="tiles"></div>
+    <div class="canvas"><svg id="svg" role="img"></svg><div class="note hide" id="note"></div></div>
+    <div class="stage-foot">
+      <div class="legend" id="legend"></div>
+      <div class="ctrls">
+        <button class="ibtn" id="bReplay" title="這一步重播" aria-label="這一步重播"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+        <button class="ibtn" id="bPause" title="暫停／繼續（空白鍵）" aria-label="暫停或繼續"><svg viewBox="0 0 24 24" id="pIcon"><path d="M9 5v14M15 5v14"/></svg></button>
+        <button class="ibtn" id="bFull" title="全螢幕" aria-label="全螢幕"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card steps">
+    <div class="steps-h"><span>這堂課</span><span id="stepCount"></span></div>
+    <div class="rail" id="rail"><div class="bar"><i id="railFill"></i></div></div>
+  </section>
+
+  <section class="card lesson" id="lesson" aria-live="polite"></section>
+</main>
+
+<nav class="bar-bottom"><div class="bar-in">
+  <button class="btn" id="bBack"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>上一步</button>
+  <button class="btn next" id="bNext"><span id="nextLabel">下一步</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+</div></nav>
+
+<script>
+/* ============================================================
+   課程內容（換一堂課只改這裡）
+   - nodes：場景裡的東西。type＝prism（方塊）／tank（圓柱，可顯示存量）／crowd（一群人站在台子上）
+     x、y 是等角格子座標（x 往右下、y 往左下），w、d、h 是寬、深、高（格子單位）
+   - links：箭頭線。via＝'xy' 先走 x 再走 y、'yx' 反過來、'direct' 直線
+   - kinds：流動小點的種類（顏色、形狀、圖例文字）
+   - steps：每一步。沒列在 nodes 裡的東西會淡出；links 只畫列出的；flows 是這一步在跑的小點
+   ============================================================ */
+const LESSON = {
+  by: "給第一次用系統的同事・內容照 2026-11-23 的系統",
+  crumb: "系統教學 / 第一次用系統",
+  title: "系統全景課",
+  sub: "用一個假的案子「林宅」，從客戶走到收工，看系統每一塊在做什麼。",
+  chips: [["c1","約 8 分鐘"],["c2","新進同事"],["c3","11 步"]],
+  scale: 26, origin: [463, 275], viewBox: [1000, 430], notePos: "left",
+  /* 方塊一律紙色底黑線；顏色只留給「狀態」：綠＝料、琥珀＝缺、紅＝出事 */
+  palette: { white:"#fbf8f1", red:"#f6e3d8", green:"#e4f0e2", down:"#e4ddd0" },
+  platform: ["#fbf8f1", "#efe9dd", "#e4ddd0"],
+  people: ["#ebe5d8", "#d8d0c2", "#e4ddd0"],
+  headColor: "#fbf8f1",
+  kinds: {
+    data:   { color:"#242018", label:"一筆資料" },
+    item:   { color:"#1f8a4c", label:"料（設備、耗材）" },
+    warn:   { color:"#b25e09", shape:"sq", label:"缺料回報" },
+    person: { color:"#242018", shape:"ring", label:"人" }
+  },
+  tiles: [
+    { key:"wh",    label:"主倉・智能開關", icon:"box" },
+    { key:"box",   label:"林宅案場箱", icon:"box" },
+    { key:"done",  label:"已裝好", icon:"wrench" },
+    { key:"short", label:"缺料回報", icon:"alert" },
+    { key:"vo",    label:"增減單", icon:"doc" }
+  ],
+  /* 格子座標：案場在正中 (0,0)，其他東西往四個方向排開 */
+  nodes: {
+    S: { type:"prism", x:0,  y:0,   w:2.4, d:2.4, h:1.7, color:"white", icon:"home",      label:"案場・林宅" },
+    C: { type:"prism", x:0,  y:6,   w:2.2, d:2.2, h:1.4, color:"white", icon:"user",      label:"客戶・林先生" },
+    W: { type:"prism", x:-6, y:0,   w:2.2, d:2.2, h:1.4, color:"white", icon:"clipboard", label:"工作紀錄" },
+    X: { type:"prism", x:-6, y:6,   w:2.2, d:2.2, h:1.4, color:"white", icon:"doc",       label:"增減單" },
+    T: { type:"crowd", x:0,  y:-6,  w:3.2, d:2.4, rows:2, cols:3, tag:"技術人員", tagIcon:"users" },
+    K: { type:"prism", x:-6, y:-6,  w:2.2, d:2.2, h:1.4, color:"white", icon:"phone",     label:"LINE 打卡" },
+    Q: { type:"prism", x:0,  y:-12, w:2.2, d:2.2, h:1.4, color:"white", icon:"alert",     label:"缺料" },
+    V: { type:"prism", x:6,  y:-12, w:2.2, d:2.2, h:1.4, color:"white", icon:"truck",     label:"廠商" },
+    M: { type:"tank",  x:6,  y:-6,  r:1.15, h:1.7, color:"white", levelColor:"green", label:"主倉" },
+    B: { type:"tank",  x:6,  y:0,   r:0.95, h:1.3, color:"white", levelColor:"green", label:"林宅案場箱" }
+  },
+  links: {
+    cs: { from:"C", to:"S", via:"direct" },
+    ws: { from:"W", to:"S", via:"direct" },
+    ts: { from:"T", to:"S", via:"direct" },
+    tk: { from:"T", to:"K", via:"direct" },
+    tq: { from:"T", to:"Q", via:"direct" },
+    qv: { from:"Q", to:"V", via:"direct" },
+    vm: { from:"V", to:"M", via:"direct" },
+    mb: { from:"M", to:"B", via:"direct" },
+    bs: { from:"B", to:"S", via:"direct" },
+    sx: { from:"S", to:"X", via:"direct" },
+    xc: { from:"X", to:"C", via:"direct" }
+  },
+  steps: [
+    {
+      label:"先認地圖", tag:"開始", title:"系統把每天的事分成幾塊",
+      body:"<p>誰是客戶、去哪一戶做、哪天誰去、帶什麼料、缺什麼要叫，每一塊都對到畫面上一顆<b>圓鈕</b>。</p><p>接下來用一個假的案子「林宅」從頭走一遍。名字和數字都是編的。</p>",
+      who:["每個人"], where:"首頁、客戶、案場、工作紀錄、庫存、人員",
+      nodes:{ S:"on", C:"on", W:"on", X:"on", T:"on", K:"on", Q:"on", V:"on", M:{level:.8}, B:{level:0} },
+      links:[], flows:[],
+      tiles:{ wh:["40 台"], box:["0 台"], done:["0 台"], short:["0 件"], vo:["0 張"] },
+      note:{ title:"六顆圓鈕", rows:[["首頁","這週誰去哪、要我動手的"],["客戶","客戶名單"],["案場","每一戶的全部"],["工作紀錄","哪天去哪"],["庫存","倉、進出、缺料、叫貨"],["人員","名單、出勤"]], ft:"齒輪「設定」不是每個職位都有" }
+    },
+    {
+      label:"客戶和案場", tag:"一戶", title:"先有客戶，才有案場",
+      body:"<p>林先生是<b>客戶</b>，他家「林宅」是一個<b>案場</b>。建案場時一定要選一位客戶，所以順序是先建客戶。</p><p>客戶資料頁的下面，會列出他的案場名，點了直接進去。</p>",
+      who:["老闆","系統維護者","專案負責人"], where:"客戶 → 新增客戶；案場 → 新增案場",
+      nodes:{ C:"focus", S:"on", M:{state:"dim",level:.8}, B:{state:"dim",level:0} },
+      links:["cs"],
+      flows:[{link:"cs",kind:"data",every:1400}],
+      tiles:{ wh:["40 台"], box:["0 台"], done:["0 台"], short:["0 件"], vo:["0 張"] }
+    },
+    {
+      label:"案場頁", tag:"一戶", title:"一戶的事，都在案場頁",
+      body:"<p>點進林宅，這一戶的事都在這頁的<b>分頁</b>裡：去過幾次、交接了什麼、圖檔、基本資料。</p><p>其中「增減」「成本與收款」跟錢有關，只有老闆和系統維護者看得到。你看不到不是壞掉，是職位沒開。</p>",
+      who:["每個人"], where:"案場 → 點林宅那一列",
+      nodes:{ S:"focus", C:"dim", W:"dim", X:"dim", M:{state:"dim",level:.8}, B:{state:"dim",level:0} },
+      links:[], flows:[],
+      tiles:{ wh:["40 台"], box:["0 台"], done:["0 台"], short:["0 件"], vo:["0 張"] },
+      note:{ title:"案場頁的分頁", rows:[["人人看得到","概況、智能安裝、燈具安裝、工作紀錄、交接事項、維修保固、圖檔、基本資料"],["老闆、系統維護者","增減、成本與收款"]] }
+    },
+    {
+      label:"排一天工", tag:"一天", title:"要去林宅，先排一天工",
+      body:"<p>在「工作紀錄」排一天工：<b>哪天、哪個案場、誰去</b>。</p><p>排好之後，首頁的週表會多一格。大家打開首頁，就知道這週誰去哪。技術人員的首頁右邊，會列明天要去的案場。</p>",
+      who:["老闆","系統維護者","專案負責人","行政","技術人員"], where:"工作紀錄 → 新增安排（首頁週表旁也有「排一天工」）",
+      nodes:{ W:"focus", S:"on", T:"on", M:{state:"dim",level:.8}, B:{state:"dim",level:0} },
+      links:["ws","ts"],
+      flows:[{link:"ws",kind:"data",every:1400},{link:"ts",kind:"person",every:1400,delay:700}],
+      tiles:{ wh:["40 台"], box:["0 台"], done:["0 台"], short:["0 件"], vo:["0 張"] },
+      note:{ title:"那一天的分頁", rows:[["工作目標","這天要做什麼"],["備貨清單","要帶哪些料"],["安排人員","誰去"],["交接事項","留給下一個人"]] }
+    },
+    {
+      label:"帶料出門", tag:"料", title:"料從主倉出庫，帶去林宅",
+      body:"<p>看那一天的「備貨清單」知道要帶什麼，在「庫存 → 進出庫」記一筆出庫，帶去林宅。</p><p>帶出去的料算在<b>林宅的案場箱</b>（系統把它當一個小倉）。進出庫頁上面「帶去案場」那張卡會一直列著它，直到記回庫。</p>",
+      who:["老闆","系統維護者","行政"], where:"庫存 → 進出庫",
+      nodes:{ M:{state:"on",level:.56,gauge:56,gaugeTone:"var(--good)",gaugeLabel:"28 台"}, B:{state:"focus",level:.8,gauge:80,gaugeTone:"var(--good)",gaugeLabel:"12 台"}, S:"on", W:"dim" },
+      links:["mb","bs"],
+      flows:[{link:"mb",kind:"item",every:700},{link:"bs",kind:"item",every:1400,delay:500}],
+      tiles:{ wh:["28 台"], box:["12 台","good"], done:["0 台"], short:["0 件"], vo:["0 張"] }
+    },
+    {
+      label:"現場安裝", tag:"現場", title:"技術人員到林宅裝",
+      body:"<p>人和料都到林宅了，開始裝。</p><p>用掉幾個，會在下一步<b>「收工結算」</b>記進系統。</p>",
+      who:["技術人員"], where:"首頁右邊：明天要去的案場",
+      nodes:{ T:"on", S:"focus", B:{state:"on",level:.8,gauge:80,gaugeTone:"var(--good)",gaugeLabel:"12 台"}, M:{state:"dim",level:.56} },
+      links:["ts","bs"],
+      flows:[{link:"ts",kind:"person",every:1200},{link:"bs",kind:"item",every:900,delay:300}],
+      tiles:{ wh:["28 台"], box:["12 台"], done:["0 台"], short:["0 件"], vo:["0 張"] }
+    },
+    {
+      label:"收工結算", tag:"一天", title:"做完回來，收工結算",
+      body:"<p>在那一天的工作紀錄按右上<b>「收工結算」</b>：點貨、填實際用掉幾個、剩的帶不帶回。</p><p>帶回來的，到「進出庫」按「記回庫」，主倉的數字才會加回去。</p>",
+      who:["老闆","系統維護者","行政"], where:"工作紀錄 → 點那一天 → 收工結算",
+      nodes:{ W:"focus", S:"on", B:{state:"on",level:0,gauge:0,gaugeTone:"var(--good)",gaugeLabel:"0 台"}, M:{state:"on",level:.6,gauge:60,gaugeTone:"var(--good)",gaugeLabel:"30 台"} },
+      links:["ws","mb"],
+      flows:[{link:"ws",kind:"data",every:1400,rev:true},{link:"mb",kind:"item",every:1100,rev:true}],
+      tiles:{ wh:["30 台"], box:["0 台"], done:["10 台","good"], short:["0 件"], vo:["0 張"] },
+      note:{ title:"林宅這一趟", rows:[["帶去","12 台"],["裝好","10 台"],["帶回","2 台"]], hi:"三個數字對得上，這一趟才算收乾淨" }
+    },
+    {
+      label:"缺料叫貨", tag:"料", title:"耗材不夠：回報、叫貨、點收",
+      body:"<p>裝到一半發現線槽這類<b>耗材</b>不夠，誰都可以回報缺料。技術人員從庫存總覽的「回報缺料」按。</p><p>行政看到後到「叫貨」開叫貨單給廠商，回缺料頁按「貨叫了」。貨到了在叫貨單上點收，主倉就加回去。</p>",
+      who:["回報：每個人","叫貨、點收：老闆、系統維護者、行政"], where:"庫存 → 缺料；庫存 → 叫貨",
+      nodes:{ T:"on", Q:"focus", V:"on", M:{state:"on",level:.6}, S:"dim" },
+      links:["tq","qv","vm"],
+      flows:[{link:"tq",kind:"warn",every:1600},{link:"qv",kind:"data",every:1600,delay:800},{link:"vm",kind:"item",every:1600,delay:1600}],
+      tiles:{ wh:["30 台"], box:["0 台"], done:["10 台"], short:["1 件","warn"], vo:["0 張"] },
+      note:{ title:"缺料頁只收耗材", rows:[["耗材","線槽、螺絲這類"],["設備","不走缺料，到叫貨看水位"]] }
+    },
+    {
+      label:"增減單", tag:"錢", title:"裝的跟報價不一樣，開增減單",
+      body:"<p>林宅報價 12 台，實際裝 10 台。差的那 2 台，在案場的「增減」分頁開一張<b>工程增減單</b>，印給客戶簽。</p><p>這個分頁只有老闆、系統維護者看得到。</p>",
+      who:["老闆","系統維護者"], where:"案場 → 增減 → 看／列印",
+      nodes:{ S:"on", X:"focus", C:"on", W:"dim", M:{state:"dim",level:.6}, B:{state:"dim",level:0} },
+      links:["sx","xc"],
+      flows:[{link:"sx",kind:"data",every:1600},{link:"xc",kind:"data",every:1600,delay:800}],
+      tiles:{ wh:["30 台"], box:["0 台"], done:["10 台"], short:["1 件"], vo:["1 張","warn"] },
+      note:{ title:"林宅增減", rows:[["報價","12 台"],["實裝","10 台"],["增減","少 2 台"]], ft:"單號 VO 開頭，數字是編的" }
+    },
+    {
+      label:"LINE 打卡", tag:"人", title:"上下班打卡在 LINE，不在後台",
+      body:"<p>在 LINE 裡開<b>「威琳打卡」</b>，按上班、下班；也能看自己的出勤和請假。</p><p>第一次用要先把 LINE 綁到你的人員資料。沒綁的話會看到一串配對碼，拿給老闆或行政在人員頁幫你綁好，就能打。</p>",
+      who:["要打卡的每個人"], where:"LINE → 威琳打卡（看全部人的出勤：人員 → 出勤）",
+      nodes:{ T:"on", K:"focus", M:{state:"dim",level:.6}, B:{state:"dim",level:0}, S:"dim" },
+      links:["tk"],
+      flows:[{link:"tk",kind:"person",every:1100}],
+      tiles:{ wh:["30 台"], box:["0 台"], done:["10 台"], short:["1 件"], vo:["1 張"] }
+    },
+    {
+      label:"總整理", tag:"複習", title:"四條線記起來就夠了",
+      body:"<p><b>一戶</b>：客戶 → 案場，這一戶的事都在案場頁。</p><p><b>一天</b>：工作紀錄排工 → 去現場 → 收工結算。</p><p><b>一批料</b>：主倉出庫 → 案場箱 → 記回庫；不夠就缺料 → 叫貨 → 點收。</p><p>找不到某個按鈕，多半是你的職位沒有那把權限，問老闆或系統維護者。</p>",
+      who:["每個人"], where:"",
+      nodes:{ S:"focus", C:"on", W:"on", X:"on", T:"on", K:"on", Q:"on", V:"on", M:{level:.6}, B:{level:0} },
+      links:["cs","ws","ts","tk","tq","qv","vm","mb","bs","sx","xc"],
+      flows:[{link:"cs",kind:"data",every:2400},{link:"ws",kind:"data",every:2400,delay:600},{link:"ts",kind:"person",every:2400,delay:1200},{link:"mb",kind:"item",every:2400,delay:300},{link:"bs",kind:"item",every:2400,delay:900},{link:"tq",kind:"warn",every:3600,delay:1500},{link:"vm",kind:"item",every:3600,delay:2100}],
+      tiles:{ wh:["30 台"], box:["0 台"], done:["10 台","good"], short:["1 件"], vo:["1 張"] },
+      note:{ title:"四條線", rows:[["一戶","客戶 → 案場"],["一天","排工 → 收工結算"],["一批料","出庫 → 記回庫"],["不夠","缺料 → 叫貨"]] }
+    }
+  ]
+};
+</script>
+
+<script>
+/* ============================================================
+   引擎（兩份課共用同一段，改了要兩邊一起改）
+   ============================================================ */
+(() => {
+const L = LESSON, NS = "http://www.w3.org/2000/svg";
+const S = L.scale, CX = Math.cos(Math.PI / 6) * S, SY = 0.5 * S;
+const [OX, OY] = L.origin, [VW, VH] = L.viewBox;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const INK = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim() || "#222";
+const $ = id => document.getElementById(id);
+
+/* 等角投影：格子座標 (x,y,z) → 畫面座標 */
+const P = (x, y, z = 0) => [OX + (x - y) * CX, OY + (x + y) * SY - z * S];
+const pts = a => a.map(p => p.map(v => v.toFixed(1)).join(",")).join(" ");
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+/* 顏色變暗：側面用，讓方塊有立體感 */
+function shade(hex, k) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = (n >> 16) * k, g = (n >> 8 & 255) * k, b = (n & 255) * k;
+  return `rgb(${r | 0},${g | 0},${b | 0})`;
+}
+const col = name => L.palette[name] || name;
+
+/* 圖示（24×24 線條）。課程內容用名字指定 */
+const ICONS = {
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1a5 5 0 0 1 5-5h3a5 5 0 0 1 5 5v1M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20v-1a5 5 0 0 0-3.5-4.8"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/>',
+  pulse: '<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+  heart: '<path d="M20.5 8.5c0 5-8.5 11-8.5 11s-8.5-6-8.5-11A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8.5 2.5z"/>',
+  server: '<rect x="3" y="3.5" width="18" height="7" rx="2"/><rect x="3" y="13.5" width="18" height="7" rx="2"/><path d="M7 7h.01M7 17h.01"/>',
+  split: '<path d="M12 21v-8M12 13L5 6M12 13l7-7M3 3h5v5M21 3h-5v5"/>',
+  home: '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  clipboard: '<rect x="8" y="2.5" width="8" height="4" rx="1"/><path d="M16 4.5h2a2 2 0 0 1 2 2V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6.5a2 2 0 0 1 2-2h2M8.5 12h7M8.5 16h5"/>',
+  box: '<path d="M21 8l-9-5-9 5 9 5zM3 8v8.5l9 5 9-5V8M12 13v8.5"/>',
+  truck: '<path d="M2 6h12v10H2zM14 9.5h4.5L22 13v3h-8"/><circle cx="6.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/>',
+  doc: '<path d="M14 2.5H6a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.5z"/><path d="M14 2.5v6h6M12 11.5v6M9 14.5h6"/>',
+  phone: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/>',
+  wrench: '<path d="M14.5 6.5a4 4 0 0 0 5 5L21 13l-8 8-3-3 8-8M14.5 6.5L13 5a4 4 0 0 0-5.5 5.5L3 15l3 3"/>',
+  coin: '<circle cx="12" cy="12" r="9"/><path d="M15 9.5c-.5-1-1.6-1.5-3-1.5-1.7 0-3 .8-3 2s1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2c-1.4 0-2.5-.5-3-1.5M12 6v2M12 16v2"/>',
+  map: '<path d="M9 4L3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>',
+  alertbox: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 7.5v5.5M12 16.5h.01"/>'
+};
+const icon = (name, size = 14) =>
+  `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ""}</svg>`;
+function svgIcon(parent, name, cx, cy, size) {
+  const g = el("g", { transform: `translate(${cx - size / 2},${cy - size / 2}) scale(${size / 24})`, fill: "none", stroke: INK, "stroke-width": 2, "stroke-linecap": "round", "stroke-linejoin": "round" }, parent);
+  g.innerHTML = ICONS[name] || "";
+  return g;
+}
+
+/* ---------- 頁面上的固定文字 ---------- */
+$("by").textContent = L.by || "";
+$("crumb").textContent = L.crumb;
+$("h1").textContent = L.title;
+$("sub").textContent = L.sub;
+document.title = L.title + "・互動課";
+$("chips").innerHTML = L.chips.map(([c, t]) => `<span class="chip ${c}">${t}</span>`).join("");
+$("legend").innerHTML = Object.values(L.kinds).map(k =>
+  `<span><i class="${k.shape || ""}" style="background:${k.color};${k.shape === "ring" ? "border-color:" + k.color : ""}"></i>${k.label}</span>`).join("");
+if (L.notePos === "left") $("note").classList.add("left");
+$("tiles").innerHTML = L.tiles.map(t =>
+  `<div class="tile" id="t-${t.key}"><div class="k">${icon(t.icon, 12)}${t.label}</div><div class="v">–</div></div>`).join("");
+
+/* ---------- 畫布 ---------- */
+const svg = $("svg");
+svg.setAttribute("viewBox", `0 0 ${VW} ${VH}`);
+svg.setAttribute("aria-label", L.title + " 示意圖");
+const defs = el("defs", {}, svg);
+defs.innerHTML = `
+  <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${INK}"/></marker>
+  <radialGradient id="fade" cx="50%" cy="48%" r="62%"><stop offset="55%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></radialGradient>
+  <mask id="gridMask"><rect width="${VW}" height="${VH}" fill="url(#fade)"/></mask>`;
+
+/* 等角格線（地板） */
+const grid = el("g", { mask: "url(#gridMask)", stroke: "var(--grid)", "stroke-width": 1 }, svg);
+for (let i = -30; i <= 30; i++) {
+  const a = P(i, -30), b = P(i, 30), c = P(-30, i), d = P(30, i);
+  el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1] }, grid);
+  el("line", { x1: c[0], y1: c[1], x2: d[0], y2: d[1] }, grid);
+}
+const gLinks = el("g", {}, svg), gDots = el("g", {}, svg), gNodes = el("g", {}, svg), gTop = el("g", {}, svg);
+
+/* ---------- 東西（節點） ---------- */
+const N = {};
+const nodeRadius = n => Math.max(n.w || 2.4, n.d || 2.4) / 2 + 0.35;
+
+function drawPrism(g, n) {
+  const { x, y } = n, w = n.w || 2.4, d = n.d || 2.4, h = n.h || 1.6, base = col(n.color || "gray");
+  const x0 = x - w / 2, x1 = x + w / 2, y0 = y - d / 2, y1 = y + d / 2;
+  const attrs = { stroke: INK, "stroke-width": 2, "stroke-linejoin": "round", class: "face" };
+  // 腳下的淡影子
+  el("polygon", { points: pts([P(x0 + .25, y0 + .25), P(x1 + .25, y0 + .25), P(x1 + .25, y1 + .25), P(x0 + .25, y1 + .25)]), fill: INK, opacity: .07 }, g);
+  n.faces = [
+    [el("polygon", { ...attrs, points: pts([P(x0, y1, h), P(x1, y1, h), P(x1, y1, 0), P(x0, y1, 0)]) }, g), .9],   // 左前面
+    [el("polygon", { ...attrs, points: pts([P(x1, y0, h), P(x1, y1, h), P(x1, y1, 0), P(x1, y0, 0)]) }, g), .8],   // 右前面
+    [el("polygon", { ...attrs, points: pts([P(x0, y0, h), P(x1, y0, h), P(x1, y1, h), P(x0, y1, h)]) }, g), 1]     // 頂面
+  ];
+  n.paint = c => n.faces.forEach(([f, k]) => f.style.fill = shade(c, k));
+  n.paint(base);
+  // 圖示畫在頂面正中，名字寫在方塊正下方（最靠近看的人那個角的下面）
+  const [cx, cy] = P(x, y, h);
+  if (n.icon) svgIcon(g, n.icon, cx, cy, 22);
+  const foot = P(x1, y1, 0);
+  if (n.label) {
+    const t = el("text", { x: foot[0], y: foot[1] + 20, "text-anchor": "middle", "font-size": 14, "font-weight": 700, fill: INK, "font-family": "var(--font)", "paint-order": "stroke", stroke: "var(--stage)", "stroke-width": 4 }, g);
+    t.textContent = n.label;
+  }
+  n.top = P(x0, y0, h); n.foot = [foot[0], foot[1] + 22]; n.center = P(x, y, h / 2);
+}
+
+function drawTank(g, n) {
+  const { x, y } = n, r = n.r || 1.2, h = n.h || 1.6, base = col(n.color || "purple");
+  const rx = 1.2247 * r * S, ry = 0.7071 * r * S;
+  const [bx, by] = P(x, y, 0), [tx, ty] = P(x, y, h);
+  el("ellipse", { cx: bx + 5, cy: by + 4, rx, ry, fill: INK, opacity: .07 }, g);
+  const body = el("path", { d: `M${bx - rx},${ty} L${bx - rx},${by} A${rx},${ry} 0 0 0 ${bx + rx},${by} L${bx + rx},${ty} Z`, stroke: INK, "stroke-width": 2, "stroke-linejoin": "round", class: "face" }, g);
+  // 存量：從底部往上長的一段顏色，高度跟著每一步的 level 動
+  const lvl = el("path", { fill: col(n.levelColor || "green"), stroke: INK, "stroke-width": 1.4, opacity: .95 }, g);
+  const lidEdge = el("path", { fill: "none", stroke: INK, "stroke-width": 2 }, g);
+  lidEdge.setAttribute("d", `M${bx - rx},${by} A${rx},${ry} 0 0 0 ${bx + rx},${by}`);
+  const top = el("ellipse", { cx: tx, cy: ty, rx, ry, stroke: INK, "stroke-width": 2, class: "face" }, g);
+  n.faces = [[body, .86], [top, 1]];
+  n.paint = c => n.faces.forEach(([f, k]) => f.style.fill = shade(c, k));
+  n.paint(base);
+  n.level = 0;
+  n.setLevel = v => {
+    n.level = v;
+    if (v <= 0.001) { lvl.setAttribute("d", ""); return; }
+    const ly = by - v * h * S;
+    lvl.setAttribute("d", `M${bx - rx},${ly} L${bx - rx},${by} A${rx},${ry} 0 0 0 ${bx + rx},${by} L${bx + rx},${ly} A${rx},${ry} 0 0 1 ${bx - rx},${ly} Z`);
+  };
+  if (n.icon) svgIcon(g, n.icon, tx, ty, 18);
+  // 名字寫在圓柱正下方，跟方塊一樣
+  if (n.label) {
+    const t = el("text", { x: bx, y: by + ry + 20, "text-anchor": "middle", "font-size": 14, "font-weight": 700, fill: INK, "font-family": "var(--font)", "paint-order": "stroke", stroke: "var(--stage)", "stroke-width": 4 }, g);
+    t.textContent = n.label;
+  }
+  n.top = [bx - rx * .6, ty - ry]; n.foot = [bx, by + ry + 22]; n.center = [bx, (by + ty) / 2];
+}
+
+function drawCrowd(g, n) {
+  const { x, y } = n, w = n.w || 4.5, d = n.d || 3.5, h = .35;
+  const x0 = x - w / 2, x1 = x + w / 2, y0 = y - d / 2, y1 = y + d / 2;
+  const a = { stroke: INK, "stroke-width": 2, "stroke-linejoin": "round" };
+  const [pTop, pL, pR] = L.platform || ["#f7f3ea", "#e9e3d6", "#ddd6c7"];
+  el("polygon", { ...a, fill: pL, points: pts([P(x0, y1, h), P(x1, y1, h), P(x1, y1, 0), P(x0, y1, 0)]) }, g);
+  el("polygon", { ...a, fill: pR, points: pts([P(x1, y0, h), P(x1, y1, h), P(x1, y1, 0), P(x1, y0, 0)]) }, g);
+  el("polygon", { ...a, fill: pTop, points: pts([P(x0, y0, h), P(x1, y0, h), P(x1, y1, h), P(x0, y1, h)]) }, g);
+  // 小人：照遠到近畫，近的蓋住遠的
+  const rows = n.rows || 3, cols = n.cols || 4, list = [];
+  for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++)
+    list.push([x0 + (j + .5) * w / cols, y0 + (i + .5) * d / rows, i * cols + j]);
+  list.sort((p, q) => (p[0] + p[1]) - (q[0] + q[1]));
+  list.forEach(([px, py, k]) => {
+    const [sx, sy] = P(px, py, h);
+    const c = L.people[k % L.people.length];
+    el("rect", { x: sx - 5.5, y: sy - 17, width: 11, height: 15, rx: 5, fill: c, stroke: INK, "stroke-width": 1.6 }, g);
+    el("circle", { cx: sx, cy: sy - 22, r: 5, fill: L.headColor || "#fffaf0", stroke: INK, "stroke-width": 1.6 }, g);
+  });
+  n.top = P(x0, y0, h); n.foot = P(x1, y1, 0); n.center = P(x, y, h);
+  n.paint = () => {};
+}
+
+/* 小膠囊（節點底下的名字牌、線上的標籤）
+   寬度用字數估，不用 getComputedTextLength：網路字型還沒載完時量到的寬度會偏小，字會跑出框 */
+const textW = (t, fs) => [...t].reduce((w, c) => w + (/[\u2E80-\uFFFF]/.test(c) ? fs * 1.02 : fs * .62), 0);
+function pill(parent, cx, cy, text, opt = {}) {
+  const g = el("g", {}, parent), fs = 12.5, pad = 11, iw = opt.icon ? 18 : 0;
+  const w = pad * 2 + iw + textW(text, fs), x = cx - w / 2;
+  el("rect", { x, y: cy - 12, width: w, height: 24, rx: 12, fill: "var(--chip)", stroke: INK, "stroke-width": 1.8 }, g);
+  if (opt.icon) svgIcon(g, opt.icon, x + pad + 6, cy, 13);
+  const t = el("text", { x: x + pad + iw, y: cy + 4.5, "font-size": fs, "font-weight": 600, fill: INK, "font-family": "var(--mono)" }, g);
+  t.textContent = text;
+  return g;
+}
+
+for (const id in L.nodes) {
+  const n = L.nodes[id]; n.id = id;
+  const g = el("g", { class: "node off", "data-id": id }, gNodes);
+  n.g = g;
+  // 「現在看這裡」的擴散圈，畫在最底
+  const [fx, fy] = P(n.x, n.y, 0), rr = nodeRadius(n);
+  n.ring = el("ellipse", { cx: fx, cy: fy, rx: 1.2247 * rr * S, ry: .7071 * rr * S, fill: "none", stroke: "var(--ring)", "stroke-width": 2.5, class: "pulse", style: "display:none" }, g);
+  if (n.type === "prism") drawPrism(g, n);
+  else if (n.type === "tank") drawTank(g, n);
+  else drawCrowd(g, n);
+  if (n.tag) pill(g, n.center[0], n.foot[1] + 24, n.tag, { icon: n.tagIcon });
+  // 壞掉的大叉
+  n.downX = el("g", { class: "down-x", opacity: 0 }, g);
+  el("circle", { cx: n.center[0], cy: n.center[1] - 4, r: 15, fill: "var(--bad)", stroke: INK, "stroke-width": 2 }, n.downX);
+  el("path", { d: `M${n.center[0] - 6},${n.center[1] - 10}l12,12M${n.center[0] + 6},${n.center[1] - 10}l-12,12`, stroke: "#fff", "stroke-width": 3, "stroke-linecap": "round" }, n.downX);
+  // 頭上的負載條（每一步可以不同）
+  n.gauge = el("g", { opacity: 0, style: "transition:opacity .4s" }, gTop);
+  n.depth = n.x + n.y;
+}
+// 遠的先畫：x+y 小的在後面
+[...gNodes.children].sort((a, b) => L.nodes[a.dataset.id].depth - L.nodes[b.dataset.id].depth).forEach(c => gNodes.appendChild(c));
+
+function setGauge(n, pct, tone, label) {
+  n.gauge.innerHTML = "";
+  if (pct == null) { n.gauge.setAttribute("opacity", 0); return; }
+  const [tx, ty] = n.top, cx = tx + 6, cy = ty - 22, w = 96;
+  const bad = pct >= 80, c = tone || (bad ? "var(--bad)" : pct >= 60 ? "var(--warn)" : "var(--good)");
+  el("rect", { x: cx - w / 2, y: cy - 12, width: w, height: 24, rx: 12, fill: "var(--chip)", stroke: INK, "stroke-width": 1.8 }, n.gauge);
+  el("rect", { x: cx - w / 2 + 10, y: cy - 3.5, width: 40, height: 7, rx: 3.5, fill: "var(--grid)" }, n.gauge);
+  el("rect", { x: cx - w / 2 + 10, y: cy - 3.5, width: Math.max(3, 40 * pct / 100), height: 7, rx: 3.5, fill: c }, n.gauge);
+  const t = el("text", { x: cx + w / 2 - 10, y: cy + 4.5, "text-anchor": "end", "font-size": 12.5, "font-weight": 600, fill: INK, "font-family": "var(--mono)" }, n.gauge);
+  t.textContent = label ?? (pct + "%");
+  n.gauge.setAttribute("opacity", 1);
+}
+
+/* ---------- 箭頭線 ---------- */
+const LK = {};
+function route(a, b, via) {
+  const A = [a.x, a.y], B = [b.x, b.y];
+  if (via === "direct") return [A, B];
+  return via === "yx" ? [A, [a.x, b.y], B] : [A, [b.x, a.y], B];
+}
+/* 把頭尾縮進去，箭頭才不會被方塊蓋住 */
+function trim(path, s, e) {
+  const p = path.map(q => q.slice());
+  const cut = (i, j, amt) => {
+    const dx = p[j][0] - p[i][0], dy = p[j][1] - p[i][1], len = Math.hypot(dx, dy) || 1;
+    const k = Math.min(amt, len - .05) / len;
+    p[i][0] += dx * k; p[i][1] += dy * k;
+  };
+  cut(0, 1, s);
+  const n = p.length - 1;
+  cut(n, n - 1, e);
+  return p.filter((q, i) => i === 0 || i === p.length - 1 || Math.hypot(q[0] - p[i - 1][0], q[1] - p[i - 1][1]) > .01);
+}
+for (const id in L.links) {
+  const k = L.links[id], a = L.nodes[k.from], b = L.nodes[k.to];
+  const rt = route(a, b, k.via);
+  // 從後面接近的線（往畫面下方走）會被目標方塊本身擋住，箭頭看不到 → 終點多縮一段，縮多少跟方塊高度成正比
+  const [p1, p2] = rt.slice(-2), dl = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) || 1;
+  const behind = Math.max(0, (p2[0] - p1[0] + p2[1] - p1[1]) / dl / Math.SQRT2);
+  const gp = trim(rt, nodeRadius(a), nodeRadius(b) + .15 + behind * (b.type === "crowd" ? 1 : (b.h || 1.6)) * .6);
+  const sp = gp.map(([x, y]) => P(x, y, .1));
+  const d = "M" + sp.map(q => q.map(v => v.toFixed(1)).join(",")).join("L");
+  const g = el("g", { class: "link off" }, gLinks);
+  const path = el("path", { d, fill: "none", stroke: INK, "stroke-width": 1.8, "stroke-linejoin": "round", "marker-end": "url(#arr)" }, g);
+  if (k.bi) path.setAttribute("marker-start", "url(#arr)");
+  if (k.dashed) path.setAttribute("stroke-dasharray", "5 5");
+  k.g = g; k.path = path; k.len = path.getTotalLength();
+  if (k.label) { const m = path.getPointAtLength(k.len / 2); pill(g, m.x, m.y - 2, k.label, { icon: k.labelIcon }); }
+  LK[id] = k;
+}
+
+/* ---------- 流動的小點 ---------- */
+let dots = [], flows = [], paused = false, last = performance.now(), clock = 0;
+function spawn(f) {
+  const k = LK[f.link], kind = L.kinds[f.kind] || {};
+  if (!k) return;
+  let e;
+  if (kind.shape === "sq") e = el("rect", { width: 11, height: 11, x: -5.5, y: -5.5, rx: 2, fill: kind.color, stroke: INK, "stroke-width": 1.5 }, gDots);
+  else if (kind.shape === "ring") e = el("circle", { r: 6, fill: "var(--stage)", stroke: kind.color, "stroke-width": 2.6 }, gDots);
+  else e = el("circle", { r: 5.5, fill: kind.color, stroke: INK, "stroke-width": 1.5 }, gDots);
+  dots.push({ e, k, p: 0, speed: f.speed || 170, rev: !!f.rev, failAt: f.failAt ?? (kind.x ? .85 : null), dead: 0 });
+}
+function crossAt(d) {
+  // 失敗的請求：停在半路，變成紅色叉叉再消失
+  d.e.remove();
+  const pt = d.k.path.getPointAtLength(d.k.len * d.p);
+  const g = el("g", { transform: `translate(${pt.x},${pt.y})` }, gDots);
+  el("circle", { r: 8, fill: "var(--bad)", stroke: INK, "stroke-width": 1.5 }, g);
+  el("path", { d: "M-3.5,-3.5L3.5,3.5M3.5,-3.5L-3.5,3.5", stroke: "#fff", "stroke-width": 2.2, "stroke-linecap": "round" }, g);
+  d.e = g; d.dead = 1;
+}
+function tick(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (!paused && !reduced) {
+    clock += dt * 1000;
+    flows.forEach(f => {
+      if (clock - (f.delay || 0) >= f.next) { spawn(f); f.next += f.every; }
+    });
+    dots = dots.filter(d => {
+      if (d.dead) { d.dead += dt; if (d.dead > .7) { d.e.remove(); return false; } d.e.setAttribute("opacity", 1.7 - d.dead); return true; }
+      d.p += d.speed * dt / d.k.len;
+      if (d.failAt != null && d.p >= d.failAt) { crossAt(d); return true; }
+      if (d.p >= 1) { d.e.remove(); return false; }
+      const pt = d.k.path.getPointAtLength(d.k.len * (d.rev ? 1 - d.p : d.p));
+      d.e.setAttribute("transform", `translate(${pt.x},${pt.y})`);
+      return true;
+    });
+  }
+  // 存量動畫
+  for (const id in L.nodes) {
+    const n = L.nodes[id];
+    if (n.setLevel && n.goal != null && Math.abs(n.level - n.goal) > .002) n.setLevel(n.level + (n.goal - n.level) * Math.min(1, dt * 5));
+  }
+  requestAnimationFrame(tick);
+}
+function setFlows(list) {
+  dots.forEach(d => d.e.remove()); dots = [];
+  clock = 0;
+  flows = (list || []).map(f => ({ ...f, next: 0 }));
+  if (reduced) flows.forEach(f => {   // 減少動態：每條線放一顆不動的點
+    spawn(f); const d = dots[dots.length - 1]; if (!d) return;
+    const pt = d.k.path.getPointAtLength(d.k.len * .5); d.e.setAttribute("transform", `translate(${pt.x},${pt.y})`);
+  });
+}
+
+/* ---------- 數字卡：數字會從上一步跳到這一步 ---------- */
+const num = s => { const m = String(s).match(/^([\d,]*\.?\d+)(.*)$/); return m ? { v: parseFloat(m[1].replace(/,/g, "")), dec: (m[1].split(".")[1] || "").length, comma: m[1].includes(","), unit: m[2] } : null; };
+const fmt = (v, o) => { let s = v.toFixed(o.dec); if (o.comma) s = Number(s).toLocaleString("en-US", { minimumFractionDigits: o.dec, maximumFractionDigits: o.dec }); return s + o.unit; };
+let tileTimer;
+function setTiles(vals, from) {
+  cancelAnimationFrame(tileTimer);
+  const jobs = L.tiles.map(t => {
+    const box = $("t-" + t.key), vEl = box.querySelector(".v");
+    const [to, tone] = (vals && vals[t.key]) || ["–"];
+    box.className = "tile " + (tone || "");
+    const startText = from && from[t.key] ? from[t.key][0] : vEl.textContent;
+    const a = num(startText), b = num(to);
+    if (a && b && a.unit === b.unit && !reduced) return { vEl, a, b };
+    vEl.textContent = to; return null;
+  }).filter(Boolean);
+  const t0 = performance.now();
+  const step = now => {
+    const k = Math.min(1, (now - t0) / 650), e = 1 - Math.pow(1 - k, 3);
+    jobs.forEach(j => j.vEl.textContent = fmt(j.a.v + (j.b.v - j.a.v) * e, j.b));
+    if (k < 1) tileTimer = requestAnimationFrame(step);
+  };
+  if (jobs.length) tileTimer = requestAnimationFrame(step);
+}
+
+/* ---------- 步驟條 ---------- */
+const rail = $("rail");
+L.steps.forEach((s, i) => {
+  const b = document.createElement("button");
+  b.className = "st"; b.type = "button";
+  b.innerHTML = `<span class="n">${i + 1}</span><span class="l">${s.label}</span>`;
+  b.setAttribute("aria-label", `第 ${i + 1} 步：${s.label}`);
+  b.onclick = () => go(i);
+  rail.appendChild(b);
+});
+
+/* ---------- 切到某一步 ---------- */
+let cur = -1;
+function go(i, replay) {
+  i = Math.max(0, Math.min(L.steps.length - 1, i));
+  const s = L.steps[i], prev = replay ? L.steps[i - 1] : (cur >= 0 ? L.steps[cur] : null);
+  cur = i;
+  if (location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+
+  for (const id in L.nodes) {
+    const n = L.nodes[id];
+    let v = s.nodes[id]; if (typeof v === "string") v = { state: v };
+    const st = v ? (v.state || "on") : "off";
+    n.g.setAttribute("class", "node " + (st === "dim" ? "dim" : st === "off" ? "off" : ""));
+    n.paint(st === "hot" ? col("red") : st === "down" ? (L.palette.down || "#d9d4ca") : col(v && v.color || n.color || "gray"));
+    n.ring.style.display = st === "focus" && !reduced ? "" : "none";
+    n.downX.setAttribute("opacity", st === "down" ? 1 : 0);
+    setGauge(n, v ? v.gauge : null, v && v.gaugeTone, v && v.gaugeLabel);
+    if (n.setLevel) { n.goal = v && v.level != null ? v.level : n.goal ?? 0; if (reduced) n.setLevel(n.goal); }
+  }
+  for (const id in LK) LK[id].g.setAttribute("class", "link " + (s.links.includes(id) ? "" : "off"));
+  setFlows(s.flows);
+  setTiles(s.tiles, prev && prev.tiles);
+
+  const note = $("note");
+  if (s.note) {
+    note.innerHTML = `<h4>${s.note.title}</h4>` + (s.note.rows || []).map(([a, b]) => `<div class="r"><b>${a}</b><span>${b}</span></div>`).join("") +
+      (s.note.hi ? `<div class="hi">${s.note.hi}</div>` : "") + (s.note.ft ? `<div class="ft">${s.note.ft}</div>` : "");
+    note.classList.remove("hide");
+  } else note.classList.add("hide");
+
+  [...rail.querySelectorAll(".st")].forEach((b, j) => b.className = "st" + (j < i ? " done" : j === i ? " cur" : ""));
+  $("railFill").style.width = (i / (L.steps.length - 1) * (100 - 100 / L.steps.length) + 50 / L.steps.length) + "%";
+  $("railFill").parentElement.style.left = (50 / L.steps.length) + "%";
+  $("railFill").parentElement.style.right = (50 / L.steps.length) + "%";
+  $("railFill").style.width = (i / (L.steps.length - 1) * 100) + "%";
+  $("stepCount").innerHTML = `第 <b>${i + 1}</b> 步，共 ${L.steps.length} 步`;
+
+  const meta = (s.who || s.where) ? `<div class="meta">${s.who ? `<div class="who"><span class="mk">誰會做</span>${s.who.map(w => `<span>${w}</span>`).join("")}</div>` : ""}${s.where ? `<div class="where"><span class="mk">在哪裡</span><code>${s.where}</code></div>` : ""}</div>` : "";
+  $("lesson").innerHTML = `<div class="stepno">STEP ${i + 1} / ${L.steps.length}</div><span class="tag">${s.tag || ""}</span><h2>${s.title}</h2><div class="body">${s.body}</div>${meta}`;
+
+  $("bBack").disabled = i === 0;
+  $("nextLabel").textContent = i === L.steps.length - 1 ? "從頭再看一次" : "下一步：" + L.steps[i + 1].label;
+}
+
+$("bBack").onclick = () => go(cur - 1);
+$("bNext").onclick = () => go(cur === L.steps.length - 1 ? 0 : cur + 1);
+$("bReplay").onclick = () => go(cur, true);
+$("bPause").onclick = () => {
+  paused = !paused;
+  $("pIcon").innerHTML = paused ? '<path d="M7 4l13 8-13 8z"/>' : '<path d="M9 5v14M15 5v14"/>';
+};
+$("bFull").onclick = () => document.fullscreenElement ? document.exitFullscreen() : $("stage").requestFullscreen?.();
+addEventListener("keydown", e => {
+  if (e.target.closest && e.target.closest("input,textarea")) return;
+  if (e.key === "ArrowRight") go(cur + 1);
+  else if (e.key === "ArrowLeft") go(cur - 1);
+  else if (e.key === " ") { e.preventDefault(); $("bPause").click(); }
+});
+addEventListener("hashchange", () => { const n = parseInt(location.hash.slice(1)); if (n && n - 1 !== cur) go(n - 1); });
+
+go((parseInt(location.hash.slice(1)) || 1) - 1);
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
