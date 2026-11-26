@@ -334,7 +334,7 @@ const LESSON = {
     },
     {
       label:"帶料出門", tag:"料", title:"料從主倉出庫，帶去林宅",
-      body:"<p>看那一天的「備貨清單」知道要帶什麼，在「庫存 → 進出庫」記一筆出庫，帶去林宅。</p><p>帶出去的料算在<b>林宅的案場箱</b>（系統把它當一個小倉）。進出庫頁上面「帶去案場」那張卡會一直列著它，直到記回庫。</p>",
+      body:"<p>看那一天的「備貨清單」知道要帶什麼，在「庫存 → 進出庫」記一筆出庫，帶去林宅。</p><p>帶出去的料算在<b>林宅的案場箱</b>（系統把它當一個小倉）。進出庫頁上面「帶去案場」那張卡會一直列著它，直到帶回。</p>",
       who:["老闆","系統維護者","行政"], where:"庫存 → 進出庫",
       nodes:{ M:{state:"on",level:.56,gauge:56,gaugeTone:"var(--good)",gaugeLabel:"28 台"}, B:{state:"focus",level:.8,gauge:80,gaugeTone:"var(--good)",gaugeLabel:"12 台"}, S:"on", W:"dim" },
       links:["mb","bs"],
@@ -352,7 +352,7 @@ const LESSON = {
     },
     {
       label:"收工結算", tag:"一天", title:"做完回來，收工結算",
-      body:"<p>在那一天的工作紀錄按右上<b>「收工結算」</b>：點貨、填實際用掉幾個、剩的帶不帶回。</p><p>帶回來的，到「進出庫」按「記回庫」，主倉的數字才會加回去。</p>",
+      body:"<p>在那一天的工作紀錄按右上<b>「收工結算」</b>：點貨、填實際用掉幾個、剩的帶不帶回。</p><p>帶回來的，到「進出庫」按「帶回」，主倉的數字才會加回去。</p>",
       who:["老闆","系統維護者","行政"], where:"工作紀錄 → 點那一天 → 收工結算",
       nodes:{ W:"focus", S:"on", B:{state:"on",level:0,gauge:0,gaugeTone:"var(--good)",gaugeLabel:"0 台"}, M:{state:"on",level:.6,gauge:60,gaugeTone:"var(--good)",gaugeLabel:"30 台"} },
       links:["ws","mb"],
@@ -391,13 +391,13 @@ const LESSON = {
     },
     {
       label:"總整理", tag:"複習", title:"四條線記起來就夠了",
-      body:"<p><b>一戶</b>：客戶 → 案場，這一戶的事都在案場頁。</p><p><b>一天</b>：工作紀錄排工 → 去現場 → 收工結算。</p><p><b>一批料</b>：主倉出庫 → 案場箱 → 記回庫；不夠就缺料 → 叫貨 → 點收。</p><p>找不到某個按鈕，多半是你的職位沒有那把權限，問老闆或系統維護者。</p>",
+      body:"<p><b>一戶</b>：客戶 → 案場，這一戶的事都在案場頁。</p><p><b>一天</b>：工作紀錄排工 → 去現場 → 收工結算。</p><p><b>一批料</b>：主倉出庫 → 案場箱 → 帶回；不夠就缺料 → 叫貨 → 點收。</p><p>找不到某個按鈕，多半是你的職位沒有那把權限，問老闆或系統維護者。</p>",
       who:["每個人"], where:"",
       nodes:{ S:"focus", C:"on", W:"on", X:"on", T:"on", K:"on", Q:"on", V:"on", M:{level:.6}, B:{level:0} },
       links:["cs","ws","ts","tk","tq","qv","vm","mb","bs","sx","xc"],
       flows:[{link:"cs",kind:"data",every:2400},{link:"ws",kind:"data",every:2400,delay:600},{link:"ts",kind:"person",every:2400,delay:1200},{link:"mb",kind:"item",every:2400,delay:300},{link:"bs",kind:"item",every:2400,delay:900},{link:"tq",kind:"warn",every:3600,delay:1500},{link:"vm",kind:"item",every:3600,delay:2100}],
       tiles:{ wh:["30 台"], box:["0 台"], done:["10 台","good"], short:["1 件"], vo:["1 張"] },
-      note:{ title:"四條線", rows:[["一戶","客戶 → 案場"],["一天","排工 → 收工結算"],["一批料","出庫 → 記回庫"],["不夠","缺料 → 叫貨"]] }
+      note:{ title:"四條線", rows:[["一戶","客戶 → 案場"],["一天","排工 → 收工結算"],["一批料","出庫 → 帶回"],["不夠","缺料 → 叫貨"]] }
     }
   ]
 };
